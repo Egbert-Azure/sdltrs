@@ -125,6 +125,7 @@ extern int resize4;
 extern int trs_uart_switches;
 extern int trs_show_led;
 extern int window_border_width;
+extern int trs_hd_boot;
 extern int trs_joystick_num;
 extern int trs_keypad_joystick;
 extern int trs_charset1;

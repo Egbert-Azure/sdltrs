@@ -38,6 +38,8 @@
 
 #include "reed.h"
 
+int trs_hd_boot;
+
 /*#define HARDDEBUG1 1*/  /* show detail on all port i/o */
 /*#define HARDDEBUG2 1*/  /* show all commands */
 
