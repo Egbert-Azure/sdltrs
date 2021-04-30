@@ -430,7 +430,7 @@ static int open_drive(int drive)
 
   /* Read in the Reed header and check some basic magic numbers (not all) */
   res = fread(&rhh, sizeof(rhh), 1, d->file);
-  if (res != 1 || rhh.id1 != 0x56 || rhh.id2 != 0xcb || rhh.ver != 0x10) {
+  if (res != 1 || rhh.id1 != 0x56 || rhh.id2 != 0xcb || rhh.ver >= 0x20) {
     error("trs_hard: unrecognized hard drive image %s", d->filename);
     err = -1;
     goto fail;
