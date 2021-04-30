@@ -309,6 +309,7 @@ static const trs_opt options[] = {
   { "hard2",           trs_opt_hard,          1, 2, NULL                 },
   { "hard3",           trs_opt_hard,          1, 3, NULL                 },
   { "harddir",         trs_opt_dirname,       1, 0, trs_hard_dir         },
+  { "hdboot",          trs_opt_value,         0, 1, &trs_hd_boot         },
   { "hideled",         trs_opt_value,         0, 0, &trs_show_led        },
   { "huffman",         trs_opt_huffman,       0, 1, NULL                 },
   { "hypermem",        trs_opt_hypermem,      0, 1, NULL                 },
@@ -336,6 +337,7 @@ static const trs_opt options[] = {
   { "noemtsafe",       trs_opt_value,         0, 0, &trs_emtsafe         },
   { "nofullscreen",    trs_opt_value,         0, 0, &fullscreen          },
   { "nofs",            trs_opt_value,         0, 0, &fullscreen          },
+  { "nohdboot",        trs_opt_value,         0, 0, &trs_hd_boot         },
   { "nohuffman",       trs_opt_huffman,       0, 0, NULL                 },
   { "nohypermem",      trs_opt_hypermem,      0, 0, NULL                 },
   { "nojoyaxismapped", trs_opt_value,         0, 0, &jaxis_mapped        },
@@ -928,6 +930,7 @@ int trs_load_config_file(void)
   trs_disk_doubler = TRSDISK_BOTH;
   trs_disk_truedam = 0;
   trs_emtsafe = 1;
+  trs_hd_boot = 0;
   trs_joystick_num = 0;
   trs_kb_bracket(FALSE);
   trs_keypad_joystick = TRUE;
@@ -1100,6 +1103,7 @@ int trs_write_config_file(const char *filename)
       fprintf(config_file, "hard%d=%s\n", i, diskname);
   }
   fprintf(config_file, "harddir=%s\n", trs_hard_dir);
+  fprintf(config_file, "%shdboot\n", trs_hd_boot ? "" : "no");
   fprintf(config_file, "%shuffman\n", huffman_ram ? "" : "no");
   fprintf(config_file, "%shypermem\n", hypermem ? "" : "no");
   fprintf(config_file, "%sjoyaxismapped\n", jaxis_mapped ? "" : "no");
