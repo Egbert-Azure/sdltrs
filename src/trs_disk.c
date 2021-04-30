@@ -452,7 +452,7 @@ trs_disk_init(int poweron)
       }
     }
   }
-  trs_hard_init();
+  trs_hard_init(poweron);
   stringy_init();
   trs_cancel_event();
 

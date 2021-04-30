@@ -96,9 +96,8 @@ static int open_drive(int n);
 static void set_dir_cyl(int cyl);
 
 /* Powerup or reset button */
-void trs_hard_init(void)
+void trs_hard_init(int poweron)
 {
-  int i;
   state.control = 0;
   state.data = 0;
   state.error = 0;
@@ -109,12 +108,17 @@ void trs_hard_init(void)
   state.head = 0;
   state.status = 0;
   state.command = 0;
-  for (i = 0; i < TRS_HARD_MAXDRIVES; i++) {
-    if (state.d[i].file == NULL) {
+
+  if (poweron) {
+    int i;
+
+    state.present = 0;
+    for (i = 0; i < TRS_HARD_MAXDRIVES; i++) {
       state.d[i].writeprot = 0;
       state.d[i].cyls = 0;
       state.d[i].heads = 0;
       state.d[i].secs = 0;
+      if (open_drive(i) == 0) state.present = 1;
     }
   }
 }
@@ -216,13 +220,10 @@ void trs_hard_out(int port, int value)
     break;
   case TRS_HARD_CONTROL:
     if (value & TRS_HARD_SOFTWARE_RESET) {
-      trs_hard_init();
+      trs_hard_init(0);
     }
-    if ((value & TRS_HARD_DEVICE_ENABLE) && state.present == 0) {
-      int i;
-      for (i = 0; i < TRS_HARD_MAXDRIVES; i++) {
-	if (open_drive(i) == 0) state.present = 1;
-      }
+    if (value & TRS_HARD_DEVICE_ENABLE) {
+      trs_hard_init(1);
     }
     state.control = value;
     break;
