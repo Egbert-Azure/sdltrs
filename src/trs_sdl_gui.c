@@ -800,6 +800,8 @@ redraw:
 
   trs_gui_frame(1, 6, 62, 8);
   trs_gui_write_text(title, 3, 6, 0);
+  if (file)
+    trs_gui_center_text(" TAB selects directory ", 8, 1);
 
   while (1) {
     for (i = 0; i < 60; i++) {
@@ -1278,7 +1280,7 @@ void trs_gui_disk_creation(void)
         break;
       case 6:
         filename[0] = 0;
-        if (trs_gui_input_string("Enter Filename for Disk Image, TAB selects directory",
+        if (trs_gui_input_string("Enter Filename for Disk Image",
             trs_disk_dir, filename, FILENAME_MAX, 1) == 0) {
           if (trs_gui_file_overwrite()) {
             int ret = 0;
@@ -1404,7 +1406,7 @@ void trs_gui_diskset_load(void)
 void trs_gui_diskset_save(void)
 {
   filename[0] = 0;
-  if (trs_gui_input_string("Enter Filename for Disk Set, TAB selects directory",
+  if (trs_gui_input_string("Enter Filename for Disk Set",
       trs_disk_set_dir, filename, FILENAME_MAX - 5, 1) == 0) {
     trs_add_extension(filename, ".set");
     if (trs_gui_file_overwrite()) {
@@ -1578,7 +1580,7 @@ void trs_gui_hard_management(void)
           break;
         }
         filename[0] = 0;
-        if (trs_gui_input_string("Enter Filename for Hard Disk Image, TAB selects directory",
+        if (trs_gui_input_string("Enter Filename for Hard Disk Image",
             trs_hard_dir, filename, FILENAME_MAX, 1) == 0) {
           if (trs_gui_file_overwrite()) {
             if (trs_create_blank_hard(filename, cylinder_count, sector_count,
@@ -1640,7 +1642,7 @@ void trs_gui_stringy_management(void)
         break;
       case 12:
         filename[0] = 0;
-        if (trs_gui_input_string("Enter Filename for Wafer Image, TAB selects directory",
+        if (trs_gui_input_string("Enter Filename for Wafer Image",
             trs_cass_dir, filename, FILENAME_MAX, 1) == 0) {
           if (trs_gui_file_overwrite()) {
             if (stringy_create(filename) != 0)
@@ -1713,7 +1715,7 @@ void trs_gui_cassette_management(void)
         break;
       case 7:
         filename[0] = 0;
-        if (trs_gui_input_string("Enter Filename for Cassette Image, TAB selects directory",
+        if (trs_gui_input_string("Enter Filename for Cassette Image",
             trs_cass_dir, filename, FILENAME_MAX, 1) == 0) {
           switch (image_type) {
             case 0:
@@ -2154,7 +2156,7 @@ void trs_gui_misc_settings(void)
 void trs_gui_save_state(void)
 {
   filename[0] = 0;
-  if (trs_gui_input_string("Save Emulator State, TAB selects directory",
+  if (trs_gui_input_string("Save Emulator State",
       trs_state_file[0] != 0 ? trs_state_file : trs_state_dir, filename,
       FILENAME_MAX - 5, 1) == 0) {
     trs_add_extension(filename, ".t8s");
@@ -2183,7 +2185,7 @@ int trs_gui_load_state(void)
 void trs_gui_write_config(void)
 {
   filename[0] = 0;
-  if (trs_gui_input_string("Write Configuration, TAB selects directory",
+  if (trs_gui_input_string("Write Configuration",
       trs_config_file[0] != 0 ? trs_config_file : trs_state_dir, filename,
       FILENAME_MAX - 5, 1) == 0) {
     trs_add_extension(filename, ".t8c");
@@ -2696,7 +2698,7 @@ int trs_gui_exit_sdltrs(void)
 void trs_gui_save_bmp(void)
 {
   filename[0] = 0;
-  if (trs_gui_input_string("Save Screenshot, TAB selects directory",
+  if (trs_gui_input_string("Save Screenshot",
       trs_printer_dir, filename, FILENAME_MAX - 5, 1) == 0) {
     trs_add_extension(filename, ".bmp");
     trs_screen_refresh();
