@@ -40,7 +40,5 @@ typedef struct {
   Uint8 gran;      /* 30: Number of granules per track (floppy); cyl (hard)*/
   Uint8 dcyl;      /* 31: Directory cylinder [mkdisk sets to 1; xtrs ignores]*/
   char label[32];  /* 32: Volume label: 31 bytes terminated by 0 */
-  char filename[192];/* 64 - 255: 191 characters of filename terminated by 0
-		      [Cervasio addition.  xtrs actually doesn't limit this
-                       to 8 chars or strip the extension] */
+  Uint8 res2[192]; /* 64 - 255: reserved */
 } ReedHardHeader;

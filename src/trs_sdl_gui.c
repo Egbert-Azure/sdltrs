@@ -1612,7 +1612,7 @@ void trs_gui_hard_management(void)
         }
         filename[0] = 0;
         if (trs_gui_input_string("Enter Filename for Hard Disk Image, TAB selects directory",
-            trs_hard_dir, filename, 191, 1) == 0) {
+            trs_hard_dir, filename, FILENAME_MAX, 1) == 0) {
           if (trs_gui_file_overwrite()) {
             if (trs_create_blank_hard(filename, cylinder_count, sector_count,
                 granularity, dir_sector) != 0)
