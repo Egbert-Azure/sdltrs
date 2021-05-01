@@ -366,7 +366,6 @@ int trs_create_blank_hard(const char *fname, int cyl, int sec,
   rhh.gran = gran;
   rhh.dcyl = dir;
   snprintf(rhh.label, 9, "%s", "xtrshard");
-  snprintf(rhh.filename, 192, "%s", fname);
 
   cksum = 0;
   for (i = 0; i <= 31; i++) {
