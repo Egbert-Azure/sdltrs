@@ -1436,12 +1436,7 @@ void trs_gui_disk_management(void)
 
   while (1) {
     for (i = 0; i < 8; i++) {
-      const char *diskname = trs_disk_getfilename(i);
-
-      if (diskname[0] == 0)
-        snprintf(&disk_menu[i].title[8], 6, "%s", "Empty");
-      else
-        trs_gui_limit_string(diskname, &disk_menu[i].title[8], 52);
+      trs_gui_limit_string(trs_disk_getfilename(i), &disk_menu[i].title[8], 52);
       disk_menu[i].title[0] = trs_disk_getwriteprotect(i) ? '*' : ' ';
     }
     trs_gui_clear_screen();
@@ -1495,12 +1490,7 @@ void trs_gui_hard_management(void)
 
   while (1) {
     for (i = 0; i < 4; i++) {
-      const char *diskname = trs_hard_getfilename(i);
-
-      if (diskname[0] == 0)
-        snprintf(&hard_menu[i].title[8], 6, "%s", "Empty");
-      else
-        trs_gui_limit_string(diskname, &hard_menu[i].title[8], 52);
+      trs_gui_limit_string(trs_hard_getfilename(i), &hard_menu[i].title[8], 52);
       hard_menu[i].title[0] = trs_hard_getwriteprotect(i) ? '*' : ' ';
     }
     snprintf(&hard_menu[7].title[57], 4, "%3d", cylinder_count);
@@ -1631,12 +1621,7 @@ void trs_gui_stringy_management(void)
 
   while (1) {
     for (i = 0; i < 8; i++) {
-      const char *wafername = stringy_get_name(i);
-
-      if (wafername[0] == 0)
-        snprintf(&stringy_menu[i].title[9], 6, "%s", "Empty");
-      else
-        trs_gui_limit_string(wafername, &stringy_menu[i].title[9], 52);
+      trs_gui_limit_string(stringy_get_name(i), &stringy_menu[i].title[9], 52);
       stringy_menu[i].title[0] = stringy_get_writeprotect(i) ? '*' : ' ';
     }
     snprintf(&stringy_menu[11].title[52], 10, "%8s", wafer_choices[wafer_insert]);
@@ -1693,12 +1678,7 @@ void trs_gui_cassette_management(void)
   int value;
 
   while (1) {
-    const char *cass_name = trs_cassette_getfilename();
-
-    if (cass_name[0] == 0)
-      snprintf(&cass_menu[0].title[8], 6, "%s", "Empty");
-    else
-      trs_gui_limit_string(cass_name, &cass_menu[0].title[8], 52);
+    trs_gui_limit_string(trs_cassette_getfilename(), &cass_menu[0].title[8], 52);
     cass_menu[0].title[0] = trs_cass_getwriteprotect() ? '*' : ' ';
 
     snprintf(&cass_menu[2].title[36], 25, "%10d of %10d", trs_get_cassette_position(), trs_get_cassette_length());
