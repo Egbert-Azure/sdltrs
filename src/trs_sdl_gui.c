@@ -799,7 +799,7 @@ redraw:
     first_disp = 0;
 
   trs_gui_frame(1, 6, 62, 8);
-  trs_gui_write_text(title, 3, 6, 0);
+  trs_gui_center_text(title, 6, 0);
   if (file)
     trs_gui_center_text(" TAB selects directory ", 8, 1);
 
