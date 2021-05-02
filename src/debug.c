@@ -153,6 +153,9 @@ Miscellaneous:\n\
     set I<port> = <value>\n\
     set <addr> = <value>\n\
         Change the value of a register, register pair, I/O or memory byte.\n\
+    save <start addr> , <end addr> <filename>\n\
+    save <start addr> / <num bytes> <filename>\n\
+        Save memory in the range of hex addresses to the specified file.\n\
     timeroff\n\
     timeron\n\
         Disable/enable the emulated TRS-80 real time clock interrupt.\n\
@@ -389,6 +392,22 @@ static void print_memory(Uint16 address, int num_bytes)
 	putchar('\n');
 	num_bytes -= bytes_to_print;
 	address += bytes_to_print;
+    }
+}
+
+static void save_memory(Uint16 address, int num_bytes, const char *filename)
+{
+    FILE *file = fopen(filename, "wb");
+
+    if(file) {
+	int i;
+
+	for(i = 0; i < num_bytes; ++i)
+	    putc(mem_read(address + i), file);
+
+	fclose(file);
+    } else {
+	error("failed to save to: %s", filename);
     }
 }
 
@@ -877,6 +896,20 @@ void debug_shell(void)
 	    {
 		trs_io_debug_flags = 0;
 		sscanf(input, "iodebug %x", (unsigned int *)&trs_io_debug_flags);
+	    }
+	    else if(!strcmp(command, "save"))
+	    {
+		unsigned int start_address, end_address, num_bytes;
+		char *file = input;
+
+		if(sscanf(input, "save %x, %x %s", &start_address, &end_address, file) == 3)
+		{
+		    save_memory(start_address, end_address - start_address, file);
+		}
+		else if(sscanf(input, "save %x / %x %s", &start_address, &num_bytes, file) == 3)
+		{
+		    save_memory(start_address, num_bytes, file);
+		}
 	    }
 	    else
 	    {
