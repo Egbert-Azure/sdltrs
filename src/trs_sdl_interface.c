@@ -573,12 +573,13 @@ static void trs_opt_dirname(char *arg, int intarg, int *stringarg)
 {
   struct stat st;
 
+  if (stat(arg, &st) < 0)
+    strcpy(arg, ".");
+
   if (arg[strlen(arg) - 1] == DIR_SLASH)
     snprintf((char *)stringarg, FILENAME_MAX, "%s", arg);
   else
     snprintf((char *)stringarg, FILENAME_MAX, "%s%c", arg, DIR_SLASH);
-  if (stat((char *)stringarg, &st) < 0)
-    strcpy((char *)stringarg, ".");
 }
 
 static void trs_opt_doubler(char *arg, int intarg, int *stringarg)
