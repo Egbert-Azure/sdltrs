@@ -52,6 +52,11 @@ SDL2 binaries and packages above are build on the [SDL2] branch.
 The SDL2 version is available in [RetroPie] since version 4.6.6 and Valerio
 Lupi's fork of [RetroPie-Setup] ...
 
+## Forks
+
+  * [SDLTRS-SH] with Mongoose web server for debugging by Sascha Häberling
+  * [SDLTRS-TRS-IO] with integrated TRS-IO and FreHD by Arno Puder
+
 ## Screenshots
 
 ![screenshot](screenshots/sdltrs01.png)
@@ -71,6 +76,8 @@ Lupi's fork of [RetroPie-Setup] ...
 [SDL2.DLL]: https://www.libsdl.org/download-2.0.php
 [SDL-1.2.14]: https://www.libsdl.org/release/SDL-1.2.14-win32.zip
 [SDLTRS]: http://sdltrs.sourceforge.net
+[SDLTRS-SH]: https://github.com/shaeberling/sdltrs
+[SDLTRS-TRS-IO]: https://github.com/apuder/sdltrs-trs-io
 [sdltrs.exe]: bin/sdltrs.exe
 [sdl2trs.exe]: bin/sdl2trs.exe
 [sdl2trs64.exe]: bin/sdl2trs64.exe
