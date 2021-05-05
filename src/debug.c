@@ -408,7 +408,7 @@ static void load_memory(Uint16 address, const char *filename)
 	    mem_write(address++, c);
 	fclose(file);
     } else {
-	error("failed to load: %s", filename);
+	error("failed to load: %s: %s", filename, strerror(errno));
     }
 }
 
@@ -424,7 +424,7 @@ static void save_memory(Uint16 address, int num_bytes, const char *filename)
 
 	fclose(file);
     } else {
-	error("failed to save to: %s", filename);
+	error("failed to save: %s: %s", filename, strerror(errno));
     }
 }
 
