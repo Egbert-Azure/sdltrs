@@ -153,6 +153,8 @@ Miscellaneous:\n\
     set I<port> = <value>\n\
     set <addr> = <value>\n\
         Change the value of a register, register pair, I/O or memory byte.\n\
+    load <start addr> <filename>\n\
+        Load memory from file to the specified hex address.\n\
     save <start addr> , <end addr> <filename>\n\
     save <start addr> / <num bytes> <filename>\n\
         Save memory in the range of hex addresses to the specified file.\n\
@@ -392,6 +394,21 @@ static void print_memory(Uint16 address, int num_bytes)
 	putchar('\n');
 	num_bytes -= bytes_to_print;
 	address += bytes_to_print;
+    }
+}
+
+static void load_memory(Uint16 address, const char *filename)
+{
+    FILE *file = fopen(filename, "rb");
+
+    if(file) {
+	int c;
+
+	while((c = getc(file)) != EOF)
+	    mem_write(address++, c);
+	fclose(file);
+    } else {
+	error("failed to load: %s", filename);
     }
 }
 
@@ -896,6 +913,16 @@ void debug_shell(void)
 	    {
 		trs_io_debug_flags = 0;
 		sscanf(input, "iodebug %x", (unsigned int *)&trs_io_debug_flags);
+	    }
+	    else if(!strcmp(command, "load"))
+	    {
+		unsigned int start_address;
+		char *file = input;
+
+		if(sscanf(input,"load %x %s", &start_address, file) == 2)
+		{
+		    load_memory(start_address, file);
+		}
 	    }
 	    else if(!strcmp(command, "save"))
 	    {
