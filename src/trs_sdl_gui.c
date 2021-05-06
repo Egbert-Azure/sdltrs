@@ -70,51 +70,51 @@ typedef struct menu_entry_type {
   int const type;
 } MENU_ENTRY;
 
-static const char *yes_no_choices[2] = {
+static const char *yes_no_choices[] = {
   "        No",
   "       Yes"
 };
 
-static const char *function_choices[8] = {
+static const char *function_choices[] = {
   "  GUI Menu  ", "  Keyboard  ",
   " Save State ", " Load State ",
   "   Reset    ", "    Quit    ",
   "   Pause    ", "Joystick GUI"
 };
 
-static int const function_codes[8] = {
+static int const function_codes[] = {
   GUI,   KEYBRD,
   SAVE,  LOAD,
   RESET, EXIT,
   PAUSE, JOYGUI
 };
 
-static const char *key_names[N_KEYS] = {
+static const char *key_names[] = {
   " 1 ", " 2 ", " 3 ", " 4 ", " 5 ", " 6 ", " 7 ", " 8 ", " 9 ", " 0 ", " : ", " - ", "BRK",
   " UP", " q ", " w ", " e ", " r ", " t ", " y ", " u ", " i ", " o ", " p ", "LFT", "RGT",
   "DWN", " a ", " s ", " d ", " f ", " g ", " h ", " j ", " k ", " l ", " ; ", "ENT", "CLR",
   "SHF", " z ", " x ", " c ", " v ", " b ", " n ", " m ", " , ", " . ", " / ", " @ ", "SPC"
 };
-static int const key_syms[N_KEYS] = {
+static int const key_syms[] = {
   SDLK_1,    SDLK_2, SDLK_3, SDLK_4, SDLK_5, SDLK_6, SDLK_7, SDLK_8, SDLK_9,     SDLK_0,      SDLK_COLON,     SDLK_MINUS,  SDLK_ESCAPE,
   SDLK_UP,   SDLK_q, SDLK_w, SDLK_e, SDLK_r, SDLK_t, SDLK_y, SDLK_u, SDLK_i,     SDLK_o,      SDLK_p,         SDLK_LEFT,   SDLK_RIGHT,
   SDLK_DOWN, SDLK_a, SDLK_s, SDLK_d, SDLK_f, SDLK_g, SDLK_h, SDLK_j, SDLK_k,     SDLK_l,      SDLK_SEMICOLON, SDLK_RETURN, SDLK_HOME,
   -1,        SDLK_z, SDLK_x, SDLK_c, SDLK_v, SDLK_b, SDLK_n, SDLK_m, SDLK_COMMA, SDLK_PERIOD, SDLK_SLASH,     SDLK_AT,     SDLK_SPACE
 };
-static const char *key_names_shifted[N_KEYS] = {
+static const char *key_names_shifted[] = {
   " ! ", " \" ", " # ", " $ ", " % ", " & ", " ' ", " ( ", " ) ", " _ ", " * ", " = ", " ~ ",
   "TAB", " Q ",  " W ", " E ", " R ", " T ", " Y ", " U ", " I ", " O ", " P ", " [ ", " ] ",
   " ^ ", " A ",  " S ", " D ", " F ", " G ", " H ", " J ", " K ", " L ", " + ", " { ", " } ",
   "SHF", " Z ",  " X ", " C ", " V ", " B ", " N ", " M ", " < ", " > ", " ? ", " \\ ", " | "
 };
-static int const key_syms_shifted[N_KEYS] = {
+static int const key_syms_shifted[] = {
   SDLK_EXCLAIM, SDLK_QUOTEDBL, SDLK_HASH, SDLK_DOLLAR, 0x25, SDLK_AMPERSAND, SDLK_QUOTE, SDLK_LEFTPAREN, SDLK_RIGHTPAREN, SDLK_UNDERSCORE, SDLK_ASTERISK, SDLK_EQUALS, SDLK_CARET,
   SDLK_TAB,     0x51,          0x57,      0x45,        0x52, 0x54,           0x59,       0x55,           0x49,            0x4f,            0x50,          0xc4,        0xdc,
   0x7e,         0x41,          0x53,      0x44,        0x46, 0x47,           0x48,       0x4a,           0x4b,            0x4c,            SDLK_PLUS,     0xe4,        0xfc,
   -1,           0x5a,          0x58,      0x43,        0x56, 0x42,           0x4e,       0x4d,           SDLK_LESS,       SDLK_GREATER,    SDLK_QUESTION, 0xd6,        0xf6
 };
 
-int jbutton_map[N_JOYBUTTONS] = {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1};
+int jbutton_map[] = {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1};
 int jaxis_mapped = 0;
 
 extern int  scanlines;
@@ -1234,13 +1234,13 @@ void trs_gui_disk_creation(void)
    {"Insert Created Disk Into This Drive                         ", MENU_NORMAL_TYPE},
    {"Create Disk Image with Above Parameters", MENU_NORMAL_TYPE},
    {"", 0}};
-  const char *image_type_choices[3] = {"   JV1", "   JV3", "   DMK"};
-  const char *num_sides_choices[2] =  {"     1", "     2"};
-  const char *density_choices[2] =    {"Single", "Double"};
-  const char *size_choices[2] =       {"5 Inch", "8 Inch"};
-  const char *drive_choices[9] =      {"  None", "Disk 0", "Disk 1", "Disk 2",
-                                       "Disk 3", "Disk 4", "Disk 5", "Disk 6",
-                                       "Disk 7"};
+  const char *image_type_choices[] = {"   JV1", "   JV3", "   DMK"};
+  const char *num_sides_choices[]  = {"     1", "     2"};
+  const char *density_choices[]    = {"Single", "Double"};
+  const char *size_choices[]       = {"5 Inch", "8 Inch"};
+  const char *drive_choices[]      = {"  None", "Disk 0", "Disk 1", "Disk 2",
+                                      "Disk 3", "Disk 4", "Disk 5", "Disk 6",
+                                      "Disk 7"};
   static int image_type = 1;
   static int num_sides = 1;
   static int density = 1;
@@ -1318,7 +1318,7 @@ void trs_gui_disk_steps(void)
    {"", MENU_NORMAL_TYPE},
    {"", MENU_NORMAL_TYPE},
    {"", 0}};
-  const char *step_choices[2] = {"Single", "Double"};
+  const char *step_choices[] = {"Single", "Double"};
   int selection = 0;
   int i, step;
 
@@ -1357,8 +1357,8 @@ void trs_gui_disk_options(void)
    {"Set Drive Steps", MENU_NORMAL_TYPE},
 #endif
    {"", 0}};
-  const char *doubler_choices[4] = {"     None", "   Percom", "    Tandy", "     Both"};
-  const char *size_choices[2] = {"5 Inch", "8 Inch"};
+  const char *doubler_choices[] = {"     None", "   Percom", "    Tandy", "     Both"};
+  const char *size_choices[]    = {"5 Inch", "8 Inch"};
   int selection = 0;
   int i, size;
 
@@ -1480,7 +1480,7 @@ void trs_gui_hard_management(void)
    {"Insert Created Disk Into This Drive                         ", MENU_NORMAL_TYPE},
    {"Create Hard Disk Image with Above Parameters", MENU_NORMAL_TYPE},
    {"", 0}};
-  const char *drive_choices[5] = {"  None", "Hard 0", "Hard 1", "Hard 2", "Hard 3"};
+  const char *drive_choices[] = {"  None", "Hard 0", "Hard 1", "Hard 2", "Hard 3"};
   static int cylinder_count = 202;
   static int sector_count = 256;
   static int granularity = 8;
@@ -1615,8 +1615,8 @@ void trs_gui_stringy_management(void)
    {"Insert Created Image Into This Wafer                       ", MENU_NORMAL_TYPE},
    {"Create Blank Floppy Wafer", MENU_NORMAL_TYPE},
    {"", 0}};
-  const char *wafer_choices[9] = {"   None", "Wafer 0", "Wafer 1", "Wafer 2", "Wafer 3",
-                                  "Wafer 4", "Wafer 5", "Wafer 6", "Wafer 7"};
+  const char *wafer_choices[] = {"   None", "Wafer 0", "Wafer 1", "Wafer 2", "Wafer 3",
+                                 "Wafer 4", "Wafer 5", "Wafer 6", "Wafer 7"};
   static int wafer_insert = 0;
   int selection = 0;
   int i;
@@ -1672,7 +1672,7 @@ void trs_gui_cassette_management(void)
    {"Insert Created Cassette Into Drive                          ", MENU_NORMAL_TYPE},
    {"Create Blank Cassette Image with Above Parameters", MENU_NORMAL_TYPE},
    {"", 0}};
-  const char *image_type_choices[3] = {"   CAS", "   CPT", "   WAV"};
+  const char *image_type_choices[] = {"   CAS", "   CPT", "   WAV"};
   static int image_type = 0;
   static int drive_insert = 1;
   char input[12];
@@ -1767,11 +1767,11 @@ void trs_gui_emulator_settings(void)
    {"SuperMem (Alpha Technology) I/III Memory Expansion          ", MENU_NORMAL_TYPE},
    {"TRS-80 Users Society Selector I Memory Expansion            ", MENU_NORMAL_TYPE},
    {"", 0}};
-  const char *model_choices[4] =  {"  TRS-80 Model I",
-                                   "TRS-80 Model III",
-                                   "  TRS-80 Model 4",
-                                   " TRS-80 Model 4P"};
-  const char *speed_choices[4] =  {"      None", "  Archbold", "    Holmes","Seatronics"};
+  const char *model_choices[] = {"  TRS-80 Model I",
+                                 "TRS-80 Model III",
+                                 "  TRS-80 Model 4",
+                                 " TRS-80 Model 4P"};
+  const char *speed_choices[] = {"      None", "  Archbold", "    Holmes","Seatronics"};
   float clock_mhz[4];
   char input[8];
   int selection = 0;
@@ -1894,17 +1894,17 @@ void trs_gui_display_settings(void)
    {"Display Scanlines with brightness                           ", MENU_NORMAL_TYPE},
 #endif
    {"", 0}};
-  const char *font1_choices[7] =    {"      Early",
-                                     "      Stock",
-                                     "      LCmod",
-                                     "      Wider",
-                                     "      Genie",
-                                     "   HT-1080Z",
-                                     "Video Genie"};
-  const char *font34_choices[3] =   {"     Katakana",
-                                     "International",
-                                     "         Bold"};
-  const char *scale_choices[4] =    {" None", "  2 x", "  3 x", "  4 x"};
+  const char *font1_choices[]  = {"      Early",
+                                  "      Stock",
+                                  "      LCmod",
+                                  "      Wider",
+                                  "      Genie",
+                                  "   HT-1080Z",
+                                  "Video Genie"};
+  const char *font34_choices[] = {"     Katakana",
+                                  "International",
+                                  "         Bold"};
+  const char *scale_choices[]  = {" None", "  2 x", "  3 x", "  4 x"};
   char input[8];
   int redraw = 0;
   int selection = 0;
@@ -2254,7 +2254,7 @@ void trs_gui_printer_management(void)
    {"Printer Command:", MENU_TITLE_TYPE},
    {"   ", MENU_NORMAL_TYPE},
    {"", 0}};
-  const char *printer_choices[2] = {"     None", "     Text"};
+  const char *printer_choices[] = {"     None", "     Text"};
   int selection = 0;
 
   while (1) {
