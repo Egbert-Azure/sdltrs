@@ -2629,6 +2629,8 @@ void trs_gui_rom_files(void)
    {"", MENU_TITLE_TYPE},
    {"Model 4P ROM File:", MENU_TITLE_TYPE},
    {"   ", MENU_NORMAL_TYPE},
+   {"", MENU_TITLE_TYPE},
+   {"Patch Model I ROM for auto-boot from hard drive   ", MENU_NORMAL_TYPE},
    {"", 0}};
   int selection = 1;
 
@@ -2636,6 +2638,7 @@ void trs_gui_rom_files(void)
     trs_gui_limit_string(romfile, &romfile_menu[1].title[2], 58);
     trs_gui_limit_string(romfile3, &romfile_menu[4].title[2], 58);
     trs_gui_limit_string(romfile4p, &romfile_menu[7].title[2], 58);
+    snprintf(&romfile_menu[9].title[50], 11, "%s", yes_no_choices[trs_hd_boot]);
     trs_gui_clear_screen();
 
     selection = trs_gui_display_menu("SDLTRS ROM File Selection", romfile_menu, selection);
@@ -2648,6 +2651,9 @@ void trs_gui_rom_files(void)
         break;
       case 7:
         trs_gui_file_browse(romfile4p, romfile4p, NULL, 0, "Model 4P ROM");
+        break;
+      case 9:
+        trs_hd_boot = trs_gui_display_popup("Patch", yes_no_choices, 2, trs_hd_boot);
         break;
       case -1:
         return;
