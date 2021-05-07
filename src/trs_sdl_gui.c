@@ -1146,14 +1146,14 @@ int trs_gui_display_popup_matrix(const char* title, const char **entry,
   int const x = (64 - width) / 2;
   int const y = (16 - rows) / 2;
   int row, col;
-  int i, j, key;
+  int key;
 
   trs_gui_frame(x - 1, y - 1, x + width, y + rows);
   trs_gui_clear_rect(x, y, width, rows);
   trs_gui_center_text(title, y - 1, 0);
-  for (i = 0; i < rows; i++)
-    for (j = 0; j < cols; j++)
-      trs_gui_write_text(entry[i * cols + j], x + j * entry_len, y + i, 0);
+  for (row = 0; row < rows; row++)
+    for (col = 0; col < cols; col++)
+      trs_gui_write_text(entry[row * cols + col], x + col * entry_len, y + row, 0);
 
   if (selection < 0)
     selection = 0;
