@@ -66,7 +66,7 @@ static int filenamecount = 0;
 static int filenamelistsize = 0;
 
 typedef struct menu_entry_type {
-  char title[64];
+  char text[64];
   int const type;
 } MENU_ENTRY;
 
@@ -914,16 +914,16 @@ int trs_gui_display_menu(const char *title, MENU_ENTRY *entry, int selection)
   trs_gui_write_text(title, 2, 0, 0);
 
   while (entry[num].type != 0) {
-    trs_gui_write_text(entry[num].title, 2, num + 2, 0);
+    trs_gui_write_text(entry[num].text, 2, num + 2, 0);
     num++;
   }
   num--;
 
   while (1) {
-    trs_gui_write_text(entry[selection].title, 2, selection + 2, 1);
+    trs_gui_write_text(entry[selection].text, 2, selection + 2, 1);
     trs_screen_update();
     key = trs_gui_get_key();
-    trs_gui_write_text(entry[selection].title, 2, selection + 2, 0);
+    trs_gui_write_text(entry[selection].text, 2, selection + 2, 0);
     if (key >= '0' && key <= '9') {
       key -= '0';
       if (key <= num && entry[key].type != MENU_TITLE_TYPE)
@@ -935,7 +935,7 @@ int trs_gui_display_menu(const char *title, MENU_ENTRY *entry, int selection)
       do {
         if (++selection > num)
           selection = 0;
-      } while (selection != i && (int)*entry[selection].title != key);
+      } while (selection != i && (int)*entry[selection].text != key);
       while (entry[selection].type == MENU_TITLE_TYPE) {
         if (selection < num)
           selection++;
@@ -987,7 +987,7 @@ int trs_gui_display_menu(const char *title, MENU_ENTRY *entry, int selection)
               break;
           }
           if (entry[selection].type != MENU_NORMAL_TYPE) {
-            entry[selection].title[0] = ' ';
+            entry[selection].text[0] = ' ';
             return selection;
           }
           break;
@@ -1247,12 +1247,12 @@ void trs_gui_disk_creation(void)
   int selection = 6;
 
   while (1) {
-    snprintf(&disk_creation_menu[0].title[54], 7, "%s", image_type_choices[image_type]);
-    snprintf(&disk_creation_menu[1].title[54], 7, "%s", num_sides_choices[num_sides - 1]);
-    snprintf(&disk_creation_menu[2].title[54], 7, "%s", density_choices[density - 1]);
-    snprintf(&disk_creation_menu[3].title[54], 7, "%s", size_choices[eight]);
-    snprintf(&disk_creation_menu[4].title[50], 11, "%s", yes_no_choices[ignore_density]);
-    snprintf(&disk_creation_menu[5].title[54], 7, "%s", drive_choices[drive_insert]);
+    snprintf(&disk_creation_menu[0].text[54], 7, "%s", image_type_choices[image_type]);
+    snprintf(&disk_creation_menu[1].text[54], 7, "%s", num_sides_choices[num_sides - 1]);
+    snprintf(&disk_creation_menu[2].text[54], 7, "%s", density_choices[density - 1]);
+    snprintf(&disk_creation_menu[3].text[54], 7, "%s", size_choices[eight]);
+    snprintf(&disk_creation_menu[4].text[50], 11, "%s", yes_no_choices[ignore_density]);
+    snprintf(&disk_creation_menu[5].text[54], 7, "%s", drive_choices[drive_insert]);
     trs_gui_clear_screen();
 
     selection = trs_gui_display_menu("SDLTRS Floppy Disk Creation", disk_creation_menu, selection);
@@ -1321,7 +1321,7 @@ void trs_gui_disk_steps(void)
 
   while (1) {
     for (i = 0; i < 8; i++) {
-      snprintf(disk_steps_menu[i].title, 63,
+      snprintf(disk_steps_menu[i].text, 63,
           "Disk Drive Number %d Step                              %s",
           i, step_choices[trs_disk_getstep(i) == 1 ? 0 : 1]);
     }
@@ -1361,12 +1361,12 @@ void trs_gui_disk_options(void)
 
   while (1) {
     for (i = 0; i < 8; i++) {
-      snprintf(disk_menu[i].title, 63,
+      snprintf(disk_menu[i].text, 63,
           "Disk Drive Number %d Size                              %s",
           i, size_choices[trs_disk_getsize(i) == 5 ? 0 : 1]);
     }
-    snprintf(&disk_menu[9].title[51], 10, "%s", doubler_choices[trs_disk_doubler]);
-    snprintf(&disk_menu[10].title[50], 11, "%s", yes_no_choices[trs_disk_truedam]);
+    snprintf(&disk_menu[9].text[51], 10, "%s", doubler_choices[trs_disk_doubler]);
+    snprintf(&disk_menu[10].text[50], 11, "%s", yes_no_choices[trs_disk_truedam]);
     trs_gui_clear_screen();
 
     selection = trs_gui_display_menu("SDLTRS Floppy Disk Options", disk_menu, selection);
@@ -1435,8 +1435,8 @@ void trs_gui_disk_management(void)
 
   while (1) {
     for (i = 0; i < 8; i++) {
-      trs_gui_limit_string(trs_disk_getfilename(i), &disk_menu[i].title[8], 52);
-      disk_menu[i].title[0] = trs_disk_getwriteprotect(i) ? '*' : ' ';
+      trs_gui_limit_string(trs_disk_getfilename(i), &disk_menu[i].text[8], 52);
+      disk_menu[i].text[0] = trs_disk_getwriteprotect(i) ? '*' : ' ';
     }
     trs_gui_clear_screen();
 
@@ -1489,14 +1489,14 @@ void trs_gui_hard_management(void)
 
   while (1) {
     for (i = 0; i < 4; i++) {
-      trs_gui_limit_string(trs_hard_getfilename(i), &hard_menu[i].title[8], 52);
-      hard_menu[i].title[0] = trs_hard_getwriteprotect(i) ? '*' : ' ';
+      trs_gui_limit_string(trs_hard_getfilename(i), &hard_menu[i].text[8], 52);
+      hard_menu[i].text[0] = trs_hard_getwriteprotect(i) ? '*' : ' ';
     }
-    snprintf(&hard_menu[7].title[57], 4, "%3d", cylinder_count);
-    snprintf(&hard_menu[8].title[57], 4, "%3d", sector_count);
-    snprintf(&hard_menu[9].title[57], 4, "%3d", granularity);
-    snprintf(&hard_menu[10].title[57], 4, "%3d", dir_sector);
-    snprintf(&hard_menu[11].title[54], 7, "%6s", drive_choices[drive_insert]);
+    snprintf(&hard_menu[7].text[57], 4, "%3d", cylinder_count);
+    snprintf(&hard_menu[8].text[57], 4, "%3d", sector_count);
+    snprintf(&hard_menu[9].text[57], 4, "%3d", granularity);
+    snprintf(&hard_menu[10].text[57], 4, "%3d", dir_sector);
+    snprintf(&hard_menu[11].text[54], 7, "%6s", drive_choices[drive_insert]);
     trs_gui_clear_screen();
 
     selection = trs_gui_display_menu("SDLTRS Hard Disk Management", hard_menu, selection);
@@ -1620,10 +1620,10 @@ void trs_gui_stringy_management(void)
 
   while (1) {
     for (i = 0; i < 8; i++) {
-      trs_gui_limit_string(stringy_get_name(i), &stringy_menu[i].title[9], 52);
-      stringy_menu[i].title[0] = stringy_get_writeprotect(i) ? '*' : ' ';
+      trs_gui_limit_string(stringy_get_name(i), &stringy_menu[i].text[9], 52);
+      stringy_menu[i].text[0] = stringy_get_writeprotect(i) ? '*' : ' ';
     }
-    snprintf(&stringy_menu[11].title[52], 10, "%8s", wafer_choices[wafer_insert]);
+    snprintf(&stringy_menu[11].text[52], 10, "%8s", wafer_choices[wafer_insert]);
     trs_gui_clear_screen();
 
     selection = trs_gui_display_menu("SDLTRS Stringy Wafer Management", stringy_menu, selection);
@@ -1677,13 +1677,13 @@ void trs_gui_cassette_management(void)
   int value;
 
   while (1) {
-    trs_gui_limit_string(trs_cassette_getfilename(), &cass_menu[0].title[8], 52);
-    cass_menu[0].title[0] = trs_cass_getwriteprotect() ? '*' : ' ';
+    trs_gui_limit_string(trs_cassette_getfilename(), &cass_menu[0].text[8], 52);
+    cass_menu[0].text[0] = trs_cass_getwriteprotect() ? '*' : ' ';
 
-    snprintf(&cass_menu[2].title[36], 25, "%10d of %10d", trs_get_cassette_position(), trs_get_cassette_length());
-    snprintf(&cass_menu[3].title[50], 11, "%10d", cassette_default_sample_rate);
-    snprintf(&cass_menu[5].title[54], 7, "%s", image_type_choices[image_type]);
-    snprintf(&cass_menu[6].title[50], 11, "%s", yes_no_choices[drive_insert]);
+    snprintf(&cass_menu[2].text[36], 25, "%10d of %10d", trs_get_cassette_position(), trs_get_cassette_length());
+    snprintf(&cass_menu[3].text[50], 11, "%10d", cassette_default_sample_rate);
+    snprintf(&cass_menu[5].text[54], 7, "%s", image_type_choices[image_type]);
+    snprintf(&cass_menu[6].text[50], 11, "%s", yes_no_choices[drive_insert]);
     trs_gui_clear_screen();
 
     selection = trs_gui_display_menu("SDLTRS Cassette Management", cass_menu, selection);
@@ -1780,17 +1780,17 @@ void trs_gui_emulator_settings(void)
   clock_mhz[3] = clock_mhz_4;
 
   while (1) {
-    snprintf(&model_menu[0].title[44], 17, "%s", model_choices[model_selection]);
-    snprintf(&model_menu[1].title[50], 11, "%6.2f MHz", clock_mhz[model_selection]);
-    snprintf(&model_menu[2].title[50], 11, "%s", yes_no_choices[stringy]);
-    snprintf(&model_menu[3].title[50], 11, "%s", yes_no_choices[lowercase]);
-    snprintf(&model_menu[4].title[50], 11, "%s", speed_choices[speedup]);
-    snprintf(&model_menu[6].title[50], 11, "%s", yes_no_choices[grafyx_get_microlabs()]);
-    snprintf(&model_menu[7].title[50], 11, "%s", yes_no_choices[lowe_le18]);
-    snprintf(&model_menu[9].title[50], 11, "%s", yes_no_choices[huffman_ram]);
-    snprintf(&model_menu[10].title[50], 11, "%s", yes_no_choices[hypermem]);
-    snprintf(&model_menu[11].title[50], 11, "%s", yes_no_choices[supermem]);
-    snprintf(&model_menu[12].title[50], 11, "%s", yes_no_choices[selector]);
+    snprintf(&model_menu[0].text[44], 17, "%s", model_choices[model_selection]);
+    snprintf(&model_menu[1].text[50], 11, "%6.2f MHz", clock_mhz[model_selection]);
+    snprintf(&model_menu[2].text[50], 11, "%s", yes_no_choices[stringy]);
+    snprintf(&model_menu[3].text[50], 11, "%s", yes_no_choices[lowercase]);
+    snprintf(&model_menu[4].text[50], 11, "%s", speed_choices[speedup]);
+    snprintf(&model_menu[6].text[50], 11, "%s", yes_no_choices[grafyx_get_microlabs()]);
+    snprintf(&model_menu[7].text[50], 11, "%s", yes_no_choices[lowe_le18]);
+    snprintf(&model_menu[9].text[50], 11, "%s", yes_no_choices[huffman_ram]);
+    snprintf(&model_menu[10].text[50], 11, "%s", yes_no_choices[hypermem]);
+    snprintf(&model_menu[11].text[50], 11, "%s", yes_no_choices[supermem]);
+    snprintf(&model_menu[12].text[50], 11, "%s", yes_no_choices[selector]);
     trs_gui_clear_screen();
 
     selection = trs_gui_display_menu("SDLTRS Emulator Settings", model_menu, selection);
@@ -1910,22 +1910,22 @@ void trs_gui_display_settings(void)
   unsigned int rgb_color = 0;
 
   while (1) {
-    snprintf(&display_menu[0].title[52], 9, "0x%06X", background);
-    snprintf(&display_menu[1].title[52], 9, "0x%06X", foreground);
-    snprintf(&display_menu[2].title[52], 9, "0x%06X", gui_background);
-    snprintf(&display_menu[3].title[52], 9, "0x%06X", gui_foreground);
-    snprintf(&display_menu[4].title[49], 12, "%s", font1_choices[gui_charset1]);
-    snprintf(&display_menu[5].title[47], 14, "%s", font34_choices[trs_charset3 - 4]);
-    snprintf(&display_menu[6].title[47], 14, "%s", font34_choices[trs_charset4 - 7]);
-    snprintf(&display_menu[7].title[52], 9, "%8d", window_border_width);
-    snprintf(&display_menu[8].title[50], 11, "%s", yes_no_choices[resize3]);
-    snprintf(&display_menu[9].title[50], 11, "%s", yes_no_choices[resize4]);
-    snprintf(&display_menu[10].title[55], 6, "%s", scale_choices[scale - 1]);
-    snprintf(&display_menu[11].title[50], 11, "%s", yes_no_choices[trs_show_led]);
+    snprintf(&display_menu[0].text[52], 9, "0x%06X", background);
+    snprintf(&display_menu[1].text[52], 9, "0x%06X", foreground);
+    snprintf(&display_menu[2].text[52], 9, "0x%06X", gui_background);
+    snprintf(&display_menu[3].text[52], 9, "0x%06X", gui_foreground);
+    snprintf(&display_menu[4].text[49], 12, "%s", font1_choices[gui_charset1]);
+    snprintf(&display_menu[5].text[47], 14, "%s", font34_choices[trs_charset3 - 4]);
+    snprintf(&display_menu[6].text[47], 14, "%s", font34_choices[trs_charset4 - 7]);
+    snprintf(&display_menu[7].text[52], 9, "%8d", window_border_width);
+    snprintf(&display_menu[8].text[50], 11, "%s", yes_no_choices[resize3]);
+    snprintf(&display_menu[9].text[50], 11, "%s", yes_no_choices[resize4]);
+    snprintf(&display_menu[10].text[55], 6, "%s", scale_choices[scale - 1]);
+    snprintf(&display_menu[11].text[50], 11, "%s", yes_no_choices[trs_show_led]);
 #ifdef OLD_SCANLINES
-    snprintf(&display_menu[12].title[50], 11, "%s", yes_no_choices[scanlines]);
+    snprintf(&display_menu[12].text[50], 11, "%s", yes_no_choices[scanlines]);
 #else
-    snprintf(&display_menu[12].title[34], 27, "%-3d%23s", scanshade, yes_no_choices[scanlines]);
+    snprintf(&display_menu[12].text[34], 27, "%-3d%23s", scanshade, yes_no_choices[scanlines]);
 #endif
     trs_gui_clear_screen();
 
@@ -2083,15 +2083,15 @@ void trs_gui_misc_settings(void)
   int selection = 0;
 
   while (1) {
-    snprintf(&misc_menu[0].title[50], 11, "%s", yes_no_choices[trs_emtsafe]);
-    snprintf(&misc_menu[1].title[50], 11, "%10d", stretch_amount);
-    trs_gui_limit_string(trs_uart_name, &misc_menu[3].title[2], 58);
-    snprintf(&misc_menu[4].title[56], 5, "0x%02X", trs_uart_switches);
-    snprintf(&misc_menu[5].title[50], 11, "%s", yes_no_choices[trs_kb_bracket_state]);
-    snprintf(&misc_menu[6].title[50], 11, "%s", yes_no_choices[trs_sound]);
-    snprintf(&misc_menu[7].title[50], 11, "%s", yes_no_choices[timer_overclock]);
-    snprintf(&misc_menu[8].title[50], 11, "%10d", timer_overclock_rate);
-    snprintf(&misc_menu[9].title[50], 11, "%s", yes_no_choices[turbo_paste]);
+    snprintf(&misc_menu[0].text[50], 11, "%s", yes_no_choices[trs_emtsafe]);
+    snprintf(&misc_menu[1].text[50], 11, "%10d", stretch_amount);
+    trs_gui_limit_string(trs_uart_name, &misc_menu[3].text[2], 58);
+    snprintf(&misc_menu[4].text[56], 5, "0x%02X", trs_uart_switches);
+    snprintf(&misc_menu[5].text[50], 11, "%s", yes_no_choices[trs_kb_bracket_state]);
+    snprintf(&misc_menu[6].text[50], 11, "%s", yes_no_choices[trs_sound]);
+    snprintf(&misc_menu[7].text[50], 11, "%s", yes_no_choices[timer_overclock]);
+    snprintf(&misc_menu[8].text[50], 11, "%10d", timer_overclock_rate);
+    snprintf(&misc_menu[9].text[50], 11, "%s", yes_no_choices[turbo_paste]);
     trs_gui_clear_screen();
 
     selection = trs_gui_display_menu("SDLTRS Miscellaneous Settings", misc_menu, selection);
@@ -2255,8 +2255,8 @@ void trs_gui_printer_management(void)
   int selection = 0;
 
   while (1) {
-    snprintf(&printer_menu[1].title[51], 10, "%s", printer_choices[trs_printer]);
-    trs_gui_limit_string(trs_printer_command, &printer_menu[3].title[2], 58);
+    snprintf(&printer_menu[1].text[51], 10, "%s", printer_choices[trs_printer]);
+    trs_gui_limit_string(trs_printer_command, &printer_menu[3].text[2], 58);
     trs_gui_clear_screen();
 
     selection = trs_gui_display_menu("SDLTRS Printer Management", printer_menu, selection);
@@ -2454,12 +2454,12 @@ void trs_gui_joystick_settings(void)
     joystick_choices[i] = joystick_strings[i];
 
   while (1) {
-    snprintf(&display_menu[0].title[50], 11, "%s", yes_no_choices[gui_keypad_joystick]);
+    snprintf(&display_menu[0].text[50], 11, "%s", yes_no_choices[gui_keypad_joystick]);
     if (gui_joystick_num == -1)
-      snprintf(&display_menu[1].title[50], 11, "      None");
+      snprintf(&display_menu[1].text[50], 11, "      None");
     else
-      snprintf(&display_menu[1].title[50], 11, "Joystick %1d", gui_joystick_num);
-    snprintf(&display_menu[2].title[50], 11, "%s", yes_no_choices[jaxis_mapped]);
+      snprintf(&display_menu[1].text[50], 11, "Joystick %1d", gui_joystick_num);
+    snprintf(&display_menu[2].text[50], 11, "%s", yes_no_choices[jaxis_mapped]);
     trs_gui_clear_screen();
     trs_gui_joystick_display_map(-1);
 
@@ -2551,12 +2551,12 @@ void trs_gui_default_dirs(void)
   int selection = 1;
 
   while (1) {
-    trs_gui_limit_string(trs_disk_dir, &default_menu[1].title[2], 58);
-    trs_gui_limit_string(trs_hard_dir, &default_menu[3].title[2], 58);
-    trs_gui_limit_string(trs_cass_dir, &default_menu[5].title[2], 58);
-    trs_gui_limit_string(trs_disk_set_dir, &default_menu[7].title[2], 58);
-    trs_gui_limit_string(trs_state_dir, &default_menu[9].title[2], 58);
-    trs_gui_limit_string(trs_printer_dir, &default_menu[11].title[2], 58);
+    trs_gui_limit_string(trs_disk_dir, &default_menu[1].text[2], 58);
+    trs_gui_limit_string(trs_hard_dir, &default_menu[3].text[2], 58);
+    trs_gui_limit_string(trs_cass_dir, &default_menu[5].text[2], 58);
+    trs_gui_limit_string(trs_disk_set_dir, &default_menu[7].text[2], 58);
+    trs_gui_limit_string(trs_state_dir, &default_menu[9].text[2], 58);
+    trs_gui_limit_string(trs_printer_dir, &default_menu[11].text[2], 58);
     trs_gui_clear_screen();
 
     selection = trs_gui_display_menu("SDLTRS Default Directories", default_menu, selection);
@@ -2602,10 +2602,10 @@ void trs_gui_rom_files(void)
   int selection = 1;
 
   while (1) {
-    trs_gui_limit_string(romfile, &romfile_menu[1].title[2], 58);
-    trs_gui_limit_string(romfile3, &romfile_menu[4].title[2], 58);
-    trs_gui_limit_string(romfile4p, &romfile_menu[7].title[2], 58);
-    snprintf(&romfile_menu[9].title[50], 11, "%s", yes_no_choices[trs_hd_boot]);
+    trs_gui_limit_string(romfile, &romfile_menu[1].text[2], 58);
+    trs_gui_limit_string(romfile3, &romfile_menu[4].text[2], 58);
+    trs_gui_limit_string(romfile4p, &romfile_menu[7].text[2], 58);
+    snprintf(&romfile_menu[9].text[50], 11, "%s", yes_no_choices[trs_hd_boot]);
     trs_gui_clear_screen();
 
     selection = trs_gui_display_menu("SDLTRS ROM File Selection", romfile_menu, selection);
