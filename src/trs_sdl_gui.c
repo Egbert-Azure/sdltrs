@@ -1226,12 +1226,12 @@ void trs_gui_new_machine(void)
 void trs_gui_disk_creation(void)
 {
   MENU_ENTRY disk_creation_menu[] =
-  {{"Image Type                                                  ", MENU_NORMAL_TYPE},
-   {"Number of Sides                                             ", MENU_NORMAL_TYPE},
-   {"Density                                                     ", MENU_NORMAL_TYPE},
-   {"Physical Size                                               ", MENU_NORMAL_TYPE},
-   {"Ignore Density Flag                                         ", MENU_NORMAL_TYPE},
-   {"Insert Created Disk Into This Drive                         ", MENU_NORMAL_TYPE},
+  {{"Image Type                                            ", MENU_NORMAL_TYPE},
+   {"Number of Sides                                       ", MENU_NORMAL_TYPE},
+   {"Density                                               ", MENU_NORMAL_TYPE},
+   {"Physical Size                                         ", MENU_NORMAL_TYPE},
+   {"Ignore Density Flag                                   ", MENU_NORMAL_TYPE},
+   {"Insert Created Disk Into This Drive                   ", MENU_NORMAL_TYPE},
    {"Create Disk Image with Above Parameters", MENU_NORMAL_TYPE},
    {"", 0}};
   const char *image_type_choices[] = {"   JV1", "   JV3", "   DMK"};
@@ -1350,8 +1350,8 @@ void trs_gui_disk_options(void)
    {"", MENU_NORMAL_TYPE},
    {"", MENU_NORMAL_TYPE},
    {"", MENU_TITLE_TYPE},
-   {"Doubler Type                                                ", MENU_NORMAL_TYPE},
-   {"True DAM Emulation                                          ", MENU_NORMAL_TYPE},
+   {"Doubler Type                                       ", MENU_NORMAL_TYPE},
+   {"True DAM Emulation                                 ", MENU_NORMAL_TYPE},
 #ifdef __linux
    {"", MENU_TITLE_TYPE},
    {"Set Drive Steps", MENU_NORMAL_TYPE},
@@ -1473,11 +1473,11 @@ void trs_gui_hard_management(void)
    {"", MENU_TITLE_TYPE},
    {"Save Disk Set", MENU_NORMAL_TYPE},
    {"Load Disk Set", MENU_NORMAL_TYPE},
-   {"Cylinder Count                                              ", MENU_NORMAL_TYPE},
-   {"Sector Count                                                ", MENU_NORMAL_TYPE},
-   {"Granularity                                                 ", MENU_NORMAL_TYPE},
-   {"Directory Sector                                            ", MENU_NORMAL_TYPE},
-   {"Insert Created Disk Into This Drive                         ", MENU_NORMAL_TYPE},
+   {"Cylinder Count                                           ", MENU_NORMAL_TYPE},
+   {"Sector Count                                             ", MENU_NORMAL_TYPE},
+   {"Granularity                                              ", MENU_NORMAL_TYPE},
+   {"Directory Sector                                         ", MENU_NORMAL_TYPE},
+   {"Insert Created Disk Into This Drive                      ", MENU_NORMAL_TYPE},
    {"Create Hard Disk Image with Above Parameters", MENU_NORMAL_TYPE},
    {"", 0}};
   const char *drive_choices[] = {"  None", "Hard 0", "Hard 1", "Hard 2", "Hard 3"};
@@ -1612,7 +1612,7 @@ void trs_gui_stringy_management(void)
    {"", MENU_TITLE_TYPE},
    {"Save Disk Set", MENU_NORMAL_TYPE},
    {"Load Disk Set", MENU_NORMAL_TYPE},
-   {"Insert Created Image Into This Wafer                       ", MENU_NORMAL_TYPE},
+   {"Insert Created Image Into This Wafer                ", MENU_NORMAL_TYPE},
    {"Create Blank Floppy Wafer", MENU_NORMAL_TYPE},
    {"", 0}};
   const char *wafer_choices[] = {"   None", "Wafer 0", "Wafer 1", "Wafer 2", "Wafer 3",
@@ -1665,11 +1665,11 @@ void trs_gui_cassette_management(void)
   MENU_ENTRY cass_menu[] =
   {{" Cass  :", MENU_CASS_BROWSE_TYPE},
    {"", MENU_TITLE_TYPE},
-   {"Cassette Position                                           ", MENU_NORMAL_TYPE},
-   {"Cassette Default Sample Rate                                ", MENU_NORMAL_TYPE},
+   {"Cassette Position                                     ", MENU_NORMAL_TYPE},
+   {"Cassette Default Sample Rate                          ", MENU_NORMAL_TYPE},
    {"", MENU_TITLE_TYPE},
-   {"Image Type                                                  ", MENU_NORMAL_TYPE},
-   {"Insert Created Cassette Into Drive                          ", MENU_NORMAL_TYPE},
+   {"Image Type                                            ", MENU_NORMAL_TYPE},
+   {"Insert Created Cassette Into Drive                    ", MENU_NORMAL_TYPE},
    {"Create Blank Cassette Image with Above Parameters", MENU_NORMAL_TYPE},
    {"", 0}};
   const char *image_type_choices[] = {"   CAS", "   CPT", "   WAV"};
@@ -1753,19 +1753,19 @@ void trs_gui_cassette_management(void)
 void trs_gui_emulator_settings(void)
 {
   MENU_ENTRY model_menu[] =
-  {{"Model                                                       ", MENU_NORMAL_TYPE},
-   {"CPU Clock Speed                                             ", MENU_NORMAL_TYPE},
-   {"Exatron Stringy Floppy Emulation for Model I                ", MENU_NORMAL_TYPE},
-   {"Lowercase Modification for Model I                          ", MENU_NORMAL_TYPE},
-   {"Speedup Kit Emulation for Model I/III/4/4P                  ", MENU_NORMAL_TYPE},
+  {{"Model                                             ", MENU_NORMAL_TYPE},
+   {"CPU Clock Speed                                   ", MENU_NORMAL_TYPE},
+   {"Exatron Stringy Floppy Emulation for Model I      ", MENU_NORMAL_TYPE},
+   {"Lowercase Modification for Model I                ", MENU_NORMAL_TYPE},
+   {"Speedup Kit Emulation for Model I/III/4/4P        ", MENU_NORMAL_TYPE},
    {"", MENU_TITLE_TYPE},
-   {"Grafyx Solution (Micro-Labs) III/4/4P Graphics              ", MENU_NORMAL_TYPE},
-   {"LE18 (Lowe Electronics) Graphics for Model I                ", MENU_NORMAL_TYPE},
+   {"Grafyx Solution (Micro-Labs) III/4/4P Graphics    ", MENU_NORMAL_TYPE},
+   {"LE18 (Lowe Electronics) Graphics for Model I      ", MENU_NORMAL_TYPE},
    {"", MENU_TITLE_TYPE},
-   {"Dave Huffman (and other) 4/4P Memory Expansion              ", MENU_NORMAL_TYPE},
-   {"HyperMem (Anitek Software) 4/4P Memory Expansion            ", MENU_NORMAL_TYPE},
-   {"SuperMem (Alpha Technology) I/III Memory Expansion          ", MENU_NORMAL_TYPE},
-   {"TRS-80 Users Society Selector I Memory Expansion            ", MENU_NORMAL_TYPE},
+   {"Dave Huffman (and other) 4/4P Memory Expansion    ", MENU_NORMAL_TYPE},
+   {"HyperMem (Anitek Software) 4/4P Memory Expansion  ", MENU_NORMAL_TYPE},
+   {"SuperMem (Alpha Technology) I/III Memory Expansion", MENU_NORMAL_TYPE},
+   {"TRS-80 Users Society Selector I Memory Expansion  ", MENU_NORMAL_TYPE},
    {"", 0}};
   const char *model_choices[] = {"  TRS-80 Model I",
                                  "TRS-80 Model III",
@@ -1876,22 +1876,22 @@ void trs_gui_emulator_settings(void)
 void trs_gui_display_settings(void)
 {
   MENU_ENTRY display_menu[] =
-  {{"Emulator Background Color                                   ", MENU_NORMAL_TYPE},
-   {"Emulator Foreground Color                                   ", MENU_NORMAL_TYPE},
-   {"GUI Background Color                                        ", MENU_NORMAL_TYPE},
-   {"GUI Foreground Color                                        ", MENU_NORMAL_TYPE},
-   {"Model 1 Character Set                                       ", MENU_NORMAL_TYPE},
-   {"Model 3 Character Set                                       ", MENU_NORMAL_TYPE},
-   {"Model 4/4P Character Set                                    ", MENU_NORMAL_TYPE},
-   {"Border Width                                                ", MENU_NORMAL_TYPE},
-   {"Resize Window on Mode Change for Model 3                    ", MENU_NORMAL_TYPE},
-   {"Resize Window on Mode Change for Model 4                    ", MENU_NORMAL_TYPE},
-   {"Scale Factor for Window                                     ", MENU_NORMAL_TYPE},
-   {"LED Display for Disks and Turbo Mode                        ", MENU_NORMAL_TYPE},
+  {{"Emulator Background Color                              ", MENU_NORMAL_TYPE},
+   {"Emulator Foreground Color                              ", MENU_NORMAL_TYPE},
+   {"GUI Background Color                                   ", MENU_NORMAL_TYPE},
+   {"GUI Foreground Color                                   ", MENU_NORMAL_TYPE},
+   {"Model 1 Character Set                                  ", MENU_NORMAL_TYPE},
+   {"Model 3 Character Set                                  ", MENU_NORMAL_TYPE},
+   {"Model 4/4P Character Set                               ", MENU_NORMAL_TYPE},
+   {"Border Width                                           ", MENU_NORMAL_TYPE},
+   {"Resize Window on Mode Change for Model 3               ", MENU_NORMAL_TYPE},
+   {"Resize Window on Mode Change for Model 4               ", MENU_NORMAL_TYPE},
+   {"Scale Factor for Window                                ", MENU_NORMAL_TYPE},
+   {"LED Display for Disks and Turbo Mode                   ", MENU_NORMAL_TYPE},
 #ifdef OLD_SCANLINES
-   {"Display Scanlines with Background Color                     ", MENU_NORMAL_TYPE},
+   {"Display Scanlines with Background Color                ", MENU_NORMAL_TYPE},
 #else
-   {"Display Scanlines with brightness                           ", MENU_NORMAL_TYPE},
+   {"Display Scanlines with brightness                      ", MENU_NORMAL_TYPE},
 #endif
    {"", 0}};
   const char *font1_choices[]  = {"      Early",
@@ -2071,16 +2071,16 @@ void trs_gui_display_settings(void)
 void trs_gui_misc_settings(void)
 {
   MENU_ENTRY misc_menu[] =
-  {{"Emtsafe                                                     ", MENU_NORMAL_TYPE},
-   {"Keystretch Value                                            ", MENU_NORMAL_TYPE},
-   {"Serial Port Name:                                           ", MENU_TITLE_TYPE},
-   {"                                                            ", MENU_NORMAL_TYPE},
-   {"Serial Switches                                             ", MENU_NORMAL_TYPE},
-   {"Shift Bracket Emulation                                     ", MENU_NORMAL_TYPE},
-   {"Sound Output                                                ", MENU_NORMAL_TYPE},
-   {"Turbo Mode                                                  ", MENU_NORMAL_TYPE},
-   {"Turbo Speed                                                 ", MENU_NORMAL_TYPE},
-   {"Turbo Paste                                                 ", MENU_NORMAL_TYPE},
+  {{"Emtsafe                                                 ", MENU_NORMAL_TYPE},
+   {"Keystretch Value                                        ", MENU_NORMAL_TYPE},
+   {"Serial Port Name:", MENU_TITLE_TYPE},
+   {"                                                        ", MENU_NORMAL_TYPE},
+   {"Serial Switches                                         ", MENU_NORMAL_TYPE},
+   {"Shift Bracket Emulation                                 ", MENU_NORMAL_TYPE},
+   {"Sound Output                                            ", MENU_NORMAL_TYPE},
+   {"Turbo Mode                                              ", MENU_NORMAL_TYPE},
+   {"Turbo Speed                                             ", MENU_NORMAL_TYPE},
+   {"Turbo Paste                                             ", MENU_NORMAL_TYPE},
    {"", 0}};
   char input[12];
   int selection = 0;
@@ -2250,7 +2250,7 @@ void trs_gui_printer_management(void)
 {
   MENU_ENTRY printer_menu[] =
   {{"Close and Reopen Printer Output File", MENU_NORMAL_TYPE},
-   {"Printer Type                                                ", MENU_NORMAL_TYPE},
+   {"Printer Type                                       ", MENU_NORMAL_TYPE},
    {"Printer Command:", MENU_TITLE_TYPE},
    {"   ", MENU_NORMAL_TYPE},
    {"", 0}};
@@ -2436,9 +2436,9 @@ void trs_gui_joystick_display_map(int button)
 void trs_gui_joystick_settings(void)
 {
   MENU_ENTRY display_menu[] =
-  {{"Use Keypad for Joystick                                     ", MENU_NORMAL_TYPE},
-   {"USB Joystick/Gamepad                                        ", MENU_NORMAL_TYPE},
-   {"Map Joystick/Mouse to Arrow Keys                            ", MENU_NORMAL_TYPE},
+  {{"Use Keypad for Joystick                           ", MENU_NORMAL_TYPE},
+   {"USB Joystick/Gamepad                              ", MENU_NORMAL_TYPE},
+   {"Map Joystick/Mouse to Arrow Keys                  ", MENU_NORMAL_TYPE},
    {"Map Button to Key", MENU_NORMAL_TYPE},
    {"Map Button to Function", MENU_NORMAL_TYPE},
    {"Unmap Button", MENU_NORMAL_TYPE},
