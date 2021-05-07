@@ -1877,11 +1877,11 @@ void trs_gui_display_settings(void)
    {"Emulator Foreground Color                              ", MENU_NORMAL_TYPE},
    {"GUI Background Color                                   ", MENU_NORMAL_TYPE},
    {"GUI Foreground Color                                   ", MENU_NORMAL_TYPE},
-   {"Model 1 Character Set                                  ", MENU_NORMAL_TYPE},
-   {"Model 3 Character Set                                  ", MENU_NORMAL_TYPE},
+   {"Model I Character Set                                  ", MENU_NORMAL_TYPE},
+   {"Model III Character Set                                ", MENU_NORMAL_TYPE},
    {"Model 4/4P Character Set                               ", MENU_NORMAL_TYPE},
    {"Border Width                                           ", MENU_NORMAL_TYPE},
-   {"Resize Window on Mode Change for Model 3               ", MENU_NORMAL_TYPE},
+   {"Resize Window on Mode Change for Model III             ", MENU_NORMAL_TYPE},
    {"Resize Window on Mode Change for Model 4               ", MENU_NORMAL_TYPE},
    {"Scale Factor for Window                                ", MENU_NORMAL_TYPE},
    {"LED Display for Disks and Turbo Mode                   ", MENU_NORMAL_TYPE},
@@ -1976,7 +1976,7 @@ void trs_gui_display_settings(void)
         }
         break;
       case 4:
-        value = trs_gui_display_popup("Charset 1", font1_choices, 7, gui_charset1);
+        value = trs_gui_display_popup("Charset I", font1_choices, 7, gui_charset1);
         if (value != gui_charset1) {
           gui_charset1 = value;
           trs_charset1 = value >= 4 ? value += 6 : value;
@@ -1984,7 +1984,7 @@ void trs_gui_display_settings(void)
         }
         break;
       case 5:
-        value = trs_gui_display_popup("Charset 3", font34_choices, 3, trs_charset3 - 4) + 4;
+        value = trs_gui_display_popup("Charset III", font34_choices, 3, trs_charset3 - 4) + 4;
         if (value != trs_charset3) {
           trs_charset3 = value;
           redraw = 1;
@@ -2011,7 +2011,7 @@ void trs_gui_display_settings(void)
         }
         break;
       case 8:
-        value = trs_gui_display_popup("Resize 3", yes_no_choices, 2, resize3);
+        value = trs_gui_display_popup("Resize III", yes_no_choices, 2, resize3);
         if (value != resize3) {
           resize3 = value;
           redraw = 1;
@@ -2588,10 +2588,10 @@ void trs_gui_default_dirs(void)
 void trs_gui_rom_files(void)
 {
   MENU_ENTRY romfile_menu[] =
-  {{"Model 1 ROM File:", MENU_TITLE_TYPE},
+  {{"Model I ROM File:", MENU_TITLE_TYPE},
    {"   ", MENU_NORMAL_TYPE},
    {"", MENU_TITLE_TYPE},
-   {"Model 3 ROM File:", MENU_TITLE_TYPE},
+   {"Model III ROM File:", MENU_TITLE_TYPE},
    {"   ", MENU_NORMAL_TYPE},
    {"", MENU_TITLE_TYPE},
    {"Model 4P ROM File:", MENU_TITLE_TYPE},
@@ -2611,10 +2611,10 @@ void trs_gui_rom_files(void)
     selection = trs_gui_display_menu("SDLTRS ROM File Selection", romfile_menu, selection);
     switch (selection) {
       case 1:
-        trs_gui_file_browse(romfile, romfile, NULL, 0, "Model 1 ROM");
+        trs_gui_file_browse(romfile, romfile, NULL, 0, "Model I ROM");
         break;
       case 4:
-        trs_gui_file_browse(romfile3, romfile3, NULL, 0, "Model 3 ROM");
+        trs_gui_file_browse(romfile3, romfile3, NULL, 0, "Model III ROM");
         break;
       case 7:
         trs_gui_file_browse(romfile4p, romfile4p, NULL, 0, "Model 4P ROM");
