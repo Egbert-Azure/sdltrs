@@ -1048,11 +1048,9 @@ int trs_gui_display_popup(const char *title, const char **entry,
 {
   int const entry_len = strlen(entry[0]);
   int const saved_selection = selection;
+  int const x = (64 - entry_len) / 2;
+  int const y = (16 - entry_count) / 2;
   int i, key;
-  int x, y;
-
-  x = (64 - entry_len) / 2;
-  y = (16 - entry_count) / 2;
 
   trs_gui_frame(x - 1, y - 1, x + entry_len, y + entry_count);
   trs_gui_center_text(title, y - 1, 0);
@@ -1122,9 +1120,17 @@ int trs_gui_display_popup_matrix(const char* title, const char **entry,
   int const entry_len = strlen(entry[0]) + 1;
   int const entry_count = rows * cols;
   int const width = cols * entry_len - 1;
+  int const x = (64 - width) / 2;
+  int const y = (16 - rows) / 2;
   int row, col;
   int i, j, key;
-  int x, y;
+
+  trs_gui_frame(x - 1, y - 1, x + width, y + rows);
+  trs_gui_clear_rect(x, y, width, rows);
+  trs_gui_center_text(title, y - 1, 0);
+  for (i = 0; i < rows; i++)
+    for (j = 0; j < cols; j++)
+      trs_gui_write_text(entry[i * cols + j], x + j * entry_len, y + i, 0);
 
   if (selection < 0)
     selection = 0;
@@ -1133,15 +1139,6 @@ int trs_gui_display_popup_matrix(const char* title, const char **entry,
 
   row = selection / cols;
   col = selection % cols;
-  x = (64 - width) / 2;
-  y = (16 - rows) / 2;
-
-  trs_gui_frame(x - 1, y - 1, x + width, y + rows);
-  trs_gui_clear_rect(x, y, width, rows);
-  trs_gui_center_text(title, y - 1, 0);
-  for (i = 0; i < rows; i++)
-    for (j = 0; j < cols; j++)
-      trs_gui_write_text(entry[i * cols + j], x + j * entry_len, y + i, 0);
 
   while (1) {
     if (col < 0)
