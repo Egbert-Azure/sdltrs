@@ -31,10 +31,10 @@ ifeq (${OS},Windows_NT)
 	MACROS	:= -DWIN32
 endif
 
-.PHONY: all bsd clean clean-win sdl2 win64 wsdl2
+.PHONY: all bsd clean clean-win sdl2 win32 win64
 
 all:
-	@echo "make (bsd|clean|clean-win|depend|sdl2|win64|wsdl2)"
+	@echo "make (bsd|clean|clean-win|depend|sdl2|win32|win64)"
 
 bsd:
 	make -f BSDmakefile
@@ -55,18 +55,18 @@ sdl2:	LIBS	?= $(shell sdl2-config --libs)
 sdl2:	READLINE?= -DREADLINE
 sdl2:	${PROG}
 
+win32:	MINGW	?= \MinGW
+win32:	CC	 = ${MINGW}\bin\gcc.exe
+win32:	INCS	?= -I${MINGW}\include\SDL2
+win32:	LIBS	?= -L${MINGW}\lib -lmingw32 -lSDL2main -lSDL2
+win32:	${PROG}
+
 win64:	MINGW64	?= \MinGW64
 win64:	CC	 = ${MINGW64}\bin\gcc.exe
 win64:	INCS	?= -I${MINGW64}\include\SDL2
 win64:	LIBS	?= -L${MINGW64}\lib -lmingw32 -lSDL2main -lSDL2
 win64:	PROG	 = sdl2trs64
 win64:	${PROG}
-
-wsdl2:	MINGW	?= \MinGW
-wsdl2:	CC	 = ${MINGW}\bin\gcc.exe
-wsdl2:	INCS	?= -I${MINGW}\include\SDL2
-wsdl2:	LIBS	?= -L${MINGW}\lib -lmingw32 -lSDL2main -lSDL2
-wsdl2:	${PROG}
 
 READLINELIBS	 =$(if ${READLINE},-lreadline,)
 ZBX		?= -DZBX
