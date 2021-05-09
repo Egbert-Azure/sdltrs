@@ -8,13 +8,13 @@
 with lib;
 stdenv.mkDerivation rec {
   pname   = "sdltrs";
-  version = "1.2.17";
+  version = "1.2.18";
 
   src = fetchFromGitLab {
     owner  = "jengun";
     repo   = "sdltrs";
     rev    = version;
-    sha256 = "158jvwx4xmbx71dg23q08zgh8vlcdfcq9v1xn42kg71vh0yjgxsh";
+    sha256 = "1qvv0n21r2rhj8pg1r6pajlh9iiscypdbw6mdh268yg78w4sc6nn";
   };
 
   nativeBuildInputs = [ cmake ];
@@ -40,7 +40,6 @@ stdenv.mkDerivation rec {
       Model 4P mode, a freely-licensed boot ROM included with this package can be
       used to boot a Model 4 operating system from a diskette image.)
     '';
-    maintainers = [ maintainers.jengun ];
     license     = licenses.bsd2;
     platforms   = lib.platforms.all;
   };
