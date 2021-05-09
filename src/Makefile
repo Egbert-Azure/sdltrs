@@ -31,19 +31,16 @@ ifeq (${OS},Windows_NT)
 	MACROS	:= -DWIN32
 endif
 
-.PHONY: all bsd clean clean-win sdl2 win32 win64
+.PHONY: all bsd clean sdl2 win32 win64
 
 all:
-	@echo "make (bsd|clean|clean-win|depend|sdl2|win32|win64)"
+	@echo "make (bsd | clean | depend | sdl2 | win32 | win64)"
 
 bsd:
 	make -f BSDmakefile
 
 clean:
-	rm -f ${OBJS} ${PROG}
-
-clean-win:
-	del *.o sdl2trs.exe sdl2trs64.exe
+	rm -f ${OBJS} ${PROG} sdl2trs64
 
 depend:
 	makedepend -Y -- ${CFLAGS} -- ${SRCS} 2>&1 | \
