@@ -69,6 +69,8 @@ void PasteManagerStartCopy(const char *string)
 }
 #elif WIN32
 #include <stdio.h>
+#include <SDL_types.h>
+
 #include "windows.h"
 
 static int charCount = 0;
