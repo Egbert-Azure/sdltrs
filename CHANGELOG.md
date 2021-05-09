@@ -1,3 +1,11 @@
+## Version 1.2.18 Release 05-09-2021:
+
+  * Added Load/Save TRS-80 memory in debugger.
+  * Added UART ports for System 80.
+  * Added Model I ROM patch for auto-boot from hard drive.
+  * Added support for hard disk images created with David Keil's emulator.
+  * Fixed issue #7 "Level1 basic does not run" (reported by David Rand).
+
 ## Version 1.2.17 Release 04-04-2021:
 
   * Added support for Prologica CP-300/500 16kB ROM.
