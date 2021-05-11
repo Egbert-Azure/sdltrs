@@ -3606,11 +3606,11 @@ int trs_diskset_load(const char *filename)
 
 static void trs_fdc_save(FILE *file, FDCState *fdc)
 {
-  trs_save_uchar(file, &fdc->status, 1);
-  trs_save_uchar(file, &fdc->track, 1);
-  trs_save_uchar(file, &fdc->sector, 1);
-  trs_save_uchar(file, &fdc->data, 1);
-  trs_save_uchar(file, &fdc->currcommand, 1);
+  trs_save_uint8(file, &fdc->status, 1);
+  trs_save_uint8(file, &fdc->track, 1);
+  trs_save_uint8(file, &fdc->sector, 1);
+  trs_save_uint8(file, &fdc->data, 1);
+  trs_save_uint8(file, &fdc->currcommand, 1);
   trs_save_int(file, &fdc->lastdirection, 1);
   trs_save_int(file, &fdc->bytecount, 1);
   trs_save_int(file, &fdc->format, 1);
@@ -3622,18 +3622,18 @@ static void trs_fdc_save(FILE *file, FDCState *fdc)
   trs_save_uint32(file, &fdc->curdrive, 1);
   trs_save_int(file, &fdc->curside, 1);
   trs_save_int(file, &fdc->density, 1);
-  trs_save_uchar(file, &fdc->controller, 1);
+  trs_save_uint8(file, &fdc->controller, 1);
   trs_save_int(file, &fdc->last_readadr, 1);
   trs_save_uint64(file, &fdc->motor_timeout, 1);
 }
 
 static void trs_fdc_load(FILE *file, FDCState *fdc)
 {
-  trs_load_uchar(file, &fdc->status, 1);
-  trs_load_uchar(file, &fdc->track, 1);
-  trs_load_uchar(file, &fdc->sector, 1);
-  trs_load_uchar(file, &fdc->data, 1);
-  trs_load_uchar(file, &fdc->currcommand, 1);
+  trs_load_uint8(file, &fdc->status, 1);
+  trs_load_uint8(file, &fdc->track, 1);
+  trs_load_uint8(file, &fdc->sector, 1);
+  trs_load_uint8(file, &fdc->data, 1);
+  trs_load_uint8(file, &fdc->currcommand, 1);
   trs_load_int(file, &fdc->lastdirection, 1);
   trs_load_int(file, &fdc->bytecount, 1);
   trs_load_int(file, &fdc->format, 1);
@@ -3645,23 +3645,23 @@ static void trs_fdc_load(FILE *file, FDCState *fdc)
   trs_load_uint32(file, &fdc->curdrive, 1);
   trs_load_int(file, &fdc->curside, 1);
   trs_load_int(file, &fdc->density, 1);
-  trs_load_uchar(file, &fdc->controller, 1);
+  trs_load_uint8(file, &fdc->controller, 1);
   trs_load_int(file, &fdc->last_readadr, 1);
   trs_load_uint64(file, &fdc->motor_timeout, 1);
 }
 
 static void trs_save_sectorid(FILE *file, SectorId *id)
 {
-  trs_save_uchar(file, &id->track, 1);
-  trs_save_uchar(file, &id->sector, 1);
-  trs_save_uchar(file, &id->flags, 1);
+  trs_save_uint8(file, &id->track, 1);
+  trs_save_uint8(file, &id->sector, 1);
+  trs_save_uint8(file, &id->flags, 1);
 }
 
 static void trs_load_sectorid(FILE *file, SectorId *id)
 {
-  trs_load_uchar(file, &id->track, 1);
-  trs_load_uchar(file, &id->sector, 1);
-  trs_load_uchar(file, &id->flags, 1);
+  trs_load_uint8(file, &id->track, 1);
+  trs_load_uint8(file, &id->sector, 1);
+  trs_load_uint8(file, &id->flags, 1);
 }
 
 static void trs_save_jv3state(FILE *file, JV3State *jv3)
@@ -3707,7 +3707,7 @@ static void trs_save_dmkstate(FILE *file, DMKState *dmk)
   trs_save_int(file, &dmk->curside, 1);
   trs_save_int(file, &dmk->curbyte, 1);
   trs_save_int(file, &dmk->nextidam, 1);
-  trs_save_uchar(file, dmk->buf, DMK_TRACKLEN_MAX);
+  trs_save_uint8(file, dmk->buf, DMK_TRACKLEN_MAX);
 }
 
 static void trs_load_dmkstate(FILE *file, DMKState *dmk)
@@ -3721,7 +3721,7 @@ static void trs_load_dmkstate(FILE *file, DMKState *dmk)
   trs_load_int(file, &dmk->curside, 1);
   trs_load_int(file, &dmk->curbyte, 1);
   trs_load_int(file, &dmk->nextidam, 1);
-  trs_load_uchar(file, dmk->buf, DMK_TRACKLEN_MAX);
+  trs_load_uint8(file, dmk->buf, DMK_TRACKLEN_MAX);
 }
 
 static void trs_save_realstate(FILE *file, RealState *real)
@@ -3732,7 +3732,7 @@ static void trs_save_realstate(FILE *file, RealState *real)
   trs_save_int(file, (int *)&real->empty_timeout, 1);
   trs_save_uint32(file, &real->fmt_nbytes, 1);
   trs_save_int(file, &real->fmt_fill, 1);
-  trs_save_uchar(file, real->buf, MAXSECSIZE);
+  trs_save_uint8(file, real->buf, MAXSECSIZE);
 }
 
 static void trs_load_realstate(FILE *file, RealState *real)
@@ -3743,7 +3743,7 @@ static void trs_load_realstate(FILE *file, RealState *real)
   trs_load_int(file, (int *)&real->empty_timeout, 1);
   trs_load_uint32(file, &real->fmt_nbytes, 1);
   trs_load_int(file, &real->fmt_fill, 1);
-  trs_load_uchar(file, real->buf, MAXSECSIZE);
+  trs_load_uint8(file, real->buf, MAXSECSIZE);
 }
 
 static void trs_save_diskstate(FILE *file, DiskState *d)

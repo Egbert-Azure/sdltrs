@@ -44,7 +44,7 @@ int trs_state_save(const char *filename)
 
   file = fopen(filename, "wb");
   if (file) {
-    trs_save_uchar(file, (Uint8 *)stateFileBanner, stateFileBannerLen);
+    trs_save_uint8(file, (Uint8 *)stateFileBanner, stateFileBannerLen);
     trs_save_uint32(file, &stateVersionNumber, 1);
     trs_main_save(file);
     trs_cassette_save(file);
@@ -73,7 +73,7 @@ int trs_state_load(const char *filename)
 
   file = fopen(filename, "rb");
   if (file) {
-    trs_load_uchar(file, (Uint8 *)banner, stateFileBannerLen);
+    trs_load_uint8(file, (Uint8 *)banner, stateFileBannerLen);
     if (strncmp(banner, stateFileBanner, stateFileBannerLen)) {
       error("failed to get State Banner from %s", filename);
       fclose(file);
@@ -104,12 +104,12 @@ int trs_state_load(const char *filename)
   return -1;
 }
 
-void trs_save_uchar(FILE *file, Uint8 *buffer, int count)
+void trs_save_uint8(FILE *file, Uint8 *buffer, int count)
 {
   fwrite(buffer, count, 1, file);
 }
 
-void trs_load_uchar(FILE *file, Uint8 *buffer, int count)
+void trs_load_uint8(FILE *file, Uint8 *buffer, int count)
 {
   fread(buffer, count, 1, file);
 }
@@ -320,7 +320,7 @@ void trs_save_float(FILE *file, float *buffer, int count)
   for (i = 0; i < count; i++)
   {
     snprintf(float_buff, 21, "%20f", *buffer++);
-    trs_save_uchar(file, (Uint8 *)float_buff, 20);
+    trs_save_uint8(file, (Uint8 *)float_buff, 20);
   }
 }
 
@@ -331,7 +331,7 @@ void trs_load_float(FILE *file, float *buffer, int count)
 
   for (i = 0; i < count; i++)
   {
-    trs_load_uchar(file, (Uint8 *)float_buff, 20);
+    trs_load_uint8(file, (Uint8 *)float_buff, 20);
     sscanf(float_buff, "%f", buffer++);
   }
 }
@@ -341,7 +341,7 @@ void trs_save_filename(FILE *file, char *filename)
   Uint16 length = strlen(filename);
 
   trs_save_uint16(file, &length, 1);
-  trs_save_uchar(file, (Uint8 *)filename, length);
+  trs_save_uint8(file, (Uint8 *)filename, length);
 }
 
 void trs_load_filename(FILE *file, char *filename)
@@ -349,6 +349,6 @@ void trs_load_filename(FILE *file, char *filename)
   Uint16 length;
 
   trs_load_uint16(file, &length, 1);
-  trs_load_uchar(file, (Uint8 *)filename, length);
+  trs_load_uint8(file, (Uint8 *)filename, length);
   filename[length] = 0;
 }

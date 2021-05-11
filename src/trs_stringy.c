@@ -689,13 +689,13 @@ static void trs_save_stringy(FILE *file, stringy_info_t *d)
   trs_save_uint64(file, (Uint64 *)&d->pos_time, 1);
   trs_save_uint64(file, (Uint64 *)&d->flux_change_pos, 1);
   trs_save_int(file, &d->flux_change_to, 1);
-  trs_save_uchar(file, &d->in_port, 1);
-  trs_save_uchar(file, &d->out_port, 1);
-  trs_save_uchar(file, &d->format, 1);
+  trs_save_uint8(file, &d->in_port, 1);
+  trs_save_uint8(file, &d->out_port, 1);
+  trs_save_uint8(file, &d->format, 1);
   trs_save_uint64(file, (Uint64 *)&d->esf_bytelen, 1);
   trs_save_uint64(file, (Uint64 *)&d->esf_bytepos, 1);
-  trs_save_uchar(file, &d->esf_bytebuf, 1);
-  trs_save_uchar(file, &d->esf_bitpos, 1);
+  trs_save_uint8(file, &d->esf_bytebuf, 1);
+  trs_save_uint8(file, &d->esf_bitpos, 1);
 }
 
 static void trs_load_stringy(FILE *file, stringy_info_t *d)
@@ -714,13 +714,13 @@ static void trs_load_stringy(FILE *file, stringy_info_t *d)
   trs_load_uint64(file, (Uint64 *)&d->pos_time, 1);
   trs_load_uint64(file, (Uint64 *)&d->flux_change_pos, 1);
   trs_load_int(file, &d->flux_change_to, 1);
-  trs_load_uchar(file, &d->in_port, 1);
-  trs_load_uchar(file, &d->out_port, 1);
-  trs_load_uchar(file, &d->format, 1);
+  trs_load_uint8(file, &d->in_port, 1);
+  trs_load_uint8(file, &d->out_port, 1);
+  trs_load_uint8(file, &d->format, 1);
   trs_load_uint64(file, (Uint64 *)&d->esf_bytelen, 1);
   trs_load_uint64(file, (Uint64 *)&d->esf_bytepos, 1);
-  trs_load_uchar(file, &d->esf_bytebuf, 1);
-  trs_load_uchar(file, &d->esf_bitpos, 1);
+  trs_load_uint8(file, &d->esf_bytebuf, 1);
+  trs_load_uint8(file, &d->esf_bitpos, 1);
 }
 
 void trs_stringy_save(FILE *file)

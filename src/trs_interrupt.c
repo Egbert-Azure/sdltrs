@@ -569,9 +569,9 @@ void trs_interrupt_save(FILE *file)
 {
   int event;
 
-  trs_save_uchar(file, &interrupt_latch, 1);
-  trs_save_uchar(file, &interrupt_mask, 1);
-  trs_save_uchar(file, &nmi_latch, 1);
+  trs_save_uint8(file, &interrupt_latch, 1);
+  trs_save_uint8(file, &interrupt_mask, 1);
+  trs_save_uint8(file, &nmi_latch, 1);
   trs_save_int(file, &timer_hz, 1);
   trs_save_uint32(file, &cycles_per_timer, 1);
   trs_save_int(file, &timer_on, 1);
@@ -611,9 +611,9 @@ void trs_interrupt_load(FILE *file)
 {
   int event;
 
-  trs_load_uchar(file, &interrupt_latch, 1);
-  trs_load_uchar(file, &interrupt_mask, 1);
-  trs_load_uchar(file, &nmi_latch, 1);
+  trs_load_uint8(file, &interrupt_latch, 1);
+  trs_load_uint8(file, &interrupt_mask, 1);
+  trs_load_uint8(file, &nmi_latch, 1);
   trs_load_int(file, &timer_hz, 1);
   trs_load_uint32(file, &cycles_per_timer, 1);
   trs_load_int(file, &timer_on, 1);

@@ -3496,7 +3496,7 @@ void trs_main_save(FILE *file)
   int i;
 
   trs_save_int(file, &trs_model, 1);
-  trs_save_uchar(file, trs_screen, 2048);
+  trs_save_uint8(file, trs_screen, 2048);
   trs_save_int(file, &screen_chars, 1);
   trs_save_int(file, &col_chars, 1);
   trs_save_int(file, &row_chars, 1);
@@ -3508,14 +3508,14 @@ void trs_main_save(FILE *file)
   trs_save_int(file, &trs_charset3, 1);
   trs_save_int(file, &trs_charset4, 1);
   for (i = 0; i < G_YSIZE; i++)
-    trs_save_uchar(file, grafyx_unscaled[i], G_XSIZE);
-  trs_save_uchar(file, &grafyx_x, 1);
-  trs_save_uchar(file, &grafyx_y, 1);
-  trs_save_uchar(file, &grafyx_enable, 1);
-  trs_save_uchar(file, &grafyx_overlay, 1);
-  trs_save_uchar(file, &grafyx_xoffset, 1);
-  trs_save_uchar(file, &grafyx_yoffset, 1);
-  trs_save_uchar(file, &grafyx_x, 1);
+    trs_save_uint8(file, grafyx_unscaled[i], G_XSIZE);
+  trs_save_uint8(file, &grafyx_x, 1);
+  trs_save_uint8(file, &grafyx_y, 1);
+  trs_save_uint8(file, &grafyx_enable, 1);
+  trs_save_uint8(file, &grafyx_overlay, 1);
+  trs_save_uint8(file, &grafyx_xoffset, 1);
+  trs_save_uint8(file, &grafyx_yoffset, 1);
+  trs_save_uint8(file, &grafyx_x, 1);
   trs_save_int(file, key_queue, KEY_QUEUE_SIZE);
   trs_save_int(file, &key_queue_head, 1);
   trs_save_int(file, &key_queue_entries, 1);
@@ -3529,7 +3529,7 @@ void trs_main_load(FILE *file)
   int i;
 
   trs_load_int(file, &trs_model, 1);
-  trs_load_uchar(file, trs_screen, 2048);
+  trs_load_uint8(file, trs_screen, 2048);
   trs_load_int(file, &screen_chars, 1);
   trs_load_int(file, &col_chars, 1);
   trs_load_int(file, &row_chars, 1);
@@ -3541,14 +3541,14 @@ void trs_main_load(FILE *file)
   trs_load_int(file, &trs_charset3, 1);
   trs_load_int(file, &trs_charset4, 1);
   for (i = 0; i < G_YSIZE; i++)
-    trs_load_uchar(file, grafyx_unscaled[i], G_XSIZE);
-  trs_load_uchar(file, &grafyx_x, 1);
-  trs_load_uchar(file, &grafyx_y, 1);
-  trs_load_uchar(file, &grafyx_enable, 1);
-  trs_load_uchar(file, &grafyx_overlay, 1);
-  trs_load_uchar(file, &grafyx_xoffset, 1);
-  trs_load_uchar(file, &grafyx_yoffset, 1);
-  trs_load_uchar(file, &grafyx_x, 1);
+    trs_load_uint8(file, grafyx_unscaled[i], G_XSIZE);
+  trs_load_uint8(file, &grafyx_x, 1);
+  trs_load_uint8(file, &grafyx_y, 1);
+  trs_load_uint8(file, &grafyx_enable, 1);
+  trs_load_uint8(file, &grafyx_overlay, 1);
+  trs_load_uint8(file, &grafyx_xoffset, 1);
+  trs_load_uint8(file, &grafyx_yoffset, 1);
+  trs_load_uint8(file, &grafyx_x, 1);
   trs_load_int(file, key_queue, KEY_QUEUE_SIZE);
   trs_load_int(file, &key_queue_head, 1);
   trs_load_int(file, &key_queue_entries, 1);
