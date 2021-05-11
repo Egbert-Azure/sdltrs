@@ -152,8 +152,6 @@ static void do_add_flags(int a, int b, int result)
     /*
      * Compute the flag values for a + b = result operation
      */
-    int index;
-    int f;
 
     /*
      * Sign, carry, and overflow depend upon values of bit 7.
@@ -163,9 +161,10 @@ static void do_add_flags(int a, int b, int result)
      * Undocumented flags in bit 3, 5 of F come from the result.
      */
 
+    int index = ((a & 0x88) >> 1) | ((b & 0x88) >> 2) |
+      ((result & 0x88) >> 3);
 
-    index = ((a & 0x88) >> 1) | ((b & 0x88) >> 2) | ((result & 0x88) >> 3);
-    f = half_carry_table[index & 7] |
+    int f = half_carry_table[index & 7] |
       sign_carry_overflow_table[index >> 4] |
       (result & (UNDOC3_MASK|UNDOC5_MASK));
 
@@ -176,9 +175,6 @@ static void do_add_flags(int a, int b, int result)
 
 static void do_sub_flags(int a, int b, int result)
 {
-    int index;
-    int f;
-
     /*
      * Sign, carry, and overflow depend upon values of bit 7.
      * Half-carry depends upon values of bit 3.
@@ -187,8 +183,10 @@ static void do_sub_flags(int a, int b, int result)
      * Undocumented flags in bit 3, 5 of F come from the result.
      */
 
-    index = ((a & 0x88) >> 1) | ((b & 0x88) >> 2) | ((result & 0x88) >> 3);
-    f = SUBTRACT_MASK | subtract_half_carry_table[index & 7] |
+    int index = ((a & 0x88) >> 1) | ((b & 0x88) >> 2) |
+      ((result & 0x88) >> 3);
+
+    int f = SUBTRACT_MASK | subtract_half_carry_table[index & 7] |
       subtract_sign_carry_overflow_table[index >> 4] |
       (result & (UNDOC3_MASK|UNDOC5_MASK));
 
@@ -200,9 +198,6 @@ static void do_sub_flags(int a, int b, int result)
 
 static void do_adc_word_flags(int a, int b, int result)
 {
-    int index;
-    int f;
-
     /*
      * Sign, carry, and overflow depend upon values of bit 15.
      * Half-carry depends upon values of bit 11.
@@ -211,10 +206,10 @@ static void do_adc_word_flags(int a, int b, int result)
      * Undocumented flags in bit 3, 5 of F come from the result high byte.
      */
 
-    index = ((a & 0x8800) >> 9) | ((b & 0x8800) >> 10) |
+    int index = ((a & 0x8800) >> 9) | ((b & 0x8800) >> 10) |
       ((result & 0x8800) >> 11);
 
-    f = half_carry_table[index & 7] |
+    int f = half_carry_table[index & 7] |
       sign_carry_overflow_table[index >> 4] |
       ((result >> 8) & (UNDOC3_MASK|UNDOC5_MASK));
 
@@ -225,9 +220,6 @@ static void do_adc_word_flags(int a, int b, int result)
 
 static void do_add_word_flags(int a, int b, int result)
 {
-    int index;
-    int f;
-
     /*
      * Carry depends upon values of bit 15.
      * Half-carry depends upon values of bit 11.
@@ -236,10 +228,10 @@ static void do_add_word_flags(int a, int b, int result)
      * Undocumented flags in bit 3, 5 of F come from the result high byte.
      */
 
-    index = ((a & 0x8800) >> 9) | ((b & 0x8800) >> 10) |
+    int index = ((a & 0x8800) >> 9) | ((b & 0x8800) >> 10) |
       ((result & 0x8800) >> 11);
 
-    f = half_carry_table[index & 7] |
+    int f = half_carry_table[index & 7] |
       (sign_carry_overflow_table[index >> 4] & CARRY_MASK) |
       (Z80_F & (ZERO_MASK | PARITY_MASK | SIGN_MASK)) |
       ((result >> 8) & (UNDOC3_MASK | UNDOC5_MASK));
@@ -249,9 +241,6 @@ static void do_add_word_flags(int a, int b, int result)
 
 static void do_sbc_word_flags(int a, int b, int result)
 {
-    int index;
-    int f;
-
     /*
      * Sign, carry, and overflow depend upon values of bit 15.
      * Half-carry depends upon values of bit 11.
@@ -260,10 +249,10 @@ static void do_sbc_word_flags(int a, int b, int result)
      * Undocumented flags in bit 3, 5 of F come from the result high byte.
      */
 
-    index = ((a & 0x8800) >> 9) | ((b & 0x8800) >> 10) |
+    int index = ((a & 0x8800) >> 9) | ((b & 0x8800) >> 10) |
       ((result & 0x8800) >> 11);
 
-    f = SUBTRACT_MASK | subtract_half_carry_table[index & 7] |
+    int f = SUBTRACT_MASK | subtract_half_carry_table[index & 7] |
       subtract_sign_carry_overflow_table[index >> 4] |
       ((result >> 8) & (UNDOC3_MASK | UNDOC5_MASK));
 
@@ -274,9 +263,7 @@ static void do_sbc_word_flags(int a, int b, int result)
 
 static void do_flags_dec_byte(int value)
 {
-    Uint8 set;
-
-    set = SUBTRACT_MASK;
+    Uint8 set = SUBTRACT_MASK;
 
     if(value == 0x7f)
       set |= OVERFLOW_MASK;
@@ -293,9 +280,7 @@ static void do_flags_dec_byte(int value)
 
 static void do_flags_inc_byte(int value)
 {
-    Uint8 set;
-
-    set = 0;
+    Uint8 set = 0;
 
     if(value == 0x80)
       set |= OVERFLOW_MASK;
@@ -316,12 +301,8 @@ static void do_flags_inc_byte(int value)
  */
 static void do_and_byte(int value)
 {
-    int result;
-    Uint8 set;
-
-    result = (Z80_A &= value);
-
-    set = HALF_CARRY_MASK;
+    int result = (Z80_A &= value);
+    Uint8 set  = HALF_CARRY_MASK;
 
     if(parity(result))
       set |= PARITY_MASK;
@@ -335,12 +316,8 @@ static void do_and_byte(int value)
 
 static void do_or_byte(int value)
 {
-    int result;  /* the result of the or operation */
-    Uint8 set;
-
-    result = (Z80_A |= value);
-
-    set = 0;
+    int result = (Z80_A |= value);  /* the result of the or operation */
+    Uint8 set  = 0;
 
     if(parity(result))
       set |= PARITY_MASK;
@@ -354,12 +331,8 @@ static void do_or_byte(int value)
 
 static void do_xor_byte(int value)
 {
-    int result;  /* the result of the xor operation */
-    Uint8 set;
-
-    result = (Z80_A ^= value);
-
-    set = 0;
+    int result = (Z80_A ^= value);  /* the result of the xor operation */
+    Uint8 set  = 0;
 
     if(parity(result))
       set |= PARITY_MASK;
@@ -373,60 +346,61 @@ static void do_xor_byte(int value)
 
 static void do_add_byte(int value)
 {
-    int a, result;
+    int a = Z80_A;
+    int result = a + value;
 
-    result = (a = Z80_A) + value;
     Z80_A = result;
     do_add_flags(a, value, result);
 }
 
 static void do_adc_byte(int value)
 {
-    int a, result;
+    int a = Z80_A;
+    int result;
 
     if(CARRY_FLAG)
-      result = (a = Z80_A) + value + 1;
+      result = a + value + 1;
     else
-      result = (a = Z80_A) + value;
+      result = a + value;
     Z80_A = result;
     do_add_flags(a, value, result);
 }
 
 static void do_sub_byte(int value)
 {
-    int a, result;
+    int a = Z80_A;
+    int result = a - value;
 
-    result = (a = Z80_A) - value;
     Z80_A = result;
     do_sub_flags(a, value, result);
 }
 
 static void do_negate(void)
 {
-    int a;
+    int a = Z80_A;
 
-    a = Z80_A;
     Z80_A = - a;
     do_sub_flags(0, a, Z80_A);
 }
 
 static void do_sbc_byte(int value)
 {
-    int a, result;
+    int a = Z80_A;
+    int result;
 
     if(CARRY_FLAG)
-      result = (a = Z80_A) - (value + 1);
+      result = a - (value + 1);
     else
-      result = (a = Z80_A) - value;
+      result = a - value;
     Z80_A = result;
     do_sub_flags(a, value, result);
 }
 
 static void do_add_word(int value)
 {
-    int a, result;
+    int a = Z80_HL;
+    int result = a + value;
 
-    result = (a = Z80_HL) + value;
     Z80_HL = result;
 
     do_add_word_flags(a, value, result);
@@ -434,12 +408,13 @@ static void do_add_word(int value)
 
 static void do_adc_word(int value)
 {
-    int a, result;
+    int a = Z80_HL;
+    int result;
 
     if(CARRY_FLAG)
-      result = (a = Z80_HL) + value + 1;
+      result = a + value + 1;
     else
-      result = (a = Z80_HL) + value;
+      result = a + value;
 
     Z80_HL = result;
 
@@ -448,12 +423,13 @@ static void do_adc_word(int value)
 
 static void do_sbc_word(int value)
 {
-    int a, result;
+    int a = Z80_HL;
+    int result;
 
     if(CARRY_FLAG)
-      result = (a = Z80_HL) - (value + 1);
+      result = a - (value + 1);
     else
-      result = (a = Z80_HL) - value;
+      result = a - value;
 
     Z80_HL = result;
 
@@ -462,9 +438,9 @@ static void do_sbc_word(int value)
 
 static void do_add_word_index(Uint16 *regp, int value)
 {
-    int a, result;
+    int a = *regp;
+    int result = a + value;
 
-    result = (a = *regp) + value;
     *regp = result;
 
     do_add_word_flags(a, value, result);
@@ -473,12 +449,6 @@ static void do_add_word_index(Uint16 *regp, int value)
 /* compare this value with A's contents */
 static void do_cp(int value)
 {
-    int a, result;
-    int index;
-    int f;
-
-    result = (a = Z80_A) - value;
-
     /*
      * Sign, carry, and overflow depend upon values of bit 7.
      * Half-carry depends upon values of bit 3.
@@ -487,8 +457,11 @@ static void do_cp(int value)
      * Undocumented flags in bit 3, 5 of F come from the second operand.
      */
 
-    index = ((a & 0x88) >> 1) | ((value & 0x88) >> 2) | ((result & 0x88) >> 3);
-    f = SUBTRACT_MASK | subtract_half_carry_table[index & 7] |
+    int a = Z80_A;
+    int result = a - value;
+    int index = ((a & 0x88) >> 1) | ((value & 0x88) >> 2) |
+      ((result & 0x88) >> 3);
+    int f = SUBTRACT_MASK | subtract_half_carry_table[index & 7] |
       subtract_sign_carry_overflow_table[index >> 4] |
       (value & (UNDOC3_MASK|UNDOC5_MASK));
 
@@ -500,9 +473,10 @@ static void do_cp(int value)
 static void do_cpd(void)
 {
     int oldcarry = Z80_F & CARRY_MASK;
-    int a, value, result;
-    value = mem_read(Z80_HL);
-    result = (a = Z80_A) - value;
+    int a = Z80_A;
+    int value = mem_read(Z80_HL);
+    int result = a - value;
+
     Z80_HL--;
     Z80_BC--;
 
@@ -520,9 +494,10 @@ static void do_cpd(void)
 static void do_cpi(void)
 {
     int oldcarry = Z80_F & CARRY_MASK;
-    int a, value, result;
-    value = mem_read(Z80_HL);
-    result = (a = Z80_A) - value;
+    int a = Z80_A;
+    int value = mem_read(Z80_HL);
+    int result = a - value;
+
     Z80_HL++;
     Z80_BC--;
 
@@ -642,10 +617,8 @@ static int rl_byte(int value)
      * operation, setting flags as appropriate.
      */
 
-    Uint8 set;
+    Uint8 set = 0;
     int result;
-
-    set = 0;
 
     if(CARRY_FLAG)
     {
@@ -677,10 +650,8 @@ static int rr_byte(int value)
      * operation, setting flags as appropriate.
      */
 
-    Uint8 set;
+    Uint8 set = 0;
     int result;
-
-    set = 0;
 
     if(CARRY_FLAG)
     {
@@ -712,10 +683,8 @@ static int rlc_byte(int value)
      * This does not do the right thing for the RLCA instruction.
      */
 
-    Uint8 set;
+    Uint8 set = 0;
     int result;
-
-    set = 0;
 
     if(value & 0x80)
     {
@@ -741,10 +710,8 @@ static int rlc_byte(int value)
 
 static int rrc_byte(int value)
 {
-    Uint8 set;
+    Uint8 set = 0;
     int result;
-
-    set = 0;
 
     if(value & 0x1)
     {
@@ -774,9 +741,7 @@ static int rrc_byte(int value)
  */
 static void do_rla(void)
 {
-    Uint8 set;
-
-    set = 0;
+    Uint8 set = 0;
 
     if(Z80_A & 0x80)
       set |= CARRY_MASK;
@@ -796,9 +761,7 @@ static void do_rla(void)
 
 static void do_rra(void)
 {
-    Uint8 set;
-
-    set = 0;
+    Uint8 set = 0;
 
     if(Z80_A & 0x1)
       set |= CARRY_MASK;
@@ -817,9 +780,7 @@ static void do_rra(void)
 
 static void do_rlca(void)
 {
-    Uint8 set;
-
-    set = 0;
+    Uint8 set = 0;
 
     if(Z80_A & 0x80)
     {
@@ -836,9 +797,7 @@ static void do_rlca(void)
 
 static void do_rrca(void)
 {
-    Uint8 set;
-
-    set = 0;
+    Uint8 set = 0;
 
     if(Z80_A & 0x1)
     {
@@ -855,12 +814,8 @@ static void do_rrca(void)
 
 static int sla_byte(int value)
 {
-    Uint8 set;
-    int result;
-
-    set = 0;
-
-    result = (value << 1) & 0xFF;
+    Uint8 set = 0;
+    int result = (value << 1) & 0xFF;
 
     if(result & 0x80)
       set |= SIGN_MASK;
@@ -878,10 +833,8 @@ static int sla_byte(int value)
 
 static int sra_byte(int value)
 {
-    Uint8 set;
+    Uint8 set = 0;
     int result;
-
-    set = 0;
 
     if(value & 0x80)
     {
@@ -908,12 +861,8 @@ static int sra_byte(int value)
 /* undocumented opcode slia: shift left and increment */
 static int slia_byte(int value)
 {
-    Uint8 set;
-    int result;
-
-    set = 0;
-
-    result = ((value << 1) & 0xFF) | 1;
+    Uint8 set = 0;
+    int result = ((value << 1) & 0xFF) | 1;
 
     if(result & 0x80)
       set |= SIGN_MASK;
@@ -931,12 +880,8 @@ static int slia_byte(int value)
 
 static int srl_byte(int value)
 {
-    Uint8 set;
-    int result;
-
-    set = 0;
-
-    result = value >> 1;
+    Uint8 set = 0;
+    int result = value >> 1;
 
     if(result & 0x80)
       set |= SIGN_MASK;
@@ -1046,9 +991,7 @@ static void do_lddr(void)
 
 static void do_ld_a_i(void)
 {
-    Uint8 set;
-
-    set = 0;
+    Uint8 set = 0;
 
     Z80_A = Z80_I;
 
@@ -1065,9 +1008,7 @@ static void do_ld_a_i(void)
 
 static void do_ld_a_r(void)
 {
-    Uint8 set;
-
-    set = 0;
+    Uint8 set = 0;
 
     Z80_A = (Z80_R & 0x7F) | Z80_R7;
 
@@ -1121,15 +1062,11 @@ static void do_rld(void)
     /*
      * Rotate-left-decimal.
      */
-    int old_value, new_value;
-    Uint8 set;
-
-    set = 0;
-
-    old_value = mem_read(Z80_HL);
+    Uint8 set = 0;
+    int old_value = mem_read(Z80_HL);
 
     /* left-shift old value, add lower bits of a */
-    new_value = ((old_value << 4) | (Z80_A & 0x0f)) & 0xff;
+    int new_value = ((old_value << 4) | (Z80_A & 0x0f)) & 0xff;
 
     /* rotate high bits of old value into low bits of a */
     Z80_A = (Z80_A & 0xf0) | (old_value >> 4);
@@ -1150,15 +1087,11 @@ static void do_rrd(void)
     /*
      * Rotate-right-decimal.
      */
-    int old_value, new_value;
-    Uint8 set;
-
-    set = 0;
-
-    old_value = mem_read(Z80_HL);
+    Uint8 set = 0;
+    int old_value = mem_read(Z80_HL);
 
     /* right-shift old value, add lower bits of a */
-    new_value = (old_value >> 4) | ((Z80_A & 0x0f) << 4);
+    int new_value = (old_value >> 4) | ((Z80_A & 0x0f) << 4);
 
     /* rotate low bits of old value into low bits of a */
     Z80_A = (Z80_A & 0xf0) | (old_value & 0x0f);
@@ -1268,14 +1201,10 @@ static int in_with_flags(int port)
      * which compute the flags.  Return the input value.
      */
 
-    int value;
-    Uint8 clear, set;
-
-    clear = (Uint8) ~(SIGN_MASK | ZERO_MASK | HALF_CARRY_MASK |
-		      PARITY_MASK | SUBTRACT_MASK);
-    set = 0;
-
-    value = z80_in(port);
+    int value = z80_in(port);
+    Uint8 clear = (Uint8) ~(SIGN_MASK | ZERO_MASK | HALF_CARRY_MASK |
+			    PARITY_MASK | SUBTRACT_MASK);
+    Uint8 set = 0;
 
     if(value & 0x80)
       set |= SIGN_MASK;
@@ -1444,9 +1373,7 @@ static void do_nmi(void)
  */
 static void do_CB_instruction(void)
 {
-    Uint8 instruction;
-
-    instruction = mem_read(Z80_PC++);
+    Uint8 instruction = mem_read(Z80_PC++);
 
     switch(instruction)
     {
@@ -2247,9 +2174,7 @@ static void do_CB_instruction(void)
  */
 static void do_indexed_instruction(Uint16 *ixp)
 {
-    Uint8 instruction;
-
-    instruction = mem_read(Z80_PC++);
+    Uint8 instruction = mem_read(Z80_PC++);
 
     switch(instruction)
     {
@@ -2290,10 +2215,8 @@ static void do_indexed_instruction(Uint16 *ixp)
 
       case 0x35:	/* dec (ix + offset) */
         {
-	  Uint16 address;
-	  Uint8 value;
-	  address = *ixp + (signed char) mem_read(Z80_PC++);
-	  value = mem_read(address) - 1;
+	  Uint16 address = *ixp + (signed char) mem_read(Z80_PC++);
+	  Uint8 value = mem_read(address) - 1;
 	  mem_write(address, value);
 	  do_flags_dec_byte(value);
         }
@@ -2307,8 +2230,7 @@ static void do_indexed_instruction(Uint16 *ixp)
 
       case 0xE3:	/* ex (sp), ix */
         {
-	  Uint16 temp;
-	  temp = mem_read_word(Z80_SP);
+	  Uint16 temp = mem_read_word(Z80_SP);
 	  mem_write_word(Z80_SP, *ixp);
 	  *ixp = temp;
         }
@@ -2317,10 +2239,8 @@ static void do_indexed_instruction(Uint16 *ixp)
 
       case 0x34:	/* inc (ix + offset) */
         {
-	  Uint16 address;
-	  Uint8 value;
-	  address = *ixp + (signed char) mem_read(Z80_PC++);
-	  value = mem_read(address) + 1;
+	  Uint16 address = *ixp + (signed char) mem_read(Z80_PC++);
+	  Uint8 value = mem_read(address) + 1;
 	  mem_write(address, value);
 	  do_flags_inc_byte(value);
         }
@@ -2458,11 +2378,9 @@ static void do_indexed_instruction(Uint16 *ixp)
 
       case 0xCB:
         {
-	  signed char offset, result = 0;
-	  Uint8 sub_instruction;
-
-	  offset = (signed char) mem_read(Z80_PC++);
-	  sub_instruction = mem_read(Z80_PC++);
+	  signed char offset = (signed char) mem_read(Z80_PC++);
+	  signed char result = 0;
+	  Uint8 sub_instruction = mem_read(Z80_PC++);
 
 	  /* Instructions with (sub_instruction & 7) != 6 are undocumented;
 	     their extra effect is handled after this switch */
@@ -2734,10 +2652,8 @@ static void do_indexed_instruction(Uint16 *ixp)
  */
 static int do_ED_instruction(void)
 {
-    Uint8 instruction;
+    Uint8 instruction = mem_read(Z80_PC++);
     int debug = 0;
-
-    instruction = mem_read(Z80_PC++);
 
     switch(instruction)
     {
@@ -3484,8 +3400,7 @@ int z80_run(int continuous)
 
 	  case 0x08:	/* ex af, af' */
 	  {
-	      Uint16 temp;
-	      temp = Z80_AF;
+	      Uint16 temp = Z80_AF;
 	      Z80_AF = Z80_AF_PRIME;
 	      Z80_AF_PRIME = temp;
 	  }
@@ -3494,8 +3409,7 @@ int z80_run(int continuous)
 
 	  case 0xEB:	/* ex de, hl */
 	  {
-	      Uint16 temp;
-	      temp = Z80_DE;
+	      Uint16 temp = Z80_DE;
 	      Z80_DE = Z80_HL;
 	      Z80_HL = temp;
 	  }
@@ -3504,8 +3418,7 @@ int z80_run(int continuous)
 
 	  case 0xE3:	/* ex (sp), hl */
 	  {
-	      Uint16 temp;
-	      temp = mem_read_word(Z80_SP);
+	      Uint16 temp = mem_read_word(Z80_SP);
 	      mem_write_word(Z80_SP, Z80_HL);
 	      Z80_HL = temp;
 	  }
@@ -3514,8 +3427,7 @@ int z80_run(int continuous)
 
 	  case 0xD9:	/* exx */
 	  {
-	      Uint16 tmp;
-	      tmp = Z80_BC_PRIME;
+	      Uint16 tmp = Z80_BC_PRIME;
 	      Z80_BC_PRIME = Z80_BC;
 	      Z80_BC = tmp;
 	      tmp = Z80_DE_PRIME;
