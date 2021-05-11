@@ -589,16 +589,16 @@ void trs_hard_save(FILE *file)
   int i;
 
   trs_save_int(file, &state.present, 1);
-  trs_save_uchar(file, &state.control, 1);
-  trs_save_uchar(file, &state.data, 1);
-  trs_save_uchar(file, &state.error, 1);
-  trs_save_uchar(file, &state.seccnt, 1);
-  trs_save_uchar(file, &state.secnum, 1);
+  trs_save_uint8(file, &state.control, 1);
+  trs_save_uint8(file, &state.data, 1);
+  trs_save_uint8(file, &state.error, 1);
+  trs_save_uint8(file, &state.seccnt, 1);
+  trs_save_uint8(file, &state.secnum, 1);
   trs_save_uint16(file, &state.cyl, 1);
-  trs_save_uchar(file, &state.drive, 1);
-  trs_save_uchar(file, &state.head, 1);
-  trs_save_uchar(file, &state.status, 1);
-  trs_save_uchar(file, &state.command, 1);
+  trs_save_uint8(file, &state.drive, 1);
+  trs_save_uint8(file, &state.head, 1);
+  trs_save_uint8(file, &state.status, 1);
+  trs_save_uint8(file, &state.command, 1);
   trs_save_int(file, &state.bytesdone, 1);
   for (i = 0; i < TRS_HARD_MAXDRIVES; i++)
     trs_save_harddrive(file, &state.d[i]);
@@ -613,16 +613,16 @@ void trs_hard_load(FILE *file)
       fclose(state.d[i].file);
   }
   trs_load_int(file, &state.present, 1);
-  trs_load_uchar(file, &state.control, 1);
-  trs_load_uchar(file, &state.data, 1);
-  trs_load_uchar(file, &state.error, 1);
-  trs_load_uchar(file, &state.seccnt, 1);
-  trs_load_uchar(file, &state.secnum, 1);
+  trs_load_uint8(file, &state.control, 1);
+  trs_load_uint8(file, &state.data, 1);
+  trs_load_uint8(file, &state.error, 1);
+  trs_load_uint8(file, &state.seccnt, 1);
+  trs_load_uint8(file, &state.secnum, 1);
   trs_load_uint16(file, &state.cyl, 1);
-  trs_load_uchar(file, &state.drive, 1);
-  trs_load_uchar(file, &state.head, 1);
-  trs_load_uchar(file, &state.status, 1);
-  trs_load_uchar(file, &state.command, 1);
+  trs_load_uint8(file, &state.drive, 1);
+  trs_load_uint8(file, &state.head, 1);
+  trs_load_uint8(file, &state.status, 1);
+  trs_load_uint8(file, &state.command, 1);
   trs_load_int(file, &state.bytesdone, 1);
   for (i = 0; i < TRS_HARD_MAXDRIVES; i++) {
     trs_load_harddrive(file, &state.d[i]);

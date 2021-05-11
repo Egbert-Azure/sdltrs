@@ -24,8 +24,8 @@
 
 int  trs_state_save(const char *filename);
 int  trs_state_load(const char *filename);
-void trs_save_uchar(FILE *file, Uint8 *buffer, int count);
-void trs_load_uchar(FILE *file, Uint8 *buffer, int count);
+void trs_save_uint8(FILE *file, Uint8 *buffer, int count);
+void trs_load_uint8(FILE *file, Uint8 *buffer, int count);
 void trs_save_uint16(FILE *file, Uint16 *buffer, int count);
 void trs_load_uint16(FILE *file, Uint16 *buffer, int count);
 void trs_save_uint32(FILE *file, Uint32 *buffer, int count);

@@ -860,11 +860,11 @@ Uint8 *mem_pointer(int address, int writing)
 
 void trs_mem_save(FILE *file)
 {
-  trs_save_uchar(file, memory, MAX_MEMORY_SIZE + 1);
-  trs_save_uchar(file, supermem_ram, MAX_SUPERMEM_SIZE + 1);
-  trs_save_uchar(file, rom, MAX_ROM_SIZE + 1);
-  trs_save_uchar(file, cp500_rom, CP500_ROM_SIZE + 1);
-  trs_save_uchar(file, video, MAX_VIDEO_SIZE + 1);
+  trs_save_uint8(file, memory, MAX_MEMORY_SIZE + 1);
+  trs_save_uint8(file, supermem_ram, MAX_SUPERMEM_SIZE + 1);
+  trs_save_uint8(file, rom, MAX_ROM_SIZE + 1);
+  trs_save_uint8(file, cp500_rom, CP500_ROM_SIZE + 1);
+  trs_save_uint8(file, video, MAX_VIDEO_SIZE + 1);
   trs_save_int(file, &trs_rom_size, 1);
   trs_save_int(file, &trs_video_size, 1);
   trs_save_int(file, &memory_map, 1);
@@ -872,7 +872,7 @@ void trs_mem_save(FILE *file)
   trs_save_int(file, &video_offset, 1);
   trs_save_int(file, &romin, 1);
   trs_save_uint32(file, &bank_base, 1);
-  trs_save_uchar(file, &mem_command, 1);
+  trs_save_uint8(file, &mem_command, 1);
   trs_save_int(file, &huffman_ram, 1);
   trs_save_int(file, &hypermem, 1);
   trs_save_int(file, &supermem, 1);
@@ -883,11 +883,11 @@ void trs_mem_save(FILE *file)
 
 void trs_mem_load(FILE *file)
 {
-  trs_load_uchar(file, memory, MAX_MEMORY_SIZE + 1);
-  trs_load_uchar(file, supermem_ram, MAX_SUPERMEM_SIZE + 1);
-  trs_load_uchar(file, rom, MAX_ROM_SIZE + 1);
-  trs_load_uchar(file, cp500_rom, CP500_ROM_SIZE + 1);
-  trs_load_uchar(file, video, MAX_VIDEO_SIZE + 1);
+  trs_load_uint8(file, memory, MAX_MEMORY_SIZE + 1);
+  trs_load_uint8(file, supermem_ram, MAX_SUPERMEM_SIZE + 1);
+  trs_load_uint8(file, rom, MAX_ROM_SIZE + 1);
+  trs_load_uint8(file, cp500_rom, CP500_ROM_SIZE + 1);
+  trs_load_uint8(file, video, MAX_VIDEO_SIZE + 1);
   trs_load_int(file, &trs_rom_size, 1);
   trs_load_int(file, &trs_video_size, 1);
   trs_load_int(file, &memory_map, 1);
@@ -895,7 +895,7 @@ void trs_mem_load(FILE *file)
   trs_load_int(file, &video_offset, 1);
   trs_load_int(file, &romin, 1);
   trs_load_uint32(file, &bank_base, 1);
-  trs_load_uchar(file, &mem_command, 1);
+  trs_load_uint8(file, &mem_command, 1);
   trs_load_int(file, &huffman_ram, 1);
   trs_load_int(file, &hypermem, 1);
   trs_load_int(file, &supermem, 1);
