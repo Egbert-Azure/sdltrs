@@ -42,7 +42,6 @@
 
 #include <stdio.h>
 #include <ctype.h>
-#include <sys/time.h>
 #include <SDL_types.h>
 
 #ifndef TRUE
