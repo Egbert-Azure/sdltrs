@@ -49,7 +49,6 @@
 #include <string.h>
 #include <time.h>
 #include <sys/stat.h>
-#include <sys/time.h>
 #include <unistd.h>
 
 #if __linux
