@@ -347,93 +347,68 @@ static void do_xor_byte(int value)
 static void do_add_byte(int value)
 {
     int a = Z80_A;
-    int result = a + value;
 
-    Z80_A = result;
-    do_add_flags(a, value, result);
+    Z80_A = Z80_A + value;
+    do_add_flags(a, value, Z80_A);
 }
 
 static void do_adc_byte(int value)
 {
     int a = Z80_A;
-    int result;
 
-    if(CARRY_FLAG)
-      result = a + value + 1;
-    else
-      result = a + value;
-    Z80_A = result;
-    do_add_flags(a, value, result);
+    Z80_A = Z80_A + value + CARRY_FLAG;
+    do_add_flags(a, value, Z80_A);
 }
 
 static void do_sub_byte(int value)
 {
     int a = Z80_A;
-    int result = a - value;
 
-    Z80_A = result;
-    do_sub_flags(a, value, result);
+    Z80_A = Z80_A - value;
+    do_sub_flags(a, value, Z80_A);
 }
 
 static void do_negate(void)
 {
     int a = Z80_A;
 
-    Z80_A = - a;
+    Z80_A = - Z80_A;
     do_sub_flags(0, a, Z80_A);
 }
 
 static void do_sbc_byte(int value)
 {
     int a = Z80_A;
-    int result;
 
-    if(CARRY_FLAG)
-      result = a - (value + 1);
-    else
-      result = a - value;
-    Z80_A = result;
-    do_sub_flags(a, value, result);
+    Z80_A = Z80_A - (value + CARRY_FLAG);
+    do_sub_flags(a, value, Z80_A);
 }
 
 static void do_add_word(int value)
 {
     int a = Z80_HL;
-    int result = a + value;
 
-    Z80_HL = result;
+    Z80_HL = Z80_HL + value;
 
-    do_add_word_flags(a, value, result);
+    do_add_word_flags(a, value, Z80_HL);
 }
 
 static void do_adc_word(int value)
 {
     int a = Z80_HL;
-    int result;
 
-    if(CARRY_FLAG)
-      result = a + value + 1;
-    else
-      result = a + value;
+    Z80_HL = Z80_HL + value + CARRY_FLAG;
 
-    Z80_HL = result;
-
-    do_adc_word_flags(a, value, result);
+    do_adc_word_flags(a, value, Z80_HL);
 }
 
 static void do_sbc_word(int value)
 {
     int a = Z80_HL;
-    int result;
 
-    if(CARRY_FLAG)
-      result = a - (value + 1);
-    else
-      result = a - value;
+    Z80_HL = Z80_HL - (value + CARRY_FLAG);
 
-    Z80_HL = result;
-
-    do_sbc_word_flags(a, value, result);
+    do_sbc_word_flags(a, value, Z80_HL);
 }
 
 static void do_add_word_index(Uint16 *regp, int value)
