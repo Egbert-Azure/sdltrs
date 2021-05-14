@@ -54,12 +54,12 @@
 #include "trs_stringy.h"
 #include "trs_uart.h"
 
-static int modesel = 0;     /* Model I */
+static int modesel;         /* Model I */
 static int modeimage = 0x8; /* Model III/4/4p */
-static int ctrlimage = 0;   /* Model 4/4p */
-static int rominimage = 0;  /* Model 4p */
+static int ctrlimage;       /* Model 4/4p */
+static int rominimage;      /* Model 4p */
 
-int trs_io_debug_flags = 0;
+int trs_io_debug_flags;
 
 /*ARGSUSED*/
 void z80_out(int port, int value)

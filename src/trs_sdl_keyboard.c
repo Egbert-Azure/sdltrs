@@ -481,17 +481,17 @@ KeyTable ascii_key_table[] = {
 /* 0x142 */    { TK_NULL, TK_Neutral },
 };
 
-static int keystate[8] = { 0, };
+static int keystate[8];
 static int force_shift = TK_Neutral;
-static int joystate = 0;
-int key_heartbeat = 0;
-int trs_joystick_num = 0;
+static int joystate;
+int key_heartbeat;
+int trs_joystick_num;
 int trs_keypad_joystick = TRUE;
 
 /* Avoid changing state too fast so keystrokes aren't lost. */
 static tstate_t key_stretch_timeout;
 int stretch_amount = STRETCH_AMOUNT;
-int trs_kb_bracket_state = 0;
+int trs_kb_bracket_state;
 
 void trs_kb_reset(void)
 {

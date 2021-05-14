@@ -47,7 +47,7 @@
 #define NO_PRINTER   0
 #define TEXT_PRINTER 1
 
-static FILE *printer = NULL;
+static FILE *printer;
 static char printer_filename[FILENAME_MAX];
 static int printer_open = FALSE;
 int trs_printer = NO_PRINTER;

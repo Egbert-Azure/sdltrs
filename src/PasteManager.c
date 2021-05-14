@@ -32,9 +32,9 @@
 #include <SDL_clipboard.h>
 
 /* Emulator specific variables */
-static int charCount = 0;
+static int charCount;
 static char *pasteString;
-static int pasteStringLength = 0;
+static int pasteStringLength;
 
 int PasteManagerGetChar(Uint8 *character)
 {

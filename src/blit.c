@@ -29,7 +29,7 @@
 #include <stdlib.h>
 #include <SDL_video.h>
 
-static Uint8 *blitMap = NULL;
+static Uint8 *blitMap;
 
 static void CopyBlitImageTo1Byte(int width, int height, Uint8 *src,
     int srcskip, Uint8 *dst, int dstskip, Uint8 *map)

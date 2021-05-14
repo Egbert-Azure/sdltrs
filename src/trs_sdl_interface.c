@@ -88,7 +88,7 @@ int resize4;
 int scanlines;
 int scanshade;
 int window_border_width;
-int turbo_paste = 0;
+int turbo_paste;
 char romfile[FILENAME_MAX];
 char romfile3[FILENAME_MAX];
 char romfile4p[FILENAME_MAX];
@@ -108,18 +108,18 @@ char trs_printer_command[FILENAME_MAX];
 
 static Uint8 trs_screen[2048];
 static char scale_quality = '1';
-static int cpu_panel = 0;
-static int debugger = 0;
+static int cpu_panel;
+static int debugger;
 static int screen_chars = 1024;
 static int row_chars = 64;
 static int col_chars = 16;
 static int border_width = 2;
 static int resize;
-static int text80x24 = 0, screen640x240 = 0;
-static int drawnRectCount = 0;
-static int top_margin = 0;
-static int left_margin = 0;
-static int screen_height = 0;
+static int text80x24, screen640x240;
+static int drawnRectCount;
+static int top_margin;
+static int left_margin;
+static int screen_height;
 static int currentmode = NORMAL;
 static int OrigHeight, OrigWidth;
 static int cur_char_width = TRS_CHAR_WIDTH;
@@ -132,15 +132,15 @@ static int mousepointer = 1;
 static int mouse_x_size = 640, mouse_y_size = 240;
 static int mouse_sens = 3;
 static int mouse_last_x = -1, mouse_last_y = -1;
-static int mouse_old_style = 0;
+static int mouse_old_style;
 static unsigned int mouse_last_buttons;
 static SDL_Surface *trs_char[6][MAXCHARS];
 static SDL_Surface *trs_box[3][64];
 static SDL_Surface *image;
 static SDL_Surface *screen;
-static SDL_Window *window = NULL;
-static SDL_Renderer *render = NULL;
-static SDL_Texture *texture = NULL;
+static SDL_Window *window;
+static SDL_Renderer *render;
+static SDL_Texture *texture;
 static Uint32 light_red;
 static Uint32 bright_red;
 static Uint32 light_orange;
@@ -162,10 +162,10 @@ extern int  PasteManagerGetChar(Uint8 *character);
 #define COPY_DEFINED  2
 #define COPY_CLEAR    3
 static int copyStatus = COPY_IDLE;
-static int selectionStartX = 0;
-static int selectionStartY = 0;
-static int selectionEndX = 0;
-static int selectionEndY = 0;
+static int selectionStartX;
+static int selectionStartY;
+static int selectionEndX;
+static int selectionEndY;
 static int requestSelectAll = FALSE;
 static int timer_saved;
 static unsigned int cycles_saved;
@@ -178,11 +178,11 @@ static unsigned int cycles_saved;
 static char grafyx[(G_YSIZE * 2) * G_XSIZE];
 static Uint8 grafyx_unscaled[G_YSIZE][G_XSIZE];
 
-static Uint8 grafyx_microlabs = 0;
-static Uint8 grafyx_x = 0, grafyx_y = 0, grafyx_mode = 0;
-static Uint8 grafyx_enable = 0;
-static Uint8 grafyx_overlay = 0;
-static Uint8 grafyx_xoffset = 0, grafyx_yoffset = 0;
+static Uint8 grafyx_microlabs;
+static Uint8 grafyx_x, grafyx_y, grafyx_mode;
+static Uint8 grafyx_enable;
+static Uint8 grafyx_overlay;
+static Uint8 grafyx_xoffset, grafyx_yoffset;
 
 /* Port 0x83 (grafyx_mode) bits */
 #define G_ENABLE    1
@@ -207,8 +207,8 @@ static int hrg_pixel_x[2][6 + 1];
 static int hrg_pixel_y[12 + 1];
 static int hrg_pixel_width[2][6];
 static int hrg_pixel_height[12];
-static int hrg_enable = 0;
-static int hrg_addr = 0;
+static int hrg_enable;
+static int hrg_addr;
 static void hrg_update_char(int position);
 
 /* Option handling */
@@ -1401,13 +1401,13 @@ static void DrawSelectionRectangle(int orig_x, int orig_y, int copy_x, int copy_
 
 static void ProcessCopySelection(int selectAll)
 {
-  static int orig_x = 0;
-  static int orig_y = 0;
-  static int end_x = 0;
-  static int end_y = 0;
-  static int copy_x = 0;
-  static int copy_y = 0;
-  static Uint8 mouse = 0;
+  static int orig_x;
+  static int orig_y;
+  static int end_x;
+  static int end_y;
+  static int copy_x;
+  static int copy_y;
+  static Uint8 mouse;
 
   if (selectAll) {
     if (copyStatus == COPY_STARTED)
@@ -1552,7 +1552,7 @@ void trs_sdl_flush(void)
 
 void trs_exit(int confirm)
 {
-  static int recursion = 0;
+  static int recursion;
 
   if (recursion && confirm)
     return;
@@ -2094,7 +2094,7 @@ void trs_get_event(int wait)
 
       case SDL_JOYAXISMOTION:
         if (jaxis_mapped == 1 && (event.jaxis.axis == 0 || event.jaxis.axis == 1)) {
-          static int hor_value = 0, ver_value = 0, hor_key = 0, ver_key = 0;
+          static int hor_value, ver_value, hor_key, ver_key;
           int value = 0, trigger_keyup = 0, trigger_keydown = 0;
 
           if (event.jaxis.axis == 0)
@@ -2568,7 +2568,7 @@ void trs_screen_refresh(void)
 
 void trs_disk_led(int drive, int on_off)
 {
-  static int countdown[8] = { 0, 0, 0, 0, 0, 0, 0, 0 };
+  static int countdown[8];
   int i;
   SDL_Rect rect;
 
@@ -2609,7 +2609,7 @@ void trs_disk_led(int drive, int on_off)
 
 void trs_hard_led(int drive, int on_off)
 {
-  static int countdown[4] = { 0, 0, 0, 0 };
+  static int countdown[4];
   int const drive0_led_x = OrigWidth - border_width - 88;
   int i;
   SDL_Rect rect;
@@ -3125,7 +3125,7 @@ hrg_init(void)
 void
 hrg_onoff(int enable)
 {
-  static int init = 0;
+  static int init;
 
   if ((hrg_enable!=0) == (enable!=0)) return; /* State does not change. */
 
