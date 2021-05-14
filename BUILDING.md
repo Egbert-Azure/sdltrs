@@ -108,8 +108,8 @@ make bsd
 
 For *Win32/64* please copy the header files of the SDL library to
 `\MinGW\include\SDL2` (or `\MinGW\include\SDL` for SDL 1.2), and
-libraries to the `\MinGW\lib\` directory or edit the macros `LIBS` and
-`INCS` in `Makefile` to point to the location of the SDL installation:
+libraries to the `\MinGW\lib\` directory or edit the macros `SDL_INC`
+and `SDL_LIB` in `Makefile` to point to the SDL or SDL2 location:
 ```sh
 mingw32-make wsdl2
 ```
