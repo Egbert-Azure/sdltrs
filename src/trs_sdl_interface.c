@@ -115,6 +115,7 @@ static int screen_chars = 1024;
 static int row_chars = 64;
 static int col_chars = 16;
 static int border_width = 2;
+static int window_scale;
 static int resize;
 static int text80x24, screen640x240;
 static int drawnRectCount;
@@ -742,6 +743,7 @@ static void trs_opt_scale(char *arg, int intarg, int *stringarg)
     scale = 1;
   else if (scale > MAX_SCALE)
     scale = MAX_SCALE;
+  window_scale = scale;
 }
 
 static void trs_opt_scanshade(char *arg, int intarg, int *stringarg)
@@ -1599,8 +1601,6 @@ void trs_sdl_cleanup(void)
 
 static void trs_flip_fullscreen(void)
 {
-  static int window_scale = 1;
-
   fullscreen = !fullscreen;
   if (fullscreen) {
     window_scale = scale;
