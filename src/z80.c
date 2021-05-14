@@ -593,16 +593,7 @@ static int rl_byte(int value)
      */
 
     Uint8 set = 0;
-    int result;
-
-    if(CARRY_FLAG)
-    {
-	result = ((value << 1) & 0xFF) | 1;
-    }
-    else
-    {
-	result = (value << 1) & 0xFF;
-    }
+    int result = ((value << 1) & 0xFF) | CARRY_FLAG;
 
     if(result & 0x80)
       set |= SIGN_MASK;
@@ -626,16 +617,7 @@ static int rr_byte(int value)
      */
 
     Uint8 set = 0;
-    int result;
-
-    if(CARRY_FLAG)
-    {
-	result = (value >> 1) | 0x80;
-    }
-    else
-    {
-	result = (value >> 1);
-    }
+    int result = (value >> 1) | (CARRY_FLAG ? 0x80 : 0);
 
     if(result & 0x80)
       set |= SIGN_MASK;
@@ -721,14 +703,7 @@ static void do_rla(void)
     if(Z80_A & 0x80)
       set |= CARRY_MASK;
 
-    if(CARRY_FLAG)
-    {
-	Z80_A = ((Z80_A << 1) & 0xFF) | 1;
-    }
-    else
-    {
-	Z80_A = (Z80_A << 1) & 0xFF;
-    }
+    Z80_A = ((Z80_A << 1) & 0xFF) | CARRY_FLAG;
 
     Z80_F = (Z80_F & (OVERFLOW_MASK | ZERO_MASK | SIGN_MASK))
       | set | (Z80_A & (UNDOC3_MASK | UNDOC5_MASK ));
@@ -741,14 +716,8 @@ static void do_rra(void)
     if(Z80_A & 0x1)
       set |= CARRY_MASK;
 
-    if(CARRY_FLAG)
-    {
-	Z80_A = (Z80_A >> 1) | 0x80;
-    }
-    else
-    {
-	Z80_A = Z80_A >> 1;
-    }
+    Z80_A = (Z80_A >> 1) | (CARRY_FLAG ? 0x80 : 0);
+
     Z80_F = (Z80_F & (OVERFLOW_MASK | ZERO_MASK | SIGN_MASK))
       | set | (Z80_A & (UNDOC3_MASK | UNDOC5_MASK ));
 }
