@@ -81,11 +81,11 @@ Uint8 rom[MAX_ROM_SIZE + 1];
 Uint8 cp500_rom[CP500_ROM_SIZE + 1];
 int trs_rom_size;
 int lowercase = 1;
-int romin = 0; /* Model 4p */
-int huffman_ram = 0;
-int hypermem = 0;
-int supermem = 0;
-int selector = 0;
+int romin; /* Model 4p */
+int huffman_ram;
+int hypermem;
+int supermem;
+int selector;
 
 /* private data */
 static Uint8 video[MAX_VIDEO_SIZE + 1];
@@ -93,16 +93,16 @@ static Uint8 video[MAX_VIDEO_SIZE + 1];
    confusing when combining with other stuff */
 static Uint8 supermem_ram[MAX_SUPERMEM_SIZE + 1];
 static int trs_video_size;
-static int memory_map = 0;
+static int memory_map;
 static int bank_offset[2];
 #define VIDEO_PAGE_0 0
 #define VIDEO_PAGE_1 1024
 static int video_offset = (-VIDEO_START + VIDEO_PAGE_0);
 static unsigned int bank_base = 0x10000;
-static Uint8 mem_command = 0;
+static Uint8 mem_command;
 static int supermem_base;
 static unsigned int supermem_hi;
-static int selector_reg = 0;
+static int selector_reg;
 static int m_a11_flipflop;
 
 void mem_video_page(int which)

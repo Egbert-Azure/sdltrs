@@ -58,7 +58,7 @@ char trs_uart_name[FILENAME_MAX] = "";
 int trs_uart_switches =
   0x7 | TRS_UART_NOPAR | TRS_UART_WORD8; /* Default: 9600 8N1 */
 
-static int initialized = 0;
+static int initialized;
 
 static struct {
   int modem;

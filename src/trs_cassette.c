@@ -86,18 +86,18 @@ static const char *format_name[] = {
 
 #define FLUSH -500  /* special fake signal value used when turning off motor */
 
-static char cassette_filename[FILENAME_MAX] = {0};
-static int cassette_position = 0;
+static char cassette_filename[FILENAME_MAX];
+static int cassette_position;
 static unsigned int cassette_format = DEFAULT_FORMAT;
 static int cassette_state = CLOSE;
-static int cassette_motor = 0;
+static int cassette_motor;
 static FILE *cassette_file;
 static float cassette_avg;
 static float cassette_env;
 static int cassette_noisefloor;
 static int cassette_sample_rate;
 int cassette_default_sample_rate = DEFAULT_SAMPLE_RATE;
-static int cassette_stereo = 0;
+static int cassette_stereo;
 static Uint32 cassette_silence;
 static int soundDeviceOpen = FALSE;
 
@@ -115,7 +115,7 @@ static int cassette_afmt = AUDIO_U8;
 static Uint8 sound_ring[SOUND_RING_SIZE];
 static Uint8 *sound_ring_read_ptr = sound_ring;
 static Uint8 *sound_ring_write_ptr = sound_ring;
-static Uint32 sound_ring_count = 0;
+static Uint32 sound_ring_count;
 static Uint8 *sound_ring_end = sound_ring + SOUND_RING_SIZE;
 
 /* For bit-level emulation */

@@ -33,9 +33,9 @@
 #include <SDL_clipboard.h>
 
 /* Emulator specific variables */
-static int charCount = 0;
+static int charCount;
 static char *pasteString;
-static int pasteStringLength = 0;
+static int pasteStringLength;
 
 int PasteManagerGetChar(Uint8 *character)
 {
@@ -73,9 +73,9 @@ void PasteManagerStartCopy(const char *string)
 
 #include "windows.h"
 
-static int charCount = 0;
+static int charCount;
 static char *pasteString;
-static int pasteStringLength = 0;
+static int pasteStringLength;
 static HANDLE hClipboardData;
 
 int PasteManagerGetChar(Uint8 *character)
@@ -158,7 +158,7 @@ static Atom _atom_UTF8;
 static Atom _atom_TEXT;
 static Atom _atom_COMPOUND;
 static Time _cliptime = CurrentTime;
-static char *clipboard = NULL;
+static char *clipboard;
 
 /* Maximum size to send or receive per request. */
 #define MIN(a,b) (((a) < (b)) ? a : b)
@@ -169,9 +169,9 @@ static char *clipboard = NULL;
         : XExtendedMaxRequestSize (display) - 100)
 
 /* Emulator specific variables */
-static int charCount = 0;
+static int charCount;
 static char *pasteString;
-static int pasteStringLength = 0;
+static int pasteStringLength;
 static int firstTime = 1;
 
 static int init_scrap(void)

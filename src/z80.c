@@ -70,7 +70,7 @@ extern void trs_timer_sync_with_host(void);
  * The state of our Z80 registers is kept in this structure:
  */
 struct z80_state_struct z80_state;
-static tstate_t last_t_count = 0;
+static tstate_t last_t_count;
 
 /* for parity flag, 1 = even parity, 0 = odd parity. */
 static const short parity_table[256] =

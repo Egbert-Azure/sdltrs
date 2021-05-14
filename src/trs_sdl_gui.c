@@ -61,9 +61,9 @@
 #define SHIFT         39
 
 static char filename[FILENAME_MAX];
-static char **filenamelist = NULL;
-static int filenamecount = 0;
-static int filenamelistsize = 0;
+static char **filenamelist;
+static int filenamecount;
+static int filenamelistsize;
 
 typedef struct menu_entry_type {
   char text[64];
@@ -115,7 +115,7 @@ static int const key_syms_shifted[] = {
 };
 
 int jbutton_map[] = {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1};
-int jaxis_mapped = 0;
+int jaxis_mapped;
 
 extern int  scanlines;
 extern int  scanshade;
@@ -350,7 +350,7 @@ int trs_gui_get_key(void)
         break;
       case SDL_JOYAXISMOTION:
         if (event.jaxis.axis == 0 || event.jaxis.axis == 1) {
-          static int hor_value = 0, ver_value = 0;
+          static int hor_value, ver_value;
           int value = 0, trigger_keydown = 0, key = -1;
 
           if (event.jaxis.axis == 0)
@@ -1264,9 +1264,9 @@ void trs_gui_disk_creation(void)
   static int image_type = 1;
   static int num_sides = 1;
   static int density = 1;
-  static int eight = 0;
-  static int ignore_density = 0;
-  static int drive_insert = 0;
+  static int eight;
+  static int ignore_density;
+  static int drive_insert;
   int selection = 6;
 
   while (1) {
@@ -1505,7 +1505,7 @@ void trs_gui_hard_management(void)
   static int sector_count = 256;
   static int granularity = 8;
   static int dir_sector = 1;
-  static int drive_insert = 0;
+  static int drive_insert;
   char input[4];
   int selection = 0;
   int i, value;
@@ -1637,7 +1637,7 @@ void trs_gui_stringy_management(void)
    {"", 0}};
   const char *wafer_choices[] = {"   None", "Wafer 0", "Wafer 1", "Wafer 2", "Wafer 3",
                                  "Wafer 4", "Wafer 5", "Wafer 6", "Wafer 7"};
-  static int wafer_insert = 0;
+  static int wafer_insert;
   int selection = 0;
   int i;
 
@@ -1693,7 +1693,7 @@ void trs_gui_cassette_management(void)
    {"Create Blank Cassette Image with Above Parameters", MENU_NORMAL_TYPE},
    {"", 0}};
   const char *image_type_choices[] = {"   CAS", "   CPT", "   WAV"};
-  static int image_type = 0;
+  static int image_type;
   static int drive_insert = 1;
   char input[12];
   int selection = 0;
@@ -2332,7 +2332,7 @@ const char *trs_gui_get_key_name(int key)
 
 int trs_gui_virtual_keyboard(void)
 {
-  static int saved_selection = 0;
+  static int saved_selection;
   int key_index = SHIFT, shifted = 0;
 
   while (key_index == SHIFT || (shifted && key_syms_shifted[key_index] == -1)) {

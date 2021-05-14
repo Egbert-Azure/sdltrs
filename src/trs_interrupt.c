@@ -46,8 +46,8 @@
 #define M3_TIMER_BIT    0x04
 #define M3_CASSFALL_BIT 0x02
 #define M3_CASSRISE_BIT 0x01
-static Uint8 interrupt_latch = 0;
-static Uint8 interrupt_mask = 0;
+static Uint8 interrupt_latch;
+static Uint8 interrupt_mask;
 
 /* NMIs (M3/4/4P only) */
 #define M3_INTRQ_BIT    0x80  /* FDC chip INTRQ line */
@@ -60,7 +60,7 @@ static Uint8 nmi_mask = M3_RESET_BIT;
 #define TIMER_HZ_3 30
 #define TIMER_HZ_4 60
 int timer_hz = TIMER_HZ_1;
-int timer_overclock = 0;
+int timer_overclock;
 int timer_overclock_rate = 5;
 int speedup = 1;
 unsigned int cycles_per_timer;
@@ -112,7 +112,7 @@ float clock_mhz_4 = 4.05504;
 static Uint32 deltatime = 25;
 static int timer_on = 1;
 #ifdef IDEBUG
-static long lost_timer_interrupts = 0;
+static long lost_timer_interrupts;
 #endif
 
 /* Note: the independent interrupt latch and mask model is not correct
@@ -331,7 +331,7 @@ trs_timer_event(void)
 void trs_timer_sync_with_host(void)
 {
   Uint32 curtime;
-  static Uint32 lasttime = 0;
+  static Uint32 lasttime;
 
   curtime = SDL_GetTicks();
 

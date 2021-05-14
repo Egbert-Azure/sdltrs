@@ -66,7 +66,7 @@ static Uint8 *traps;
 static int num_traps;
 static int print_instructions;
 static int stop_signaled;
-static unsigned int num_watchpoints = 0;
+static unsigned int num_watchpoints;
 
 static struct
 {
