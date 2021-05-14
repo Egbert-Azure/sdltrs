@@ -47,28 +47,28 @@ depend:
 		(egrep -v 'cannot find|not in' || true)
 
 sdl2:	ENDIAN	 = $(shell echo "ab" | od -x | grep "6261" > /dev/null || echo "-Dbig_endian")
-sdl2:	INCS	?= $(shell sdl2-config --cflags)
-sdl2:	LIBS	?= $(shell sdl2-config --libs)
+sdl2:	SDL_INC	?= $(shell sdl2-config --cflags)
+sdl2:	SDL_LIB	?= $(shell sdl2-config --libs)
 sdl2:	READLINE?= -DREADLINE
 sdl2:	${PROG}
 
 win32:	MINGW	?= \MinGW
 win32:	CC	 = ${MINGW}\bin\gcc.exe
-win32:	INCS	?= -I${MINGW}\include\SDL2
-win32:	LIBS	?= -L${MINGW}\lib -lmingw32 -lSDL2main -lSDL2
+win32:	SDL_INC	?= -I${MINGW}\include\SDL2
+win32:	SDL_LIB	?= -L${MINGW}\lib -lmingw32 -lSDL2main -lSDL2
 win32:	${PROG}
 
 win64:	MINGW64	?= \MinGW64
 win64:	CC	 = ${MINGW64}\bin\gcc.exe
-win64:	INCS	?= -I${MINGW64}\include\SDL2
-win64:	LIBS	?= -L${MINGW64}\lib -lmingw32 -lSDL2main -lSDL2
+win64:	SDL_INC	?= -I${MINGW64}\include\SDL2
+win64:	SDL_LIB	?= -L${MINGW64}\lib -lmingw32 -lSDL2main -lSDL2
 win64:	PROG	 = sdl2trs64
 win64:	${PROG}
 
 READLINELIBS	 =$(if ${READLINE},-lreadline,)
 ZBX		?= -DZBX
 CFLAGS		?= -g -O2 -Wall
-CFLAGS		+= ${INCS} ${ENDIAN} ${MACROS} ${READLINE} ${ZBX}
+CFLAGS		+= ${SDL_INC} ${ENDIAN} ${MACROS} ${READLINE} ${ZBX}
 
 ${PROG}: ${OBJS}
-	${CC} -o ${PROG} ${OBJS} ${LIBS} ${LDFLAGS} ${READLINELIBS}
+	${CC} -o ${PROG} ${OBJS} ${SDL_LIB} ${LDFLAGS} ${READLINELIBS}
