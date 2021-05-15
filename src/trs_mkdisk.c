@@ -251,10 +251,9 @@ void trs_protect_stringy(int drive, int writeprot)
 
 int trs_create_blank_jv1(const char *fname)
 {
-  FILE *f;
+  FILE *f = fopen(fname, "wb");
 
   /* Unformatted JV1 disk - just an empty file! */
-  f = fopen(fname, "wb");
   if (f == NULL) {
     error("failed to create JV1 disk %s: %s", fname, strerror(errno));
     return -1;
@@ -265,11 +264,10 @@ int trs_create_blank_jv1(const char *fname)
 
 int trs_create_blank_jv3(const char *fname)
 {
-  FILE *f;
   int i;
+  FILE *f = fopen(fname, "wb");
 
   /* Unformatted JV3 disk. */
-  f = fopen(fname, "wb");
   if (f == NULL) {
     error("failed to create JV3 disk %s: %s", fname, strerror(errno));
     return -1;
@@ -283,11 +281,10 @@ int trs_create_blank_jv3(const char *fname)
 int trs_create_blank_dmk(const char *fname, int sides, int density,
                          int eight, int ignden)
 {
-  FILE *f;
   int i;
-  /* Unformatted DMK disk */
+  FILE *f = fopen(fname, "wb");
 
-  f = fopen(fname, "wb");
+  /* Unformatted DMK disk */
   if (f == NULL) {
     error("failed to create DMK disk %s: %s", fname, strerror(errno));
     return -1;
@@ -342,7 +339,7 @@ int trs_create_blank_hard(const char *fname, int cyl, int sec,
   struct tm *lt = localtime(&tt);
   ReedHardHeader rhh;
   Uint8 *rhhp = (Uint8 *) &rhh;
-  int cksum;
+  int cksum = 0;
 
   memset(&rhh, 0, sizeof(rhh));
 
@@ -367,7 +364,6 @@ int trs_create_blank_hard(const char *fname, int cyl, int sec,
   rhh.dcyl = dir;
   snprintf(rhh.label, 9, "%s", "xtrshard");
 
-  cksum = 0;
   for (i = 0; i <= 31; i++) {
     cksum += rhhp[i];
   }

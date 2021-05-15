@@ -354,8 +354,8 @@ void trs_timer_sync_with_host(void)
 void
 trs_timer_init(void)
 {
-  struct tm *lt;
-  time_t tt;
+  time_t tt = time(NULL);
+  struct tm *lt = localtime(&tt);
 
   switch (trs_model) {
     case 1:
@@ -376,8 +376,6 @@ trs_timer_init(void)
   trs_timer_event();
 
   /* Also initialize the clock in memory - hack */
-  tt = time(NULL);
-  lt = localtime(&tt);
   if (trs_model == 1) {
       mem_write(LDOS_MONTH, (lt->tm_mon + 1) ^ 0x50);
       mem_write(LDOS_DAY, lt->tm_mday);

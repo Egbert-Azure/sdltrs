@@ -358,11 +358,8 @@ int z80_in(int port)
   if ((port >= 0x70 && port <= 0x7C)
       || (port >= 0xB0 && port <= 0xBC)
       /*|| (port >= 0xC0 && port <= 0xCC)*/) {
-    struct tm *time_info;
-    time_t time_secs;
-
-    time_secs = time(NULL);
-    time_info = localtime(&time_secs);
+    time_t time_secs = time(NULL);
+    struct tm *time_info = localtime(&time_secs);
 
     switch (port & 0x0F) {
     case 0xC: /* year (high) */
