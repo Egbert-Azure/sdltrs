@@ -28,7 +28,6 @@
 
 #include <stdio.h>
 #include <time.h>
-#include <unistd.h>
 #include <SDL.h>
 #include "trs.h"
 #include "trs_state_save.h"
