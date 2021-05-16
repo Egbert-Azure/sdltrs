@@ -54,12 +54,13 @@ int trs_printer = NO_PRINTER;
 
 int trs_printer_reset(void)
 {
-  char command[256 + FILENAME_MAX]; /* 256 for print_command + FILENAME_MAX for spool_file */
-
   if (printer_open) {
     fclose(printer);
     printer_open = FALSE;
     if (trs_printer_command[0]) {
+      /* 256 for print_command + FILENAME_MAX for spool_file */
+      char command[256 + FILENAME_MAX];
+
       snprintf(command, 255 + FILENAME_MAX, trs_printer_command, printer_filename);
       if (system(command) != 0)
         return -1;
