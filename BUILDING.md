@@ -87,13 +87,13 @@ and libraries to the `\MinGW\lib\` (or `\MinGW64\lib`) directory,
 or edit the macros `SDL_INC` and `SDL_LIB` in `Makefile` to point
 to the SDL2 installation location:
 ```sh
-mingw32-make wsdl2
+mingw32-make win32
 ```
-to build the SDL2 version (`sdl2trs.exe`), or
+to build the SDL2 version, or
 ```sh
 mingw32-make win64
 ```
-to build the 64-bit SDL2 version (`sdl2trs64.exe`).
+to build the 64-bit SDL2 version.
 
 ---
 
@@ -111,7 +111,7 @@ In the main directory of the source, execute the following commands:
 ./configure --enable-readline
 make
 ```
-This will build the executable binary file called `sdl2trs`.
+This will build the executable binary.
 
 [Homebrew]: https://brew.sh
 [MinGW]: http://www.mingw.org
