@@ -1,4 +1,4 @@
-**SDL(2)TRS** needs the development files of `SDL2`/`SDL 1.2` and
+**SDLTRS** needs the development files of `SDL2`/`SDL 1.2` and
 optional `GNU readline` for the integrated Z80 debugger zbx.
 
 On *Debian* and *Ubuntu* based systems these can be installed with:
@@ -113,11 +113,11 @@ and `SDL_LIB` in `Makefile` to point to the SDL or SDL2 location:
 ```sh
 mingw32-make wsdl2
 ```
-to build the SDL2 version (`sdl2trs.exe`), or
+to build the SDL2 version, or
 ```sh
 mingw32-make win32
 ```
-for the SDL 1.2 version (`sdltrs.exe`).
+for the SDL 1.2 version.
 
 ---
 
@@ -128,14 +128,14 @@ Download and install [Homebrew] for macOS first.
 ```sh
 brew install autoconf automake libtool llvm readline sdl2
 ```
-should download and install the required packages to build **SDL2TRS**.
+should download and install the required packages to build **SDLTRS**.
 In the main directory of the source, execute the following commands:
 ```sh
 ./autogen.sh
 ./configure --enable-readline
 make
 ```
-This will build the executable binary file called `sdltrs`.
+This will build the executable binary.
 
 [Homebrew]: https://brew.sh
 [MinGW]: http://www.mingw.org
