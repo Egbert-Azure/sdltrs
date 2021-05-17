@@ -40,7 +40,7 @@ bsd:
 	make -f BSDmakefile
 
 clean:
-	rm -f ${OBJS} ${PROG} sdl2trs64
+	rm -f ${OBJS} ${PROG}
 
 depend:
 	makedepend -Y -- ${CFLAGS} -- ${SRCS} 2>&1 | \
@@ -62,7 +62,6 @@ win64:	MINGW64	?= \MinGW64
 win64:	CC	 = ${MINGW64}\bin\gcc.exe
 win64:	SDL_INC	?= -I${MINGW64}\include\SDL2
 win64:	SDL_LIB	?= -L${MINGW64}\lib -lmingw32 -lSDL2main -lSDL2
-win64:	PROG	 = sdl2trs64
 win64:	${PROG}
 
 READLINELIBS	 =$(if ${READLINE},-lreadline,)
