@@ -40,7 +40,7 @@ bsd:
 	make -f BSDmakefile
 
 clean:
-	rm -f ${OBJS} ${PROG} sdl2trs sdl2trs64
+	rm -f ${OBJS} ${PROG}
 
 depend:
 	makedepend -Y -- ${CFLAGS} -- ${SRCS} 2>&1 | \
@@ -66,7 +66,6 @@ sdl2:	SDL_INC	?= $(shell sdl2-config --cflags)
 sdl2:	SDL_LIB	?= $(shell sdl2-config --libs)
 sdl2:	MACROS	+= -DSDL2
 sdl2:	READLINE?= -DREADLINE
-sdl2:	PROG	 = sdl2trs
 sdl2:	${PROG}
 
 win32:	MINGW	?= \MinGW
@@ -80,7 +79,6 @@ win64:	CC	 = ${MINGW64}\bin\gcc.exe
 win64:	SDL_INC	?= -I${MINGW64}\include\SDL2
 win64:	SDL_LIB	?= -L${MINGW64}\lib -lmingw32 -lSDL2main -lSDL2
 win64:	MACROS	+= -DSDL2
-win64:	PROG	 = sdl2trs64
 win64:	${PROG}
 
 wsdl2:	MINGW	?= \MinGW
@@ -88,7 +86,6 @@ wsdl2:	CC	 = ${MINGW}\bin\gcc.exe
 wsdl2:	SDL_INC	?= -I${MINGW}\include\SDL2
 wsdl2:	SDL_LIB	?= -L${MINGW}\lib -lmingw32 -lSDL2main -lSDL2
 wsdl2:	MACROS	+= -DSDL2
-wsdl2:	PROG	 = sdl2trs
 wsdl2:	${PROG}
 
 READLINELIBS	 =$(if ${READLINE},-lreadline,)
