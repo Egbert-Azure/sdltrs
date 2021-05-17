@@ -102,7 +102,6 @@ char trs_printer_dir[FILENAME_MAX];
 char trs_cmd_file[FILENAME_MAX];
 char trs_config_file[FILENAME_MAX];
 char trs_state_file[FILENAME_MAX];
-char trs_printer_command[FILENAME_MAX];
 
 /* Private data */
 #include "trs_chars.c"
@@ -361,7 +360,6 @@ static const trs_opt options[] = {
   { "noturbopaste",    trs_opt_value,         0, 0, &turbo_paste         },
 #endif
   { "printer",         trs_opt_printer,       1, 0, NULL                 },
-  { "printercmd",      trs_opt_string,        1, 0, trs_printer_command  },
   { "printerdir",      trs_opt_dirname,       1, 0, trs_printer_dir      },
   { "resize3",         trs_opt_value,         0, 1, &resize3             },
   { "resize4",         trs_opt_value,         0, 1, &resize4             },
@@ -917,11 +915,6 @@ int trs_load_config_file(void)
   strcpy(trs_disk_dir, ".");
   strcpy(trs_disk_set_dir, ".");
   strcpy(trs_hard_dir, ".");
-#ifdef _WIN32
-  strcpy(trs_printer_command, "notepad %s");
-#else
-  strcpy(trs_printer_command, "lpr %s");
-#endif
   strcpy(trs_printer_dir, ".");
   strcpy(trs_state_dir, ".");
   stretch_amount = STRETCH_AMOUNT;
@@ -1118,7 +1111,6 @@ int trs_write_config_file(const char *filename)
           trs_model == 5 ? 4 : trs_model, trs_model == 5 ? "P" : "");
   fprintf(config_file, "%smousepointer\n", mousepointer ? "" : "no");
   fprintf(config_file, "printer=%d\n", trs_printer);
-  fprintf(config_file, "printercmd=%s\n", trs_printer_command);
   fprintf(config_file, "printerdir=%s\n", trs_printer_dir);
   fprintf(config_file, "%sresize3\n", resize3 ? "" : "no");
   fprintf(config_file, "%sresize4\n", resize4 ? "" : "no");

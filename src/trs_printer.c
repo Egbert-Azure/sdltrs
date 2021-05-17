@@ -38,8 +38,6 @@
  */
 
 #include <errno.h>
-#include <stdlib.h>
-#include <string.h>
 #include <sys/stat.h>
 #include "error.h"
 #include "trs.h"
@@ -57,14 +55,6 @@ int trs_printer_reset(void)
   if (printer_open) {
     fclose(printer);
     printer_open = FALSE;
-    if (trs_printer_command[0]) {
-      /* 256 for print_command + FILENAME_MAX for spool_file */
-      char command[256 + FILENAME_MAX];
-
-      snprintf(command, 255 + FILENAME_MAX, trs_printer_command, printer_filename);
-      if (system(command) != 0)
-        return -1;
-    }
     return 0;
   } else
     return -1;
