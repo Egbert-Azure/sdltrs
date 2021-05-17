@@ -2248,33 +2248,24 @@ void trs_gui_printer_management(void)
   MENU_ENTRY printer_menu[] =
   {{"Close and Reopen Printer Output File", MENU_NORMAL_TYPE},
    {"Printer Type                                       ", MENU_NORMAL_TYPE},
-   {"Printer Command:", MENU_TITLE_TYPE},
-   {"   ", MENU_NORMAL_TYPE},
    {"", 0}};
   const char *printer_choices[] = {"     None", "     Text"};
   int selection = 0;
 
   while (1) {
     snprintf(&printer_menu[1].text[51], 10, "%s", printer_choices[trs_printer]);
-    trs_gui_limit_string(trs_printer_command, &printer_menu[3].text[2], 58);
     trs_gui_clear_screen();
 
     selection = trs_gui_display_menu("SDLTRS Printer Management", printer_menu, selection);
     switch (selection) {
       case 0:
         if (trs_printer_reset() == 0)
-          trs_gui_display_message("Status", "Printer file closed, printer command ran");
+          trs_gui_display_message("Status", "Printer file closed");
         else
           trs_gui_display_message("Warning", "No Printer Output in File");
         break;
       case 1:
         trs_printer = trs_gui_display_popup("Printer", printer_choices, 2, trs_printer);
-        break;
-      case 3:
-        filename[0] = 0;
-        if (trs_gui_input_string("Enter Printer Command", trs_printer_command,
-            filename, FILENAME_MAX, 0) == 0)
-          snprintf(trs_printer_command, FILENAME_MAX, "%s", filename);
         break;
       case -1:
         return;
