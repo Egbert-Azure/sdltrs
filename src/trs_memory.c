@@ -86,6 +86,7 @@ int huffman_ram;
 int hypermem;
 int supermem;
 int selector;
+int eg3200; /* EACA EG 3200 Genie III */
 
 /* private data */
 static Uint8 video[MAX_VIDEO_SIZE + 1];
@@ -104,6 +105,7 @@ static int supermem_base;
 static unsigned int supermem_hi;
 static int selector_reg;
 static int m_a11_flipflop;
+static int eg3200_bank_reg = 0xFF;
 
 void mem_video_page(int which)
 {
@@ -221,6 +223,16 @@ int cp500_a11_flipflop_toggle(void)
 	return 0x00; /* really?! */
 }
 
+void eg3200_bank_out(Uint8 value)
+{
+	eg3200_bank_reg = value;
+
+	if (!eg3200) {
+		eg3200 = 1;
+		trs_timer_init();
+	}
+}
+
 void selector_out(Uint8 value)
 {
 	/* Not all bits are necessarily really present but hey what
@@ -305,6 +317,8 @@ void trs_reset(int poweron)
 	hrg_onoff(0);		/* Switch off HRG1B hi-res graphics. */
 	bank_base = 0;
 	selector_reg = 0;
+	eg3200 = 0;
+	eg3200_bank_reg = 0xFF;
     }
     trs_kb_reset();  /* Part of keyboard stretch kludge */
     clear_key_queue(); /* init the key queue */
@@ -400,6 +414,34 @@ static int trs80_model1_mmio(int address)
   return 0xff;
 }
 
+static int eg3200_bank_read(int address)
+{
+  /* Bank 1: ROM/EPROM */
+  if (!(eg3200_bank_reg & (1 << 0))) {
+    if (address < trs_rom_size)
+      return rom[address];
+  }
+  /* Bank 2: Video Memory 0 (1k, 64x16, TRS-80 M1 compatible) */
+  if (!(eg3200_bank_reg & (1 << 1))) {
+    if (address >= VIDEO_START && address <= 0x3FFF)
+      return video[address - VIDEO_START];
+  }
+  /* Bank 3: Video Memory 1 (additional 1k for 80x24 video mode) */
+  if (!(eg3200_bank_reg & (1 << 2))) {
+    if (address >= 0x4000 && address <= 0x43FF)
+      return video[address - VIDEO_START];
+  }
+  /* Bank 4: Disk I/O and Keyboard */
+  if (!(eg3200_bank_reg & (1 << 3))) {
+    if (address >= 0x37E0 && address <= 0x37EF)
+      return trs80_model1_mmio(address);
+    if (address >= KEYBOARD_START && address <= 0x3880)
+      return trs_kb_mem_read(address);
+  }
+  /* Bank 0: RAM */
+  return memory[address];
+}
+
 int mem_read(int address)
 {
     address &= 0xffff; /* allow callers to be sloppy */
@@ -414,6 +456,9 @@ int mem_read(int address)
       if (!((address ^ supermem_hi) & 0x8000))
           return supermem_ram[supermem_base + (address & 0x7FFF)];
       /* Otherwise the request comes from the system */
+    }
+    if (eg3200) {
+      return eg3200_bank_read(address);
     }
     switch (memory_map) {
       case 0x10: /* Model I */
@@ -577,6 +622,32 @@ static void trs80_model1_write_mmio(int address, int value)
     trs80_model1_write_mem(address, value);
 }
 
+static void eg3200_bank_write(int address, int value)
+{
+  /* Bank 2: Video Memory 0 (1k, 64x16, TRS-80 M1 compatible) */
+  if (!(eg3200_bank_reg & (1 << 1))) {
+    if (address >= VIDEO_START && address <= 0x3FFF) {
+      trs80_screen_write_char(address - VIDEO_START, value);
+      return;
+    }
+  }
+  /* Bank 3: Video Memory 1 (additional 1k for 80x24 video mode) */
+  if (!(eg3200_bank_reg & (1 << 2))) {
+    if (address >= 0x4000 && address <= 0x43FF) {
+      trs80_screen_write_char(address - VIDEO_START, value);
+      return;
+    }
+  }
+  /* Bank 4: Disk I/O */
+  if (!(eg3200_bank_reg & (1 << 3))) {
+    if (address >= 0x37E0 && address <= 0x37EF) {
+      trs80_model1_write_mmio(address, value);
+      return;
+    }
+  }
+  /* Bank 0: RAM */
+  memory[address] = value;
+}
 
 void mem_write(int address, int value)
 {
@@ -589,6 +660,10 @@ void mem_write(int address, int value)
           return;
       }
       /* Otherwise the request comes from the system */
+    }
+    if (eg3200) {
+      eg3200_bank_write(address, value);
+      return;
     }
 
     switch (memory_map) {

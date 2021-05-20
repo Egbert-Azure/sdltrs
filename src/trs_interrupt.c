@@ -359,7 +359,10 @@ trs_timer_init(void)
   switch (trs_model) {
     case 1:
       timer_hz = TIMER_HZ_1;
-      z80_state.clockMHz = clock_mhz_1;
+      if (eg3200)
+        z80_state.clockMHz = 4.0000;
+      else
+        z80_state.clockMHz = clock_mhz_1;
       break;
     case 3:
       timer_hz = TIMER_HZ_3;
