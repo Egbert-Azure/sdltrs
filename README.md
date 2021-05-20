@@ -20,6 +20,9 @@ Updated version of Mark Grebe's [SDLTRS]:
   * Joystick emulation with Mouse
   * Support Prologica CP-300/500 16kB ROM with extra 2kB Z80 monitor
   * Support Seatronics Super Speed-Up Board for all TRS-80 Models
+  * Support UART I/O ports for System 80
+  * Load and Save TRS-80 memory in debugger
+  * Patch Model I ROM to boot from hard disk drive
 
 ## License
 
