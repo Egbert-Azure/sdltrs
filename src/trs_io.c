@@ -56,7 +56,7 @@
 
 static int modesel;         /* Model I */
 static int modeimage = 0x8; /* Model III/4/4p */
-static int ctrlimage;       /* Model 4/4p */
+static int ctrlimage;       /* Model 4/4p & EG 3200 */
 static int rominimage;      /* Model 4p */
 
 int trs_io_debug_flags;
@@ -149,13 +149,29 @@ void z80_out(int port, int value)
     case 0xF3:
     case 0xF4:
     case 0xF5:
+      if (eg3200) {
+        trs_screen_inverse(value & 1);
+        break;
+      }
     case 0xF6:
+      if (eg3200) {
+        ctrlimage = value;
+        break;
+      }
     case 0xF7:
+      if (eg3200) {
+        if (ctrlimage == 1)
+          trs_screen_80x24(value == 80);
+        break;
+      }
       if (stringy)
         stringy_out(port & 7, value);
       break;
     case 0xF8:
       trs_uart_data_out(value);
+      break;
+    case 0xFA:
+      eg3200_bank_out(value);
       break;
     case 0xFD:
       /* GENIE location of printer port */
@@ -357,7 +373,7 @@ int z80_in(int port)
 
   if ((port >= 0x70 && port <= 0x7C)
       || (port >= 0xB0 && port <= 0xBC)
-      /*|| (port >= 0xC0 && port <= 0xCC)*/) {
+      || (port >= 0xE0 && port <= 0xE1)) {
     time_t time_secs = time(NULL);
     struct tm *time_info = localtime(&time_secs);
 

@@ -1190,9 +1190,10 @@ void trs_screen_caption(void)
   else {
     const char *trs_name[] = { "", "I", "", "III", "4", "4P" };
 
-    snprintf(title, 79, "%sTRS-80 Model %s (%.2f MHz) %s%s",
+    snprintf(title, 79, "%s%s %s (%.2f MHz) %s%s",
              timer_overclock ? "Turbo " : "",
-             trs_name[trs_model],
+             eg3200 ? "EACA" : "TRS-80 Model",
+             eg3200 ? "EG 3200" : trs_name[trs_model],
              z80_state.clockMHz,
              trs_paused ? "PAUSED " : "",
              trs_sound ? "" : "(Mute)");

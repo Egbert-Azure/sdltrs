@@ -1235,6 +1235,9 @@ trs_disk_select_write(Uint8 data)
 		      (data & TRSDISK_SIDE) != 0 );
     if (state.curside) data &= ~TRSDISK_SIDE;
 
+    /* EG 3200 uses bit 4 to select side */
+    if (eg3200)
+      state.curside = (data & 0x10) != 0;
   } else {
     state.curside = (data & TRSDISK3_SIDE) != 0;
     state.density = (data & TRSDISK3_MFM) != 0;
@@ -2971,6 +2974,12 @@ trs_disk_command_write(Uint8 cmd)
 
   case TRSDISK_WRITETRK:
     state.last_readadr = -1;
+    if (eg3200) {
+      if ((cmd & 0xF8) == 0xF8) {
+	state.density = cmd & 1;
+	return;
+      }
+    }
     /* Really a write track? */
     if (trs_model == 1 && (cmd == TRSDISK_P1771 || cmd == TRSDISK_P1791)) {
       /* No; emulate Percom Doubler */

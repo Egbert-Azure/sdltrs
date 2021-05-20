@@ -69,6 +69,7 @@ extern char trs_config_file[FILENAME_MAX];
 extern char trs_state_file[FILENAME_MAX];
 
 extern int trs_model; /* 1, 3, 4, 5(=4p) */
+extern int eg3200;    /* EACA EG 3200: Genie III */
 extern unsigned int foreground;
 extern unsigned int background;
 extern unsigned int gui_foreground;
@@ -207,6 +208,7 @@ extern void mem_bank_base(int bits);
 extern int mem_read_bank_base(void);
 extern void mem_romin(int state);
 extern int cp500_a11_flipflop_toggle(void);
+extern void eg3200_bank_out(Uint8 value);
 
 extern void trs_debug(void);
 
