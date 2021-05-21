@@ -414,34 +414,6 @@ static int trs80_model1_mmio(int address)
   return 0xff;
 }
 
-static int eg3200_bank_read(int address)
-{
-  /* Bank 1: ROM/EPROM */
-  if (!(eg3200_bank_reg & (1 << 0))) {
-    if (address < trs_rom_size)
-      return rom[address];
-  }
-  /* Bank 2: Video Memory 0 (1k, 64x16, TRS-80 M1 compatible) */
-  if (!(eg3200_bank_reg & (1 << 1))) {
-    if (address >= VIDEO_START && address <= 0x3FFF)
-      return video[address - VIDEO_START];
-  }
-  /* Bank 3: Video Memory 1 (additional 1k for 80x24 video mode) */
-  if (!(eg3200_bank_reg & (1 << 2))) {
-    if (address >= 0x4000 && address <= 0x43FF)
-      return video[address - VIDEO_START];
-  }
-  /* Bank 4: Disk I/O and Keyboard */
-  if (!(eg3200_bank_reg & (1 << 3))) {
-    if (address >= 0x37E0 && address <= 0x37EF)
-      return trs80_model1_mmio(address);
-    if (address >= KEYBOARD_START && address <= 0x3880)
-      return trs_kb_mem_read(address);
-  }
-  /* Bank 0: RAM */
-  return memory[address];
-}
-
 int mem_read(int address)
 {
     address &= 0xffff; /* allow callers to be sloppy */
@@ -458,7 +430,30 @@ int mem_read(int address)
       /* Otherwise the request comes from the system */
     }
     if (eg3200) {
-      return eg3200_bank_read(address);
+      /* Bit 0 - Bank 1: ROM/EPROM */
+      if (!(eg3200_bank_reg & (1 << 0))) {
+	if (address < trs_rom_size)
+	  return rom[address];
+      }
+      /* Bit 1 - Bank 2: Video Memory 0 (1k, 64x16, TRS-80 M1 compatible) */
+      if (!(eg3200_bank_reg & (1 << 1))) {
+	if (address >= VIDEO_START && address <= 0x3FFF)
+	  return video[address - VIDEO_START];
+      }
+      /* Bit 2 - Bank 3: Video Memory 1 (additional 1k for 80x24 video mode) */
+      if (!(eg3200_bank_reg & (1 << 2))) {
+	if (address >= 0x4000 && address <= 0x43FF)
+	  return video[address - VIDEO_START];
+      }
+      /* Bit 3 - Bank 4: Disk I/O and Keyboard */
+      if (!(eg3200_bank_reg & (1 << 3))) {
+	if (address >= 0x37E0 && address <= 0x37EF)
+	  return trs80_model1_mmio(address);
+	if (address >= KEYBOARD_START && address <= 0x3880)
+	  return trs_kb_mem_read(address);
+      }
+      /* Bank 0: RAM */
+      return memory[address];
     }
     switch (memory_map) {
       case 0x10: /* Model I */
@@ -622,33 +617,6 @@ static void trs80_model1_write_mmio(int address, int value)
     trs80_model1_write_mem(address, value);
 }
 
-static void eg3200_bank_write(int address, int value)
-{
-  /* Bank 2: Video Memory 0 (1k, 64x16, TRS-80 M1 compatible) */
-  if (!(eg3200_bank_reg & (1 << 1))) {
-    if (address >= VIDEO_START && address <= 0x3FFF) {
-      trs80_screen_write_char(address - VIDEO_START, value);
-      return;
-    }
-  }
-  /* Bank 3: Video Memory 1 (additional 1k for 80x24 video mode) */
-  if (!(eg3200_bank_reg & (1 << 2))) {
-    if (address >= 0x4000 && address <= 0x43FF) {
-      trs80_screen_write_char(address - VIDEO_START, value);
-      return;
-    }
-  }
-  /* Bank 4: Disk I/O */
-  if (!(eg3200_bank_reg & (1 << 3))) {
-    if (address >= 0x37E0 && address <= 0x37EF) {
-      trs80_model1_write_mmio(address, value);
-      return;
-    }
-  }
-  /* Bank 0: RAM */
-  memory[address] = value;
-}
-
 void mem_write(int address, int value)
 {
     address &= 0xffff;
@@ -662,7 +630,29 @@ void mem_write(int address, int value)
       /* Otherwise the request comes from the system */
     }
     if (eg3200) {
-      eg3200_bank_write(address, value);
+      /* Bit 1 - Bank 2: Video Memory 0 (1k, 64x16, TRS-80 M1 compatible) */
+      if (!(eg3200_bank_reg & (1 << 1))) {
+	if (address >= VIDEO_START && address <= 0x3FFF) {
+	  trs80_screen_write_char(address - VIDEO_START, value);
+	  return;
+	}
+      }
+      /* Bit 2 - Bank 3: Video Memory 1 (additional 1k for 80x24 video mode) */
+      if (!(eg3200_bank_reg & (1 << 2))) {
+	if (address >= 0x4000 && address <= 0x43FF) {
+	  trs80_screen_write_char(address - VIDEO_START, value);
+	  return;
+	}
+      }
+      /* Bit 3 - Bank 4: Disk I/O */
+      if (!(eg3200_bank_reg & (1 << 3))) {
+	if (address >= 0x37E0 && address <= 0x37EF) {
+	  trs80_model1_write_mmio(address, value);
+	  return;
+	}
+      }
+      /* Bank 0: RAM */
+      memory[address] = value;
       return;
     }
 
