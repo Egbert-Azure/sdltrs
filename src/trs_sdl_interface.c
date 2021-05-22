@@ -2061,6 +2061,11 @@ void trs_get_event(int wait)
           keysym.unicode = (int) keysym.unicode + 0x20;
 #endif
 
+        if (eg3200) {
+          if (keysym.sym == SDLK_LCTRL)
+            keysym.sym = 0x12f;
+        }
+
         if (trs_model == 1) {
           switch (keysym.sym) {
             case SDLK_F1: keysym.sym = 0x115; break; /* _ */
