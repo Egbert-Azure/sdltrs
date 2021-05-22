@@ -228,7 +228,7 @@ void eg3200_bank_out(Uint8 value)
 	eg3200_bank_reg = value;
 
 	if (!eg3200) {
-		eg3200 = 1;
+		eg3200 = 16; /* 64x16 screen */
 		trs_timer_init();
 	}
 }
