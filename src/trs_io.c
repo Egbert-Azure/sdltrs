@@ -174,10 +174,7 @@ void z80_out(int port, int value)
             trs_screen_80x24(value != 16);
             break;
           case 0x0A: /* Cursor visible */
-            if (!(value & (1 << 5)))
-              cursor_vis = 0;
-            else
-              cursor_vis = 1;
+            cursor_vis = !(value & (1 << 5)) || (value & (1 << 6));
             break;
           case 0x0E: /* Cursor LSB */
             cursor_pos = ((value & 0x3F) << 8) | (cursor_pos & 0x00FF);
