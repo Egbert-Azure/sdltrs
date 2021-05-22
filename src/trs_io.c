@@ -171,6 +171,7 @@ void z80_out(int port, int value)
             break;
           case 0x06: /* Lines displayed */
             eg3200 = value;
+            trs_screen_80x24(value != 16);
             break;
           case 0x0A: /* Cursor visible */
             if (!(value & (1 << 5)))
