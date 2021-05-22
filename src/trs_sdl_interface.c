@@ -1222,6 +1222,9 @@ void trs_screen_init(void)
   }
 
   if (trs_model == 1) {
+    if (eg3200)
+      trs_charset = 13;
+
     if (trs_charset < 3)
       cur_char_width = 6 * scale;
     else
