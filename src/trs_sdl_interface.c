@@ -1747,7 +1747,7 @@ void trs_get_event(int wait)
 #if XDEBUG
           debug("Active\n");
 #endif
-          if (trs_model == 1)
+          if (trs_model == 1 && eg3200 == 0)
             clear_key_queue();
         }
         break;
