@@ -58,6 +58,9 @@ static int modesel;         /* Model I */
 static int modeimage = 0x8; /* Model III/4/4p */
 static int ctrlimage;       /* Model 4/4p & EG 3200 */
 static int rominimage;      /* Model 4p */
+/* EG 3200 CRT */
+static int cursor_pos;
+static int cursor_vis;
 
 int trs_io_debug_flags;
 
@@ -160,9 +163,30 @@ void z80_out(int port, int value)
       }
     case 0xF7:
       if (eg3200) {
-        if (ctrlimage == 1)
-          trs_screen_80x24(value == 80);
-        break;
+        if (cursor_vis)
+          eg3200_cursor(cursor_pos, 0);
+        switch (ctrlimage) {
+          case 0x01: /* Chars displayed */
+            trs_screen_80x24(value == 80);
+            break;
+          case 0x06: /* Lines displayed */
+            eg3200 = value;
+            break;
+          case 0x0A: /* Cursor visible */
+            if (!(value & (1 << 5)))
+              cursor_vis = 0;
+            else
+              cursor_vis = 1;
+            break;
+          case 0x0E: /* Cursor LSB */
+            cursor_pos = ((value & 0x3F) << 8) | (cursor_pos & 0x00FF);
+            break;
+          case 0x0F: /* Cursor MSB */
+            cursor_pos = ((value & 0xFF) << 0) | (cursor_pos & 0xFF00);
+            break;
+        }
+        if (cursor_vis)
+          eg3200_cursor(cursor_pos, cursor_vis);
       }
       if (stringy)
         stringy_out(port & 7, value);

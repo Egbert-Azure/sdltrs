@@ -2282,7 +2282,7 @@ void trs_screen_alternate(int flag)
 
 static void trs_screen_640x240(int flag)
 {
-  if (flag == screen640x240) return;
+  if (flag == screen640x240 && eg3200 == 0) return;
   screen640x240 = flag;
   if (flag) {
     row_chars = 80;
@@ -2292,6 +2292,10 @@ static void trs_screen_640x240(int flag)
     row_chars = 64;
     col_chars = 16;
     cur_char_height = TRS_CHAR_HEIGHT * 2;
+  }
+  if (eg3200) {
+    col_chars = eg3200;
+    screen_init();
   }
   screen_chars = row_chars * col_chars;
   if (resize)
@@ -2549,6 +2553,10 @@ void trs_screen_refresh(void)
     trs_disk_led(-1, 0);
     trs_hard_led(-1, 0);
     trs_turbo_led();
+  }
+  if (eg3200) {
+    z80_out(0xF6, 0xFF);
+    z80_out(0xF7, 0xFF);
   }
   drawnRectCount = MAX_RECTS; /* Will force redraw of whole screen */
   trs_sdl_flush();
@@ -3272,6 +3280,35 @@ hrg_update_char(int position)
   SDL_FillRects(screen, &rect[0], n, foreground);
 }
 
+void eg3200_cursor(int position, int visible)
+{
+  int row, col;
+  SDL_Rect rect;
+
+  if (position >= (unsigned int)screen_chars)
+    return;
+
+  if (visible == 0) {
+    trs_screen_write_char(position, trs_screen[position]);
+    return;
+  }
+
+  if (row_chars == 64) {
+    row = position / 64;
+    col = position - (row * 64);
+  } else {
+    row = position / 80;
+    col = position - (row * 80);
+  }
+
+  rect.h = 2 * scale;
+  rect.w = cur_char_width;
+  rect.x = col * cur_char_width + left_margin;
+  rect.y = row * cur_char_height + top_margin + cur_char_height - 6;
+
+  SDL_FillRect(screen, &rect, foreground);
+  drawnRectCount = MAX_RECTS;
+}
 
 void trs_get_mouse_pos(int *x, int *y, unsigned int *buttons)
 {
