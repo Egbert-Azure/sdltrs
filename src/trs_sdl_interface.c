@@ -2755,9 +2755,10 @@ void trs_screen_write_char(unsigned int position, Uint8 char_index)
   dstRect.x = col * cur_char_width + left_margin;
   dstRect.y = row * cur_char_height + top_margin;
 
-  if (trs_model == 1 && char_index >= 0xc0) {
+  if (trs_model == 1 && eg3200 == 0) {
     /* On Model I, 0xc0-0xff is another copy of 0x80-0xbf */
-    char_index -= 0x40;
+    if (char_index >= 0xc0)
+      char_index -= 0x40;
   }
   if (char_index >= 0x80 && char_index <= 0xbf && !(currentmode & INVERSE)) {
     /* Use box graphics character bitmap */
