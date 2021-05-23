@@ -62,6 +62,9 @@ static int rominimage;      /* Model 4p */
 static int cursor_pos;
 static int cursor_vis;
 
+/* EG 3200 RTC */
+static int rtc_reg;
+
 int trs_io_debug_flags;
 
 /*ARGSUSED*/
@@ -130,6 +133,10 @@ void z80_out(int port, int value)
       break;
     case 0xB5: /* Orchestra-85 right channel */
       trs_orch90_out(2, value);
+      break;
+    case 0xE0:
+      if (eg3200)
+        rtc_reg = value;
       break;
     case 0xEC:
       if (lowe_le18)
@@ -395,9 +402,12 @@ int z80_in(int port)
 
   if ((port >= 0x70 && port <= 0x7C)
       || (port >= 0xB0 && port <= 0xBC)
-      || (port >= 0xE0 && port <= 0xE1)) {
+      || (port == 0xE0)) {
     time_t time_secs = time(NULL);
     struct tm *time_info = localtime(&time_secs);
+
+    if (eg3200)
+      port = (rtc_reg >> 4) & 0x0F;
 
     switch (port & 0x0F) {
     case 0xC: /* year (high) */
