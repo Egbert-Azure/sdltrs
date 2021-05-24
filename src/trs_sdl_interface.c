@@ -2778,19 +2778,12 @@ void trs_gui_write_char(int col, int row, Uint8 char_index, int invert)
   dstRect.x = col * cur_char_width + left_margin;
   dstRect.y = row * cur_char_height + top_margin;
 
-  if (trs_model == 1 && char_index >= 0xc0)
-    /* On Model I, 0xc0-0xff is another copy of 0x80-0xbf */
-    char_index -= 0x40;
-  if (char_index >= 0x80 && char_index <= 0xbf && !(currentmode & INVERSE)) {
+  if (char_index >= 0x80 && char_index <= 0xbf)
     /* Use graphics character bitmap instead of font */
     SDL_BlitSurface(trs_box[2][char_index - 0x80], &srcRect, screen, &dstRect);
-  } else {
+  else
     /* Draw character using a builtin bitmap */
-    if (trs_model > 1 && char_index >= 0xc0 &&
-        (currentmode & (ALTERNATE + INVERSE)) == 0)
-      char_index -= 0x40;
     SDL_BlitSurface(trs_char[invert ? 5 : 4][char_index], &srcRect, screen, &dstRect);
-  }
 }
 
 static void grafyx_write_byte(int x, int y, char byte)
