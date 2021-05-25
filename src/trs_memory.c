@@ -283,6 +283,8 @@ void trs_reset(int poweron)
     trs_emu_mouse = FALSE;
     m_a11_flipflop = 0;
     bank_base = 0x10000;
+    eg3200 = 0;
+    eg3200_bank_reg = 0xFF;
     mem_command = 0;
     supermem_base = 0;
     supermem_hi = 0x8000;
@@ -317,8 +319,6 @@ void trs_reset(int poweron)
 	hrg_onoff(0);		/* Switch off HRG1B hi-res graphics. */
 	bank_base = 0;
 	selector_reg = 0;
-	eg3200 = 0;
-	eg3200_bank_reg = 0xFF;
     }
     trs_kb_reset();  /* Part of keyboard stretch kludge */
     clear_key_queue(); /* init the key queue */
