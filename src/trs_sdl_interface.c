@@ -3408,9 +3408,6 @@ void eg3200_cursor(int position, int visible)
   int row, col;
   SDL_Rect rect;
 
-  if (position >= (unsigned int)screen_chars)
-    return;
-
   if (visible == 0) {
     trs_screen_write_char(position, trs_screen[position]);
     return;
