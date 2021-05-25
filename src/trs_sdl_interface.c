@@ -1210,8 +1210,12 @@ void trs_screen_init(void)
 
   switch (trs_model) {
     case 1:
-      trs_charset = trs_charset1;
-      currentmode = NORMAL;
+      if (eg3200)
+        trs_charset = 13;
+      else {
+        trs_charset = trs_charset1;
+        currentmode = NORMAL;
+      }
       break;
     case 3:
       trs_charset = trs_charset3;
@@ -1222,9 +1226,6 @@ void trs_screen_init(void)
   }
 
   if (trs_model == 1) {
-    if (eg3200)
-      trs_charset = 13;
-
     if (trs_charset < 3)
       cur_char_width = 6 * scale;
     else
@@ -2382,6 +2383,7 @@ void trs_screen_80x24(int flag)
 
 void screen_init(void)
 {
+  currentmode = NORMAL;
   /* initially, screen is blank (i.e. full of spaces) */
   memset(trs_screen, ' ', sizeof(trs_screen));
   memset(grafyx, 0, (2 * G_YSIZE * MAX_SCALE) * (G_XSIZE * MAX_SCALE));
