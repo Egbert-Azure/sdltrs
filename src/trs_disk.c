@@ -2193,6 +2193,12 @@ trs_disk_command_write(Uint8 cmd)
     debug("command_write(0x%02x) pc 0x%04x\n", cmd, Z80_PC);
   }
 
+  if (eg3200) {
+    if ((cmd & 0xF8) == 0xF8) {
+      state.density = cmd & 1;
+      return;
+    }
+  }
   /* Handle DMK partial track reformat */
   if (d->emutype == DMK &&
       (state.currcommand & ~TRSDISK_EBIT) == TRSDISK_WRITETRK &&
@@ -2974,12 +2980,6 @@ trs_disk_command_write(Uint8 cmd)
 
   case TRSDISK_WRITETRK:
     state.last_readadr = -1;
-    if (eg3200) {
-      if ((cmd & 0xF8) == 0xF8) {
-	state.density = cmd & 1;
-	return;
-      }
-    }
     /* Really a write track? */
     if (trs_model == 1 && (cmd == TRSDISK_P1771 || cmd == TRSDISK_P1791)) {
       /* No; emulate Percom Doubler */
