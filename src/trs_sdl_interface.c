@@ -2328,7 +2328,6 @@ void trs_screen_80x24(int flag)
 
 void screen_init(void)
 {
-  currentmode = NORMAL;
   /* initially, screen is blank (i.e. full of spaces) */
   memset(trs_screen, ' ', sizeof(trs_screen));
   memset(grafyx, 0, (G_YSIZE * 2) * G_XSIZE);
