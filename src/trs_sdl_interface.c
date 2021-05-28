@@ -3425,7 +3425,7 @@ void eg3200_cursor(int position, int visible)
   rect.h = 2 * scale;
   rect.w = cur_char_width;
   rect.x = col * cur_char_width + left_margin;
-  rect.y = row * cur_char_height + top_margin + 9 * (scale * 2);
+  rect.y = row * cur_char_height + top_margin + 11 * (scale * 2);
 
   SDL_FillRect(screen, &rect, foreground);
   addToDrawList(&rect);
