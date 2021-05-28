@@ -3290,10 +3290,10 @@ hrg_update_char(int position)
   SDL_FillRects(screen, &rect[0], n, foreground);
 }
 
-void eg3200_cursor(int position, int visible)
+void eg3200_cursor(int position, int line, int visible)
 {
   int row, col;
-  SDL_Rect rect;
+  SDL_Rect rect, srcRect;
 
   if (visible == 0) {
     trs_screen_write_char(position, trs_screen[position]);
@@ -3308,12 +3308,24 @@ void eg3200_cursor(int position, int visible)
     col = position - (row * 80);
   }
 
-  rect.h = 2 * scale;
   rect.w = cur_char_width;
   rect.x = col * cur_char_width + left_margin;
-  rect.y = row * cur_char_height + top_margin + 11 * (scale * 2);
+  rect.y = row * cur_char_height + top_margin;
 
-  SDL_FillRect(screen, &rect, foreground);
+  if (line == 0) {
+    if (position >= (unsigned int)screen_chars) return;
+    /* Draw block cursor with inverse char */
+    srcRect.x = 0;
+    srcRect.y = 0;
+    srcRect.w = cur_char_width;
+    srcRect.h = cur_char_height;
+    SDL_BlitSurface(trs_char[2][trs_screen[position]], &srcRect, screen, &rect);
+  } else {
+    rect.h = 2 * scale;
+    rect.w = cur_char_width;
+    rect.y = rect.y + line * (scale * 2);
+    SDL_FillRect(screen, &rect, foreground);
+  }
   drawnRectCount = MAX_RECTS;
 }
 
