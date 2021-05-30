@@ -610,6 +610,10 @@ void trs_io_save(FILE *file)
   trs_save_int(file, &modeimage, 1);
   trs_save_int(file, &ctrlimage, 1);
   trs_save_int(file, &rominimage, 1);
+  trs_save_int(file, &cursor_csr, 1);
+  trs_save_int(file, &cursor_pos, 1);
+  trs_save_int(file, &cursor_vis, 1);
+  trs_save_int(file, &rtc_reg, 1);
 }
 
 void trs_io_load(FILE *file)
@@ -618,5 +622,9 @@ void trs_io_load(FILE *file)
   trs_load_int(file, &modeimage, 1);
   trs_load_int(file, &ctrlimage, 1);
   trs_load_int(file, &rominimage, 1);
+  trs_load_int(file, &cursor_csr, 1);
+  trs_load_int(file, &cursor_pos, 1);
+  trs_load_int(file, &cursor_vis, 1);
+  trs_load_int(file, &rtc_reg, 1);
 }
 
