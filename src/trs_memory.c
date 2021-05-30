@@ -231,6 +231,7 @@ void eg3200_bank_out(Uint8 value)
 		eg3200 = 16; /* 64x16 screen */
 		trs_disk_doubler = TRSDISK_PERCOM;
 		trs_timer_init();
+		trs_screen_80x24(0);
 		trs_screen_inverse(0);
 	}
 }
