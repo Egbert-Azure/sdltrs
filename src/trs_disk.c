@@ -1227,17 +1227,16 @@ trs_disk_select_write(Uint8 data)
   }
 
   state.status &= ~TRSDISK_NOTRDY;
-  if (trs_model == 1) {
+  /* EG 3200 uses bit 4 to select side */
+  if (eg3200) {
+    state.curside = (data & 0x10) != 0;
+  } else if (trs_model == 1) {
     /* Disk 3 and side select share a bit.  You can't have a drive :3
        on a real Model I if any drive is two-sided.  Here we are more
        generous and just forbid drive :3 from being 2-sided. */
     state.curside = ( (data & (TRSDISK_0|TRSDISK_1|TRSDISK_2)) != 0 &&
 		      (data & TRSDISK_SIDE) != 0 );
     if (state.curside) data &= ~TRSDISK_SIDE;
-
-    /* EG 3200 uses bit 4 to select side */
-    if (eg3200)
-      state.curside = (data & 0x10) != 0;
   } else {
     state.curside = (data & TRSDISK3_SIDE) != 0;
     state.density = (data & TRSDISK3_MFM) != 0;
