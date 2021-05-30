@@ -947,6 +947,8 @@ void trs_mem_save(FILE *file)
   trs_save_int(file, &selector, 1);
   trs_save_int(file, &selector_reg, 1);
   trs_save_int(file, &m_a11_flipflop, 1);
+  trs_save_int(file, &eg3200, 1);
+  trs_save_int(file, &eg3200_bank_reg, 1);
 }
 
 void trs_mem_load(FILE *file)
@@ -970,5 +972,7 @@ void trs_mem_load(FILE *file)
   trs_load_int(file, &selector, 1);
   trs_load_int(file, &selector_reg, 1);
   trs_load_int(file, &m_a11_flipflop, 1);
+  trs_load_int(file, &eg3200, 1);
+  trs_load_int(file, &eg3200_bank_reg, 1);
 }
 
