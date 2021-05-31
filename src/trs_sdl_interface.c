@@ -877,6 +877,7 @@ int trs_load_config_file(void)
 
   background = BLACK;
   cassette_default_sample_rate = DEFAULT_SAMPLE_RATE;
+  currentmode = NORMAL;
   /* Disk Sizes are 5" or 8" for all Eight Default Drives */
   /* Corrected by Larry Kraemer 08-01-2011 */
   disksizes[0] = 5;
