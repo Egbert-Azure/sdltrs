@@ -1523,12 +1523,13 @@ void trs_sdl_flush(void)
       SDL_FillRect(screen, &rect, background);
 #else
     int const width = screen->format->BytesPerPixel * OrigWidth;
+    int const pitch = screen->pitch;
     Uint8 *pixels   = screen->pixels;
     Uint8 *pixel;
     int x, y;
 
     SDL_LockSurface(screen);
-    for (y = 0; y < screen->pitch * screen_height; y += screen->pitch * 2) {
+    for (y = 0; y < pitch * screen_height; y += pitch * 2) {
       pixel = pixels + y;
       for (x = 0; x < width; x++)
         *pixel++ &= scanshade;
