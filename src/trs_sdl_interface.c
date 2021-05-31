@@ -3308,6 +3308,8 @@ void eg3200_cursor(int position, int line, int visible)
     trs_screen_write_char(position, trs_screen[position]);
     return;
   }
+  if (position >= (unsigned int)screen_chars)
+    return;
 
   if (row_chars == 64) {
     row = position / 64;
@@ -3322,7 +3324,6 @@ void eg3200_cursor(int position, int line, int visible)
   rect.y = row * cur_char_height + top_margin;
 
   if (line == 0) {
-    if (position >= (unsigned int)screen_chars) return;
     /* Draw block cursor with inverse char */
     srcRect.x = 0;
     srcRect.y = 0;
