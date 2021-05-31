@@ -1772,14 +1772,20 @@ void trs_get_event(int wait)
         switch (keysym.sym) {
           /* Trap some function keys here */
           case SDLK_F7:
-            if (SDL_GetModState() & KMOD_SHIFT)
-              call_function(EMULATOR);
-            else
-              call_function(GUI);
-            continue;
+            if (eg3200 == 0) {
+              if (SDL_GetModState() & KMOD_SHIFT)
+                call_function(EMULATOR);
+              else
+                call_function(GUI);
+              continue;
+            }
+            break;
           case SDLK_F8:
-            trs_exit(!(SDL_GetModState() & KMOD_SHIFT));
-            continue;
+            if (eg3200 == 0) {
+              trs_exit(!(SDL_GetModState() & KMOD_SHIFT));
+              continue;
+            }
+            break;
           case SDLK_F9:
             if (SDL_GetModState() & KMOD_SHIFT) {
               cpu_panel = !cpu_panel;
@@ -2021,16 +2027,18 @@ void trs_get_event(int wait)
         if (eg3200) {
           if (keysym.sym == SDLK_LCTRL)
             keysym.sym = 0x12f;
-        }
-
-        if (trs_model == 1) {
-          switch (keysym.sym) {
-            case SDLK_F1: keysym.sym = 0x115; break; /* _ */
-            case SDLK_F2: keysym.sym = 0x120; break; /* \ */
-            case SDLK_F3: keysym.sym = 0x121; break; /* ] */
-            case SDLK_F4: keysym.sym = 0x122; break; /* ^ */
-            default:
-              break;
+          else if (keysym.sym >= SDLK_F1 && keysym.sym <= SDLK_F8)
+            keysym.sym = (keysym.sym - SDLK_F1) + 0x080;
+        } else {
+          if (trs_model == 1) {
+            switch (keysym.sym) {
+              case SDLK_F1: keysym.sym = 0x115; break; /* _ */
+              case SDLK_F2: keysym.sym = 0x120; break; /* \ */
+              case SDLK_F3: keysym.sym = 0x121; break; /* ] */
+              case SDLK_F4: keysym.sym = 0x122; break; /* ^ */
+              default:
+                break;
+            }
           }
         }
 
