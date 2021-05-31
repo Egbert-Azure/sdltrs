@@ -128,14 +128,22 @@ int key_queue_entries;
 #define TK_F2           TK(7, 5)  /* M4 only */
 #define TK_F3           TK(7, 6)  /* M4 only */
 #define TK_Unused       TK(7, 7)
+#define TK_EG3200_F1    TK(8, 0)
+#define TK_EG3200_F2    TK(8, 1)
+#define TK_EG3200_F3    TK(8, 2)
+#define TK_EG3200_F4    TK(8, 3)
+#define TK_EG3200_F5    TK(8, 4)
+#define TK_EG3200_F6    TK(8, 5)
+#define TK_EG3200_F7    TK(8, 6)
+#define TK_EG3200_F8    TK(8, 7)
 
 /* Fake keycodes with special meanings */
-#define TK_NULL                 TK(8, 0)
-#define TK_Neutral              TK(8, 1)
-#define TK_ForceShift           TK(8, 2)
-#define TK_ForceNoShift         TK(8, 3)
-#define TK_ForceShiftPersistent TK(8, 4)
-#define TK_AllKeysUp            TK(8, 5)
+#define TK_NULL                 TK(9, 0)
+#define TK_Neutral              TK(9, 1)
+#define TK_ForceShift           TK(9, 2)
+#define TK_ForceNoShift         TK(9, 3)
+#define TK_ForceShiftPersistent TK(9, 4)
+#define TK_AllKeysUp            TK(9, 5)
 #define TK_Joystick             TK(10,  0)
 #define TK_North                TK(10,  1)
 #define TK_Northeast            TK(10,  9)
@@ -284,14 +292,14 @@ KeyTable ascii_key_table[] = {
 /* 0x7d */    { TK_RightBracket, TK_ForceShift },
 /* 0x7e */    { TK_Caret, TK_ForceShift },
 /* 0x7f */    { TK_Left, TK_Neutral },
-/* 0x80 */    { TK_NULL, TK_Neutral },
-/* 0x81 */    { TK_NULL, TK_Neutral },
-/* 0x82 */    { TK_NULL, TK_Neutral },
-/* 0x83 */    { TK_NULL, TK_Neutral },
-/* 0x84 */    { TK_NULL, TK_Neutral },
-/* 0x85 */    { TK_NULL, TK_Neutral },
-/* 0x86 */    { TK_NULL, TK_Neutral },
-/* 0x87 */    { TK_NULL, TK_Neutral },
+/* 0x80 */    { TK_EG3200_F1, TK_Neutral },
+/* 0x81 */    { TK_EG3200_F2, TK_Neutral },
+/* 0x82 */    { TK_EG3200_F3, TK_Neutral },
+/* 0x83 */    { TK_EG3200_F4, TK_Neutral },
+/* 0x84 */    { TK_EG3200_F5, TK_Neutral },
+/* 0x85 */    { TK_EG3200_F6, TK_Neutral },
+/* 0x86 */    { TK_EG3200_F7, TK_Neutral },
+/* 0x87 */    { TK_EG3200_F8, TK_Neutral },
 /* 0x88 */    { TK_NULL, TK_Neutral },
 /* 0x89 */    { TK_NULL, TK_Neutral },
 /* 0x8a */    { TK_NULL, TK_Neutral },
@@ -481,7 +489,7 @@ KeyTable ascii_key_table[] = {
 /* 0x142 */    { TK_NULL, TK_Neutral },
 };
 
-static int keystate[8];
+static int keystate[9];
 static int force_shift = TK_Neutral;
 static int joystate;
 int key_heartbeat;
@@ -729,7 +737,7 @@ static void change_keystate(int action)
   switch (action) {
     case TK_AllKeysUp:
       /* force all keys up */
-      for (i = 0; i < 7; i++) {
+      for (i = 0; i < 8; i++) {
         keystate[i] = 0;
       }
       force_shift = TK_Neutral;
@@ -756,33 +764,42 @@ static int kb_mem_value(int address)
 {
   int i, bitpos, data = 0;
 
-  for (i = 0, bitpos = 1; i < 7; i++, bitpos <<= 1) {
-    if (address & bitpos) {
-      data |= keystate[i];
-    }
-  }
-  if (address & 0x80) {
-    int tmp = keystate[7];
-
-    if (trs_model == 1) {
-      if (force_shift == TK_ForceNoShift) {
-        /* deactivate shift key */
-        tmp &= ~1;
-      } else if (force_shift != TK_Neutral) {
-        /* activate shift key */
-        tmp |= 1;
+  if ((address & 0x00e0) < 0x00a0) {
+    for (i = 0, bitpos = 1; i < 7; i++, bitpos <<= 1) {
+      if (address & bitpos) {
+        data |= keystate[i];
       }
-    } else {
-      if (force_shift == TK_ForceNoShift) {
-        /* deactivate both shift keys */
-        tmp &= ~3;
-      } else if (force_shift != TK_Neutral) {
-        /* if no shift keys are down, activate left shift key */
-        if ((tmp & 3) == 0)
+    }
+    if (address & 0x80) {
+      int tmp = keystate[7];
+
+      if (trs_model == 1) {
+        if (force_shift == TK_ForceNoShift) {
+          /* deactivate shift key */
+          tmp &= ~1;
+        } else if (force_shift != TK_Neutral) {
+          /* activate shift key */
           tmp |= 1;
         }
+      } else {
+        if (force_shift == TK_ForceNoShift) {
+          /* deactivate both shift keys */
+          tmp &= ~3;
+        } else if (force_shift != TK_Neutral) {
+          /* if no shift keys are down, activate left shift key */
+          if ((tmp & 3) == 0)
+            tmp |= 1;
+          }
+      }
+      data |= tmp;
     }
-  data |= tmp;
+  } else {
+    for (i = 0, bitpos = 1; i < 5; i++, bitpos <<= 1) {
+      if (address & bitpos) {
+        data |= keystate[i];
+      }
+    }
+    data |= keystate[8];
   }
   return data;
 }
