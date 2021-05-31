@@ -1220,9 +1220,11 @@ void trs_screen_init(void)
     case 3:
       trs_charset = trs_charset3;
       currentmode = NORMAL;
+           resize = resize3;
       break;
     default:
       trs_charset = trs_charset4;
+           resize = resize4;
   }
 
   if (trs_model == 1) {
@@ -1242,9 +1244,8 @@ void trs_screen_init(void)
   border_width = fullscreen ? 0 : window_border_width;
   led_width = trs_show_led ? 8 : 0;
   led_height = led_width * scale;
-  resize = (trs_model >= 4) ? resize4 : resize3;
 
-  if (trs_model >= 3  && !resize) {
+  if (trs_model >= 3 && !resize) {
     OrigWidth = cur_char_width * 80 + 2 * border_width;
     left_margin = cur_char_width * (80 - row_chars) / 2 + border_width;
     OrigHeight = TRS_CHAR_HEIGHT4 * (scale * 2) * 24 + 2 * border_width + led_height;
@@ -2370,7 +2371,7 @@ static void trs_screen_640x240(int flag)
     screen_init();
   }
   screen_chars = row_chars * col_chars;
-  if (resize)
+  if (eg3200 || resize)
     trs_screen_init();
   else {
     left_margin = cur_char_width * (80 - row_chars) / 2 + border_width;
