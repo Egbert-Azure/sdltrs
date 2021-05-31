@@ -1766,15 +1766,13 @@ void trs_get_event(int wait)
         if (event.window.event == SDL_WINDOWEVENT_EXPOSED) {
           if ((screen = SDL_GetWindowSurface(window)) == NULL)
             fatal("failed to get window surface: %s", SDL_GetError());
-          SDL_UpdateWindowSurface(window);
-          if (trs_show_led) {
-            trs_disk_led(-1, 0);
-            trs_hard_led(-1, 0);
-            trs_turbo_led();
-          }
-        }
-        if (event.window.event == SDL_WINDOWEVENT_SIZE_CHANGED) {
-          SDL_UpdateWindowSurface(window);
+          else {
+            SDL_UpdateWindowSurface(window);
+            if (trs_show_led) {
+              trs_disk_led(-1, 0);
+              trs_hard_led(-1, 0);
+              trs_turbo_led();
+            }
 #else
       case SDL_ACTIVEEVENT:
         if (event.active.state & SDL_APPACTIVE) {
@@ -1786,9 +1784,7 @@ void trs_get_event(int wait)
             if (trs_model == 1 && eg3200 == 0)
               clear_key_queue();
           }
-#ifndef SDL2
         }
-#endif
         break;
 
       case SDL_KEYDOWN:
