@@ -3319,7 +3319,6 @@ void eg3200_cursor(int position, int line, int visible)
     col = position - (row * 80);
   }
 
-  rect.w = cur_char_width;
   rect.x = col * cur_char_width + left_margin;
   rect.y = row * cur_char_height + top_margin;
 
