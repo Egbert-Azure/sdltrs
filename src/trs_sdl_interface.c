@@ -2302,7 +2302,7 @@ void trs_screen_alternate(int flag)
 
 static void trs_screen_640x240(int flag)
 {
-  if (flag == screen640x240 && eg3200 == 0) return;
+  if (flag == screen640x240) return;
   screen640x240 = flag;
   if (flag) {
     row_chars = 80;
@@ -2313,12 +2313,8 @@ static void trs_screen_640x240(int flag)
     col_chars = 16;
     cur_char_height = TRS_CHAR_HEIGHT * 2;
   }
-  if (eg3200) {
-    col_chars = eg3200;
-    screen_init();
-  }
   screen_chars = row_chars * col_chars;
-  if (eg3200 || resize)
+  if (resize)
     trs_screen_init();
   else {
     left_margin = cur_char_width * (80 - row_chars) / 2 + border_width;
@@ -3338,6 +3334,22 @@ void eg3200_cursor(int position, int line, int visible)
     SDL_FillRect(screen, &rect, foreground);
   }
   drawnRectCount = MAX_RECTS;
+}
+
+void eg3200_screen(int lines)
+{
+  if (lines == eg3200)
+    return;
+
+  if (lines == 16)
+    row_chars = 64;
+  else
+    row_chars = 80;
+
+  col_chars = eg3200 = lines;
+  screen_chars = row_chars * col_chars;
+  screen_init();
+  trs_screen_init();
 }
 
 void trs_get_mouse_pos(int *x, int *y, unsigned int *buttons)

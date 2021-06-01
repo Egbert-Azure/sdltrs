@@ -174,12 +174,8 @@ void z80_out(int port, int value)
         if (cursor_vis)
           eg3200_cursor(cursor_pos, cursor_csr, 0);
         switch (ctrlimage) {
-          case 0x01: /* Chars displayed */
-            trs_screen_80x24(value == 80);
-            break;
           case 0x06: /* Lines displayed */
-            eg3200 = value;
-            trs_screen_80x24(value != 16);
+            eg3200_screen(value);
             break;
           case 0x0A: /* Cursor visible / Cursor Start Line */
             cursor_vis = !(value & (1 << 5)) || (value & (1 << 6));
