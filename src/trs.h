@@ -210,6 +210,7 @@ extern void mem_romin(int state);
 extern int cp500_a11_flipflop_toggle(void);
 extern void eg3200_bank_out(Uint8 value);
 extern void eg3200_cursor(int position, int line, int visible);
+extern void eg3200_screen(int lines);
 
 extern void trs_debug(void);
 
