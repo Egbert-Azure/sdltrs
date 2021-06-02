@@ -190,9 +190,10 @@ void z80_out(int port, int value)
         }
         if (cursor_vis)
           eg3200_cursor(cursor_pos, cursor_csr, cursor_vis);
+      } else {
+        if (stringy)
+          stringy_out(port & 7, value);
       }
-      if (stringy)
-        stringy_out(port & 7, value);
       break;
     case 0xF8:
       trs_uart_data_out(value);
@@ -206,7 +207,7 @@ void z80_out(int port, int value)
       break;
     case 0xFE:
       /* Typical location for clock speedup kits */
-      if (speedup)
+      if (speedup && eg3200 == 0)
         trs_timer_speed(value);
       break;
     case 0xFF:
@@ -508,7 +509,7 @@ int z80_in(int port)
     case 0xF5:
     case 0xF6:
     case 0xF7:
-      if (stringy)
+      if (stringy && eg3200 == 0)
         value = stringy_in(port & 7);
       goto done;
     case 0xF9:
