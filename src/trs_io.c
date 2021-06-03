@@ -406,7 +406,7 @@ int z80_in(int port)
     struct tm *time_info = localtime(&time_secs);
 
     if (eg3200)
-      port = (rtc_reg >> 4) & 0x0F;
+      port = (rtc_reg >> 4);
 
     switch (port & 0x0F) {
     case 0xC: /* year (high) */
