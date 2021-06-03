@@ -1364,7 +1364,8 @@ static void DrawSelectionRectangle(int orig_x, int orig_y, int copy_x, int copy_
     orig_y = swap;
   }
 
-  SDL_LockSurface(screen);
+  if (SDL_MUSTLOCK(screen))
+    SDL_LockSurface(screen);
 
   orig_x *= bpp;
   copy_x *= bpp;
@@ -1392,7 +1393,8 @@ static void DrawSelectionRectangle(int orig_x, int orig_y, int copy_x, int copy_
     }
   }
 
-  SDL_UnlockSurface(screen);
+  if (SDL_MUSTLOCK(screen))
+    SDL_UnlockSurface(screen);
 }
 
 static void ProcessCopySelection(int selectAll)
@@ -1529,13 +1531,17 @@ void trs_sdl_flush(void)
     Uint8 *pixel;
     int x, y;
 
-    SDL_LockSurface(screen);
+    if (SDL_MUSTLOCK(screen))
+      SDL_LockSurface(screen);
+
     for (y = 0; y < pitch * screen_height; y += pitch * 2) {
       pixel = pixels + y;
       for (x = 0; x < width; x++)
         *pixel++ &= scanshade;
     }
-    SDL_UnlockSurface(screen);
+
+    if (SDL_MUSTLOCK(screen))
+      SDL_UnlockSurface(screen);
 #endif
   }
 
