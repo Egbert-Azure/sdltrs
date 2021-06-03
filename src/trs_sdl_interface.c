@@ -1763,16 +1763,12 @@ void trs_get_event(int wait)
         break;
 #ifdef SDL2
       case SDL_WINDOWEVENT:
-        if (event.window.event == SDL_WINDOWEVENT_EXPOSED) {
+        SDL_UpdateWindowSurface(window);
+        if (event.window.event == SDL_WINDOWEVENT_SIZE_CHANGED) {
           if ((screen = SDL_GetWindowSurface(window)) == NULL)
             fatal("failed to get window surface: %s", SDL_GetError());
           else {
-            SDL_UpdateWindowSurface(window);
-            if (trs_show_led) {
-              trs_disk_led(-1, 0);
-              trs_hard_led(-1, 0);
-              trs_turbo_led();
-            }
+            trs_screen_refresh();
 #else
       case SDL_ACTIVEEVENT:
         if (event.active.state & SDL_APPACTIVE) {
