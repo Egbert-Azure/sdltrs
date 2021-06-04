@@ -3473,6 +3473,10 @@ void eg3200_screen(int lines)
   col_chars = eg3200 = lines;
   screen_chars = row_chars * col_chars;
   screen_init();
+#ifdef SDL2
+  /* Needed for OpenBox */
+  SDL_HideWindow(window);
+#endif
   trs_screen_init();
 }
 
