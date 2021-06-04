@@ -3430,7 +3430,7 @@ void eg3200_cursor(int position, int line, int visible)
     trs_screen_write_char(position, trs_screen[position]);
     return;
   }
-  if (position >= (unsigned int)screen_chars)
+  if (position >= screen_chars)
     return;
 
   if (row_chars == 64) {
