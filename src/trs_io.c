@@ -164,11 +164,13 @@ void z80_out(int port, int value)
         trs_screen_inverse(value & 1);
         break;
       }
+      /* Fall through */
     case 0xF6:
       if (eg3200) {
         ctrlimage = value;
         break;
       }
+      /* Fall through */
     case 0xF7:
       if (eg3200) {
         if (cursor_vis)
