@@ -824,6 +824,26 @@ Uint8 *mem_pointer(int address, int writing)
           return &supermem_ram[supermem_base + (address & 0x7FFF)];
       /* Otherwise the request comes from the system */
     }
+    /* EG 3200 bank switching, inverted (bit set to 0 => bank enabled) */
+    if (eg3200) {
+      /* Bit 0 - Bank 1: ROM/EPROM */
+      if ((eg3200_bank_reg & (1 << 0)) == 0) {
+	if (address < trs_rom_size)
+	  return &rom[address];
+      }
+      /* Bit 1 - Bank 2: Video Memory 0 (1k, 64x16, TRS-80 M1 compatible) */
+      if ((eg3200_bank_reg & (1 << 1)) == 0) {
+	if (address >= VIDEO_START && address <= 0x3FFF)
+	  return &video[address - VIDEO_START];
+      }
+      /* Bit 2 - Bank 3: Video Memory 1 (additional 1k for 80x24 video mode) */
+      if ((eg3200_bank_reg & (1 << 2)) == 0) {
+	if (address >= 0x4000 && address <= 0x43FF)
+	  return &video[address - VIDEO_START];
+      }
+      /* Bank 0: RAM */
+      return &memory[address];
+    }
 
     switch (memory_map + (writing << 3)) {
       case 0x10: /* Model I */
