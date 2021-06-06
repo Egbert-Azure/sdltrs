@@ -1212,8 +1212,12 @@ void trs_screen_init(void)
 
   switch (trs_model) {
     case 1:
-      if (eg3200)
-        trs_charset = 13;
+      if (eg3200) {
+        if (trs_rom_size > 2048)
+          trs_charset = 14;
+        else
+          trs_charset = 13;
+      }
       else {
         trs_charset = trs_charset1;
         currentmode = NORMAL;
