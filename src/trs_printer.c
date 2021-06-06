@@ -38,6 +38,7 @@
  */
 
 #include <errno.h>
+#include <string.h>
 #include <sys/stat.h>
 #include "error.h"
 #include "trs.h"
