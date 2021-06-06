@@ -1,3 +1,7 @@
+## Version 1.2.19 Release 06-06-2021:
+
+  * Added support for EACA EG 3200 (Genie III).
+
 ## Version 1.2.18 Release 05-09-2021:
 
   * Added Load/Save TRS-80 memory in debugger.

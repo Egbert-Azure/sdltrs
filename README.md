@@ -23,6 +23,7 @@ Updated version of Mark Grebe's [SDLTRS]:
   * Support UART I/O ports for System 80
   * Load and Save TRS-80 memory in debugger
   * Patch Model I ROM to boot from hard disk drive
+  * Support EACA EG 3200 (Genie III) system
 
 ## License
 
