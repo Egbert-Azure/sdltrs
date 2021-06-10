@@ -538,7 +538,7 @@ int trs_gui_readdirectory(const char *path, const char *mask, int browse_dir)
     trs_gui_create_filename_list();
     while ((dir_entry = readdir(directory))) {
 
-      if (strcmp(dir_entry->d_name, ".") == 0)
+      if (dir_entry->d_name[0] == '.' && dir_entry->d_name[1] == 0)
         continue;
 
       if (snprintf(pathname, FILENAME_MAX, "%s%s",
@@ -725,8 +725,8 @@ read_directory:
         case SDLK_TAB:
           if (key == SDLK_TAB && browse_dir)
             goto done;
-          if (*filenamelist[first_row + selection] == '<') {
-            new_dir = filenamelist[first_row + selection];
+          new_dir = filenamelist[first_row + selection];
+          if (new_dir[0] == '<') {
             if (new_dir[1] == '.' && new_dir[2] == '.') {
               for (i = strlen(current_dir) - 2; i >= 0; i--) {
                 if (current_dir[i] == DIR_SLASH) {
@@ -751,8 +751,7 @@ read_directory:
           }
 #ifdef _WIN32
           /* Select a new drive */
-          else if (*filenamelist[first_row + selection] == '[') {
-            new_dir = filenamelist[first_row + selection];
+          else if (new_dir[0] == '[') {
             current_dir[0] = new_dir[1];
             current_dir[1] = new_dir[2];
             current_dir[2] = DIR_SLASH;
@@ -777,20 +776,18 @@ done:
     snprintf(name, FILENAME_MAX, "%s", current_dir);
     if (browse_dir) {
       new_dir = filenamelist[selection];
-      if (new_dir[1] != '.' && new_dir[2] != '.') {
 #ifdef _WIN32
-        if (new_dir[0] == '[') {
-          name[0] = new_dir[1];
-          name[1] = new_dir[2];
-          name[2] = DIR_SLASH;
-          name[3] = 0;
-        } else
+      if (new_dir[0] == '[') {
+        name[0] = new_dir[1];
+        name[1] = new_dir[2];
+        name[2] = DIR_SLASH;
+        name[3] = 0;
+      } else
 #endif
-        {
-          snprintf(name + strlen(name), FILENAME_MAX - strlen(name),
-              "%s", &new_dir[1]);
-          name[strlen(name) - 1] = DIR_SLASH;
-        }
+      if (new_dir[1] != '.' && new_dir[2] != '.') {
+        snprintf(name + strlen(name), FILENAME_MAX - strlen(name),
+            "%s", &new_dir[1]);
+        name[strlen(name) - 1] = DIR_SLASH;
       }
     }
     else
