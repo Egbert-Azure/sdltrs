@@ -67,7 +67,7 @@ void PasteManagerStartCopy(const char *string)
 {
   SDL_SetClipboardText(string);
 }
-#elif WIN32
+#elif _WIN32
 #include <stdio.h>
 #include <SDL_types.h>
 
