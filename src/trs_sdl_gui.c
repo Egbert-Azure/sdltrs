@@ -437,17 +437,6 @@ void trs_gui_add_to_filename_list(char *name)
 
 int trs_gui_filename_cmp(const char *name1, const char *name2)
 {
-#ifdef _WIN32
-  /* Sort the drive letters last in the list */
-  if (name1[0] == '[') {
-    if (name2[0] == '[')
-      return -1;
-    else
-      return 1;
-  }
-  if (name2[0] == '[')
-    return -1;
-#endif
   if (name1[0] == '<') {
     if (name2[0] != '<')
       return -1;
@@ -548,6 +537,9 @@ int trs_gui_readdirectory(const char *path, const char *mask, int browse_dir)
       trs_gui_add_to_filename_list(name);
     }
     closedir(directory);
+
+    trs_gui_quicksort(filenamelist, filenamelist + filenamecount,
+        trs_gui_filename_cmp);
 #ifdef _WIN32
     {
       char letter;
@@ -564,9 +556,6 @@ int trs_gui_readdirectory(const char *path, const char *mask, int browse_dir)
       }
     }
 #endif
-
-    trs_gui_quicksort(filenamelist, filenamelist + filenamecount,
-        trs_gui_filename_cmp);
     return 0;
   }
   return -1;
