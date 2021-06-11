@@ -27,10 +27,10 @@ SRCS	+= PasteManager.c
 
 OBJS	 = ${SRCS:.c=.o}
 
-.PHONY: all bsd clean sdl2 win32 win64
+.PHONY: all bsd clean os2 sdl2 win32 win64
 
 all:
-	@echo "make (bsd | clean | depend | sdl2 | win32 | win64)"
+	@echo "make (bsd | clean | depend | os2 | sdl2 | win32 | win64)"
 
 bsd:
 	make -f BSDmakefile
@@ -41,6 +41,11 @@ clean:
 depend:
 	makedepend -Y -- ${CFLAGS} -- ${SRCS} 2>&1 | \
 		(egrep -v 'cannot find|not in' || true)
+
+os2:	SDL_INC	?= $(shell sdl2-config --cflags)
+os2:	SDL_LIB	?= $(shell sdl2-config --libs)
+os2:	LDFLAGS	+= -Zomf
+os2:	${PROG}
 
 sdl2:	ENDIAN	 = $(shell echo "ab" | od -x | grep "6261" > /dev/null || echo "-Dbig_endian")
 sdl2:	SDL_INC	?= $(shell sdl2-config --cflags)
