@@ -52,6 +52,7 @@ nox:	${PROG}
 os2:	SDL_INC	?= $(shell sdl-config --cflags)
 os2:	SDL_LIB	?= $(shell sdl-config --libs)
 os2:	MACROS	+= -DNOX
+os2:	LDFLAGS	+= -Zomf
 os2:	${PROG}
 
 sdl:	ENDIAN	 = $(shell echo "ab" | od -x | grep "6261" > /dev/null || echo "-Dbig_endian")
