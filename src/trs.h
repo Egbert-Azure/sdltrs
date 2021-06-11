@@ -49,7 +49,7 @@
 #define STRETCH_AMOUNT 4000
 #define DEFAULT_SAMPLE_RATE 44100  /* samples/sec to use for .wav files */
 
-#ifdef _WIN32
+#if defined(__OS2__) || defined(_WIN32)
 #define DIR_SLASH '\\'
 #else
 #define DIR_SLASH '/'

@@ -32,6 +32,9 @@
 #include <string.h>
 #include <sys/stat.h>
 #include <unistd.h>
+#ifdef __OS2__
+#include <os2.h>
+#endif
 #ifdef _WIN32
 #include <windows.h>
 #endif
@@ -294,7 +297,7 @@ int trs_gui_get_key(void)
       case SDL_KEYDOWN:
         if (event.key.keysym.mod & KMOD_ALT) {
           switch (event.key.keysym.sym) {
-#ifdef _WIN32
+#if defined(__OS2__) || defined(_WIN32)
             case SDLK_F4:
 #endif
             case SDLK_q:
@@ -540,10 +543,16 @@ int trs_gui_readdirectory(const char *path, const char *mask, int browse_dir)
 
     trs_gui_quicksort(filenamelist, filenamelist + filenamecount,
         trs_gui_filename_cmp);
-#ifdef _WIN32
+#if defined(__OS2__) || defined(_WIN32)
     {
       char letter;
+#ifdef __OS2__
+      ULONG drive_curr = 0, drive_mask = 0;
+
+      DosQueryCurrentDisk(&drive_curr, &drive_mask);
+#else
       DWORD drive_mask = GetLogicalDrives();
+#endif
 
       for (letter = 'A'; letter <= 'Z'; letter++) {
         if (drive_mask & 1) {
@@ -701,7 +710,7 @@ read_directory:
                 }
               }
               if (i < 0 &&
-#ifdef _WIN32
+#if defined(__OS2__) || defined(_WIN32)
                 current_dir[2] != DIR_SLASH) {
 #else
                 current_dir[0] != DIR_SLASH) {
@@ -715,7 +724,7 @@ read_directory:
             }
             goto read_directory;
           }
-#ifdef _WIN32
+#if defined(__OS2__) || defined(_WIN32)
           /* Select a new drive */
           else if (new_dir[0] == '[') {
             current_dir[0] = new_dir[1];
@@ -742,7 +751,7 @@ done:
     snprintf(name, FILENAME_MAX, "%s", current_dir);
     if (browse_dir) {
       new_dir = filenamelist[selection];
-#ifdef _WIN32
+#if defined(__OS2__) || defined(_WIN32)
       if (new_dir[0] == '[') {
         name[0] = new_dir[1];
         name[1] = new_dir[2];
@@ -2349,7 +2358,7 @@ int trs_gui_joystick_get_button(void)
       case SDL_KEYDOWN:
         if (event.key.keysym.mod & KMOD_ALT) {
           switch (event.key.keysym.sym) {
-#ifdef _WIN32
+#if defined(__OS2__) || defined(_WIN32)
             case SDLK_F4:
 #endif
             case SDLK_q:
