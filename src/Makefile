@@ -27,10 +27,6 @@ SRCS	+= PasteManager.c
 
 OBJS	 = ${SRCS:.c=.o}
 
-ifeq (${OS},Windows_NT)
-	MACROS	:= -DWIN32
-endif
-
 .PHONY: all bsd clean sdl2 win32 win64
 
 all:
