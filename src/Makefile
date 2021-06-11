@@ -27,10 +27,10 @@ SRCS	+= PasteManager.c
 
 OBJS	 = ${SRCS:.c=.o}
 
-.PHONY: all bsd clean nox sdl sdl2 win32 win64 wsdl2
+.PHONY: all bsd clean nox os2 sdl sdl2 win32 win64 wsdl2
 
 all:
-	@echo "make (bsd | clean | depend | nox | sdl | sdl2 | win32 | win64 | wsdl2)"
+	@echo "make (bsd | clean | depend | nox | os2 | sdl | sdl2 | win32 | win64 | wsdl2)"
 
 bsd:
 	make -f BSDmakefile
@@ -48,6 +48,11 @@ nox:	SDL_LIB	?= $(shell sdl-config --libs)
 nox:	MACROS	+= -DNOX
 nox:	READLINE?= -DREADLINE
 nox:	${PROG}
+
+os2:	SDL_INC	?= $(shell sdl-config --cflags)
+os2:	SDL_LIB	?= $(shell sdl-config --libs)
+os2:	MACROS	+= -DNOX
+os2:	${PROG}
 
 sdl:	ENDIAN	 = $(shell echo "ab" | od -x | grep "6261" > /dev/null || echo "-Dbig_endian")
 sdl:	SDL_INC	?= $(shell sdl-config --cflags)
