@@ -8,13 +8,13 @@
 with lib;
 stdenv.mkDerivation rec {
   pname   = "sdltrs";
-  version = "1.2.18";
+  version = "1.2.19";
 
   src = fetchFromGitLab {
     owner  = "jengun";
     repo   = "sdltrs";
     rev    = version;
-    sha256 = "1qvv0n21r2rhj8pg1r6pajlh9iiscypdbw6mdh268yg78w4sc6nn";
+    sha256 = "03a0aa1hxqgn1fx7kdib5lgb1fn22dhgc4hlfmdzq8jzbbg3n1k4";
   };
 
   nativeBuildInputs = [ cmake ];
