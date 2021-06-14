@@ -13,20 +13,13 @@ AC_FUNC_ERROR_AT_LINE
 AC_CHECK_HEADERS([fcntl.h limits.h sys/file.h sys/ioctl.h sys/time.h termios.h])
 AC_CHECK_FUNCS([ftruncate getcwd gettimeofday memmove memset putenv strcasecmp strchr strdup strerror strncasecmp strrchr strtol])
 
-case $host_os in
-  *mingw*)
-    AC_DEFINE([WIN32])
-    ;;
-  *)
-    AS_IF([test "x$with_x" != "xno"],
-    [AC_PATH_X
-     AC_PATH_XTRA
-     CFLAGS="$CFLAGS $X_CFLAGS"
-     LDFLAGS="$LDFLAGS $X_LIBS"
-     AC_CHECK_LIB([X11], [XOpenDisplay], [], AC_DEFINE([NOX]))],
-    [AC_DEFINE([NOX])])
-    ;;
-esac
+AS_IF([test "x$with_x" != "xno"],
+[AC_PATH_X
+  AC_PATH_XTRA
+  CFLAGS="$CFLAGS $X_CFLAGS"
+  LDFLAGS="$LDFLAGS $X_LIBS"
+  AC_CHECK_LIB([X11], [XOpenDisplay], [], AC_DEFINE([NOX]))],
+ [AC_DEFINE([NOX])])
 
 AC_ARG_ENABLE([fastmove],
   [AS_HELP_STRING([--enable-fastmove], [faster but not accurate Z80 block moves])],
