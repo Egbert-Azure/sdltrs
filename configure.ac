@@ -13,12 +13,6 @@ AC_FUNC_ERROR_AT_LINE
 AC_CHECK_HEADERS([fcntl.h limits.h sys/file.h sys/ioctl.h sys/time.h termios.h])
 AC_CHECK_FUNCS([ftruncate getcwd gettimeofday memmove memset putenv strcasecmp strchr strdup strerror strncasecmp strrchr strtol])
 
-case $host_os in
-  *mingw*)
-    AC_DEFINE([WIN32])
-    ;;
-esac
-
 AC_ARG_ENABLE([fastmove],
   [AS_HELP_STRING([--enable-fastmove], [faster but not accurate Z80 block moves])],
   [AC_DEFINE([FAST_MOVE])
