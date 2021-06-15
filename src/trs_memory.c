@@ -425,12 +425,6 @@ int mem_read(int address)
        the address. Deal with these first so that we take their
        output and feed it into the memory map */
 
-    /* The SuperMem sits between the system and the Z80 */
-    if (supermem) {
-      if (!((address ^ supermem_hi) & 0x8000))
-          return supermem_ram[supermem_base + (address & 0x7FFF)];
-      /* Otherwise the request comes from the system */
-    }
     /* EG 3200 bank switching, inverted (bit set to 0 => bank enabled) */
     if (eg3200) {
       /* Bit 0 - Bank 1: ROM/EPROM */
@@ -459,6 +453,12 @@ int mem_read(int address)
       }
       /* Bank 0: RAM */
       return memory[address];
+    }
+    /* The SuperMem sits between the system and the Z80 */
+    if (supermem) {
+      if (!((address ^ supermem_hi) & 0x8000))
+          return supermem_ram[supermem_base + (address & 0x7FFF)];
+      /* Otherwise the request comes from the system */
     }
     switch (memory_map) {
       case 0x10: /* Model I */
@@ -626,14 +626,6 @@ void mem_write(int address, int value)
 {
     address &= 0xffff;
 
-    /* The SuperMem sits between the system and the Z80 */
-    if (supermem) {
-      if (!((address ^ supermem_hi) & 0x8000)) {
-          supermem_ram[supermem_base + (address & 0x7FFF)] = value;
-          return;
-      }
-      /* Otherwise the request comes from the system */
-    }
     /* EG 3200 bank switching, inverted (bit set to 0 => bank enabled) */
     if (eg3200) {
       /* Bit 1 - Bank 2: Video Memory 0 (1k, 64x16, TRS-80 M1 compatible) */
@@ -660,6 +652,14 @@ void mem_write(int address, int value)
       /* Bank 0: RAM */
       memory[address] = value;
       return;
+    }
+    /* The SuperMem sits between the system and the Z80 */
+    if (supermem) {
+      if (!((address ^ supermem_hi) & 0x8000)) {
+          supermem_ram[supermem_base + (address & 0x7FFF)] = value;
+          return;
+      }
+      /* Otherwise the request comes from the system */
     }
 
     switch (memory_map) {
@@ -818,12 +818,6 @@ Uint8 *mem_pointer(int address, int writing)
 {
     address &= 0xffff;
 
-    /* The SuperMem sits between the system and the Z80 */
-    if (supermem) {
-      if (!((address ^ supermem_hi) & 0x8000))
-          return &supermem_ram[supermem_base + (address & 0x7FFF)];
-      /* Otherwise the request comes from the system */
-    }
     /* EG 3200 bank switching, inverted (bit set to 0 => bank enabled) */
     if (eg3200) {
       /* Bit 0 - Bank 1: ROM/EPROM */
@@ -843,6 +837,12 @@ Uint8 *mem_pointer(int address, int writing)
       }
       /* Bank 0: RAM */
       return &memory[address];
+    }
+    /* The SuperMem sits between the system and the Z80 */
+    if (supermem) {
+      if (!((address ^ supermem_hi) & 0x8000))
+          return &supermem_ram[supermem_base + (address & 0x7FFF)];
+      /* Otherwise the request comes from the system */
     }
 
     switch (memory_map + (writing << 3)) {
