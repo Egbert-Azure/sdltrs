@@ -2510,6 +2510,7 @@ static void bitmap_init(void)
   int i;
 
   for (i = 0; i < MAXCHARS; i++) {
+    /* Normal */
     if (trs_char[0][i]) {
       free(trs_char[0][i]->pixels);
       SDL_FreeSurface(trs_char[0][i]);
@@ -2517,6 +2518,7 @@ static void bitmap_init(void)
     trs_char[0][i] = CreateSurfaceFromDataScale(trs_char_data[trs_charset][i],
         foreground, background, scale, scale * 2);
 
+    /* Expanded */
     if (trs_char[1][i]) {
       free(trs_char[1][i]->pixels);
       SDL_FreeSurface(trs_char[1][i]);
@@ -2524,6 +2526,7 @@ static void bitmap_init(void)
     trs_char[1][i] = CreateSurfaceFromDataScale(trs_char_data[trs_charset][i],
         foreground, background, scale * 2, scale * 2);
 
+    /* Inverse */
     if (trs_char[2][i]) {
       free(trs_char[2][i]->pixels);
       SDL_FreeSurface(trs_char[2][i]);
@@ -2531,6 +2534,7 @@ static void bitmap_init(void)
     trs_char[2][i] = CreateSurfaceFromDataScale(trs_char_data[trs_charset][i],
         background, foreground, scale, scale * 2);
 
+    /* Expanded + Inverse */
     if (trs_char[3][i]) {
       free(trs_char[3][i]->pixels);
       SDL_FreeSurface(trs_char[3][i]);
@@ -2538,6 +2542,7 @@ static void bitmap_init(void)
     trs_char[3][i] = CreateSurfaceFromDataScale(trs_char_data[trs_charset][i],
         background, foreground, scale * 2, scale * 2);
 
+    /* GUI Normal */
     if (trs_char[4][i]) {
       free(trs_char[4][i]->pixels);
       SDL_FreeSurface(trs_char[4][i]);
@@ -2550,6 +2555,7 @@ static void bitmap_init(void)
       trs_char[4][i] = CreateSurfaceFromDataScale(trs_char_data[trs_charset][i],
           gui_foreground, gui_background, scale, scale * 2);
 
+    /* GUI Inverse */
     if (trs_char[5][i]) {
       free(trs_char[5][i]->pixels);
       SDL_FreeSurface(trs_char[5][i]);
