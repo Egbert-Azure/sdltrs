@@ -374,8 +374,10 @@ trs_timer_init(void)
   }
   cycles_per_timer = z80_state.clockMHz * 1000000 / timer_hz;
   trs_turbo_mode(-1);
-
   trs_timer_event();
+
+  if (eg3200)
+    return;
 
   /* Also initialize the clock in memory - hack */
   if (trs_model == 1) {
