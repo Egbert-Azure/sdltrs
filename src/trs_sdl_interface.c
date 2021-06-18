@@ -3359,7 +3359,7 @@ void eg3200_cursor(int position, int line, int visible)
 
 void eg3200_screen(int lines)
 {
-  if (lines == eg3200)
+  if (lines == col_chars)
     return;
 
   if (lines == 16)
@@ -3367,7 +3367,7 @@ void eg3200_screen(int lines)
   else
     row_chars = 80;
 
-  col_chars = eg3200 = lines;
+  col_chars = lines;
   screen_chars = row_chars * col_chars;
   screen_init();
   trs_screen_init();

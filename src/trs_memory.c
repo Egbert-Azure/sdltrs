@@ -105,7 +105,6 @@ static int supermem_base;
 static unsigned int supermem_hi;
 static int selector_reg;
 static int m_a11_flipflop;
-static int eg3200_bank_reg = 0xFF;
 
 void mem_video_page(int which)
 {
@@ -225,13 +224,14 @@ int cp500_a11_flipflop_toggle(void)
 
 void eg3200_bank_out(Uint8 value)
 {
-	eg3200_bank_reg = value;
-
 	if (eg3200 == 0) {
+		eg3200 = value;
 		eg3200_screen(16); /* 64x16 screen */
 		trs_disk_doubler = TRSDISK_PERCOM;
 		trs_timer_init();
 		trs_screen_inverse(0);
+	} else {
+		eg3200 = value;
 	}
 }
 
@@ -286,7 +286,6 @@ void trs_reset(int poweron)
     m_a11_flipflop = 0;
     bank_base = 0x10000;
     eg3200 = 0;
-    eg3200_bank_reg = 0xFF;
     mem_command = 0;
     supermem_base = 0;
     supermem_hi = 0x8000;
@@ -428,22 +427,22 @@ int mem_read(int address)
     /* EG 3200 bank switching, inverted (bit set to 0 => bank enabled) */
     if (eg3200) {
       /* Bit 0 - Bank 1: ROM/EPROM */
-      if ((eg3200_bank_reg & (1 << 0)) == 0) {
+      if ((eg3200 & (1 << 0)) == 0) {
 	if (address < trs_rom_size)
 	  return rom[address];
       }
       /* Bit 1 - Bank 2: Video Memory 0 (1k, 64x16, TRS-80 M1 compatible) */
-      if ((eg3200_bank_reg & (1 << 1)) == 0) {
+      if ((eg3200 & (1 << 1)) == 0) {
 	if (address >= VIDEO_START && address <= 0x3FFF)
 	  return video[address - VIDEO_START];
       }
       /* Bit 2 - Bank 3: Video Memory 1 (additional 1k for 80x24 video mode) */
-      if ((eg3200_bank_reg & (1 << 2)) == 0) {
+      if ((eg3200 & (1 << 2)) == 0) {
 	if (address >= 0x4000 && address <= 0x43FF)
 	  return video[address - VIDEO_START];
       }
       /* Bit 3 - Bank 4: Disk I/O and Keyboard */
-      if ((eg3200_bank_reg & (1 << 3)) == 0) {
+      if ((eg3200 & (1 << 3)) == 0) {
 	if (address >= 0x37E0 && address <= 0x37EF)
 	  return trs80_model1_mmio(address);
 	if (address >= KEYBOARD_START) {
@@ -629,21 +628,21 @@ void mem_write(int address, int value)
     /* EG 3200 bank switching, inverted (bit set to 0 => bank enabled) */
     if (eg3200) {
       /* Bit 1 - Bank 2: Video Memory 0 (1k, 64x16, TRS-80 M1 compatible) */
-      if ((eg3200_bank_reg & (1 << 1)) == 0) {
+      if ((eg3200 & (1 << 1)) == 0) {
 	if (address >= VIDEO_START && address <= 0x3FFF) {
 	  trs80_screen_write_char(address - VIDEO_START, value);
 	  return;
 	}
       }
       /* Bit 2 - Bank 3: Video Memory 1 (additional 1k for 80x24 video mode) */
-      if ((eg3200_bank_reg & (1 << 2)) == 0) {
+      if ((eg3200 & (1 << 2)) == 0) {
 	if (address >= 0x4000 && address <= 0x43FF) {
 	  trs80_screen_write_char(address - VIDEO_START, value);
 	  return;
 	}
       }
       /* Bit 3 - Bank 4: Disk I/O */
-      if ((eg3200_bank_reg & (1 << 3)) == 0) {
+      if ((eg3200 & (1 << 3)) == 0) {
 	if (address >= 0x37E0 && address <= 0x37EF) {
 	  trs80_model1_write_mmio(address, value);
 	  return;
@@ -821,17 +820,17 @@ Uint8 *mem_pointer(int address, int writing)
     /* EG 3200 bank switching, inverted (bit set to 0 => bank enabled) */
     if (eg3200) {
       /* Bit 0 - Bank 1: ROM/EPROM */
-      if ((eg3200_bank_reg & (1 << 0)) == 0) {
+      if ((eg3200 & (1 << 0)) == 0) {
 	if (address < trs_rom_size)
 	  return &rom[address];
       }
       /* Bit 1 - Bank 2: Video Memory 0 (1k, 64x16, TRS-80 M1 compatible) */
-      if ((eg3200_bank_reg & (1 << 1)) == 0) {
+      if ((eg3200 & (1 << 1)) == 0) {
 	if (address >= VIDEO_START && address <= 0x3FFF)
 	  return &video[address - VIDEO_START];
       }
       /* Bit 2 - Bank 3: Video Memory 1 (additional 1k for 80x24 video mode) */
-      if ((eg3200_bank_reg & (1 << 2)) == 0) {
+      if ((eg3200 & (1 << 2)) == 0) {
 	if (address >= 0x4000 && address <= 0x43FF)
 	  return &video[address - VIDEO_START];
       }
@@ -971,7 +970,6 @@ void trs_mem_save(FILE *file)
   trs_save_int(file, &selector_reg, 1);
   trs_save_int(file, &m_a11_flipflop, 1);
   trs_save_int(file, &eg3200, 1);
-  trs_save_int(file, &eg3200_bank_reg, 1);
 }
 
 void trs_mem_load(FILE *file)
@@ -996,6 +994,5 @@ void trs_mem_load(FILE *file)
   trs_load_int(file, &selector_reg, 1);
   trs_load_int(file, &m_a11_flipflop, 1);
   trs_load_int(file, &eg3200, 1);
-  trs_load_int(file, &eg3200_bank_reg, 1);
 }
 
