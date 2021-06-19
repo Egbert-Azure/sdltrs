@@ -1786,7 +1786,11 @@ void trs_gui_emulator_settings(void)
                                  "TRS-80 Model III",
                                  "  TRS-80 Model 4",
                                  " TRS-80 Model 4P"};
-  const char *speed_choices[] = {"      None", "  Archbold", "    Holmes","Seatronics"};
+  const char *speed_choices[] = {"           None",
+                                 "       Archbold",
+                                 "         Holmes",
+                                 "     Seatronics",
+                                 "TCS SpeedMaster"};
   float clock_mhz[4];
   char input[8];
   int selection = 0;
@@ -1802,7 +1806,7 @@ void trs_gui_emulator_settings(void)
     snprintf(&model_menu[1].text[50], 11, "%6.2f MHz", clock_mhz[model_selection]);
     snprintf(&model_menu[2].text[50], 11, "%s", yes_no_choices[stringy]);
     snprintf(&model_menu[3].text[50], 11, "%s", yes_no_choices[lowercase]);
-    snprintf(&model_menu[4].text[50], 11, "%s", speed_choices[speedup]);
+    snprintf(&model_menu[4].text[45], 16, "%s", speed_choices[speedup]);
     snprintf(&model_menu[6].text[50], 11, "%s", yes_no_choices[grafyx_get_microlabs()]);
     snprintf(&model_menu[7].text[50], 11, "%s", yes_no_choices[lowe_le18]);
     snprintf(&model_menu[9].text[50], 11, "%s", yes_no_choices[huffman_ram]);
@@ -1848,7 +1852,7 @@ void trs_gui_emulator_settings(void)
         lowercase = trs_gui_display_popup("Lowercase", yes_no_choices, 2, lowercase);
         break;
       case 4:
-        speedup = trs_gui_display_popup("Speedup", speed_choices, 4, speedup);
+        speedup = trs_gui_display_popup("Speedup", speed_choices, 5, speedup);
         break;
       case 6:
         grafyx_set_microlabs(trs_gui_display_popup("Grafyx", yes_no_choices, 2,

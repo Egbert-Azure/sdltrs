@@ -212,6 +212,9 @@ extern void eg3200_bank_out(Uint8 value);
 extern void eg3200_cursor(int position, int line, int visible);
 extern void eg3200_screen(int lines);
 
+extern void sys_byte_out(Uint8 value);
+extern Uint8 sys_byte_in(void);
+
 extern void trs_debug(void);
 
 typedef void (*trs_event_func)(int arg);

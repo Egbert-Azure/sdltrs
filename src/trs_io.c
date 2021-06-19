@@ -209,8 +209,13 @@ void z80_out(int port, int value)
       break;
     case 0xFE:
       /* Typical location for clock speedup kits */
-      if (speedup && eg3200 == 0)
-        trs_timer_speed(value);
+      if (speedup && eg3200 == 0) {
+        if (speedup == 4)
+          /* TCS SpeedMaster: switch bank */
+          sys_byte_out(value);
+        else
+          trs_timer_speed(value);
+      }
       break;
     case 0xFF:
       /* screen mode select is on D3 line */
@@ -520,6 +525,10 @@ int z80_in(int port)
     case 0xFD:
       /* GENIE location of printer port */
       value = trs_printer_read();
+      goto done;
+    case 0xFE:
+      if (speedup == 4)
+        value = sys_byte_in();
       goto done;
     case 0xFF:
       value = (!modesel ? 0x7f : 0x3f) | trs_cassette_in();
