@@ -786,6 +786,9 @@ static void trs_opt_speedup(char *arg, int intarg, int *stringarg)
     case 's': /*Seatronics*/
       speedup = 3;
       break;
+    case 't': /*TCS SpeedMaster*/
+      speedup = 4;
+      break;
     default:
       error("unknown speedup kit: %s", arg);
   }
@@ -1147,6 +1150,9 @@ int trs_write_config_file(const char *filename)
       break;
     case 3:
       fprintf(config_file, "seatronics\n");
+      break;
+    case 4:
+      fprintf(config_file, "tcs speedmaster\n");
       break;
   }
   fprintf(config_file, "statedir=%s\n", trs_state_dir);
@@ -2045,10 +2051,11 @@ void trs_get_event(int wait)
         } else {
           if (trs_model == 1) {
             switch (keysym.sym) {
-              case SDLK_F1: keysym.sym = 0x115; break; /* _ */
-              case SDLK_F2: keysym.sym = 0x120; break; /* \ */
-              case SDLK_F3: keysym.sym = 0x121; break; /* ] */
-              case SDLK_F4: keysym.sym = 0x122; break; /* ^ */
+              case SDLK_F1:    keysym.sym = 0x115; break; /* _ */
+              case SDLK_F2:    keysym.sym = 0x120; break; /* \ */
+              case SDLK_F3:    keysym.sym = 0x121; break; /* ] */
+              case SDLK_F4:    keysym.sym = 0x122; break; /* ^ */
+              case SDLK_LCTRL: keysym.sym = 0x11c; break; /* P1 on TCS SpeedMaster */
               default:
                 break;
             }

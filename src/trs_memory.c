@@ -105,6 +105,7 @@ static int supermem_base;
 static unsigned int supermem_hi;
 static int selector_reg;
 static int m_a11_flipflop;
+static int system_byte;
 
 void mem_video_page(int which)
 {
@@ -256,6 +257,17 @@ void selector_out(Uint8 value)
 		bank_base = 0;
 }
 
+void sys_byte_out(Uint8 value)
+{
+	system_byte = value;
+	memory_map = (value & 1) ? 0x14 : 0x10;
+}
+
+Uint8 sys_byte_in(void)
+{
+	return system_byte;
+}
+
 static void mem_init(void)
 {
     /* Initialize RAM, ROM & Video memory */
@@ -320,6 +332,7 @@ void trs_reset(int poweron)
 	hrg_onoff(0);		/* Switch off HRG1B hi-res graphics. */
 	bank_base = 0;
 	selector_reg = 0;
+	system_byte = 0;
     }
     trs_kb_reset();  /* Part of keyboard stretch kludge */
     clear_key_queue(); /* init the key queue */
@@ -970,6 +983,7 @@ void trs_mem_save(FILE *file)
   trs_save_int(file, &selector_reg, 1);
   trs_save_int(file, &m_a11_flipflop, 1);
   trs_save_int(file, &eg3200, 1);
+  trs_save_int(file, &system_byte, 1);
 }
 
 void trs_mem_load(FILE *file)
@@ -994,5 +1008,6 @@ void trs_mem_load(FILE *file)
   trs_load_int(file, &selector_reg, 1);
   trs_load_int(file, &m_a11_flipflop, 1);
   trs_load_int(file, &eg3200, 1);
+  trs_load_int(file, &system_byte, 1);
 }
 
