@@ -342,9 +342,11 @@ void do_emt_strerror(void)
     Z80_A = 0;
     Z80_F |= ZERO_MASK;
   }
-  memcpy(mem_pointer(Z80_HL, 1), msg, size);
-  mem_write(Z80_HL + size++, '\r');
-  mem_write(Z80_HL + size, '\0');
+  if (mem_pointer(Z80_HL, 1)) {
+    memcpy(mem_pointer(Z80_HL, 1), msg, size);
+    mem_write(Z80_HL + size++, '\r');
+    mem_write(Z80_HL + size, '\0');
+  }
   if (errno == 0) {
     Z80_BC = size;
   } else {
