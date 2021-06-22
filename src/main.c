@@ -155,6 +155,7 @@ void trs_rom_init(void)
         trs_load_compiled_rom(0, sizeof(trs_rom1), trs_rom1);
       if (stringy)
         trs_load_compiled_rom(0x3000, sizeof(trs_romesf), trs_romesf);
+      /* Do not overwrite memory mapped disk I/O */
       if (trs_rom_size > 0x37DE)
           trs_rom_size = 0x37DE;
       if (trs_hd_boot)
@@ -170,6 +171,7 @@ void trs_rom_init(void)
         trs_load_compiled_rom(0, sizeof(trs_rom4p), trs_rom4p);
       break;
   }
+  /* Limit ROM size to maximum of 14 kB */
   if (trs_rom_size > 0x3800)
       trs_rom_size = 0x3800;
 }
