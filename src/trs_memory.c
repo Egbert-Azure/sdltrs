@@ -227,10 +227,10 @@ void eg3200_bank_out(Uint8 value)
 {
 	if (eg3200 == 0) {
 		eg3200 = value;
-		eg3200_screen(16); /* 64x16 screen */
 		trs_disk_doubler = TRSDISK_PERCOM;
 		trs_timer_init();
 		trs_screen_inverse(0);
+		trs_screen_init();
 	} else {
 		eg3200 = value;
 	}
