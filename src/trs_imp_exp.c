@@ -565,12 +565,12 @@ void do_emt_misc(void)
     grafyx_set_microlabs(Z80_HL);
     break;
   case 12:
-/* Removed for sdltrs - mdg */
     Z80_HL = 0;
-    Z80_BC = 0;
+    Z80_BC = !timer_overclock;
     break;
   case 13:
-/* Removed for sdltrs - mdg */
+    timer_overclock = !Z80_BC;
+    trs_turbo_mode(timer_overclock);
     break;
   case 14:
     Z80_HL = stretch_amount;
