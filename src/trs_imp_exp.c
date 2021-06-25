@@ -519,12 +519,11 @@ void do_emt_getcwd(void)
   Z80_BC = strlen(result);
 }
 
-/* fixme - document codes that were removed. */
 void do_emt_misc(void)
 {
   switch (Z80_A) {
   case 0:
-/* Removed for sdltrs - mdg */
+  /* Removed for sdltrs - mdg */
     Z80_HL = 0;
     break;
   case 1:
@@ -584,13 +583,11 @@ void do_emt_misc(void)
   case 17:
     trs_disk_doubler = Z80_HL;
     break;
+  /* Removed; do not reuse
   case 18:
-    Z80_HL = 0;
-/* Removed for sdltrs - mdg */
-    break;
   case 19:
-/* Removed for sdltrs - mdg */
     break;
+  */
   case 20:
     Z80_HL = trs_disk_truedam;
     break;
