@@ -3427,7 +3427,7 @@ hrg_update_char(int position)
   }
 }
 
-void eg3200_cursor(int position, int line, int visible)
+void m6845_cursor(int position, int line, int visible)
 {
   int row, col;
   SDL_Rect rect, srcRect;
@@ -3466,7 +3466,7 @@ void eg3200_cursor(int position, int line, int visible)
   addToDrawList(&rect);
 }
 
-void eg3200_screen(int lines)
+void m6845_screen(int lines)
 {
   if (lines == col_chars)
     return;
