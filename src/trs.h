@@ -209,8 +209,8 @@ extern int mem_read_bank_base(void);
 extern void mem_romin(int state);
 extern int cp500_a11_flipflop_toggle(void);
 extern void eg3200_bank_out(Uint8 value);
-extern void eg3200_cursor(int position, int line, int visible);
-extern void eg3200_screen(int lines);
+extern void m6845_cursor(int position, int line, int visible);
+extern void m6845_screen(int lines);
 
 extern void sys_byte_out(Uint8 value);
 extern Uint8 sys_byte_in(void);

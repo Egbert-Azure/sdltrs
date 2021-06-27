@@ -3317,7 +3317,7 @@ hrg_update_char(int position)
   SDL_FillRects(screen, &rect[0], n, foreground);
 }
 
-void eg3200_cursor(int position, int line, int visible)
+void m6845_cursor(int position, int line, int visible)
 {
   int row, col;
   SDL_Rect rect, srcRect;
@@ -3356,7 +3356,7 @@ void eg3200_cursor(int position, int line, int visible)
   drawnRectCount = MAX_RECTS;
 }
 
-void eg3200_screen(int lines)
+void m6845_screen(int lines)
 {
   if (lines == col_chars)
     return;

@@ -56,9 +56,10 @@
 
 static int modesel;         /* Model I */
 static int modeimage = 0x8; /* Model III/4/4p */
-static int ctrlimage;       /* Model 4/4p & EG 3200 */
+static int ctrlimage;       /* Model 4/4p & M6845 */
 static int rominimage;      /* Model 4p */
-/* EG 3200 CRT */
+
+/* M6845 CRT */
 static int cursor_csr;
 static int cursor_pos;
 static int cursor_vis;
@@ -67,6 +68,29 @@ static int cursor_vis;
 static int rtc_reg;
 
 int trs_io_debug_flags;
+
+static void m6845_crt(int value)
+{
+  if (cursor_vis)
+    m6845_cursor(cursor_pos, cursor_csr, 0);
+  switch (ctrlimage) {
+    case 0x06: /* Lines displayed */
+      m6845_screen(value);
+      break;
+    case 0x0A: /* Cursor visible / Cursor Start Line */
+      cursor_vis = !(value & (1 << 5)) || (value & (1 << 6));
+      cursor_csr = value & 0x0F;
+      break;
+    case 0x0E: /* Cursor LSB */
+      cursor_pos = ((value & 0x3F) << 8) | (cursor_pos & 0x00FF);
+      break;
+    case 0x0F: /* Cursor MSB */
+      cursor_pos = ((value & 0xFF) << 0) | (cursor_pos & 0xFF00);
+      break;
+  }
+  if (cursor_vis)
+    m6845_cursor(cursor_pos, cursor_csr, cursor_vis);
+}
 
 /*ARGSUSED*/
 void z80_out(int port, int value)
@@ -173,25 +197,7 @@ void z80_out(int port, int value)
       /* Fall through */
     case 0xF7:
       if (eg3200) {
-        if (cursor_vis)
-          eg3200_cursor(cursor_pos, cursor_csr, 0);
-        switch (ctrlimage) {
-          case 0x06: /* Lines displayed */
-            eg3200_screen(value);
-            break;
-          case 0x0A: /* Cursor visible / Cursor Start Line */
-            cursor_vis = !(value & (1 << 5)) || (value & (1 << 6));
-            cursor_csr = value & 0x0F;
-            break;
-          case 0x0E: /* Cursor LSB */
-            cursor_pos = ((value & 0x3F) << 8) | (cursor_pos & 0x00FF);
-            break;
-          case 0x0F: /* Cursor MSB */
-            cursor_pos = ((value & 0xFF) << 0) | (cursor_pos & 0xFF00);
-            break;
-        }
-        if (cursor_vis)
-          eg3200_cursor(cursor_pos, cursor_csr, cursor_vis);
+        m6845_crt(value);
       } else {
         if (stringy)
           stringy_out(port & 7, value);
