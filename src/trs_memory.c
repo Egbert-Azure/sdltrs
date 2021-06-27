@@ -259,8 +259,19 @@ void selector_out(Uint8 value)
 
 void sys_byte_out(Uint8 value)
 {
+	switch (value) {
+		case 0x10:
+		case 0x11:
+		case 0x54:
+			/* CP/M memory layout */
+			memory_map = 0x14;
+			break;
+		default:
+			/* TRS-80 Model I */
+			memory_map = 0x10;
+			break;
+	}
 	system_byte = value;
-	memory_map = (value & 1) ? 0x14 : 0x10;
 }
 
 Uint8 sys_byte_in(void)
