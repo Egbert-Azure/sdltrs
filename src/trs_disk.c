@@ -3755,17 +3755,13 @@ static void trs_load_realstate(FILE *file, RealState *real)
 
 static void trs_save_diskstate(FILE *file, DiskState *d)
 {
-  int one = 1;
-  int zero = 0;
+  int file_not_null = (d->file != NULL);
 
   trs_save_int(file, &d->writeprot, 1);
   trs_save_int(file, &d->phytrack, 1);
   trs_save_int(file, &d->emutype, 1);
   trs_save_int(file, &d->real_step, 1);
-  if (d->file == NULL)
-     trs_save_int(file, &zero, 1);
-  else
-     trs_save_int(file, &one, 1);
+  trs_save_int(file, &file_not_null, 1);
   trs_save_filename(file, d->filename);
   if (d->emutype == JV3)
     trs_save_jv3state(file, &d->u.jv3);
