@@ -361,7 +361,7 @@ trs_timer_init(void)
       timer_hz = TIMER_HZ_1;
       if (eg3200)
         z80_state.clockMHz = 4.0000;
-      else if (speedup == 4)
+      else if (speedup == 5)
         /* TCS SpeedMaster 5.3 */
         z80_state.clockMHz = 5.3500;
       else

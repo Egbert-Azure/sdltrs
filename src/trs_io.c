@@ -216,11 +216,10 @@ void z80_out(int port, int value)
     case 0xFE:
       /* Typical location for clock speedup kits */
       if (speedup && eg3200 == 0) {
-        if (speedup == 4)
-          /* TCS SpeedMaster: switch bank */
-          sys_byte_out(value);
-        else
+        if (speedup < 4)
           trs_timer_speed(value);
+        else
+          sys_byte_out(value);
       }
       break;
     case 0xFF:

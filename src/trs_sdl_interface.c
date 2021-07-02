@@ -786,8 +786,11 @@ static void trs_opt_speedup(char *arg, int intarg, int *stringarg)
     case 's': /*Seatronics*/
       speedup = 3;
       break;
-    case 't': /*TCS SpeedMaster*/
+    case 'c': /*CP/M banking */
       speedup = 4;
+      break;
+    case 't': /*TCS SpeedMaster*/
+      speedup = 5;
       break;
     default:
       error("unknown speedup kit: %s", arg);
@@ -1152,6 +1155,9 @@ int trs_write_config_file(const char *filename)
       fprintf(config_file, "seatronics\n");
       break;
     case 4:
+      fprintf(config_file, "cp/m banking\n");
+      break;
+    case 5:
       fprintf(config_file, "tcs speedmaster\n");
       break;
   }
