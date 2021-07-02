@@ -477,6 +477,9 @@ trs_timer_speed(int fast)
         case 5: /*LNW80*/
           z80_state.clockMHz = (fast & 1) ? 4.0000 : clock_mhz_1;
           break;
+        case 6: /*TCS SpeedMaster*/
+          z80_state.clockMHz = (fast & 1) ? 5.3500 : clock_mhz_1;
+          break;
         default:
           break;
         }
