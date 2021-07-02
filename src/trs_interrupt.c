@@ -361,11 +361,19 @@ trs_timer_init(void)
       timer_hz = TIMER_HZ_1;
       if (eg3200)
         z80_state.clockMHz = 4.0000;
-      else if (speedup == 5)
-        /* TCS SpeedMaster 5.3 */
-        z80_state.clockMHz = 5.3500;
-      else
-        z80_state.clockMHz = clock_mhz_1;
+      else {
+        switch (speedup) {
+          case 5: /* LNW80 */
+            z80_state.clockMHz = 4.0000;
+            break;
+          case 6: /* TCS SpeedMaster 5.3 */
+            z80_state.clockMHz = 5.3500;
+            break;
+          default:
+            z80_state.clockMHz = clock_mhz_1;
+            break;
+        }
+      }
       break;
     case 3:
       timer_hz = TIMER_HZ_3;
@@ -465,6 +473,9 @@ trs_timer_speed(int fast)
           break;
         case 2: /*Holmes Sprinter II*/
           z80_state.clockMHz = 10.6445 / (((fast + 4) & 7) + 2);
+          break;
+        case 5: /*LNW80*/
+          z80_state.clockMHz = (fast & 1) ? 4.0000 : clock_mhz_1;
           break;
         default:
           break;

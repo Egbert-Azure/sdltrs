@@ -1768,6 +1768,7 @@ void trs_gui_emulator_settings(void)
                                  "         Holmes",
                                  "     Seatronics",
                                  "   CP/M banking",
+                                 "          LNW80",
                                  "TCS SpeedMaster"};
   float clock_mhz[4];
   char input[8];
@@ -1830,7 +1831,7 @@ void trs_gui_emulator_settings(void)
         lowercase = trs_gui_display_popup("Lowercase", yes_no_choices, 2, lowercase);
         break;
       case 4:
-        speedup = trs_gui_display_popup("Speedup", speed_choices, 6, speedup);
+        speedup = trs_gui_display_popup("Speedup", speed_choices, 7, speedup);
         break;
       case 6:
         grafyx_set_microlabs(trs_gui_display_popup("Grafyx", yes_no_choices, 2,
