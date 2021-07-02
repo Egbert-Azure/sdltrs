@@ -259,17 +259,30 @@ void selector_out(Uint8 value)
 
 void sys_byte_out(Uint8 value)
 {
-	switch (value) {
-		case 0x10:
-		case 0x11:
-		case 0x54:
-			/* CP/M memory layout */
-			memory_map = 0x14;
-			break;
-		default:
-			/* TRS-80 Model I */
-			memory_map = 0x10;
-			break;
+	/* TRS-80 Model I memory map */
+	memory_map = 0x10;
+
+	if (speedup > 4) {
+		/* TCS SpeedMaster CP/M banking */
+		if (speedup == 6) {
+			if (value & 1)
+				memory_map = 0x14;
+		}
+		/* HRG only in TRS-80 memory map */
+		if (memory_map == 0x10) {
+			if ((value & (1 << 3)))
+				memory_map = 0x20;
+			hrg_onoff((value & (1 << 1)));
+		}
+	} else {
+		/* Other CP/M banking */
+		switch (value) {
+			case 0x10:
+			case 0x11:
+			case 0x54:
+				memory_map = 0x14;
+				break;
+		}
 	}
 	system_byte = value;
 }
@@ -512,6 +525,10 @@ int mem_read(int address)
 	return trs80_model1_ram(address);
       case 0x17: /* Model 1: Described in the selector doc as 'not useful' */
         return 0xFF;	/* Not clear what really happens */
+      case 0x20: /* LNW80/TCS SpeedMaster: HRG in low 16K */
+	if (address < RAM_START)
+	  return hrg_read_data();
+	return trs80_model1_ram(address);
 
       case 0x30: /* Model III */
 	if (address >= RAM_START) return memory[address];
@@ -721,6 +738,14 @@ void mem_write(int address, int value)
 	  trs80_model1_ram(address);
       case 0x17: /* Model 1: Described in the selector doc as 'not useful' */
         break;	/* Not clear what really happens */
+      case 0x20: /* LNW80/TCS SpeedMaster: HRG in low 16K */
+	if (address < RAM_START) {
+	  hrg_write_addr(address, 0x3FFF);
+	  hrg_write_data(value);
+	} else {
+	  trs80_model1_write_mem(address, value);
+	}
+	break;
 
       case 0x30: /* Model III */
 	if (address >= RAM_START) {
