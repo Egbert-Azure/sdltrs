@@ -526,8 +526,10 @@ int mem_read(int address)
       case 0x17: /* Model 1: Described in the selector doc as 'not useful' */
         return 0xFF;	/* Not clear what really happens */
       case 0x20: /* LNW80/TCS SpeedMaster: HRG in low 16K */
-	if (address < RAM_START)
+	if (address < RAM_START) {
+	  hrg_write_addr(address, 0x3FFF);
 	  return hrg_read_data();
+	}
 	return trs80_model1_ram(address);
 
       case 0x30: /* Model III */
