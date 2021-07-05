@@ -265,8 +265,10 @@ void sys_byte_out(Uint8 value)
 	if (speedup > 4) {
 		/* TCS SpeedMaster CP/M banking */
 		if (speedup == 6) {
-			if (value & 1)
-				memory_map = 0x14;
+			if ((value & (1 << 7)) == 0) {
+				if (value & 1)
+					memory_map = 0x14;
+			}
 		}
 		/* HRG only in TRS-80 memory map */
 		if (memory_map == 0x10) {
