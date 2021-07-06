@@ -317,6 +317,12 @@ trs_nmi_mask_write(Uint8 value)
   if (!z80_state.nmi) z80_state.nmi_seen = 0;
 }
 
+void
+trs_timer_cycles(void)
+{
+  cycles_per_timer = z80_state.clockMHz * 1000000 / timer_hz;
+}
+
 static void
 trs_timer_event(void)
 {
@@ -383,9 +389,9 @@ trs_timer_init(void)
       timer_hz = TIMER_HZ_4;
       z80_state.clockMHz = clock_mhz_4;
   }
-  cycles_per_timer = z80_state.clockMHz * 1000000 / timer_hz;
-  trs_turbo_mode(-1);
+  trs_timer_cycles();
   trs_timer_event();
+  trs_turbo_mode(-1);
 
   if (eg3200)
     return;
@@ -501,7 +507,7 @@ trs_timer_speed(int fast)
     else
       timer_hz = TIMER_HZ_3;
   }
-  cycles_per_timer = z80_state.clockMHz * 1000000 / timer_hz;
+  trs_timer_cycles();
   trs_turbo_mode(-1);
 }
 
