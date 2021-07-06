@@ -1922,7 +1922,7 @@ void trs_get_event(int wait)
             case SDLK_8:
               if (z80_state.clockMHz > 0.1) {
                 z80_state.clockMHz -= 0.1;
-                cycles_per_timer = z80_state.clockMHz * 1000000 / timer_hz;
+                trs_timer_cycles();
                 trs_screen_caption();
               }
               break;
@@ -1930,7 +1930,7 @@ void trs_get_event(int wait)
             case SDLK_9:
               if (z80_state.clockMHz < 99.0) {
                 z80_state.clockMHz += 0.1;
-                cycles_per_timer = z80_state.clockMHz * 1000000 / timer_hz;
+                trs_timer_cycles();
                 trs_screen_caption();
               }
               break;
