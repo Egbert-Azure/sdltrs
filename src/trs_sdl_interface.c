@@ -204,7 +204,7 @@ static Uint8 grafyx_xoffset, grafyx_yoffset;
 #define G3_COMMAND  0x20
 #define G3_YLOW(v)  (((v) & 0x1e) >> 1)
 
-#define HRG_MEMSIZE (1024 * 12)        /* 12k * 8 bit graphics memory */
+#define HRG_MEMSIZE (1024 * 16)        /* 16k * 8 bit graphics memory */
 static Uint8 hrg_screen[HRG_MEMSIZE];
 static int hrg_pixel_x[2][6 + 1];
 static int hrg_pixel_y[12 + 1];
@@ -1275,7 +1275,7 @@ void trs_screen_init(void)
     top_margin = (TRS_CHAR_HEIGHT4 * (scale * 2) * 24 -
                  cur_char_height * col_chars) / 2 + border_width;
   } else {
-    OrigWidth = cur_char_width * row_chars + 2 * border_width;
+    OrigWidth = cur_char_width * (hrg_enable == 2 ? 80 : row_chars) + 2 * border_width;
     left_margin = border_width;
     OrigHeight = cur_char_height * col_chars + 2 * border_width + led_height;
     top_margin = border_width;
@@ -3235,6 +3235,18 @@ void lowe_le18_write_control(int value)
  * In expanded mode (32 chars per line), the graphics screen has
  * only 192*192 pixels. Pixels with an odd column address (i.e.
  * every second group of 6 pixels) are suppressed.
+ *
+ * The LNW80 and later TCS models (Genie IIs/SpeedMaster) uses the
+ * 480*192 screen resolution with 96*192 "extension region":
+ *    Bits 0-3:   additional character column address (0-15)
+ *    Bits 4-5:   MSB of line within character cell (0-11)
+ *    Bits 6-9:   character row address (0-15)
+ *    Bits 10-11: LSB of line within character cell (0-11)
+ *    Bits 12-13: Always set to 1 in the "extension region"
+ *    Bits 14-15: not used
+ *
+ * Bit: 0  1  2  3  4  5  6  7  8  9  10  11  12  13  14  15
+ *      <-column->  <MSB> <row addr>  <LSB>   1   1   <n.u.>
  */
 
 /* Initialize HRG. */
@@ -3259,19 +3271,21 @@ hrg_init(void)
   }
 }
 
-/* Switch HRG on (1) or off (0). */
+/* Switch HRG on (1 = 384*192, 2 = 480*192) or off (0). */
 void
 hrg_onoff(int enable)
 {
   static int init;
 
   if ((hrg_enable!=0) == (enable!=0)) return; /* State does not change. */
+  hrg_enable = enable;
 
   if (!init) {
+    init = enable;
+    if (init == 2)
+      trs_screen_init();
     hrg_init();
-    init = 1;
   }
-  hrg_enable = enable;
   trs_screen_refresh();
 }
 
@@ -3289,6 +3303,7 @@ hrg_write_data(int data)
   int old_data;
   int position, line;
   int bits0, bits1;
+  int rows = row_chars;
 
   if (hrg_addr >= HRG_MEMSIZE) return; /* nonexistent address */
   old_data = hrg_screen[hrg_addr];
@@ -3298,8 +3313,16 @@ hrg_write_data(int data)
   if ((currentmode & EXPANDED) && (hrg_addr & 1)) return;
   if ((data &= 0x3f) == (old_data &= 0x3f)) return;
 
-  position = hrg_addr & 0x3ff; /* bits 0-9: "PRINT @" screen position */
-  line = hrg_addr >> 10;       /* vertical offset inside character cell */
+  /* Check for 96*192 extension region */
+  if (hrg_enable == 2 && hrg_addr >= 0x3000) {
+    position = 64 + (hrg_addr & 0x0F) + (((hrg_addr >> 6) & 0x0F) * 80);
+    line = 4 * ((hrg_addr >> 4) & 0x03) + ((hrg_addr >> 10) & 0x03);
+    rows = 80;
+  } else { /* 384*192 inner region */
+    position = hrg_addr & 0x3ff; /* bits 0-9: "PRINT @" screen position */
+    line = hrg_addr >> 10;       /* vertical offset inside character cell */
+  }
+
   bits0 = ~data & old_data;    /* pattern to clear */
   bits1 = data & ~old_data;    /* pattern to set */
 
@@ -3310,8 +3333,8 @@ hrg_write_data(int data)
      ) {
     /* Only additional bits set, or blank text character.
        No need for update of text. */
-    int const destx = (position % row_chars) * cur_char_width + left_margin;
-    int const desty = (position / row_chars) * cur_char_height + top_margin
+    int const destx = (position % rows) * cur_char_width + left_margin;
+    int const desty = (position / rows) * cur_char_height + top_margin
       + hrg_pixel_y[line];
     int const *x = hrg_pixel_x[(currentmode & EXPANDED) != 0];
     int const *w = hrg_pixel_width[(currentmode & EXPANDED) != 0];
