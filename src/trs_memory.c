@@ -274,7 +274,7 @@ void sys_byte_out(Uint8 value)
 		if (memory_map == 0x10) {
 			if ((value & (1 << 3)))
 				memory_map = 0x20;
-			hrg_onoff((value & (1 << 1)));
+			hrg_onoff((value & (1 << 1)) ? 2 : 0);
 		}
 	} else {
 		/* Other CP/M banking */
