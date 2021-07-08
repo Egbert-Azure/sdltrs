@@ -3175,15 +3175,13 @@ hrg_init(void)
 void
 hrg_onoff(int enable)
 {
-  if ((hrg_enable!=0) == (enable!=0)) return; /* State does not change. */
-
-  if ((enable == 0 && hrg_enable == 2) || (enable == 2 && hrg_enable == 0)) {
-    hrg_enable = enable;
-    trs_screen_init();
-    return;
-  }
+  if (hrg_enable == enable) return; /* State does not change. */
   hrg_enable = enable;
-  trs_screen_refresh();
+
+  if (speedup > 4)
+    trs_screen_init();
+  else
+    trs_screen_refresh();
 }
 
 /* Write address to latch. */
