@@ -2067,7 +2067,9 @@ void trs_get_event(int wait)
               case SDLK_F2:    keysym.sym = 0x120; break; /* \ */
               case SDLK_F3:    keysym.sym = 0x121; break; /* ] */
               case SDLK_F4:    keysym.sym = 0x122; break; /* ^ */
-              case SDLK_LCTRL: keysym.sym = 0x11c; break; /* P1 on TCS SpeedMaster */
+              case SDLK_LCTRL: /* P1 on SpeedMaster or Control */
+                keysym.sym = (speedup == 6) ? 0x11c : 0x11a;
+                break;
               default:
                 break;
             }
