@@ -3275,17 +3275,14 @@ hrg_init(void)
 void
 hrg_onoff(int enable)
 {
-  static int init;
-
   if ((hrg_enable!=0) == (enable!=0)) return; /* State does not change. */
-  hrg_enable = enable;
 
-  if (!init) {
-    init = enable;
-    if (init == 2)
-      trs_screen_init();
-    hrg_init();
+  if ((enable == 0 && hrg_enable == 2) || (enable == 2 && hrg_enable == 0)) {
+    hrg_enable = enable;
+    trs_screen_init();
+    return;
   }
+  hrg_enable = enable;
   trs_screen_refresh();
 }
 
