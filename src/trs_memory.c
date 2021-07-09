@@ -262,29 +262,28 @@ void sys_byte_out(Uint8 value)
 	/* TRS-80 Model I memory map */
 	memory_map = 0x10;
 
-	if (speedup > 4) {
-		/* TCS SpeedMaster CP/M banking */
-		if (speedup == 6) {
+	switch (speedup) {
+		case 6: /* TCS SpeedMaster CP/M banking */
 			if ((value & (1 << 7)) == 0) {
 				if (value & 1)
 					memory_map = 0x14;
 			}
-		}
-		/* HRG only in TRS-80 memory map */
-		if (memory_map == 0x10) {
-			if ((value & (1 << 3)))
-				memory_map = 0x20;
-			hrg_onoff((value & (1 << 1)) ? 2 : 0);
-		}
-	} else {
-		/* Other CP/M banking */
-		switch (value) {
-			case 0x10:
-			case 0x11:
-			case 0x54:
-				memory_map = 0x14;
-				break;
-		}
+			/* Fall through */
+		case 5: /* HRG only in TRS-80 memory map */
+			if (memory_map == 0x10) {
+				if ((value & (1 << 3)))
+					memory_map = 0x20;
+				hrg_onoff((value & (1 << 1)) ? 2 : 0);
+			}
+			break;
+		case 4: /* Other CP/M banking */
+			switch (value) {
+				case 0x10:
+				case 0x11:
+				case 0x54:
+					memory_map = 0x14;
+					break;
+			}
 	}
 	system_byte = value;
 }
