@@ -3298,9 +3298,8 @@ void
 hrg_write_data(int data)
 {
   int old_data;
-  int position, line;
+  int position, line, cols;
   int bits0, bits1;
-  int rows = row_chars;
 
   if (hrg_addr >= HRG_MEMSIZE) return; /* nonexistent address */
   old_data = hrg_screen[hrg_addr];
@@ -3314,25 +3313,26 @@ hrg_write_data(int data)
   if (hrg_enable == 2 && hrg_addr >= 0x3000) {
     position = 64 + (hrg_addr & 0x0F) + (((hrg_addr >> 6) & 0x0F) * 80);
     line = 4 * ((hrg_addr >> 4) & 0x03) + ((hrg_addr >> 10) & 0x03);
-    rows = 80;
+    cols = 80;
   } else { /* 384*192 inner region */
     position = hrg_addr & 0x3ff; /* bits 0-9: "PRINT @" screen position */
     line = hrg_addr >> 10;       /* vertical offset inside character cell */
+    cols = 64;
   }
 
   bits0 = ~data & old_data;    /* pattern to clear */
   bits1 = data & ~old_data;    /* pattern to set */
 
   if (bits0 == 0
-      || rows == 80
+      || cols == 80
       || trs_screen[position] == 0x20
       || trs_screen[position] == 0x80
       /*|| (trs_screen[position] < 0x80 && line >= 8 && !usefont)*/
      ) {
     /* Only additional bits set, or blank text character.
        No need for update of text. */
-    int const destx = (position % rows) * cur_char_width + left_margin;
-    int const desty = (position / rows) * cur_char_height + top_margin
+    int const destx = (position % cols) * cur_char_width + left_margin;
+    int const desty = (position / cols) * cur_char_height + top_margin
       + hrg_pixel_y[line];
     int const *x = hrg_pixel_x[(currentmode & EXPANDED) != 0];
     int const *w = hrg_pixel_width[(currentmode & EXPANDED) != 0];
