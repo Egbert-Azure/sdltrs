@@ -1852,9 +1852,6 @@ void trs_get_event(int wait)
           case SDLK_PAUSE:
             call_function(PAUSE);
             continue;
-          case SDLK_PRINTSCREEN:
-            call_function(SAVE_BMP);
-            continue;
           case SDLK_NUMLOCKCLEAR:
             trs_keypad_joystick = !trs_keypad_joystick;
             trs_set_keypad_joystick();
