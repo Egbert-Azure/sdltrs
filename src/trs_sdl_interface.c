@@ -3389,17 +3389,17 @@ void m6845_cursor(int position, int line, int visible)
   drawnRectCount = MAX_RECTS;
 }
 
-void m6845_screen(int lines)
+void m6845_screen(int chars, int lines)
 {
-  if (lines == col_chars)
+  if (chars)
+    row_chars = chars;
+
+  if (lines)
+    col_chars = lines;
+
+  if (screen_chars == row_chars * col_chars)
     return;
 
-  if (lines == 16)
-    row_chars = 64;
-  else
-    row_chars = 80;
-
-  col_chars = lines;
   screen_chars = row_chars * col_chars;
   screen_init();
   trs_screen_init();
