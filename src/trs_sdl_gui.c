@@ -2663,7 +2663,7 @@ void trs_gui_keys_sdltrs(void)
   trs_gui_write_text("ESC: TRS-80 Break Key           Alt-R/W: Read / Write Config", 2, 11, 0);
   trs_gui_write_text("Home/Clear: TRS-80 Clear Key    Alt-P/Pause: Pause Emulator ", 2, 12, 0);
   trs_gui_write_text("End: TRS-80 Shifted Down Arrow  Alt-0...7: Insert Disk Drive", 2, 13, 0);
-  trs_gui_write_text("Control: TRS-80 4/4P Ctrl Key   Shift-Alt-0...7: Remove Disk", 2, 14, 0);
+  trs_gui_write_text("Control: TRS-80 Control Key     Shift-Alt-0...7: Remove Disk", 2, 14, 0);
   trs_gui_center_text(" Press Any Key To Return ", 15, 1);
   trs_screen_update();
   trs_gui_get_key();
