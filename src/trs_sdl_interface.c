@@ -399,6 +399,7 @@ static const int num_options = sizeof(options) / sizeof(trs_opt);
 
 /* Private routines */
 static void bitmap_init(void);
+static void hrg_init(void);
 
 static void stripWhitespace(char *inputStr)
 {
@@ -1360,6 +1361,7 @@ void trs_screen_init(void)
 
   TrsBlitMap(image->format->palette, screen->format);
   bitmap_init();
+  hrg_init();
 
   trs_screen_caption();
   trs_screen_refresh();
