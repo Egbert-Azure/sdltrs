@@ -1878,13 +1878,6 @@ void trs_get_event(int wait)
           case SDLK_PAUSE:
             call_function(PAUSE);
             continue;
-#ifndef SDL2
-          case SDLK_PRINT:
-#else
-          case SDLK_PRINTSCREEN:
-#endif
-            call_function(SAVE_BMP);
-            continue;
 #ifdef SDL2
           case SDLK_NUMLOCKCLEAR:
 #else
