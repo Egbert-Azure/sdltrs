@@ -3507,7 +3507,7 @@ void m6845_screen(int chars, int lines)
 
   screen_chars = row_chars * col_chars;
   screen_init();
-#ifdef SDL2
+#if defined(SDL2) && !defined(_WIN32)
   /* Needed for OpenBox */
   SDL_HideWindow(window);
 #endif
