@@ -550,22 +550,13 @@ int mem_read(int address)
 	return trs80_model1_ram(address);
       case 0x21: /* EG-64 Memory-Banking-Adaptor */
 	if (address < RAM_START) {
-	    if (address <= 0x2FFF) {
-	      if (system_byte & (1 << 0))
+	  if ((address <= 0x2FFF && (system_byte & (1 << 0))) ||
+	      (address >= 0x3000 && address <= 0x35FF && (system_byte & (1 << 2))) ||
+	      (address >= 0x3600 && address <= 0x37FF && (system_byte & (1 << 4))) ||
+	      (address >= 0x3800 && address <= 0x3BFF && (system_byte & (1 << 5))) ||
+	      (address >= 0x3C00 && address <= 0x3FFF && (system_byte & (1 << 6))))
 		return memory[address];
-	      else
-		return rom[address];
-	    }
-	    if (address >= 0x3000 && address <= 0x35FF) {
-	      if (system_byte & (1 << 2))
-		return memory[address];
-	      else
-		return rom[address];
-	    }
-	    if ((address >= 0x3600 && address <= 0x37FF && (system_byte & (1 << 4))) ||
-		(address >= 0x3800 && address <= 0x3BFF && (system_byte & (1 << 5))) ||
-		(address >= 0x3C00 && address <= 0x3FFF && (system_byte & (1 << 6))))
-	      return memory[address];
+	  if (address <= 0x35FF) return rom[address];
 	  return trs80_model1_mmio(address);
 	}
 	return memory[address];
