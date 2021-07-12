@@ -162,6 +162,9 @@ void z80_out(int port, int value)
     case 0xB5: /* Orchestra-85 right channel */
       trs_orch90_out(2, value);
       break;
+    case 0xDF:
+      eg64_mba_out(value);
+      break;
     case 0xE0:
       if (eg3200)
         rtc_reg = value;
@@ -512,6 +515,10 @@ int z80_in(int port)
       goto done;
     case 0x04: /* HRG read data byte */
       value = hrg_read_data();
+      goto done;
+    case 0xDF:
+      eg64_mba_out(7);
+      value = 0;
       goto done;
     case 0xEC:
       value = lowe_le18_read();
