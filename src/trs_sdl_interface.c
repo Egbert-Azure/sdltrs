@@ -1340,7 +1340,6 @@ void trs_screen_init(void)
   SDL_SetWindowPosition(window, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
   SDL_ShowWindow(window);
   SDL_ShowCursor(mousepointer ? SDL_ENABLE : SDL_DISABLE);
-  SDL_FillRect(screen, NULL, background);
 
 #if defined(big_endian) && !defined(__linux)
   colors[0].r = (background) & 0xFF;
@@ -2297,7 +2296,6 @@ void trs_screen_expanded(int flag)
 
   if ((currentmode ^ bit) & EXPANDED) {
     currentmode ^= EXPANDED;
-    SDL_FillRect(screen, NULL, background);
     trs_screen_refresh();
   }
 }
@@ -2350,8 +2348,6 @@ static void trs_screen_640x240(int flag)
     left_margin = cur_char_width * (80 - row_chars) / 2 + border_width;
     top_margin = (TRS_CHAR_HEIGHT4 * 2 * 24 -
         cur_char_height * col_chars) / 2 + border_width;
-    if (left_margin > border_width || top_margin > border_width)
-      SDL_FillRect(screen, NULL, background);
     trs_screen_refresh();
   }
 }
@@ -2550,6 +2546,8 @@ void trs_screen_refresh(void)
 #if XDEBUG
   debug("trs_screen_refresh\n");
 #endif
+  SDL_FillRect(screen, NULL, background);
+
   if (grafyx_enable && !grafyx_overlay) {
     int const srcx   = cur_char_width * grafyx_xoffset;
     int const srcy   = grafyx_yoffset * 2;
