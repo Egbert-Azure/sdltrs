@@ -2866,6 +2866,8 @@ void trs_gui_clear_rect(int x, int y, int w, int h)
   if (row_chars == 80) {
     x += 8;
     y += 4;
+  } else if (hrg_enable == 2) {
+    x += 8;
   }
 
   rect.x = x * cur_char_width + left_margin;
@@ -2892,6 +2894,8 @@ void trs_gui_write_char(int col, int row, Uint8 char_index, int invert)
   /* Add offsets if we are in 80x24 mode */
   if (row_chars == 80) {
     row += 4;
+    col += 8;
+  } else if (hrg_enable == 2) {
     col += 8;
   }
 
