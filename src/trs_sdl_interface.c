@@ -2649,6 +2649,17 @@ void trs_screen_refresh(void)
 
     for (i = 0; i < screen_chars; i++)
       trs_screen_write_char(i, trs_screen[i]);
+
+    /* Redraw HRG extension region */
+    if (hrg_enable == 2) {
+      for (i = 0x3000; i <= 0x3FFF; i++) {
+        int old_data = hrg_screen[i];
+
+        hrg_write_addr(i, 0x3FFF);
+        hrg_write_data(0x00);
+        hrg_write_data(old_data);
+      }
+    }
   }
 
   if (trs_show_led) {
