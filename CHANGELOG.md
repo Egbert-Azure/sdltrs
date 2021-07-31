@@ -1,3 +1,11 @@
+## Version 1.2.20 Release 07-31-2021:
+
+  * Added 480x192 HRG resolution for LNW80 and TCS SpeedMaster/Genie IIs.
+  * Added support for EG-64 Memory-Banking-Adaptor from TCS.
+  * Added CP/M banking support for some TRS-80 Model I clones.
+  * Fixed scaling of HRG1B graphics page.
+  * Fixed Control Key for TRS-80 Model I.
+
 ## Version 1.2.19 Release 06-06-2021:
 
   * Added support for EACA EG 3200 (Genie III).

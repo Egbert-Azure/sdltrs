@@ -24,6 +24,9 @@ Updated version of Mark Grebe's [SDLTRS]:
   * Load and Save TRS-80 memory in debugger
   * Patch Model I ROM to boot from hard disk drive
   * Support EACA EG 3200 (Genie III) system
+  * 480x192 HRG resolution for LNW80 and TCS SpeedMaster/Genie IIs
+  * CP/M banking support for TRS-80 Model I clones
+  * Support EG-64 Memory-Banking-Adaptor from TCS
 
 ## License
 
