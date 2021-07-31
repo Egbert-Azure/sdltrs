@@ -54,20 +54,20 @@
 #include "trs_stringy.h"
 #include "trs_uart.h"
 
+int trs_io_debug_flags;
+
 static int modesel;         /* Model I */
 static int modeimage = 0x8; /* Model III/4/4p */
 static int ctrlimage;       /* Model 4/4p & M6845 */
 static int rominimage;      /* Model 4p */
 
+/* EG 3200 RTC */
+static int rtc_reg;
+
 /* M6845 CRT */
 static int cursor_csr;
 static int cursor_pos;
 static int cursor_vis;
-
-/* EG 3200 RTC */
-static int rtc_reg;
-
-int trs_io_debug_flags;
 
 static void m6845_crt(int value)
 {
