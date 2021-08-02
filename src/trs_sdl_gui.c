@@ -2810,71 +2810,71 @@ void trs_gui(void)
 void call_function(int function)
 {
   SDL_PauseAudio(1);
-  if (function == PAUSE) {
-    trs_paused = !trs_paused;
-    trs_screen_caption();
-    if (!trs_paused)
-      trs_screen_refresh();
+  switch (function) {
+    case PAUSE:
+      trs_paused = !trs_paused;
+      trs_screen_caption();
+      if (!trs_paused)
+        trs_screen_refresh();
+      return;
+    case RESET:
+      trs_reset(1);
+      return;
+    case EXIT:
+      trs_exit(0);
+      return;
+    case GUI:
+      trs_gui();
+      break;
+    case JOYGUI:
+      trs_gui_joy_gui();
+      break;
+    case KEYBRD:
+      trs_gui_get_virtual_key();
+      break;
+    case SAVE:
+      trs_gui_save_state();
+      break;
+    case LOAD:
+      trs_gui_load_state();
+      break;
+    case DISK:
+      trs_gui_disk_management();
+      break;
+    case HARD:
+      trs_gui_hard_management();
+      break;
+    case STRINGY:
+      trs_gui_stringy_management();
+      break;
+    case TAPE:
+      trs_gui_cassette_management();
+      break;
+    case WRITE:
+      trs_gui_write_config();
+      break;
+    case READ:
+      trs_gui_read_config();
+      break;
+    case EMULATOR:
+      trs_gui_emulator_settings();
+      break;
+    case INTERFACE:
+      trs_gui_display_settings();
+      break;
+    case OTHER:
+      trs_gui_misc_settings();
+      break;
+    case KEYS:
+      trs_gui_keys_sdltrs();
+      break;
+    case EXEC:
+      trs_gui_exec_cmd();
+      break;
+    case SAVE_BMP:
+      trs_gui_save_bmp();
+      break;
   }
-  else if (function == RESET)
-    trs_reset(1);
-  else if (function == EXIT)
-    trs_exit(0);
-  else {
-    switch (function) {
-      case GUI:
-        trs_gui();
-        break;
-      case JOYGUI:
-        trs_gui_joy_gui();
-        break;
-      case KEYBRD:
-        trs_gui_get_virtual_key();
-        break;
-      case SAVE:
-        trs_gui_save_state();
-        break;
-      case LOAD:
-        trs_gui_load_state();
-        break;
-      case DISK:
-        trs_gui_disk_management();
-        break;
-      case HARD:
-        trs_gui_hard_management();
-        break;
-      case STRINGY:
-        trs_gui_stringy_management();
-        break;
-      case TAPE:
-        trs_gui_cassette_management();
-        break;
-      case WRITE:
-        trs_gui_write_config();
-        break;
-      case READ:
-        trs_gui_read_config();
-        break;
-      case EMULATOR:
-        trs_gui_emulator_settings();
-        break;
-      case INTERFACE:
-        trs_gui_display_settings();
-        break;
-      case OTHER:
-        trs_gui_misc_settings();
-        break;
-      case KEYS:
-        trs_gui_keys_sdltrs();
-        break;
-      case EXEC:
-        trs_gui_exec_cmd();
-        break;
-      case SAVE_BMP:
-        trs_gui_save_bmp();
-        break;
-    }
-    trs_screen_refresh();
-  }
+  trs_screen_refresh();
   SDL_PauseAudio(0);
 }
