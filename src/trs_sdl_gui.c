@@ -2814,7 +2814,7 @@ void call_function(int function)
     case PAUSE:
       trs_paused = !trs_paused;
       trs_screen_caption();
-      if (!trs_paused)
+      if (!trs_paused && fullscreen)
         trs_screen_refresh();
       return;
     case RESET:
