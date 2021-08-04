@@ -767,7 +767,7 @@ void
 trs_disk_insert(int drive, const char *diskname)
 {
   DiskState *d = &disk[drive];
-  struct stat st;
+  struct stat st = { 0 };
   int c;
 
   if (d->file != NULL) {

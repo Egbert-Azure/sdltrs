@@ -63,7 +63,7 @@ void trs_protect_cass(int writeprot)
 {
   char prot_filename[FILENAME_MAX];
 #ifndef _WIN32
-  struct stat st;
+  struct stat st = { 0 };
   int newmode;
 #endif
 
@@ -95,7 +95,7 @@ void trs_protect_disk(int drive, int writeprot)
 {
   char prot_filename[FILENAME_MAX];
 #ifndef _WIN32
-  struct stat st;
+  struct stat st = { 0 };
   int newmode;
 #endif
   FILE *f;
@@ -148,7 +148,7 @@ void trs_protect_hard(int drive, int writeprot)
 {
   char prot_filename[FILENAME_MAX];
 #ifndef _WIN32
-  struct stat st;
+  struct stat st = { 0 };
 #endif
   int newmode;
   FILE *f;
@@ -198,7 +198,7 @@ void trs_protect_stringy(int drive, int writeprot)
 {
   char prot_filename[FILENAME_MAX];
 #ifndef _WIN32
-  struct stat st;
+  struct stat st = { 0 };
 #endif
   int newmode;
   FILE *f;

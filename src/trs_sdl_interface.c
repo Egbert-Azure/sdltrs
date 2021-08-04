@@ -570,7 +570,7 @@ static void trs_opt_diskset(char *arg, int intarg, int *stringarg)
 
 static void trs_opt_dirname(char *arg, int intarg, int *stringarg)
 {
-  struct stat st;
+  struct stat st = { 0 };
 
   if (stat(arg, &st) < 0)
     strcpy(arg, ".");
