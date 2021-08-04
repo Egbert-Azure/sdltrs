@@ -1213,7 +1213,7 @@ void trs_gui_disk_creation(void)
     snprintf(&disk_creation_menu[5].text[54], 7, "%s", drive_choices[drive_insert]);
     trs_gui_clear_screen();
 
-    selection = trs_gui_display_menu("SDLTRS Floppy Disk Creation", disk_creation_menu, selection);
+    selection = trs_gui_display_menu("Floppy Disk Creation", disk_creation_menu, selection);
     switch (selection) {
       case 0:
         image_type = trs_gui_display_popup("Type", image_type_choices, 3, image_type);
@@ -1284,7 +1284,7 @@ void trs_gui_disk_steps(void)
           i, step_choices[trs_disk_getstep(i) == 1 ? 0 : 1]);
     }
     trs_gui_clear_screen();
-    if ((selection = trs_gui_display_menu("SDLTRS Floppy Disk Step",
+    if ((selection = trs_gui_display_menu("Floppy Disk Step",
         disk_steps_menu, selection)) == -1)
       return;
     step = trs_gui_display_popup("Step", step_choices, 2, trs_disk_getstep(selection) == 2);
@@ -1327,7 +1327,7 @@ void trs_gui_disk_options(void)
     snprintf(&disk_menu[10].text[50], 11, "%s", yes_no_choices[trs_disk_truedam]);
     trs_gui_clear_screen();
 
-    selection = trs_gui_display_menu("SDLTRS Floppy Disk Options", disk_menu, selection);
+    selection = trs_gui_display_menu("Floppy Disk Options", disk_menu, selection);
     if (selection >= 0 && selection < 8) {
       size = trs_gui_display_popup("Size", size_choices, 2, trs_disk_getsize(selection) == 8);
       trs_disk_setsize(selection, size == 0 ? 5 : 8);
@@ -1398,7 +1398,7 @@ void trs_gui_disk_management(void)
     }
     trs_gui_clear_screen();
 
-    selection = trs_gui_display_menu("SDLTRS Floppy Disk Management", disk_menu, selection);
+    selection = trs_gui_display_menu("Floppy Disk Management", disk_menu, selection);
     switch (selection) {
       case 9:
         trs_gui_diskset_save();
@@ -1457,7 +1457,7 @@ void trs_gui_hard_management(void)
     snprintf(&hard_menu[11].text[54], 7, "%6s", drive_choices[drive_insert]);
     trs_gui_clear_screen();
 
-    selection = trs_gui_display_menu("SDLTRS Hard Disk Management", hard_menu, selection);
+    selection = trs_gui_display_menu("Hard Disk Management", hard_menu, selection);
     switch (selection) {
       case 5:
         trs_gui_diskset_save();
@@ -1584,7 +1584,7 @@ void trs_gui_stringy_management(void)
     snprintf(&stringy_menu[11].text[52], 10, "%8s", wafer_choices[wafer_insert]);
     trs_gui_clear_screen();
 
-    selection = trs_gui_display_menu("SDLTRS Stringy Wafer Management", stringy_menu, selection);
+    selection = trs_gui_display_menu("Stringy Wafer Management", stringy_menu, selection);
     switch (selection) {
       case 9:
         trs_gui_diskset_save();
@@ -1644,7 +1644,7 @@ void trs_gui_cassette_management(void)
     snprintf(&cass_menu[6].text[50], 11, "%s", yes_no_choices[drive_insert]);
     trs_gui_clear_screen();
 
-    selection = trs_gui_display_menu("SDLTRS Cassette Management", cass_menu, selection);
+    selection = trs_gui_display_menu("Cassette Management", cass_menu, selection);
     switch (selection) {
       case 2:
         snprintf(input, 11, "%d", trs_get_cassette_position());
@@ -1757,7 +1757,7 @@ void trs_gui_emulator_settings(void)
     snprintf(&model_menu[12].text[50], 11, "%s", yes_no_choices[selector]);
     trs_gui_clear_screen();
 
-    selection = trs_gui_display_menu("SDLTRS Emulator Settings", model_menu, selection);
+    selection = trs_gui_display_menu("Emulator Settings", model_menu, selection);
     switch (selection) {
       case 0:
         model_selection = trs_gui_display_popup("Model", model_choices, 4, model_selection);
@@ -1893,7 +1893,7 @@ void trs_gui_display_settings(void)
 #endif
     trs_gui_clear_screen();
 
-    selection = trs_gui_display_menu("SDLTRS Display Settings", display_menu, selection);
+    selection = trs_gui_display_menu("Display Settings", display_menu, selection);
     switch (selection) {
       case 0:
         snprintf(input, 7, "%06X", background);
@@ -2058,7 +2058,7 @@ void trs_gui_misc_settings(void)
     snprintf(&misc_menu[9].text[50], 11, "%s", yes_no_choices[turbo_paste]);
     trs_gui_clear_screen();
 
-    selection = trs_gui_display_menu("SDLTRS Miscellaneous Settings", misc_menu, selection);
+    selection = trs_gui_display_menu("Miscellaneous Settings", misc_menu, selection);
     switch (selection) {
       case 0:
         trs_emtsafe = trs_gui_display_popup("Emtsafe", yes_no_choices, 2, trs_emtsafe);
@@ -2185,7 +2185,7 @@ static int trs_gui_config_management(void)
   while (1) {
     trs_gui_clear_screen();
 
-    selection = trs_gui_display_menu("SDLTRS Configuration/State Files", misc_menu, selection);
+    selection = trs_gui_display_menu("Configuration/State Files", misc_menu, selection);
     switch (selection) {
       case 0:
         trs_gui_save_state();
@@ -2220,7 +2220,7 @@ void trs_gui_printer_management(void)
     snprintf(&printer_menu[1].text[51], 10, "%s", printer_choices[trs_printer]);
     trs_gui_clear_screen();
 
-    selection = trs_gui_display_menu("SDLTRS Printer Management", printer_menu, selection);
+    selection = trs_gui_display_menu("Printer Management", printer_menu, selection);
     switch (selection) {
       case 0:
         if (trs_printer_reset() == 0)
@@ -2418,7 +2418,7 @@ void trs_gui_joystick_settings(void)
     trs_gui_clear_screen();
     trs_gui_joystick_display_map(-1);
 
-    selection = trs_gui_display_menu("SDLTRS Joystick Settings", display_menu, selection);
+    selection = trs_gui_display_menu("Joystick Settings", display_menu, selection);
     switch (selection) {
       case 0:
         gui_keypad_joystick = trs_gui_display_popup("Keypad", yes_no_choices, 2, gui_keypad_joystick);
@@ -2514,7 +2514,7 @@ void trs_gui_default_dirs(void)
     trs_gui_limit_string(trs_printer_dir, &default_menu[11].text[2], 58);
     trs_gui_clear_screen();
 
-    selection = trs_gui_display_menu("SDLTRS Default Directories", default_menu, selection);
+    selection = trs_gui_display_menu("Default Directories", default_menu, selection);
     switch (selection) {
       case 1:
         trs_gui_file_browse(trs_disk_dir, trs_disk_dir, NULL, 1, "Floppy Disk ");
@@ -2563,7 +2563,7 @@ void trs_gui_rom_files(void)
     snprintf(&romfile_menu[9].text[50], 11, "%s", yes_no_choices[trs_hd_boot]);
     trs_gui_clear_screen();
 
-    selection = trs_gui_display_menu("SDLTRS ROM File Selection", romfile_menu, selection);
+    selection = trs_gui_display_menu("ROM File Selection", romfile_menu, selection);
     switch (selection) {
       case 1:
         trs_gui_file_browse(romfile, romfile, NULL, 0, "Model I ROM");
@@ -2587,7 +2587,7 @@ void trs_gui_about_sdltrs(void)
 {
   trs_gui_clear_screen();
   trs_gui_frame(0, 0, 63, 15);
-  trs_gui_write_text("About SDLTRS", 2, 0, 0);
+  trs_gui_write_text("About", 2, 0, 0);
   trs_gui_center_text("SDLTRS", 3, 0);
   trs_gui_center_text("Version 1.2.20", 4, 0);
   trs_gui_center_text("Copyright (C) 2006-2011 Mark Grebe", 5, 0);
@@ -2606,7 +2606,7 @@ void trs_gui_keys_sdltrs(void)
 {
   trs_gui_clear_screen();
   trs_gui_frame(0, 0, 63, 15);
-  trs_gui_write_text("Keys in SDLTRS", 2, 0, 0);
+  trs_gui_write_text("Keys", 2, 0, 0);
   trs_gui_write_text("F1-F3: Functions Keys F1/F2/F3  PgUp/PgDn: Left/Right Shift ", 2, 1, 0);
   trs_gui_write_text("F4: F4/CapsLock on TRS-80 4/4P  Insert: TRS-80 Underscore   ", 2, 2, 0);
   trs_gui_write_text("F5/ScrollLock: TRS-80 @ Key     Shift-Up Arrow: TRS-80 ESC  ", 2, 3, 0);
@@ -2689,7 +2689,7 @@ void trs_gui(void)
   while (1) {
     trs_gui_clear_screen();
 
-    selection = trs_gui_display_menu("SDLTRS Main Menu", main_menu, selection);
+    selection = trs_gui_display_menu("Main Menu", main_menu, selection);
     switch (selection) {
       case 0:
         trs_gui_disk_management();
