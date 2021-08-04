@@ -136,9 +136,7 @@ static void trs_gui_display_error(const char *name);
 static void trs_gui_display_message(const char *title, const char *message);
 static void trs_gui_create_filename_list(void);
 static void trs_gui_add_to_filename_list(char *name);
-static int  trs_gui_filename_cmp(const char *name1, const char *name2);
-static void trs_gui_quicksort(char **start, char **end,
-                              int (*sort_function) (const char *, const char *));
+static int  trs_gui_filename_cmp(const void *nptr1, const void *nptr2);
 static void trs_gui_delete_filename_list(void);
 static int  trs_gui_readdirectory(const char *path, const char *mask, int browse_dir);
 static int  trs_gui_input_string(const char *title, const char *input, char* output,
@@ -438,8 +436,11 @@ void trs_gui_add_to_filename_list(char *name)
   }
 }
 
-int trs_gui_filename_cmp(const char *name1, const char *name2)
+int trs_gui_filename_cmp(const void *nptr1, const void *nptr2)
 {
+  const char *name1 = *(const char **)nptr1;
+  const char *name2 = *(const char **)nptr2;
+
   if (name1[0] == '<') {
     if (name2[0] != '<')
       return -1;
@@ -454,34 +455,6 @@ int trs_gui_filename_cmp(const char *name1, const char *name2)
     return 1;
 
   return strcasecmp(name1, name2);
-}
-
-void trs_gui_quicksort(char **start, char **end,
-                       int (*sort_function) (const char *, const char *))
-{
-  while (start + 1 < end) {
-    char **left = start + 1;
-    char **right = end;
-    char *pivot = *start;
-    char *tmp;
-
-    while (left < right) {
-      if ((*sort_function)(*left, pivot) < 0)
-        left++;
-      else {
-        right--;
-           tmp = *left;
-         *left = *right;
-        *right = tmp;
-      }
-    }
-    left--;
-       tmp = *left;
-     *left = *start;
-    *start = tmp;
-    trs_gui_quicksort(start, left, trs_gui_filename_cmp);
-    start = right;
-  }
 }
 
 void trs_gui_delete_filename_list(void)
@@ -541,8 +514,7 @@ int trs_gui_readdirectory(const char *path, const char *mask, int browse_dir)
     }
     closedir(directory);
 
-    trs_gui_quicksort(filenamelist, filenamelist + filenamecount,
-        trs_gui_filename_cmp);
+    qsort(filenamelist, filenamecount, sizeof(char *), trs_gui_filename_cmp);
 #if defined(__OS2__) || defined(_WIN32)
     {
       char letter;
