@@ -473,7 +473,7 @@ int trs_gui_readdirectory(const char *path, const char *mask, int browse_dir)
   char *name;
   int  dirname_len;
   struct dirent *dir_entry;
-  struct stat st;
+  struct stat st = { 0 };
 
   directory = opendir(path);
   if (directory) {
@@ -547,7 +547,7 @@ int trs_gui_file_browse(const char *path, char *name, const char *mask,
 {
   char current_dir[FILENAME_MAX];
   char text[64];
-  struct stat st;
+  struct stat st = { 0 };
   const char *new_dir;
   int i, j, key;
   int selection;
@@ -1162,7 +1162,7 @@ int trs_gui_display_question(const char *text)
 
 int trs_gui_file_overwrite(void)
 {
-  struct stat st;
+  struct stat st = { 0 };
 
   if (stat(filename, &st) == 0 && S_ISREG(st.st_mode))
     return trs_gui_display_question("Overwrite?");

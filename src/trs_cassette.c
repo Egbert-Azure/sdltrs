@@ -584,7 +584,7 @@ trs_cassette_getfilename(void)
 int
 trs_cass_getwriteprotect(void)
 {
-  struct stat st;
+  struct stat st = { 0 };
 
   if (cassette_filename[0] == 0)
     return 0;
@@ -595,7 +595,7 @@ trs_cass_getwriteprotect(void)
 
 int trs_get_cassette_length(void)
 {
-  struct stat st;
+  struct stat st = { 0 };
 
   if (cassette_filename[0] == 0)
     return 0;

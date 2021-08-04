@@ -64,7 +64,7 @@ int trs_printer_reset(void)
 void trs_printer_open(void)
 {
   int file_num;
-  struct stat st;
+  struct stat st = { 0 };
 
   for (file_num = 0; file_num < 10000; file_num++) {
     if (snprintf(printer_filename, FILENAME_MAX, "%s%ctrsprn%04d.txt",
