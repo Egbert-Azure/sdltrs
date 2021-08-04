@@ -2751,7 +2751,7 @@ void call_function(int function)
       trs_reset(1);
       return;
     case EXIT:
-      trs_exit(0);
+      trs_exit(1);
       return;
     case GUI:
       trs_gui();
