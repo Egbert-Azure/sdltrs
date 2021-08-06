@@ -3236,6 +3236,7 @@ hrg_write_data(int data)
   bits1 = data & ~old_data;    /* pattern to set */
 
   if (bits0 == 0
+      || cols == 80
       || trs_screen[position] == 0x20
       || trs_screen[position] == 0x80
       /*|| (trs_screen[position] < 0x80 && line >= 8 && !usefont)*/
