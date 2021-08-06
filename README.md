@@ -74,7 +74,7 @@ Lupi's fork of [RetroPie-Setup] ...
 [AUR]: https://aur.archlinux.org/packages/sdltrs
 [BUILDING.md]: BUILDING.md
 [EtchedPixels]: https://www.github.com/EtchedPixels/xtrs
-[MinGW]: http://www.mingw.org
+[MinGW]: https://osdn.net/projects/mingw/
 [MinGW-w64]: http://mingw-w64.org
 [RetroPie]: https://github.com/RetroPie
 [RetroPie-Setup]: https://github.com/valerino/RetroPie-Setup

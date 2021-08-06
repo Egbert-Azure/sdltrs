@@ -138,7 +138,7 @@ make
 This will build the executable binary.
 
 [Homebrew]: https://brew.sh
-[MinGW]: http://www.mingw.org
+[MinGW]: https://osdn.net/projects/mingw/
 [MinGW-w64]: http://mingw-w64.org
 [MSYS2]: https://www.msys2.org
 [SDL]: https://www.libsdl.org
