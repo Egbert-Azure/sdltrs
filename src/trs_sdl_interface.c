@@ -1799,19 +1799,13 @@ void trs_get_event(int wait)
             fatal("failed to get window surface: %s", SDL_GetError());
           else {
             trs_screen_refresh();
-#else
-      case SDL_ACTIVEEVENT:
-        if (event.active.state & SDL_APPACTIVE) {
-          if (event.active.gain) {
-#endif
 #if XDEBUG
             debug("Active\n");
 #endif
-            if (trs_model == 1 && eg3200 == 0)
-              clear_key_queue();
           }
         }
         break;
+#endif
 
       case SDL_KEYDOWN:
         keysym = event.key.keysym;
