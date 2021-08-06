@@ -1213,7 +1213,7 @@ void trs_screen_caption(void)
     snprintf(title, 79, "%s%s %s (%.2f MHz) %s%s",
              timer_overclock ? "Turbo " : "",
              eg3200 ? "EACA" : "TRS-80 Model",
-             eg3200 ? "EG 3200" : trs_name[trs_model],
+             eg3200 ? "EG 3200 Genie III" : trs_name[trs_model],
              z80_state.clockMHz,
              trs_paused ? "PAUSED " : "",
              trs_sound ? "" : "(Mute)");
