@@ -146,6 +146,8 @@ static Uint32 light_red;
 static Uint32 bright_red;
 static Uint32 light_orange;
 static Uint32 bright_orange;
+static Uint32 back_color;
+static Uint32 fore_color;
 static Uint32 last_key[256];
 
 #if defined(SDL2) || !defined(NOX)
@@ -1343,6 +1345,10 @@ void trs_screen_init(void)
   light_orange  = SDL_MapRGB(screen->format, 0x40, 0x28, 0x00);
   bright_orange = SDL_MapRGB(screen->format, 0xff, 0xa0, 0x00);
 #endif
+  back_color    = SDL_MapRGB(screen->format,
+                             colors[0].r, colors[0].g, colors[0].b);
+  fore_color    = SDL_MapRGB(screen->format,
+                             colors[1].r, colors[1].g, colors[1].b);
 
 #ifdef SDL2
   SDL_SetPaletteColors(image->format->palette, colors, 0, 2);
@@ -1543,7 +1549,7 @@ void trs_sdl_flush(void)
     rect.h = scale;
 
     for (rect.y = 0; rect.y < screen_height; rect.y += (scale * 2))
-      SDL_FillRect(screen, &rect, background);
+      SDL_FillRect(screen, &rect, back_color);
 #else
     int const width = screen->format->BytesPerPixel * scale * OrigWidth;
     int const pitch = screen->pitch;
@@ -2588,7 +2594,7 @@ void trs_screen_refresh(void)
 #if XDEBUG
   debug("trs_screen_refresh\n");
 #endif
-  SDL_FillRect(screen, NULL, background);
+  SDL_FillRect(screen, NULL, back_color);
 
   if (grafyx_enable && !grafyx_overlay) {
     int const srcx   = cur_char_width * grafyx_xoffset;
@@ -3380,13 +3386,13 @@ hrg_write_data(int data)
     }
     if (n0 != 0) {
       for (i = 0; i < n0; i++) {
-        SDL_FillRect(screen, &rect0[i], background);
+        SDL_FillRect(screen, &rect0[i], back_color);
         addToDrawList(&rect0[i]);
       }
     }
     if (n1 != 0) {
       for (i = 0; i < n1; i++) {
-        SDL_FillRect(screen, &rect1[i], foreground);
+        SDL_FillRect(screen, &rect1[i], fore_color);
         addToDrawList(&rect1[i]);
       }
     }
@@ -3458,7 +3464,7 @@ hrg_update_char(int position)
   }
   if (n != 0) {
     for (i = 0; i < n; i++) {
-      SDL_FillRect(screen, &rect[i], foreground);
+      SDL_FillRect(screen, &rect[i], fore_color);
       addToDrawList(&rect[i]);
     }
   }
@@ -3498,7 +3504,7 @@ void m6845_cursor(int position, int line, int visible)
     rect.h = 2 * scale;
     rect.w = cur_char_width;
     rect.y = rect.y + line * (scale * 2);
-    SDL_FillRect(screen, &rect, foreground);
+    SDL_FillRect(screen, &rect, fore_color);
   }
   addToDrawList(&rect);
 }
