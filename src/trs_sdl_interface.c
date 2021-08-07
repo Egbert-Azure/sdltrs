@@ -1793,6 +1793,7 @@ void trs_get_event(int wait)
         break;
 #ifdef SDL2
       case SDL_WINDOWEVENT:
+        SDL_FlushEvent(SDL_KEYDOWN);
         SDL_UpdateWindowSurface(window);
         if (event.window.event == SDL_WINDOWEVENT_SIZE_CHANGED) {
           if ((screen = SDL_GetWindowSurface(window)) == NULL)
