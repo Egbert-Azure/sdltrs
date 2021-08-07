@@ -880,15 +880,14 @@ int trs_gui_display_menu(const char *title, MENU_ENTRY *entry, int selection)
   while (1) {
     trs_gui_write_text(entry[selection].text, 2, selection + 2, 1);
     trs_screen_update();
-    key = trs_gui_get_key();
+    key = toupper(trs_gui_get_key());
     trs_gui_write_text(entry[selection].text, 2, selection + 2, 0);
     if (key >= '0' && key <= '9') {
       key -= '0';
       if (key <= num && entry[key].type != MENU_TITLE)
         selection = key;
     } else
-    if (key >= 'A' && key <= 'z') {
-      key = toupper(key);
+    if (key >= 'A' && key <= 'Z') {
       i = selection;
       do {
         if (++selection > num)
@@ -1019,20 +1018,17 @@ int trs_gui_display_popup(const char *title, const char **entry,
   while (1) {
     trs_gui_write_text(entry[selection], x, selection + y, 1);
     trs_screen_update();
-    key = trs_gui_get_key();
+    key = toupper(trs_gui_get_key());
     trs_gui_write_text(entry[selection], x, selection + y, 0);
     if (num == 2) {
       switch (key) {
-        case 'n':
         case 'N':
           return 0;
-        case 'y':
         case 'Y':
           return 1;
       }
     }
-    if (key >= '0' && key <= 'z') {
-      key = toupper(key);
+    if (key >= '0' && key <= 'Z') {
       for (i = 0; i < num; i++) {
         if (strchr(entry[i], key)) {
           selection = i;
