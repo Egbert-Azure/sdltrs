@@ -186,15 +186,15 @@ void trs_gui_write_text(const char *text, int x, int y, int invert)
   int i;
 
   if (len > 62 - x) {
-    int const len_first_part = (59 - x) / 2;
-    int pos_second_part = len - (59 - x - len_first_part);
+    int const len_1st_part = (59 - x) / 2;
+    int pos_2nd_part = len - (59 - x - len_1st_part);
 
-    for (i = 0; i < len_first_part; i++)
+    for (i = 0; i < len_1st_part; i++)
       trs_gui_write_char(x + i, y, text[i], invert);
-    for (; i < len_first_part + 3; i++)
+    for (; i < len_1st_part + 3; i++)
       trs_gui_write_char(x + i, y, '.', invert);
     for (; i < 62 - x; i++)
-      trs_gui_write_char(x + i, y, text[pos_second_part++], invert);
+      trs_gui_write_char(x + i, y, text[pos_2nd_part++], invert);
   } else {
     for (i = 0; i < len; i++)
       trs_gui_write_char(x + i, y, text[i], invert);
@@ -232,11 +232,11 @@ void trs_gui_clear_screen(void)
 void trs_gui_limit_string(const char *orig, char *limited, unsigned int limit)
 {
   if (strlen(orig) > limit) {
-    int const len_first_part = (limit - 3) / 2;
-    int const pos_second_part = strlen(orig) - (limit - len_first_part - 3);
+    int const len_1st_part = (limit - 3) / 2;
+    int const pos_2nd_part = strlen(orig) - (limit - len_1st_part - 3);
 
-    snprintf(limited, limit + 1, "%.*s...%s", len_first_part, orig,
-        orig + pos_second_part);
+    snprintf(limited, limit + 1, "%.*s...%s", len_1st_part, orig,
+        orig + pos_2nd_part);
   } else
     snprintf(limited, limit + 1, "%s", orig);
 }
