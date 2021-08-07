@@ -143,6 +143,8 @@ static Uint32 light_red;
 static Uint32 bright_red;
 static Uint32 light_orange;
 static Uint32 bright_orange;
+static Uint32 back_color;
+static Uint32 fore_color;
 static Uint32 last_key[256];
 
 #define PASTE_IDLE    0
@@ -1356,6 +1358,10 @@ void trs_screen_init(void)
   colors[1].g = (foreground >> 8) & 0xFF;
   colors[1].b = (foreground) & 0xFF;
 #endif
+  back_color  = SDL_MapRGB(screen->format,
+                           colors[0].r, colors[0].g, colors[0].b);
+  fore_color  = SDL_MapRGB(screen->format,
+                           colors[1].r, colors[1].g, colors[1].b);
   SDL_SetPaletteColors(image->format->palette, colors, 0, 2);
 
   TrsBlitMap(image->format->palette, screen->format);
@@ -1546,7 +1552,7 @@ void trs_sdl_flush(void)
     rect.h = 1;
 
     for (rect.y = 0; rect.y < screen_height; rect.y += 2)
-      SDL_FillRect(screen, &rect, background);
+      SDL_FillRect(screen, &rect, back_color);
 #else
     int const width = screen->format->BytesPerPixel * OrigWidth;
     int const pitch = screen->pitch;
@@ -2544,7 +2550,7 @@ void trs_screen_refresh(void)
 #if XDEBUG
   debug("trs_screen_refresh\n");
 #endif
-  SDL_FillRect(screen, NULL, background);
+  SDL_FillRect(screen, NULL, back_color);
 
   if (grafyx_enable && !grafyx_overlay) {
     int const srcx   = cur_char_width * grafyx_xoffset;
@@ -3287,9 +3293,9 @@ hrg_write_data(int data)
       }
     }
     if (n0 != 0)
-      SDL_FillRects(screen, &rect0[0], n0, background);
+      SDL_FillRects(screen, &rect0[0], n0, back_color);
     if (n1 != 0)
-      SDL_FillRects(screen, &rect1[0], n1, foreground);
+      SDL_FillRects(screen, &rect1[0], n1, fore_color);
     drawnRectCount = MAX_RECTS;
   }
   else {
@@ -3357,7 +3363,7 @@ hrg_update_char(int position)
     }
     prev_byte = byte;
   }
-  SDL_FillRects(screen, &rect[0], n, foreground);
+  SDL_FillRects(screen, &rect[0], n, fore_color);
 }
 
 void m6845_cursor(int position, int line, int visible)
@@ -3394,7 +3400,7 @@ void m6845_cursor(int position, int line, int visible)
     rect.h = 2 * scale;
     rect.w = cur_char_width;
     rect.y = rect.y + line * (scale * 2);
-    SDL_FillRect(screen, &rect, foreground);
+    SDL_FillRect(screen, &rect, fore_color);
   }
   drawnRectCount = MAX_RECTS;
 }
