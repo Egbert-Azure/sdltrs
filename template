@@ -1,5 +1,6 @@
 # Template file for 'sdl2trs'
 pkgname=sdl2trs
+branch=sdl2
 version=1.2.20
 revision=1
 create_wrksrc=yes
@@ -14,9 +15,8 @@ license="BSD-2-Clause"
 homepage="https://gitlab.com/jengun/sdltrs"
 
 do_fetch() {
-	git clone ${homepage} ${wrksrc}
+	git clone -b ${branch} ${homepage} ${wrksrc}
 	cd ${wrksrc}
-	git checkout sdl2
 }
 
 pre_configure() {
