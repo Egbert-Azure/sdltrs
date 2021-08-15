@@ -3682,9 +3682,22 @@ void trs_main_load(FILE *file)
 
 int trs_sdl_savebmp(const char *filename)
 {
-  if (SDL_SaveBMP(screen, filename) != 0) {
+  SDL_Surface *buffer = SDL_CreateRGBSurface(SDL_SWSURFACE,
+      OrigWidth, screen_height, 32,
+#if defined(big_endian) && !defined(__linux)
+      0x000000ff, 0x0000ff00, 0x00ff0000, 0);
+#else
+      0x00ff0000, 0x0000ff00, 0x000000ff, 0);
+#endif
+
+  if (buffer) {
+    SDL_BlitSurface(screen, NULL, buffer, NULL);
+    if (SDL_SaveBMP(buffer, filename) == 0) {
+      SDL_FreeSurface(buffer);
+      return 0;
+    }
     error("failed to save Screenshot %s: %s", filename, strerror(errno));
-    return -1;
+    SDL_FreeSurface(buffer);
   }
-  return 0;
+  return -1;
 }
