@@ -3579,6 +3579,7 @@ int trs_sdl_savebmp(const char *filename)
 #endif
 
   if (buffer) {
+    trs_screen_refresh();
     SDL_BlitSurface(screen, NULL, buffer, NULL);
     if (SDL_SaveBMP(buffer, filename) == 0) {
       SDL_FreeSurface(buffer);
