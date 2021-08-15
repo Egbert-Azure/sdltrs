@@ -2688,7 +2688,6 @@ void trs_gui_save_bmp(void)
   if (trs_gui_input_string("Save Screenshot",
       trs_printer_dir, filename, FILENAME_MAX - 5, 1) == 0) {
     trs_add_extension(filename, ".bmp");
-    trs_screen_refresh();
     if (trs_gui_file_overwrite()) {
       if (trs_sdl_savebmp(filename) != 0)
         trs_gui_display_error(filename);
