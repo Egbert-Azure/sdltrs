@@ -2090,6 +2090,8 @@ void trs_get_event(int wait)
             && keysym.unicode >= 'A' && keysym.unicode <= 'Z')
           keysym.unicode = (int) keysym.unicode + 0x20;
 #endif
+        if (keysym.sym == SDLK_RSHIFT && trs_model == 1)
+          keysym.sym = SDLK_LSHIFT;
 
         if (eg3200) {
           if (keysym.sym == SDLK_LCTRL)
