@@ -60,6 +60,7 @@ extern char romfile3[FILENAME_MAX];
 extern char romfile4p[FILENAME_MAX];
 extern char trs_hard_dir[FILENAME_MAX];
 extern char trs_cass_dir[FILENAME_MAX];
+extern char trs_disk_dir[FILENAME_MAX];
 extern char trs_disk_set_dir[FILENAME_MAX];
 extern char trs_state_dir[FILENAME_MAX];
 extern char trs_printer_dir[FILENAME_MAX];

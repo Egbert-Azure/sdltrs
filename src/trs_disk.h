@@ -56,7 +56,6 @@ extern int trs_diskset_save(const char *filename);
 extern int trs_diskset_load(const char *filename);
 
 extern int trs_disk_doubler;
-extern char trs_disk_dir[FILENAME_MAX];
 extern int trs_disk_truedam;
 
 /* Values for emulated disk image type (emutype) */

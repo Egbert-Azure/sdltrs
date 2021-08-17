@@ -36,7 +36,6 @@ extern void trs_hard_attach(int drive, const char *diskname);
 extern void trs_hard_remove(int drive);
 extern int trs_hard_in(int port);
 extern void trs_hard_out(int port, int value);
-extern char trs_disk_dir[];
 extern char* trs_hard_getfilename(int unit);
 extern int trs_hard_getwriteprotect(int unit);
 
