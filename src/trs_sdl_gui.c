@@ -2192,17 +2192,17 @@ static int trs_gui_config_management(void)
         break;
       case 1:
         if (trs_gui_load_state() == 0)
-          return 1;
+          return 0;
         break;
       case 2:
         trs_gui_write_config();
         break;
       case 3:
         if (trs_gui_read_config() == 0)
-          return 1;
+          return 0;
         break;
       case -1:
-        return 0;
+        return -1;
     }
   }
 }
@@ -2712,7 +2712,7 @@ void trs_gui(void)
         trs_gui_misc_settings();
         break;
       case 7:
-        if (trs_gui_config_management())
+        if (trs_gui_config_management() == 0)
           return;
         break;
       case 8:
