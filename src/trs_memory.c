@@ -973,6 +973,19 @@ Uint8 *mem_pointer(int address, int writing)
 	return trs80_model1_ram_addr(address);
       case 0x17: /* Model 1: Described in the selector doc as 'not useful' */
 	return NULL;	/* Not clear what really happens */
+      case 0x21: /* EG-64 Memory-Banking-Adaptor */
+      case 0x29:
+	if (address < RAM_START) {
+	  if ((address <= 0x2FFF && (system_byte & (1 << 0))) ||
+	      (address >= 0x3000 && address <= 0x35FF && (system_byte & (1 << 2))) ||
+	      (address >= 0x3600 && address <= 0x37FF && (system_byte & (1 << 4))) ||
+	      (address >= 0x3800 && address <= 0x3BFF && (system_byte & (1 << 5))) ||
+	      (address >= 0x3C00 && address <= 0x3FFF && (system_byte & (1 << 6))))
+		return &memory[address];
+	  if (address <= 0x35FF) return &rom[address];
+	  return trs80_model1_mmio_addr(address, writing);
+	}
+	return &memory[address];
       case 0x30: /* Model III reading */
         if (trs_model < 4 && address >= 32768)
 	    return &memory[address + bank_base];
