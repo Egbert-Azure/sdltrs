@@ -950,19 +950,24 @@ Uint8 *mem_pointer(int address, int writing)
       case 0x19:
 	return trs80_model1_ram_addr(address);
       case 0x12: /* Model 1 selector mode 2 (ROM disabled) */
+      case 0x1A:
         if (address < 0x37E0)
           return trs80_model1_ram_addr(address);
 	if (address < RAM_START)
 	  return trs80_model1_mmio_addr(address, writing);
 	return trs80_model1_ram_addr(address);
       case 0x13: /* Model 1: selector mode 3 (CP/M mode) */
+      case 0x1B:
         if (address >= 0xF7E0)
           return trs80_model1_mmio_addr(address & 0x3FFF, writing);
 	/* Fall through */
       case 0x14: /* Model 1: All RAM banking high */
+      case 0x1C:
       case 0x15: /* Model 1: All RAM banking low */
+      case 0x1D:
 	return trs80_model1_ram_addr(address);
       case 0x16: /* Model 1: Low 16K in top 16K */
+      case 0x1F:
 	if (address < RAM_START)
 	  return trs80_model1_mmio_addr(address, writing);
 	return trs80_model1_ram_addr(address);
