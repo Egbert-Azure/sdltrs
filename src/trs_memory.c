@@ -227,6 +227,7 @@ void eg3200_bank_out(Uint8 value)
 {
 	if (eg3200 == 0) {
 		eg3200 = value;
+		memory_map = 0x22;
 		trs_disk_doubler = TRSDISK_PERCOM;
 		trs_timer_init();
 		trs_screen_inverse(0);
@@ -478,35 +479,6 @@ int mem_read(int address)
        the address. Deal with these first so that we take their
        output and feed it into the memory map */
 
-    /* EG 3200 bank switching, inverted (bit set to 0 => bank enabled) */
-    if (eg3200) {
-      /* Bit 0 - Bank 1: ROM/EPROM */
-      if ((eg3200 & (1 << 0)) == 0) {
-	if (address < trs_rom_size)
-	  return rom[address];
-      }
-      /* Bit 1 - Bank 2: Video Memory 0 (1k, 64x16, TRS-80 M1 compatible) */
-      if ((eg3200 & (1 << 1)) == 0) {
-	if (address >= VIDEO_START && address <= 0x3FFF)
-	  return video[address - VIDEO_START];
-      }
-      /* Bit 2 - Bank 3: Video Memory 1 (additional 1k for 80x24 video mode) */
-      if ((eg3200 & (1 << 2)) == 0) {
-	if (address >= 0x4000 && address <= 0x43FF)
-	  return video[address - VIDEO_START];
-      }
-      /* Bit 3 - Bank 4: Disk I/O and Keyboard */
-      if ((eg3200 & (1 << 3)) == 0) {
-	if (address >= 0x37E0 && address <= 0x37EF)
-	  return trs80_model1_mmio(address);
-	if (address >= KEYBOARD_START) {
-	  if (address <= 0x38C0) return trs_kb_mem_read(address);
-	  if (address <= 0x38FF) return 0x00;
-	}
-      }
-      /* Bank 0: RAM */
-      return memory[address];
-    }
     /* The SuperMem sits between the system and the Z80 */
     if (supermem) {
       if (!((address ^ supermem_hi) & 0x8000))
@@ -559,6 +531,33 @@ int mem_read(int address)
 	  if (address <= 0x35FF) return rom[address];
 	  return trs80_model1_mmio(address);
 	}
+	return memory[address];
+      case 0x22: /* EG 3200 bank switching (bit set to 0 => bank enabled) */
+	/* Bit 0 - Bank 1: ROM/EPROM */
+	if ((eg3200 & (1 << 0)) == 0) {
+	  if (address < trs_rom_size)
+	    return rom[address];
+	}
+	/* Bit 1 - Bank 2: Video Memory 0 (1k, 64x16, TRS-80 M1 compatible) */
+	if ((eg3200 & (1 << 1)) == 0) {
+	  if (address >= VIDEO_START && address <= 0x3FFF)
+	    return video[address - VIDEO_START];
+	}
+	/* Bit 2 - Bank 3: Video Memory 1 (additional 1k for 80x24 video mode) */
+	if ((eg3200 & (1 << 2)) == 0) {
+	  if (address >= 0x4000 && address <= 0x43FF)
+	    return video[address - VIDEO_START];
+	}
+	/* Bit 3 - Bank 4: Disk I/O and Keyboard */
+	if ((eg3200 & (1 << 3)) == 0) {
+	  if (address >= 0x37E0 && address <= 0x37EF)
+	    return trs80_model1_mmio(address);
+	  if (address >= KEYBOARD_START) {
+	    if (address <= 0x38C0) return trs_kb_mem_read(address);
+	    if (address <= 0x38FF) return 0x00;
+	  }
+	}
+	/* Bank 0: RAM */
 	return memory[address];
 
       case 0x30: /* Model III */
@@ -697,33 +696,6 @@ void mem_write(int address, int value)
 {
     address &= 0xffff;
 
-    /* EG 3200 bank switching, inverted (bit set to 0 => bank enabled) */
-    if (eg3200) {
-      /* Bit 1 - Bank 2: Video Memory 0 (1k, 64x16, TRS-80 M1 compatible) */
-      if ((eg3200 & (1 << 1)) == 0) {
-	if (address >= VIDEO_START && address <= 0x3FFF) {
-	  trs80_screen_write_char(address - VIDEO_START, value);
-	  return;
-	}
-      }
-      /* Bit 2 - Bank 3: Video Memory 1 (additional 1k for 80x24 video mode) */
-      if ((eg3200 & (1 << 2)) == 0) {
-	if (address >= 0x4000 && address <= 0x43FF) {
-	  trs80_screen_write_char(address - VIDEO_START, value);
-	  return;
-	}
-      }
-      /* Bit 3 - Bank 4: Disk I/O */
-      if ((eg3200 & (1 << 3)) == 0) {
-	if (address >= 0x37E0 && address <= 0x37EF) {
-	  trs80_model1_write_mmio(address, value);
-	  return;
-	}
-      }
-      /* Bank 0: RAM */
-      memory[address] = value;
-      return;
-    }
     /* The SuperMem sits between the system and the Z80 */
     if (supermem) {
       if (!((address ^ supermem_hi) & 0x8000)) {
@@ -792,6 +764,31 @@ void mem_write(int address, int value)
 	}
 	memory[address] = value;
 	break;
+      case 0x22: /* EG 3200 bank switching (bit set to 0 => bank enabled) */
+	/* Bit 1 - Bank 2: Video Memory 0 (1k, 64x16, TRS-80 M1 compatible) */
+	if ((eg3200 & (1 << 1)) == 0) {
+	  if (address >= VIDEO_START && address <= 0x3FFF) {
+	    trs80_screen_write_char(address - VIDEO_START, value);
+	    return;
+	  }
+	}
+	/* Bit 2 - Bank 3: Video Memory 1 (additional 1k for 80x24 video mode) */
+	if ((eg3200 & (1 << 2)) == 0) {
+	  if (address >= 0x4000 && address <= 0x43FF) {
+	    trs80_screen_write_char(address - VIDEO_START, value);
+	    return;
+	  }
+	}
+	/* Bit 3 - Bank 4: Disk I/O */
+	if ((eg3200 & (1 << 3)) == 0) {
+	  if (address >= 0x37E0 && address <= 0x37EF) {
+	    trs80_model1_write_mmio(address, value);
+	    return;
+	  }
+	}
+	/* Bank 0: RAM */
+	memory[address] = value;
+	return;
 
       case 0x30: /* Model III */
 	if (address >= RAM_START) {
@@ -912,26 +909,6 @@ Uint8 *mem_pointer(int address, int writing)
 {
     address &= 0xffff;
 
-    /* EG 3200 bank switching, inverted (bit set to 0 => bank enabled) */
-    if (eg3200) {
-      /* Bit 0 - Bank 1: ROM/EPROM */
-      if ((eg3200 & (1 << 0)) == 0) {
-	if (address < trs_rom_size)
-	  return &rom[address];
-      }
-      /* Bit 1 - Bank 2: Video Memory 0 (1k, 64x16, TRS-80 M1 compatible) */
-      if ((eg3200 & (1 << 1)) == 0) {
-	if (address >= VIDEO_START && address <= 0x3FFF)
-	  return &video[address - VIDEO_START];
-      }
-      /* Bit 2 - Bank 3: Video Memory 1 (additional 1k for 80x24 video mode) */
-      if ((eg3200 & (1 << 2)) == 0) {
-	if (address >= 0x4000 && address <= 0x43FF)
-	  return &video[address - VIDEO_START];
-      }
-      /* Bank 0: RAM */
-      return &memory[address];
-    }
     /* The SuperMem sits between the system and the Z80 */
     if (supermem) {
       if (!((address ^ supermem_hi) & 0x8000))
@@ -985,6 +962,25 @@ Uint8 *mem_pointer(int address, int writing)
 	  if (address <= 0x35FF) return &rom[address];
 	  return trs80_model1_mmio_addr(address, writing);
 	}
+	return &memory[address];
+      case 0x22: /* EG 3200 bank switching (bit set to 0 => bank enabled) */
+      case 0x2A:
+	/* Bit 0 - Bank 1: ROM/EPROM */
+	if ((eg3200 & (1 << 0)) == 0) {
+	  if (address < trs_rom_size)
+	    return &rom[address];
+	}
+	/* Bit 1 - Bank 2: Video Memory 0 (1k, 64x16, TRS-80 M1 compatible) */
+	if ((eg3200 & (1 << 1)) == 0) {
+	  if (address >= VIDEO_START && address <= 0x3FFF)
+	    return &video[address - VIDEO_START];
+	}
+	/* Bit 2 - Bank 3: Video Memory 1 (additional 1k for 80x24 video mode) */
+	if ((eg3200 & (1 << 2)) == 0) {
+	  if (address >= 0x4000 && address <= 0x43FF)
+	    return &video[address - VIDEO_START];
+	}
+	/* Bank 0: RAM */
 	return &memory[address];
       case 0x30: /* Model III reading */
         if (trs_model < 4 && address >= 32768)
