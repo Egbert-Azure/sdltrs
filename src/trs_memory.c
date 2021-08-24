@@ -93,7 +93,6 @@ static Uint8 video[MAX_VIDEO_SIZE + 1];
 /* We map the SuperMem separately, otherwise it can get really
    confusing when combining with other stuff */
 static Uint8 supermem_ram[MAX_SUPERMEM_SIZE + 1];
-static int trs_video_size;
 static int memory_map;
 static int bank_offset[2];
 #define VIDEO_PAGE_0 0
@@ -320,12 +319,9 @@ static void mem_init(void)
     memset(&video, 0, sizeof(video));
 
     if (trs_model < 4) {
-        trs_video_size = 1024;
         /* Fill memory of random seed buffer */
         memset(&memory[0x4090], 0x7F, 0x3);
     }
-    else
-        trs_video_size = MAX_VIDEO_SIZE;
 
     mem_map(0);
     mem_bank(0);
@@ -1065,7 +1061,6 @@ void trs_mem_save(FILE *file)
   trs_save_uint8(file, cp500_rom, CP500_ROM_SIZE + 1);
   trs_save_uint8(file, video, MAX_VIDEO_SIZE + 1);
   trs_save_int(file, &trs_rom_size, 1);
-  trs_save_int(file, &trs_video_size, 1);
   trs_save_int(file, &memory_map, 1);
   trs_save_int(file, bank_offset, 2);
   trs_save_int(file, &video_offset, 1);
@@ -1090,7 +1085,6 @@ void trs_mem_load(FILE *file)
   trs_load_uint8(file, cp500_rom, CP500_ROM_SIZE + 1);
   trs_load_uint8(file, video, MAX_VIDEO_SIZE + 1);
   trs_load_int(file, &trs_rom_size, 1);
-  trs_load_int(file, &trs_video_size, 1);
   trs_load_int(file, &memory_map, 1);
   trs_load_int(file, bank_offset, 2);
   trs_load_int(file, &video_offset, 1);
