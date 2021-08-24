@@ -2514,31 +2514,29 @@ static void bitmap_init(void)
     trs_char[3][i] = CreateSurfaceFromDataScale(trs_char_data[trs_charset][i],
         background, foreground, 2, 2);
 
-    /* GUI Normal */
+    /* GUI Normal + Inverse */
     if (trs_char[4][i]) {
       free(trs_char[4][i]->pixels);
       SDL_FreeSurface(trs_char[4][i]);
     }
-    /* For the GUI, make sure we have brackets, backslash and block graphics */
-    if ((i >= '[' && i <= ']') || i >= 128)
-      trs_char[4][i] = CreateSurfaceFromDataScale(trs_char_data[0][i],
-          gui_foreground, gui_background, 1, 2);
-    else
-      trs_char[4][i] = CreateSurfaceFromDataScale(trs_char_data[trs_charset][i],
-          gui_foreground, gui_background, 1, 2);
-
-    /* GUI Inverse */
     if (trs_char[5][i]) {
       free(trs_char[5][i]->pixels);
       SDL_FreeSurface(trs_char[5][i]);
     }
-    if ((i >= '[' && i <= ']') || i >= 128)
+    /* For the GUI, make sure we have brackets, backslash and block graphics */
+    if ((i >= '[' && i <= ']') || i >= 128) {
+      trs_char[4][i] = CreateSurfaceFromDataScale(trs_char_data[0][i],
+          gui_foreground, gui_background, 1, 2);
       trs_char[5][i] = CreateSurfaceFromDataScale(trs_char_data[0][i],
           gui_background, gui_foreground, 1, 2);
-    else
+    } else {
+      trs_char[4][i] = CreateSurfaceFromDataScale(trs_char_data[trs_charset][i],
+          gui_foreground, gui_background, 1, 2);
       trs_char[5][i] = CreateSurfaceFromDataScale(trs_char_data[trs_charset][i],
           gui_background, gui_foreground, 1, 2);
+    }
   }
+
   boxes_init(foreground, background,
       cur_char_width, TRS_CHAR_HEIGHT * 2, 0);
   boxes_init(foreground, background,
