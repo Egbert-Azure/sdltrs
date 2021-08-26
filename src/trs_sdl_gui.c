@@ -2055,7 +2055,7 @@ void trs_gui_display_settings(void)
 void trs_gui_misc_settings(void)
 {
   MENU_ENTRY misc_menu[] =
-  {{"Emtsafe                                                 ", MENU_NORMAL},
+  {{"Emulator Traps Safe                                     ", MENU_NORMAL},
    {"Keystretch Value                                        ", MENU_NORMAL},
    {"Serial Port Name:", MENU_TITLE},
    {"                                                        ", MENU_NORMAL},
