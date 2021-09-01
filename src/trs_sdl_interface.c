@@ -2655,8 +2655,8 @@ void trs_screen_refresh(void)
       for (i = 0x3000; i <= 0x3FFF; i++) {
         int old_data = hrg_screen[i];
 
+        hrg_screen[i] = 0;
         hrg_write_addr(i, 0x3FFF);
-        hrg_write_data(0x00);
         hrg_write_data(old_data);
       }
     }
