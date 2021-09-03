@@ -2218,8 +2218,16 @@ void trs_get_event(int wait)
       case SDL_JOYBUTTONDOWN:
       case SDL_MOUSEBUTTONDOWN:
         if (event.type == SDL_MOUSEBUTTONDOWN) {
-          if (mousepointer)
+          if (mousepointer) {
+            if (event.button.button == SDL_BUTTON_MIDDLE) {
+              if (copyStatus != COPY_IDLE) {
+                copyStatus = COPY_CLEAR;
+                trs_sdl_flush();
+              }
+              call_function(GUI);
+            }
             break;
+          }
           else
             event.jbutton.button = event.button.button;
         }
