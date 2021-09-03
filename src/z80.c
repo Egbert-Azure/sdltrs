@@ -2102,13 +2102,6 @@ static void do_CB_instruction(void)
       case 0x3E:	/* srl (hl) */
 	mem_write(Z80_HL, srl_byte(mem_read(Z80_HL)));  T_COUNT(15);
 	break;
-
-      default:
-#ifdef ZBX
-	/* Not possible; all 256 cases are covered above */
-	disassemble(Z80_PC - 2);
-#endif
-	error("unsupported instruction");
     }
 }
 
@@ -4238,13 +4231,6 @@ int z80_run(int continuous)
 	  case 0xAE:	/* xor (hl) */
 	    do_xor_byte(mem_read(Z80_HL));  T_COUNT(7);
 	    break;
-
-	  default:
-#ifdef ZBX
-	    /* Not possible; all 256 cases are covered above */
-	    disassemble(Z80_PC - 1);
-#endif
-	    error("unsupported instruction");
 	}
 
 	/* Event scheduler */
