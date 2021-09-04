@@ -675,13 +675,9 @@ stringy_out(int unit, int value)
 
 static void trs_save_stringy(FILE *file, stringy_info_t *d)
 {
-  int one = 1;
-  int zero = 0;
+  int file_not_null = (d->file != NULL);
 
-  if (d->file == NULL)
-     trs_save_int(file, &zero, 1);
-  else
-     trs_save_int(file, &one, 1);
+  trs_save_int(file, &file_not_null, 1);
   trs_save_filename(file, d->name);
   trs_save_uint64(file, (Uint64 *)&d->length, 1);
   trs_save_uint64(file, (Uint64 *)&d->eotWidth, 1);
