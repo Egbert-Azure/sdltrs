@@ -745,15 +745,11 @@ void do_emt_resetdisk(void)
 
 void trs_imp_exp_save(FILE *file)
 {
-  int i;
-  int one = 1;
-  int zero = 0;
+  int i, file_not_null;
 
   for (i = 0; i < MAX_OPENDIR; i++) {
-    if (dir[i].dir == NULL)
-      trs_save_int(file, &zero, 1);
-    else
-      trs_save_int(file, &one, 1);
+    file_not_null = (dir[i].dir != NULL);
+    trs_save_int(file, &file_not_null, 1);
     trs_save_filename(file, dir[i].pathname);
   }
   for (i = 0; i < MAX_OPENDISK; i++) {
