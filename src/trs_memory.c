@@ -227,7 +227,7 @@ void eg3200_bank_out(Uint8 value)
 {
 	if (eg3200 == 0) {
 		eg3200 = value;
-		memory_map = 0x22;
+		memory_map = 0x23;
 		trs_disk_doubler = TRSDISK_PERCOM;
 		trs_timer_init();
 		trs_screen_inverse(0);
@@ -256,7 +256,7 @@ void eg64_mba_out(Uint8 value)
 void lsb_bank_out(Uint8 value)
 {
 	system_byte = value;
-	memory_map = 0x23;
+	memory_map = 0x22;
 }
 
 void selector_out(Uint8 value)
@@ -535,7 +535,19 @@ int mem_read(int address)
 	  return trs80_model1_mmio(address);
 	}
 	return memory[address];
-      case 0x22: /* EG 3200 bank switching (bit set to 0 => bank enabled) */
+      case 0x22: /* Lubomir Soft Banker */
+	if (address < RAM_START) {
+	  if ((address <= 0x37DF && (system_byte & (1 << 6))) ||
+	      (address >= 0x37E0 && address <= 0x3FFF && (system_byte & (1 << 5))))
+		return memory[address];
+	  return trs80_model1_mmio(address);
+	}
+	if (address >= 0x8000 && (system_byte & (1 << 4)))
+	  /* Read from "Expander RAM" */
+	  return memory[address + 0x8000];
+	else
+	  return memory[address];
+      case 0x23: /* EG 3200 bank switching (bit set to 0 => bank enabled) */
 	/* Bit 0 - Bank 1: ROM/EPROM */
 	if ((eg3200 & (1 << 0)) == 0) {
 	  if (address < trs_rom_size)
@@ -562,18 +574,6 @@ int mem_read(int address)
 	}
 	/* Bank 0: RAM */
 	return memory[address];
-      case 0x23: /* Lubomir Soft Banker */
-	if (address < RAM_START) {
-	  if ((address <= 0x37DF && (system_byte & (1 << 6))) ||
-	      (address >= 0x37E0 && address <= 0x3FFF && (system_byte & (1 << 5))))
-		return memory[address];
-	  return trs80_model1_mmio(address);
-	}
-	if (address >= 0x8000 && (system_byte & (1 << 4)))
-	  /* Read from "Expander RAM" */
-	  return memory[address + 0x8000];
-	else
-	  return memory[address];
 
       case 0x30: /* Model III */
 	if (address >= RAM_START) return memory[address];
@@ -779,7 +779,23 @@ void mem_write(int address, int value)
 	}
 	memory[address] = value;
 	break;
-      case 0x22: /* EG 3200 bank switching (bit set to 0 => bank enabled) */
+      case 0x22: /* Lubomir Soft Banker */
+	if (address < RAM_START) {
+	  if ((address <= 0x37DF && (system_byte & (1 << 7))) ||
+	      (address >= 0x37E0 && address <= 0x3FFF && (system_byte & (1 << 5)))) {
+		memory[address] = value;
+		return;
+	  }
+	  trs80_model1_write_mmio(address, value);
+	  return;
+	}
+	if (address >= 0x8000 && (system_byte & (1 << 4)))
+	  /* Write to "Expander RAM" */
+	  memory[address + 0x8000] = value;
+	else
+	  memory[address] = value;
+	return;
+      case 0x23: /* EG 3200 bank switching (bit set to 0 => bank enabled) */
 	/* Bit 1 - Bank 2: Video Memory 0 (1k, 64x16, TRS-80 M1 compatible) */
 	if ((eg3200 & (1 << 1)) == 0) {
 	  if (address >= VIDEO_START && address <= 0x3FFF) {
@@ -803,22 +819,6 @@ void mem_write(int address, int value)
 	}
 	/* Bank 0: RAM */
 	memory[address] = value;
-	return;
-      case 0x23: /* Lubomir Soft Banker */
-	if (address < RAM_START) {
-	  if ((address <= 0x37DF && (system_byte & (1 << 7))) ||
-	      (address >= 0x37E0 && address <= 0x3FFF && (system_byte & (1 << 5)))) {
-		memory[address] = value;
-		return;
-	  }
-	  trs80_model1_write_mmio(address, value);
-	  return;
-	}
-	if (address >= 0x8000 && (system_byte & (1 << 4)))
-	  /* Write to "Expander RAM" */
-	  memory[address + 0x8000] = value;
-	else
-	  memory[address] = value;
 	return;
 
       case 0x30: /* Model III */
@@ -994,8 +994,21 @@ Uint8 *mem_pointer(int address, int writing)
 	  return trs80_model1_mmio_addr(address, writing);
 	}
 	return &memory[address];
-      case 0x22: /* EG 3200 bank switching (bit set to 0 => bank enabled) */
+      case 0x22: /* Lubomir Soft Banker */
       case 0x2A:
+	if (address < RAM_START) {
+	  if ((address <= 0x37DF && (system_byte & (1 << 6))) ||
+	      (address >= 0x37E0 && address <= 0x3FFF && (system_byte & (1 << 5))))
+		return &memory[address];
+	  return trs80_model1_mmio_addr(address, writing);
+	}
+	if (address >= 0x8000 && (system_byte & (1 << 4)))
+	  /* Read from "Expander RAM" */
+	  return &memory[address + 0x8000];
+	else
+	  return &memory[address];
+      case 0x23: /* EG 3200 bank switching (bit set to 0 => bank enabled) */
+      case 0x2B:
 	/* Bit 0 - Bank 1: ROM/EPROM */
 	if ((eg3200 & (1 << 0)) == 0) {
 	  if (address < trs_rom_size)
@@ -1013,19 +1026,6 @@ Uint8 *mem_pointer(int address, int writing)
 	}
 	/* Bank 0: RAM */
 	return &memory[address];
-      case 0x23: /* Lubomir Soft Banker */
-      case 0x2B:
-	if (address < RAM_START) {
-	  if ((address <= 0x37DF && (system_byte & (1 << 6))) ||
-	      (address >= 0x37E0 && address <= 0x3FFF && (system_byte & (1 << 5))))
-		return &memory[address];
-	  return trs80_model1_mmio_addr(address, writing);
-	}
-	if (address >= 0x8000 && (system_byte & (1 << 4)))
-	  /* Read from "Expander RAM" */
-	  return &memory[address + 0x8000];
-	else
-	  return &memory[address];
       case 0x30: /* Model III reading */
         if (trs_model < 4 && address >= 32768)
 	    return &memory[address + bank_base];
