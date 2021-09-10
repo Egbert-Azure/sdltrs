@@ -1118,6 +1118,8 @@ void trs_mem_save(FILE *file)
   trs_save_int(file, &huffman_ram, 1);
   trs_save_int(file, &hypermem, 1);
   trs_save_int(file, &supermem, 1);
+  trs_save_int(file, &supermem_base, 1);
+  trs_save_uint32(file, &supermem_hi, 1);
   trs_save_int(file, &selector, 1);
   trs_save_int(file, &selector_reg, 1);
   trs_save_int(file, &lsb, 1);
@@ -1143,6 +1145,8 @@ void trs_mem_load(FILE *file)
   trs_load_int(file, &huffman_ram, 1);
   trs_load_int(file, &hypermem, 1);
   trs_load_int(file, &supermem, 1);
+  trs_load_int(file, &supermem_base, 1);
+  trs_load_uint32(file, &supermem_hi, 1);
   trs_load_int(file, &selector, 1);
   trs_load_int(file, &selector_reg, 1);
   trs_load_int(file, &lsb, 1);
