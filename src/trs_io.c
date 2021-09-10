@@ -105,6 +105,10 @@ void z80_out(int port, int value)
   /* First, ports common to all models */
   switch (port) {
   case TRS_HARD_WP:       /* 0xC0 */
+    if (trs_model == 1 && lsb) {
+      lsb_bank_out(value);
+      return;
+    }
   case TRS_HARD_CONTROL:  /* 0xC1 */
   case TRS_HARD_DATA:     /* 0xC8 */
   case TRS_HARD_ERROR:    /* 0xC9 */ /*=TRS_HARD_PRECOMP*/

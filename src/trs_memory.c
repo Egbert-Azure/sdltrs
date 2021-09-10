@@ -81,6 +81,7 @@ Uint8 rom[MAX_ROM_SIZE + 1];
 Uint8 cp500_rom[CP500_ROM_SIZE + 1];
 int trs_rom_size;
 int lowercase = 1;
+int lsb; /* Lubomir Soft Banker */
 int romin; /* Model 4p */
 int huffman_ram;
 int hypermem;
@@ -250,6 +251,12 @@ void eg64_mba_out(Uint8 value)
 		system_byte |= 1UL << (value - 8);
 
 	memory_map = 0x21;
+}
+
+void lsb_bank_out(Uint8 value)
+{
+	system_byte = value;
+	memory_map = 0x23;
 }
 
 void selector_out(Uint8 value)
@@ -555,6 +562,18 @@ int mem_read(int address)
 	}
 	/* Bank 0: RAM */
 	return memory[address];
+      case 0x23: /* Lubomir Soft Banker */
+	if (address < RAM_START) {
+	  if ((address <= 0x37DF && (system_byte & (1 << 6))) ||
+	      (address >= 0x37E0 && address <= 0x3FFF && (system_byte & (1 << 5))))
+		return memory[address];
+	  return trs80_model1_mmio(address);
+	}
+	if (address >= 0x8000 && (system_byte & (1 << 4)))
+	  /* Read from "Expander RAM" */
+	  return memory[address + 0x8000];
+	else
+	  return memory[address];
 
       case 0x30: /* Model III */
 	if (address >= RAM_START) return memory[address];
@@ -785,6 +804,22 @@ void mem_write(int address, int value)
 	/* Bank 0: RAM */
 	memory[address] = value;
 	return;
+      case 0x23: /* Lubomir Soft Banker */
+	if (address < RAM_START) {
+	  if ((address <= 0x37DF && (system_byte & (1 << 7))) ||
+	      (address >= 0x37E0 && address <= 0x3FFF && (system_byte & (1 << 5)))) {
+		memory[address] = value;
+		return;
+	  }
+	  trs80_model1_write_mmio(address, value);
+	  return;
+	}
+	if (address >= 0x8000 && (system_byte & (1 << 4)))
+	  /* Write to "Expander RAM" */
+	  memory[address + 0x8000] = value;
+	else
+	  memory[address] = value;
+	return;
 
       case 0x30: /* Model III */
 	if (address >= RAM_START) {
@@ -978,6 +1013,19 @@ Uint8 *mem_pointer(int address, int writing)
 	}
 	/* Bank 0: RAM */
 	return &memory[address];
+      case 0x23: /* Lubomir Soft Banker */
+      case 0x2B:
+	if (address < RAM_START) {
+	  if ((address <= 0x37DF && (system_byte & (1 << 6))) ||
+	      (address >= 0x37E0 && address <= 0x3FFF && (system_byte & (1 << 5))))
+		return &memory[address];
+	  return trs80_model1_mmio_addr(address, writing);
+	}
+	if (address >= 0x8000 && (system_byte & (1 << 4)))
+	  /* Read from "Expander RAM" */
+	  return &memory[address + 0x8000];
+	else
+	  return &memory[address];
       case 0x30: /* Model III reading */
         if (trs_model < 4 && address >= 32768)
 	    return &memory[address + bank_base];
@@ -1072,6 +1120,7 @@ void trs_mem_save(FILE *file)
   trs_save_int(file, &supermem, 1);
   trs_save_int(file, &selector, 1);
   trs_save_int(file, &selector_reg, 1);
+  trs_save_int(file, &lsb, 1);
   trs_save_int(file, &m_a11_flipflop, 1);
   trs_save_int(file, &eg3200, 1);
   trs_save_int(file, &system_byte, 1);
@@ -1096,6 +1145,7 @@ void trs_mem_load(FILE *file)
   trs_load_int(file, &supermem, 1);
   trs_load_int(file, &selector, 1);
   trs_load_int(file, &selector_reg, 1);
+  trs_load_int(file, &lsb, 1);
   trs_load_int(file, &m_a11_flipflop, 1);
   trs_load_int(file, &eg3200, 1);
   trs_load_int(file, &system_byte, 1);

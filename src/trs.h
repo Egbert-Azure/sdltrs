@@ -200,7 +200,7 @@ extern int selector;
 extern void selector_out(Uint8);
 
 extern int lowercase;
-
+extern int lsb;
 extern int stringy;
 
 extern void mem_video_page(int which);
@@ -215,6 +215,7 @@ extern void m6845_cursor(int position, int line, int visible);
 extern void m6845_screen(int chars, int lines);
 
 extern void eg64_mba_out(Uint8 value);
+extern void lsb_bank_out(Uint8 value);
 extern void sys_byte_out(Uint8 value);
 extern Uint8 sys_byte_in(void);
 
