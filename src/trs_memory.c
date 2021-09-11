@@ -81,7 +81,7 @@ Uint8 rom[MAX_ROM_SIZE + 1];
 Uint8 cp500_rom[CP500_ROM_SIZE + 1];
 int trs_rom_size;
 int lowercase = 1;
-int lsb; /* Lubomir Soft Banker */
+int lubomir; /* Lubomir Soft Banker */
 int romin; /* Model 4p */
 int huffman_ram;
 int hypermem;
@@ -1122,7 +1122,7 @@ void trs_mem_save(FILE *file)
   trs_save_uint32(file, &supermem_hi, 1);
   trs_save_int(file, &selector, 1);
   trs_save_int(file, &selector_reg, 1);
-  trs_save_int(file, &lsb, 1);
+  trs_save_int(file, &lubomir, 1);
   trs_save_int(file, &m_a11_flipflop, 1);
   trs_save_int(file, &eg3200, 1);
   trs_save_int(file, &system_byte, 1);
@@ -1149,7 +1149,7 @@ void trs_mem_load(FILE *file)
   trs_load_uint32(file, &supermem_hi, 1);
   trs_load_int(file, &selector, 1);
   trs_load_int(file, &selector_reg, 1);
-  trs_load_int(file, &lsb, 1);
+  trs_load_int(file, &lubomir, 1);
   trs_load_int(file, &m_a11_flipflop, 1);
   trs_load_int(file, &eg3200, 1);
   trs_load_int(file, &system_byte, 1);

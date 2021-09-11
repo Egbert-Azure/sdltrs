@@ -200,7 +200,7 @@ extern int selector;
 extern void selector_out(Uint8);
 
 extern int lowercase;
-extern int lsb;
+extern int lubomir;
 extern int stringy;
 
 extern void mem_video_page(int which);

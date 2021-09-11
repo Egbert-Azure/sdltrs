@@ -1771,7 +1771,7 @@ void trs_gui_emulator_settings(void)
     snprintf(&model_menu[1].text[50], 11, "%6.2f MHz", clock_mhz[model_selection]);
     snprintf(&model_menu[3].text[50], 11, "%s", yes_no_choices[stringy]);
     snprintf(&model_menu[4].text[50], 11, "%s", yes_no_choices[lowercase]);
-    snprintf(&model_menu[5].text[50], 11, "%s", yes_no_choices[lsb]);
+    snprintf(&model_menu[5].text[50], 11, "%s", yes_no_choices[lubomir]);
     snprintf(&model_menu[6].text[45], 16, "%s", speed_choices[speedup]);
     snprintf(&model_menu[7].text[50], 11, "%s", yes_no_choices[grafyx_get_microlabs()]);
     snprintf(&model_menu[8].text[50], 11, "%s", yes_no_choices[lowe_le18]);
@@ -1818,7 +1818,7 @@ void trs_gui_emulator_settings(void)
         lowercase = trs_gui_display_popup("Lowercase", yes_no_choices, 2, lowercase);
         break;
       case 5:
-        lsb = trs_gui_display_popup("Lubomir", yes_no_choices, 2, lsb);
+        lubomir = trs_gui_display_popup("Lubomir", yes_no_choices, 2, lubomir);
         break;
       case 6:
         speedup = trs_gui_display_popup("Speedup", speed_choices, 7, speedup);
