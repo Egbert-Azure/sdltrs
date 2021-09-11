@@ -143,7 +143,8 @@ void z80_out(int port, int value)
     switch (port) {
     case 0x00: /* HRG off */
     case 0x01: /* HRG on */
-      hrg_onoff(port);
+      if (eg3200 == 0)
+        hrg_onoff(port);
       break;
     case 0x02: /* HRG write address low byte */
       hrg_write_addr(value, 0xff);
@@ -516,7 +517,8 @@ int z80_in(int port)
     case 0x00: /* HRG off (undocumented) */
 #endif
     case 0x01: /* HRG on (undocumented) */
-      hrg_onoff(port);
+      if (eg3200 == 0)
+        hrg_onoff(port);
       goto done;
     case 0x04: /* HRG read data byte */
       value = hrg_read_data();
