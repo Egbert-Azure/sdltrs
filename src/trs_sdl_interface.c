@@ -1123,6 +1123,7 @@ int trs_write_config_file(const char *filename)
   fprintf(config_file, "keystretch=%d\n", stretch_amount);
   fprintf(config_file, "%sle18\n", lowe_le18 ? "" : "no");
   fprintf(config_file, "%slowercase\n", lowercase ? "" : "no");
+  fprintf(config_file, "%slubomir\n", lubomir ? "" : "no");
   fprintf(config_file, "%smicrolabs\n", grafyx_microlabs ? "" : "no");
   fprintf(config_file, "model=%d%s\n",
           trs_model == 5 ? 4 : trs_model, trs_model == 5 ? "P" : "");
