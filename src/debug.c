@@ -408,7 +408,7 @@ static void load_memory(Uint16 address, const char *filename)
 	    mem_write(address++, c);
 	fclose(file);
     } else {
-	error("failed to load: %s: %s", filename, strerror(errno));
+	error("failed to load: '%s': %s", filename, strerror(errno));
     }
 }
 
@@ -424,7 +424,7 @@ static void save_memory(Uint16 address, int num_bytes, const char *filename)
 
 	fclose(file);
     } else {
-	error("failed to save: %s: %s", filename, strerror(errno));
+	error("failed to save: '%s': %s", filename, strerror(errno));
     }
 }
 
@@ -802,7 +802,7 @@ void debug_shell(void)
 			Z80_R = value;
 			Z80_R7 = value & 0x80;
 		    } else {
-			printf("Unrecognized register name %s.\n", regname);
+			printf("Unrecognized register name '%s'.\n", regname);
 		    }
 		}
 		else if(sscanf(input, "%*s I%x = %x", &addr, &value) == 2)

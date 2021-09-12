@@ -68,11 +68,11 @@ int trs_load_cmd(const char *filename)
   int entry;
 
   if ((program = fopen(filename,"rb")) == NULL) {
-    error("failed to load CMD file %s: %s", filename, strerror(errno));
+    error("failed to load CMD file '%s': %s", filename, strerror(errno));
     return -1;
   }
   if (load_cmd(program, memory, NULL, 0, NULL, -1, NULL, &entry, 1) == LOAD_CMD_OK) {
-    debug("entry point of %s: 0x%x (%d) ...\n", filename, entry, entry);
+    debug("entry point of '%s': 0x%x (%d) ...\n", filename, entry, entry);
     if (entry >= 0)
       Z80_PC = entry;
   } else {
@@ -93,7 +93,7 @@ static int trs_load_rom(const char *filename)
     return -1;
 
   if ((program = fopen(filename, "rb")) == NULL) {
-    error("failed to load ROM file %s: %s", filename, strerror(errno));
+    error("failed to load ROM file '%s': %s", filename, strerror(errno));
     return -1;
   }
   c = getc(program);
@@ -103,7 +103,7 @@ static int trs_load_rom(const char *filename)
     trs_rom_size = load_hex(program);
     fclose(program);
     if (trs_rom_size == -1) {
-      error("ROM file %s not in Intel hex format", filename);
+      error("ROM file '%s' not in Intel hex format", filename);
       return -1;
     } else
       return 0;

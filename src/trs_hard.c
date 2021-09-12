@@ -420,7 +420,7 @@ static int open_drive(int drive)
       d->file = fopen(d->filename, "rb");
     }
     if (d->file == NULL) {
-      error("trs_hard: could not open hard drive image %s: %s",
+      error("trs_hard: could not open hard drive image '%s': %s",
 	    d->filename, strerror(errno));
       err = errno;
       goto fail;
@@ -433,7 +433,7 @@ static int open_drive(int drive)
   /* Read in the Reed header and check some basic magic numbers (not all) */
   res = fread(&rhh, sizeof(rhh), 1, d->file);
   if (res != 1 || rhh.id1 != 0x56 || rhh.id2 != 0xcb || rhh.ver >= 0x20) {
-    error("trs_hard: unrecognized hard drive image %s", d->filename);
+    error("trs_hard: unrecognized hard drive image '%s'", d->filename);
     err = -1;
     goto fail;
   }
@@ -451,7 +451,7 @@ static int open_drive(int drive)
 
   if ((rhh.sec % d->secs) != 0 ||
       d->heads <= 0 || d->heads > TRS_HARD_MAXHEADS) {
-    error("trs_hard: unusable geometry in image %s", d->filename);
+    error("trs_hard: unusable geometry in image '%s'", d->filename);
     err = -1;
     goto fail;
   }
@@ -627,7 +627,7 @@ void trs_hard_load(FILE *file)
       if (state.d[i].file == NULL) {
         state.d[i].file = fopen(state.d[i].filename, "rb");
         if (state.d[i].file == NULL) {
-          error("failed to load hard%d: %s: %s", i, state.d[i].filename,
+          error("failed to load hard%d: '%s': %s", i, state.d[i].filename,
               strerror(errno));
           state.d[i].filename[0] = 0;
           state.d[i].writeprot = 0;

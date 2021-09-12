@@ -147,7 +147,7 @@ stringy_create_with(const char *name,
 
   f = fopen(name, "w");
   if (f == NULL) {
-    error("failed to create Wafer Image %s: %s", name, strerror(errno));
+    error("failed to create Wafer Image '%s': %s", name, strerror(errno));
     return errno;
   }
 
@@ -738,7 +738,7 @@ void trs_stringy_load(FILE *file)
       if (stringy_info[i].file == NULL) {
         stringy_info[i].file = fopen(stringy_info[i].name, "rb");
         if (stringy_info[i].file == NULL) {
-          error("failed to load wafer%d: %s: %s", i, stringy_info[i].name,
+          error("failed to load wafer%d: '%s': %s", i, stringy_info[i].name,
               strerror(errno));
           stringy_info[i].name[0] = 0;
           stringy_info[i].in_port = 0;

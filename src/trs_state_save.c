@@ -61,7 +61,7 @@ int trs_state_save(const char *filename)
     fclose(file);
     return 0;
   }
-  error("failed to save State %s: %s", filename, strerror(errno));
+  error("failed to save State '%s': %s", filename, strerror(errno));
   return -1;
 }
 
@@ -75,7 +75,7 @@ int trs_state_load(const char *filename)
   if (file) {
     trs_load_uint8(file, (Uint8 *)banner, stateFileBannerLen);
     if (strncmp(banner, stateFileBanner, stateFileBannerLen)) {
-      error("failed to get State Banner from %s", filename);
+      error("failed to get State Banner from '%s'", filename);
       fclose(file);
       return -1;
     }
@@ -100,7 +100,7 @@ int trs_state_load(const char *filename)
     fclose(file);
     return 0;
   }
-  error("failed to load State %s: %s", filename, strerror(errno));
+  error("failed to load State '%s': %s", filename, strerror(errno));
   return -1;
 }
 

@@ -253,7 +253,7 @@ int trs_create_blank_jv1(const char *fname)
 
   /* Unformatted JV1 disk - just an empty file! */
   if (f == NULL) {
-    error("failed to create JV1 disk %s: %s", fname, strerror(errno));
+    error("failed to create JV1 disk '%s': %s", fname, strerror(errno));
     return -1;
   }
   fclose(f);
@@ -267,7 +267,7 @@ int trs_create_blank_jv3(const char *fname)
 
   /* Unformatted JV3 disk. */
   if (f == NULL) {
-    error("failed to create JV3 disk %s: %s", fname, strerror(errno));
+    error("failed to create JV3 disk '%s': %s", fname, strerror(errno));
     return -1;
   }
   for (i = 0; i < (256 * 34); i++)
@@ -284,7 +284,7 @@ int trs_create_blank_dmk(const char *fname, int sides, int density,
 
   /* Unformatted DMK disk */
   if (f == NULL) {
-    error("failed to create DMK disk %s: %s", fname, strerror(errno));
+    error("failed to create DMK disk '%s': %s", fname, strerror(errno));
     return -1;
   }
   putc(0, f);           /* 0: not write protected */
@@ -369,7 +369,7 @@ int trs_create_blank_hard(const char *fname, int cyl, int sec,
 
   f = fopen(fname, "wb");
   if (f == NULL) {
-    error("failed to create hard disk %s: %s", fname, strerror(errno));
+    error("failed to create hard disk '%s': %s", fname, strerror(errno));
     return 1;
   }
   fwrite(&rhh, sizeof(rhh), 1, f);

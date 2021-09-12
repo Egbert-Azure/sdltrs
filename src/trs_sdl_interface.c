@@ -500,7 +500,7 @@ static void trs_opt_charset(char *arg, int intarg, int *stringarg)
           trs_charset1 = 12;
           break;
         default:
-          error("unknown charset1 name: %s", arg);
+          error("unknown charset1 name: '%s'", arg);
     }
   } else {
     if (isdigit((int)*arg)) {
@@ -527,7 +527,7 @@ static void trs_opt_charset(char *arg, int intarg, int *stringarg)
           charset = 6;
           break;
         default:
-          error("unknown charset%d name: %s", intarg, arg);
+          error("unknown charset%d name: '%s'", intarg, arg);
           return;
       }
       if (intarg == 3)
@@ -692,7 +692,7 @@ static void trs_opt_model(char *arg, int intarg, int *stringarg)
              strcasecmp(arg, "IVp") == 0) {
     trs_model = 5;
   } else
-    error("TRS-80 Model %s not supported", arg);
+    error("TRS-80 Model '%s' not supported", arg);
 }
 
 static void trs_opt_rom(char *arg, int intarg, int *stringarg)
@@ -726,7 +726,7 @@ static void trs_opt_printer(char *arg, int intarg, int *stringarg)
         trs_printer = 1;
         break;
       default:
-        error("unknown printer type: %s", arg);
+        error("unknown printer type: '%s'", arg);
     }
 }
 
@@ -797,7 +797,7 @@ static void trs_opt_speedup(char *arg, int intarg, int *stringarg)
       speedup = 6;
       break;
     default:
-      error("unknown speedup kit: %s", arg);
+      error("unknown speedup kit: '%s'", arg);
   }
 }
 
@@ -958,13 +958,13 @@ int trs_load_config_file(void)
       snprintf(trs_config_file, FILENAME_MAX, "./sdltrs.t8c");
 
     if ((config_file = fopen(trs_config_file, "r")) == NULL) {
-      debug("create default configuration file: %s\n", trs_config_file);
+      debug("create default configuration file: '%s'\n", trs_config_file);
       trs_write_config_file(trs_config_file);
       return -1;
     }
   } else {
     if ((config_file = fopen(trs_config_file, "r")) == NULL) {
-      error("failed to load %s: %s", trs_config_file, strerror(errno));
+      error("failed to load '%s': %s", trs_config_file, strerror(errno));
       return -1;
     }
   }
@@ -1041,7 +1041,7 @@ void trs_parse_command_line(int argc, char **argv, int *debug)
       }
     }
     if (j == num_options && argv[i][0] == '-')
-      error("unrecognized option %s", argv[i]);
+      error("unrecognized option '%s'", argv[i]);
   }
 
   *debug = debugger;
@@ -1057,7 +1057,7 @@ int trs_write_config_file(const char *filename)
   int i;
 
   if ((config_file = fopen(filename, "w")) == NULL) {
-    error("failed to write %s: %s", filename, strerror(errno));
+    error("failed to write '%s': %s", filename, strerror(errno));
     return -1;
   }
 
@@ -3708,7 +3708,7 @@ int trs_sdl_savebmp(const char *filename)
       SDL_FreeSurface(buffer);
       return 0;
     }
-    error("failed to save Screenshot %s: %s", filename, strerror(errno));
+    error("failed to save Screenshot '%s': %s", filename, strerror(errno));
     SDL_FreeSurface(buffer);
   }
   return -1;

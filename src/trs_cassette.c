@@ -664,12 +664,12 @@ static int assert_state(int state)
     }
     cassette_file = fopen(cassette_filename, "rb");
     if (cassette_file == NULL) {
-      error("couldn't read %s: %s", cassette_filename, strerror(errno));
+      error("couldn't read '%s': %s", cassette_filename, strerror(errno));
       cassette_state = FAILED;
       return -1;
     }
     if (cassette_format == WAV_FORMAT && parse_wav_header(cassette_file) < 0) {
-      error("removed unusable wav file %s", cassette_filename);
+      error("removed unusable wav file '%s'", cassette_filename);
       cassette_filename[0] = 0;
       cassette_state = FAILED;
       fclose(cassette_file);
@@ -719,7 +719,7 @@ static int assert_state(int state)
         fseek(cassette_file, cassette_position, 0);
       }
       if (cassette_file == NULL) {
-        error("couldn't write %s: %s", cassette_filename, strerror(errno));
+        error("couldn't write '%s': %s", cassette_filename, strerror(errno));
         cassette_state = FAILED;
         return -1;
         }
@@ -919,7 +919,7 @@ transition_out(int value)
 
 
   default:
-    error("output format %s not implemented",
+    error("output format '%s' not implemented",
 	  cassette_format < (sizeof(format_name) / sizeof(char *)) ?
 	  format_name[cassette_format] : "out of range;");
     break;
@@ -1073,7 +1073,7 @@ transition_in(void)
     break;
 
   default:
-    error("input format %s not implemented",
+    error("input format '%s' not implemented",
 	  cassette_format < (sizeof(format_name) / sizeof(char *)) ?
 	  format_name[cassette_format] : "out of range;");
     break;
