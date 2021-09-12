@@ -73,7 +73,7 @@ void trs_printer_open(void)
         printer_open = TRUE;
         printer = fopen(printer_filename,"w");
         if (printer == NULL) {
-          error("failed to open printer output file %s: %s", printer_filename,
+          error("failed to open printer output file '%s': %s", printer_filename,
               strerror(errno));
           printer_open = FALSE;
         }

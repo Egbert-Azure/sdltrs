@@ -161,14 +161,14 @@ trs_uart_init(int reset_button)
   initialized = 1;
   uart.fd = open(trs_uart_name, O_RDWR|O_NOCTTY|O_NONBLOCK);
   if (uart.fd == -1) {
-    error("can't open %s: %s", trs_uart_name, strerror(errno));
+    error("can't open '%s': %s", trs_uart_name, strerror(errno));
     initialized = -1;
     return;
   } else {
     uart.fdflags = FNONBLOCK;
     err = tcgetattr(uart.fd, &uart.t);
     if (err < 0) {
-      error("can't get attributes of %s: %s", trs_uart_name, strerror(errno));
+      error("can't get attributes of '%s': %s", trs_uart_name, strerror(errno));
       close(uart.fd);
       initialized = uart.fd = -1;
       return;
@@ -272,7 +272,7 @@ trs_uart_baud_out(int value)
   if (uart.fd != -1) {
     err = tcsetattr(uart.fd, TCSADRAIN, &uart.t);
     if (err == -1) {
-      error("can't set attributes of %s: %s", trs_uart_name, strerror(errno));
+      error("can't set attributes of '%s': %s", trs_uart_name, strerror(errno));
     }
   }
 #endif
@@ -319,7 +319,7 @@ trs_uart_check_avail(void)
 #endif
     if (rc < 0) {
       if (errno != EAGAIN) {
-	error("can't read from %s: %s", trs_uart_name, strerror(errno));
+	error("can't read from '%s': %s", trs_uart_name, strerror(errno));
       }
       rc = 0;
     }
@@ -391,14 +391,14 @@ trs_uart_control_out(int value)
   if (uart.fd != -1) {
     err = tcsetattr(uart.fd, TCSADRAIN, &uart.t);
     if (err == -1) {
-      error("can't set attributes of %s: %s", trs_uart_name, strerror(errno));
+      error("can't set attributes of '%s': %s", trs_uart_name, strerror(errno));
     }
   }
 
   if (!(value & TRS_UART_NOTBREAK) && uart.fd != -1) {
     err = tcsendbreak(uart.fd, 0);
     if (err == -1) {
-      error("can't send break on %s: %s", trs_uart_name, strerror(errno));
+      error("can't send break on '%s': %s", trs_uart_name, strerror(errno));
     }
   }
 #endif
@@ -444,7 +444,7 @@ trs_uart_data_out(int value)
       err = write(uart.fd, &uart.odata, 1);
       if (err >= 0) return;
       if (errno != EAGAIN) {
-	error("can't read from %s: %s", trs_uart_name, strerror(errno));
+	error("can't read from '%s': %s", trs_uart_name, strerror(errno));
 	return;
       }
       /* Oops, here we didn't really want nonblocking i/o */
