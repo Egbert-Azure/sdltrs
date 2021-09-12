@@ -168,7 +168,7 @@ void z80_out(int port, int value)
       trs_orch90_out(2, value);
       break;
     case 0xDF:
-      if (eg3200 == 0)
+      if (eg3200 == 0 && lubomir == 0)
         eg64_mba_out(value);
       break;
     case 0xE0:
@@ -524,7 +524,7 @@ int z80_in(int port)
       value = hrg_read_data();
       goto done;
     case 0xDF:
-      if (eg3200 == 0) {
+      if (eg3200 == 0 && lubomir == 0) {
         eg64_mba_out(7);
         value = 0;
       }
