@@ -2264,10 +2264,12 @@ void trs_get_event(int wait)
         if (event.type == SDL_MOUSEBUTTONDOWN) {
           if (mousepointer) {
             if (event.button.button == SDL_BUTTON_MIDDLE) {
+#if defined(SDL2) || !defined(NOX)
               if (copyStatus != COPY_IDLE) {
                 copyStatus = COPY_CLEAR;
                 trs_sdl_flush();
               }
+#endif
               call_function(GUI);
             }
             break;
