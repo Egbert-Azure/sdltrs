@@ -138,13 +138,45 @@ void z80_out(int port, int value)
     break;
   }
 
-  if (trs_model == 1) {
+  /* EG 3200 Genie III */
+  if (eg3200) {
+    switch (port) {
+      case 0xE0:
+        rtc_reg = value;
+        break;
+      case 0xF5:
+        trs_screen_inverse(value & 1);
+        break;
+      case 0xF6:
+        ctrlimage = value;
+        break;
+      case 0xF7:
+        m6845_crt(value);
+        break;
+      case 0xF8:
+        trs_uart_data_out(value);
+        break;
+      case 0xFA:
+        eg3200_bank_out(value);
+        break;
+      case 0xFD:
+        trs_printer_write(value);
+        break;
+      case 0xFF:
+        modesel = (value >> 3) & 1;
+        trs_screen_expanded(modesel);
+        trs_cassette_motor((value >> 2) & 1);
+        trs_cassette_out(value & 0x3);
+        break;
+      default:
+        break;
+     }
+  } else if (trs_model == 1) {
     /* Next, Model I only */
     switch (port) {
     case 0x00: /* HRG off */
     case 0x01: /* HRG on */
-      if (eg3200 == 0)
-        hrg_onoff(port);
+      hrg_onoff(port);
       break;
     case 0x02: /* HRG write address low byte */
       hrg_write_addr(value, 0xff);
@@ -168,12 +200,8 @@ void z80_out(int port, int value)
       trs_orch90_out(2, value);
       break;
     case 0xDF:
-      if (eg3200 == 0 && lubomir == 0)
+      if (lubomir == 0)
         eg64_mba_out(value);
-      break;
-    case 0xE0:
-      if (eg3200)
-        rtc_reg = value;
       break;
     case 0xEC:
       if (lowe_le18)
@@ -196,24 +224,10 @@ void z80_out(int port, int value)
     case 0xF3:
     case 0xF4:
     case 0xF5:
-      if (eg3200) {
-        trs_screen_inverse(value & 1);
-        break;
-      }
-      /* Fall through */
     case 0xF6:
-      if (eg3200) {
-        ctrlimage = value;
-        break;
-      }
-      /* Fall through */
     case 0xF7:
-      if (eg3200) {
-        m6845_crt(value);
-      } else {
-        if (stringy)
-          stringy_out(port & 7, value);
-      }
+      if (stringy)
+        stringy_out(port & 7, value);
       break;
     case 0xF8:
       trs_uart_data_out(value);
@@ -227,7 +241,7 @@ void z80_out(int port, int value)
       break;
     case 0xFE:
       /* Typical location for clock speedup kits */
-      if (speedup && eg3200 == 0) {
+      if (speedup) {
         if (speedup < 4)
           trs_timer_speed(value);
         else
@@ -510,21 +524,34 @@ int z80_in(int port)
     }
   }
 
-  if (trs_model == 1) {
+  /* EG 3200 Genie III */
+  if (eg3200) {
+    switch (port) {
+      case 0xF9:
+        value = trs_uart_data_in();
+        break;
+      case 0xFD:
+        value = trs_printer_read();
+        break;
+      case 0xFF:
+        value = (!modesel ? 0x7f : 0x3f) | trs_cassette_in();
+        break;
+    }
+    goto done;
+  } else if (trs_model == 1) {
     /* Model I only */
     switch (port) {
 #if 0 /* Conflicts with joystick port */
     case 0x00: /* HRG off (undocumented) */
 #endif
     case 0x01: /* HRG on (undocumented) */
-      if (eg3200 == 0)
-        hrg_onoff(port);
+      hrg_onoff(port);
       goto done;
     case 0x04: /* HRG read data byte */
       value = hrg_read_data();
       goto done;
     case 0xDF:
-      if (eg3200 == 0 && lubomir == 0) {
+      if (lubomir == 0) {
         eg64_mba_out(7);
         value = 0;
       }
@@ -540,7 +567,7 @@ int z80_in(int port)
     case 0xF5:
     case 0xF6:
     case 0xF7:
-      if (stringy && eg3200 == 0)
+      if (stringy)
         value = stringy_in(port & 7);
       goto done;
     case 0xF9:
