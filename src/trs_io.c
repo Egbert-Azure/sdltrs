@@ -157,7 +157,7 @@ void z80_out(int port, int value)
         trs_uart_data_out(value);
         break;
       case 0xFA:
-        eg3200_bank_out(value);
+        eg3200 = value;
         break;
       case 0xFD:
         trs_printer_write(value);
@@ -233,7 +233,7 @@ void z80_out(int port, int value)
       trs_uart_data_out(value);
       break;
     case 0xFA:
-      eg3200_bank_out(value);
+      eg3200_init_out(value);
       break;
     case 0xFD:
       /* GENIE location of printer port */

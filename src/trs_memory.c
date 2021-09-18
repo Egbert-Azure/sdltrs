@@ -223,18 +223,15 @@ int cp500_a11_flipflop_toggle(void)
 	return 0x00; /* really?! */
 }
 
-void eg3200_bank_out(Uint8 value)
+void eg3200_init_out(Uint8 value)
 {
-	if (eg3200 == 0) {
-		eg3200 = value;
-		memory_map = 0x23;
-		trs_disk_doubler = TRSDISK_PERCOM;
-		trs_timer_init();
-		trs_screen_inverse(0);
-		trs_screen_init();
-	} else {
-		eg3200 = value;
-	}
+	eg3200 = value;
+	memory_map = 0x23;
+	trs_disk_doubler = TRSDISK_PERCOM;
+
+	trs_timer_init();
+	trs_screen_inverse(0);
+	trs_screen_init();
 }
 
 void eg64_mba_out(Uint8 value)
