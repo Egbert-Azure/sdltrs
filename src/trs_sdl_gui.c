@@ -1734,16 +1734,16 @@ void trs_gui_emulator_settings(void)
   {{"Model                                             ", MENU_NORMAL},
    {"CPU Clock Speed                                   ", MENU_NORMAL},
    {"", MENU_TITLE},
+   {"Speedup Kit Emulation for Model I/III/4/4P        ", MENU_NORMAL},
    {"Exatron Stringy Floppy Emulation for Model I      ", MENU_NORMAL},
+   {"LE18 (Lowe Electronics) Graphics for Model I      ", MENU_NORMAL},
    {"Lowercase Modification for Model I                ", MENU_NORMAL},
    {"Lubomir Soft Banker Emulation for Model I         ", MENU_NORMAL},
-   {"Speedup Kit Emulation for Model I/III/4/4P        ", MENU_NORMAL},
+   {"TRS-80 Users Society Selector I Memory Expansion  ", MENU_NORMAL},
+   {"SuperMem (Alpha Technology) I/III Memory Expansion", MENU_NORMAL},
    {"Grafyx Solution (Micro-Labs) III/4/4P Graphics    ", MENU_NORMAL},
-   {"LE18 (Lowe Electronics) Graphics for Model I      ", MENU_NORMAL},
    {"Dave Huffman (and other) 4/4P Memory Expansion    ", MENU_NORMAL},
    {"HyperMem (Anitek Software) 4/4P Memory Expansion  ", MENU_NORMAL},
-   {"SuperMem (Alpha Technology) I/III Memory Expansion", MENU_NORMAL},
-   {"TRS-80 Users Society Selector I Memory Expansion  ", MENU_NORMAL},
    {"", 0}};
   const char *model_choices[] = {"  TRS-80 Model I",
                                  "TRS-80 Model III",
@@ -1769,16 +1769,16 @@ void trs_gui_emulator_settings(void)
   while (1) {
     snprintf(&model_menu[0].text[44], 17, "%s", model_choices[model_selection]);
     snprintf(&model_menu[1].text[50], 11, "%6.2f MHz", clock_mhz[model_selection]);
-    snprintf(&model_menu[3].text[50], 11, "%s", yes_no_choices[stringy]);
-    snprintf(&model_menu[4].text[50], 11, "%s", yes_no_choices[lowercase]);
-    snprintf(&model_menu[5].text[50], 11, "%s", yes_no_choices[lubomir]);
-    snprintf(&model_menu[6].text[45], 16, "%s", speed_choices[speedup]);
-    snprintf(&model_menu[7].text[50], 11, "%s", yes_no_choices[grafyx_get_microlabs()]);
-    snprintf(&model_menu[8].text[50], 11, "%s", yes_no_choices[lowe_le18]);
-    snprintf(&model_menu[9].text[50], 11, "%s", yes_no_choices[huffman_ram]);
-    snprintf(&model_menu[10].text[50], 11, "%s", yes_no_choices[hypermem]);
-    snprintf(&model_menu[11].text[50], 11, "%s", yes_no_choices[supermem]);
-    snprintf(&model_menu[12].text[50], 11, "%s", yes_no_choices[selector]);
+    snprintf(&model_menu[3].text[45], 16, "%s", speed_choices[speedup]);
+    snprintf(&model_menu[4].text[50], 11, "%s", yes_no_choices[stringy]);
+    snprintf(&model_menu[5].text[50], 11, "%s", yes_no_choices[lowe_le18]);
+    snprintf(&model_menu[6].text[50], 11, "%s", yes_no_choices[lowercase]);
+    snprintf(&model_menu[7].text[50], 11, "%s", yes_no_choices[lubomir]);
+    snprintf(&model_menu[8].text[50], 11, "%s", yes_no_choices[selector]);
+    snprintf(&model_menu[9].text[50], 11, "%s", yes_no_choices[supermem]);
+    snprintf(&model_menu[10].text[50], 11, "%s", yes_no_choices[grafyx_get_microlabs()]);
+    snprintf(&model_menu[11].text[50], 11, "%s", yes_no_choices[huffman_ram]);
+    snprintf(&model_menu[12].text[50], 11, "%s", yes_no_choices[hypermem]);
     trs_gui_clear_screen();
 
     selection = trs_gui_display_menu("Emulator Settings", model_menu, selection);
@@ -1812,43 +1812,43 @@ void trs_gui_emulator_settings(void)
         }
         break;
       case 3:
-        stringy = trs_gui_display_popup("Stringy", yes_no_choices, 2, stringy);
-        break;
-      case 4:
-        lowercase = trs_gui_display_popup("Lowercase", yes_no_choices, 2, lowercase);
-        break;
-      case 5:
-        lubomir = trs_gui_display_popup("Lubomir", yes_no_choices, 2, lubomir);
-        break;
-      case 6:
         speedup = trs_gui_display_popup("Speedup", speed_choices, 7, speedup);
         break;
-      case 7:
-        grafyx_set_microlabs(trs_gui_display_popup("Grafyx", yes_no_choices, 2,
-            grafyx_get_microlabs()));
+      case 4:
+        stringy = trs_gui_display_popup("Stringy", yes_no_choices, 2, stringy);
         break;
-      case 8:
+      case 5:
         lowe_le18 = trs_gui_display_popup("LE18", yes_no_choices, 2, lowe_le18);
         break;
+      case 6:
+        lowercase = trs_gui_display_popup("Lowercase", yes_no_choices, 2, lowercase);
+        break;
+      case 7:
+        lubomir = trs_gui_display_popup("Lubomir", yes_no_choices, 2, lubomir);
+        break;
+      case 8:
+        selector = trs_gui_display_popup("Selector", yes_no_choices, 2, selector);
+        if (selector)
+          supermem = 0;
+        break;
       case 9:
-        huffman_ram = trs_gui_display_popup("Huffman", yes_no_choices, 2, huffman_ram);
-        if (huffman_ram)
-          hypermem = 0;
-        break;
-      case 10:
-        hypermem = trs_gui_display_popup("HyperMem", yes_no_choices, 2, hypermem);
-        if (hypermem)
-          huffman_ram = 0;
-        break;
-      case 11:
         supermem = trs_gui_display_popup("SuperMem", yes_no_choices, 2, supermem);
         if (supermem)
           selector = 0;
         break;
+      case 10:
+        grafyx_set_microlabs(trs_gui_display_popup("Grafyx", yes_no_choices, 2,
+            grafyx_get_microlabs()));
+        break;
+      case 11:
+        huffman_ram = trs_gui_display_popup("Huffman", yes_no_choices, 2, huffman_ram);
+        if (huffman_ram)
+          hypermem = 0;
+        break;
       case 12:
-        selector = trs_gui_display_popup("Selector", yes_no_choices, 2, selector);
-        if (selector)
-          supermem = 0;
+        hypermem = trs_gui_display_popup("HyperMem", yes_no_choices, 2, hypermem);
+        if (hypermem)
+          huffman_ram = 0;
         break;
       case -1:
         model_selection = (model_selection == 0 ? 1 : model_selection + 2);
