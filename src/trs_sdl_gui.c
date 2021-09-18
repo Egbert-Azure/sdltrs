@@ -2701,6 +2701,7 @@ void trs_gui(void)
    {"Default Directories", MENU_NORMAL},
    {"ROM File Selection", MENU_NORMAL},
    {"About SDLTRS", MENU_NORMAL},
+   {"Quit SDLTRS", MENU_NORMAL},
    {"", 0}};
   int selection = 0;
 
@@ -2745,6 +2746,9 @@ void trs_gui(void)
         break;
       case 11:
         trs_gui_about_sdltrs();
+        break;
+      case 12:
+        trs_exit(1);
         break;
       case -1:
         return;
