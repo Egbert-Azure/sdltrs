@@ -164,7 +164,6 @@ static void trs_gui_emulator_settings(void);
 static void trs_gui_display_settings(void);
 static void trs_gui_misc_settings(void);
 static int  trs_gui_config_management(void);
-static void trs_gui_printer_management(void);
 static const char *trs_gui_get_key_name(int key);
 static int  trs_gui_virtual_keyboard(void);
 static void trs_gui_get_virtual_key(void);
@@ -2036,8 +2035,11 @@ void trs_gui_display_settings(void)
 void trs_gui_misc_settings(void)
 {
   MENU_ENTRY misc_menu[] =
-  {{"Emulator Traps Safe                                     ", MENU_NORMAL},
+  {{"Close and Reopen Printer Output File", MENU_NORMAL},
+   {"", MENU_TITLE},
+   {"Emulator Traps Safe                                     ", MENU_NORMAL},
    {"Keystretch Value                                        ", MENU_NORMAL},
+   {"Printer Type                                            ", MENU_NORMAL},
    {"Serial Port Name:", MENU_TITLE},
    {"                                                        ", MENU_NORMAL},
    {"Serial Switches                                         ", MENU_NORMAL},
@@ -2047,27 +2049,35 @@ void trs_gui_misc_settings(void)
    {"Turbo Speed                                             ", MENU_NORMAL},
    {"Turbo Paste                                             ", MENU_NORMAL},
    {"", 0}};
+  const char *printer_choices[] = {"     None", "     Text"};
   char input[12];
   int selection = 0;
 
   while (1) {
-    snprintf(&misc_menu[0].text[50], 11, "%s", yes_no_choices[trs_emtsafe]);
-    snprintf(&misc_menu[1].text[50], 11, "%10d", stretch_amount);
-    trs_gui_limit_string(trs_uart_name, &misc_menu[3].text[2], 58);
-    snprintf(&misc_menu[4].text[56], 5, "0x%02X", trs_uart_switches);
-    snprintf(&misc_menu[5].text[50], 11, "%s", yes_no_choices[trs_kb_bracket_state]);
-    snprintf(&misc_menu[6].text[50], 11, "%s", yes_no_choices[trs_sound]);
-    snprintf(&misc_menu[7].text[50], 11, "%s", yes_no_choices[timer_overclock]);
-    snprintf(&misc_menu[8].text[50], 11, "%10d", timer_overclock_rate);
-    snprintf(&misc_menu[9].text[50], 11, "%s", yes_no_choices[turbo_paste]);
+    snprintf(&misc_menu[2].text[50], 11, "%s", yes_no_choices[trs_emtsafe]);
+    snprintf(&misc_menu[3].text[50], 11, "%10d", stretch_amount);
+    snprintf(&misc_menu[4].text[51], 10, "%s", printer_choices[trs_printer]);
+    trs_gui_limit_string(trs_uart_name, &misc_menu[6].text[2], 58);
+    snprintf(&misc_menu[7].text[56], 5, "0x%02X", trs_uart_switches);
+    snprintf(&misc_menu[8].text[50], 11, "%s", yes_no_choices[trs_kb_bracket_state]);
+    snprintf(&misc_menu[9].text[50], 11, "%s", yes_no_choices[trs_sound]);
+    snprintf(&misc_menu[10].text[50], 11, "%s", yes_no_choices[timer_overclock]);
+    snprintf(&misc_menu[11].text[50], 11, "%10d", timer_overclock_rate);
+    snprintf(&misc_menu[12].text[50], 11, "%s", yes_no_choices[turbo_paste]);
     trs_gui_clear_screen();
 
-    selection = trs_gui_display_menu("Miscellaneous Settings", misc_menu, selection);
+    selection = trs_gui_display_menu("Miscellaneous/Printer", misc_menu, selection);
     switch (selection) {
       case 0:
+        if (trs_printer_reset() == 0)
+          trs_gui_display_message("Status", "Printer file closed");
+        else
+          trs_gui_display_message("Warning", "No Printer Output in File");
+        break;
+      case 2:
         trs_emtsafe = trs_gui_display_popup("Emtsafe", yes_no_choices, 2, trs_emtsafe);
         break;
-      case 1:
+      case 3:
         snprintf(input, 11, "%d", stretch_amount);
         if (trs_gui_input_string("Enter Keystretch in Cycles", input, input, 10, 0) == 0) {
           stretch_amount = atoi(input);
@@ -2075,7 +2085,10 @@ void trs_gui_misc_settings(void)
             stretch_amount = STRETCH_AMOUNT;
         }
         break;
-      case 3:
+      case 4:
+        trs_printer = trs_gui_display_popup("Printer", printer_choices, 2, trs_printer);
+        break;
+      case 6:
         filename[0] = 0;
         if (trs_gui_input_string("Enter Serial Port Name", trs_uart_name,
             filename, FILENAME_MAX, 0) == 0) {
@@ -2083,23 +2096,23 @@ void trs_gui_misc_settings(void)
           trs_uart_init(0);
         }
         break;
-      case 4:
+      case 7:
         snprintf(input, 3, "%2X", trs_uart_switches);
         if (trs_gui_input_string("Enter Serial Switches (Hex, XX)", input, input, 2, 0) == 0) {
           trs_uart_switches = strtol(input, NULL, 16);
           trs_uart_init(0);
         }
         break;
-      case 5:
+      case 8:
         trs_kb_bracket_state = trs_gui_display_popup("Bracket", yes_no_choices, 2, trs_kb_bracket_state);
         break;
-      case 6:
+      case 9:
         trs_sound = trs_gui_display_popup("Sound", yes_no_choices, 2, trs_sound);
         break;
-      case 7:
+      case 10:
         timer_overclock = trs_gui_display_popup("Turbo", yes_no_choices, 2, timer_overclock);
         break;
-      case 8:
+      case 11:
         snprintf(input, 11, "%d", timer_overclock_rate);
         if (trs_gui_input_string("Enter Turbo Rate Multiplier", input, input, 10, 0) == 0) {
           timer_overclock_rate = atoi(input);
@@ -2107,7 +2120,7 @@ void trs_gui_misc_settings(void)
             timer_overclock_rate = 1;
         }
         break;
-      case 9:
+      case 12:
         turbo_paste = trs_gui_display_popup("Paste", yes_no_choices, 2, turbo_paste);
         break;
       case -1:
@@ -2207,36 +2220,6 @@ static int trs_gui_config_management(void)
         break;
       case -1:
         return -1;
-    }
-  }
-}
-
-void trs_gui_printer_management(void)
-{
-  MENU_ENTRY printer_menu[] =
-  {{"Close and Reopen Printer Output File", MENU_NORMAL},
-   {"Printer Type                                       ", MENU_NORMAL},
-   {"", 0}};
-  const char *printer_choices[] = {"     None", "     Text"};
-  int selection = 0;
-
-  while (1) {
-    snprintf(&printer_menu[1].text[51], 10, "%s", printer_choices[trs_printer]);
-    trs_gui_clear_screen();
-
-    selection = trs_gui_display_menu("Printer Management", printer_menu, selection);
-    switch (selection) {
-      case 0:
-        if (trs_printer_reset() == 0)
-          trs_gui_display_message("Status", "Printer file closed");
-        else
-          trs_gui_display_message("Warning", "No Printer Output in File");
-        break;
-      case 1:
-        trs_printer = trs_gui_display_popup("Printer", printer_choices, 2, trs_printer);
-        break;
-      case -1:
-        return;
     }
   }
 }
@@ -2679,9 +2662,8 @@ void trs_gui(void)
    {"Stringy Wafer Management (Alt-G)", MENU_NORMAL},
    {"Emulator Settings        (Alt-E)", MENU_NORMAL},
    {"Display Settings         (Alt-I)", MENU_NORMAL},
-   {"Miscellaneous Settings   (Alt-O)", MENU_NORMAL},
+   {"Miscellaneous/Printer    (Alt-O)", MENU_NORMAL},
    {"Configuration/State Files", MENU_NORMAL},
-   {"Printer Management", MENU_NORMAL},
    {"Joystick Settings", MENU_NORMAL},
    {"Default Directories", MENU_NORMAL},
    {"ROM File Selection", MENU_NORMAL},
@@ -2720,18 +2702,15 @@ void trs_gui(void)
           return;
         break;
       case 8:
-        trs_gui_printer_management();
-        break;
-      case 9:
         trs_gui_joystick_settings();
         break;
-      case 10:
+      case 9:
         trs_gui_default_dirs();
         break;
-      case 11:
+      case 10:
         trs_gui_rom_files();
         break;
-      case 12:
+      case 11:
         trs_gui_about_sdltrs();
         break;
       case -1:
