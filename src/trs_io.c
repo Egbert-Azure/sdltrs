@@ -109,6 +109,7 @@ void z80_out(int port, int value)
       lsb_bank_out(value);
       return;
     }
+    /* Fall through */
   case TRS_HARD_CONTROL:  /* 0xC1 */
   case TRS_HARD_DATA:     /* 0xC8 */
   case TRS_HARD_ERROR:    /* 0xC9 */ /*=TRS_HARD_PRECOMP*/
