@@ -308,9 +308,11 @@ static void real_write(void);
 static void real_readadr(void);
 static void real_readtrk(void);
 static void real_writetrk(void);
+#ifdef __linux
 static int  real_rate(DiskState *d);
 static void real_error(DiskState *d, unsigned int flags, char *msg);
 static void real_ok(DiskState *d);
+#endif
 static int  real_check_empty(DiskState *d);
 static void trs_disk_set_controller(int controller);
 
@@ -3072,6 +3074,7 @@ trs_disk_command_write(Uint8 cmd)
   }
 }
 
+#ifdef __linux
 /* Interface to real floppy drive */
 int
 real_rate(DiskState *d)
@@ -3108,6 +3111,7 @@ real_ok(DiskState *d)
   d->u.real.empty_timeout = time(NULL) + EMPTY_TIMEOUT;
   d->u.real.empty = 0;
 }
+#endif
 
 int
 real_check_empty(DiskState *d)
