@@ -176,7 +176,7 @@ void trs_rom_init(void)
       trs_rom_size = 0x3800;
 }
 
-int SDL_main(int argc, char *argv[])
+int main(int argc, char *argv[])
 {
   int debug = FALSE;
   wordregister x;
@@ -241,10 +241,4 @@ int SDL_main(int argc, char *argv[])
 
   puts("Quitting.");
   exit(EXIT_SUCCESS);
-}
-
-int main(int argc, char *argv[])
-{
-  SDL_main(argc, argv);
-  return EXIT_SUCCESS;
 }
