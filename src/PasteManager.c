@@ -32,6 +32,10 @@
 #include <SDL.h>
 #include <SDL_clipboard.h>
 
+int  PasteManagerGetChar(Uint8 *character);
+int  PasteManagerStartPaste(void);
+void PasteManagerStartCopy(const char *string);
+
 /* Emulator specific variables */
 static int charCount;
 static char *pasteString;
@@ -72,6 +76,10 @@ void PasteManagerStartCopy(const char *string)
 #include <SDL_types.h>
 
 #include "windows.h"
+
+int  PasteManagerGetChar(Uint8 *character);
+int  PasteManagerStartPaste(void);
+void PasteManagerStartCopy(const char *string);
 
 static int charCount;
 static char *pasteString;
@@ -138,6 +146,10 @@ void PasteManagerStartCopy(const char *string)
 #include <SDL_syswm.h>
 
 #include "error.h"
+
+int  PasteManagerGetChar(Uint8 *character);
+int  PasteManagerStartPaste(void);
+void PasteManagerStartCopy(const char *string);
 
 /* forward declarations */
 static int init_scrap(void);

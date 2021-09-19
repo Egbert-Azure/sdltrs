@@ -58,6 +58,7 @@
 
 #include "error.h"
 #include "trs.h"
+#include "trs_cassette.h"
 #include "trs_state_save.h"
 
 #ifndef SDL_memcpy

@@ -125,8 +125,6 @@ extern int  scanshade;
 #if defined(SDL2) || !defined(NOX)
 extern int  turbo_paste;
 #endif
-extern void trs_gui_clear_rect(int x, int y, int w, int h);
-extern int  trs_sdl_savebmp(const char *name);
 static void trs_gui_write_text(const char *text, int x, int y, int invert);
 static void trs_gui_center_text(const char *text, int y, int invert);
 static void trs_gui_frame(int x1, int y1, int x2, int y2);
@@ -165,6 +163,10 @@ static void trs_gui_cassette_management(void);
 static void trs_gui_emulator_settings(void);
 static void trs_gui_display_settings(void);
 static void trs_gui_misc_settings(void);
+static void trs_gui_save_state(void);
+static int  trs_gui_load_state(void);
+static void trs_gui_write_config(void);
+static int  trs_gui_read_config(void);
 static int  trs_gui_config_management(void);
 static const char *trs_gui_get_key_name(int key);
 static int  trs_gui_virtual_keyboard(void);

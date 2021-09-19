@@ -683,6 +683,7 @@ void do_emt_opendisk(void)
   Z80_BC = readonly;
 }
 
+static
 int do_emt_closefd(int odindex)
 {
   int i;

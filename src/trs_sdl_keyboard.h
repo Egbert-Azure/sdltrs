@@ -40,3 +40,5 @@ void trs_joy_hat(Uint8 value);
 void trs_set_keypad_joystick(void);
 void trs_open_joystick(void);
 void trs_joy_axis(Uint8 axis, short value, int bounce);
+void trs_keyboard_save(FILE *file);
+void trs_keyboard_load(FILE *file);
