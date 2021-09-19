@@ -45,7 +45,6 @@ int trs_cass_getwriteprotect(void);
 int trs_get_cassette_length(void);
 int trs_get_cassette_position(void);
 void trs_set_cassette_position(int pos);
-int assert_state(int state);
 void transition_out(int value);
 void trs_cassette_kickoff(int dummy);
 void trs_cassette_motor(int value);

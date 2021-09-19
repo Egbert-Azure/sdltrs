@@ -134,7 +134,7 @@ stringy_state(int out_port)
  * Create a blank virtual stringy floppy wafer with specified parameters.
  * Returns 0 if OK, errno value otherwise.
  */
-int
+static int
 stringy_create_with(const char *name,
 		    int format,
 		    Uint32 lengthBytes, /* data length in bytes */

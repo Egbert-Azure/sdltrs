@@ -308,7 +308,11 @@ static void real_write(void);
 static void real_readadr(void);
 static void real_readtrk(void);
 static void real_writetrk(void);
+static int  real_rate(DiskState *d);
+static void real_error(DiskState *d, unsigned int flags, char *msg);
+static void real_ok(DiskState *d);
 static int  real_check_empty(DiskState *d);
+static void trs_disk_set_controller(int controller);
 
 /* Entry point for the zbx debugger */
 void

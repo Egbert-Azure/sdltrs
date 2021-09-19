@@ -170,6 +170,7 @@ extern void trs_timer_off(void);
 extern void trs_timer_on(void);
 extern void trs_timer_cycles(void);
 extern void trs_timer_speed(int flag);
+extern void trs_timer_sync_with_host(void);
 extern void trs_turbo_mode(int mode);
 extern void trs_cassette_rise_interrupt(int dummy);
 extern void trs_cassette_fall_interrupt(int dummy);

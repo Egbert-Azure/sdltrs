@@ -61,7 +61,7 @@ int trs_printer_reset(void)
     return -1;
 }
 
-void trs_printer_open(void)
+static void trs_printer_open(void)
 {
   int file_num;
   struct stat st = { 0 };

@@ -42,6 +42,7 @@
 
 #define BUFFER_SIZE 256
 
+int load_hex(FILE *file);
 extern void mem_write_rom(int address, int value);
 
 static int hex_byte(char *string)
