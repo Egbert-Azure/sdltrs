@@ -45,7 +45,6 @@
 #include "error.h"
 #include "load_cmd.h"
 #include "trs.h"
-#include "trs_disk.h"
 #include "trs_sdl_keyboard.h"
 #include "trs_state_save.h"
 
