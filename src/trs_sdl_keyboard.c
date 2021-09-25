@@ -799,7 +799,7 @@ static int kb_mem_value(int address)
         data |= keystate[i];
       }
     }
-    if (address & 0x20)
+    if ((address & 0x00e0) == 0x00a0)
       data |= keystate[8];
   }
   return data;
