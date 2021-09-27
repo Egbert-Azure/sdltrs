@@ -73,6 +73,18 @@ typedef struct menu_entry_type {
   int const type;
 } MENU_ENTRY;
 
+static const char *drive_choices[] = {
+  "  None",
+  "     0",
+  "     1",
+  "     2",
+  "     3",
+  "     4",
+  "     5",
+  "     6",
+  "     7"
+};
+
 static const char *yes_no_choices[] = {
   "        No",
   "       Yes"
@@ -1194,9 +1206,6 @@ void trs_gui_disk_creation(void)
   const char *num_sides_choices[]  = {"     1", "     2"};
   const char *density_choices[]    = {"Single", "Double"};
   const char *size_choices[]       = {"5 Inch", "8 Inch"};
-  const char *drive_choices[]      = {"  None", "Disk 0", "Disk 1", "Disk 2",
-                                      "Disk 3", "Disk 4", "Disk 5", "Disk 6",
-                                      "Disk 7"};
   static int image_type = 1;
   static int num_sides = 1;
   static int density = 1;
@@ -1281,7 +1290,7 @@ void trs_gui_disk_steps(void)
   while (1) {
     for (i = 0; i < 8; i++) {
       snprintf(disk_steps_menu[i].text, 63,
-          "Disk Drive Number %d Step                              %s",
+          "Drive # %d Step                                        %s",
           i, step_choices[trs_disk_getstep(i) == 1 ? 0 : 1]);
     }
     trs_gui_clear_screen();
@@ -1321,7 +1330,7 @@ void trs_gui_disk_options(void)
   while (1) {
     for (i = 0; i < 8; i++) {
       snprintf(disk_menu[i].text, 63,
-          "Disk Drive Number %d Size                              %s",
+          "Drive # %d Size                                        %s",
           i, size_choices[trs_disk_getsize(i) == 5 ? 0 : 1]);
     }
     snprintf(&disk_menu[9].text[51], 10, "%s", doubler_choices[trs_disk_doubler]);
@@ -1375,14 +1384,14 @@ void trs_gui_diskset_save(void)
 void trs_gui_disk_management(void)
 {
   MENU_ENTRY disk_menu[] =
-  {{" Disk 0:", MENU_DISK_BROWSE},
-   {" Disk 1:", MENU_DISK_BROWSE},
-   {" Disk 2:", MENU_DISK_BROWSE},
-   {" Disk 3:", MENU_DISK_BROWSE},
-   {" Disk 4:", MENU_DISK_BROWSE},
-   {" Disk 5:", MENU_DISK_BROWSE},
-   {" Disk 6:", MENU_DISK_BROWSE},
-   {" Disk 7:", MENU_DISK_BROWSE},
+  {{" 0: ", MENU_DISK_BROWSE},
+   {" 1: ", MENU_DISK_BROWSE},
+   {" 2: ", MENU_DISK_BROWSE},
+   {" 3: ", MENU_DISK_BROWSE},
+   {" 4: ", MENU_DISK_BROWSE},
+   {" 5: ", MENU_DISK_BROWSE},
+   {" 6: ", MENU_DISK_BROWSE},
+   {" 7: ", MENU_DISK_BROWSE},
    {"", MENU_TITLE},
    {"Save Disk Set", MENU_NORMAL},
    {"Load Disk Set", MENU_NORMAL},
@@ -1394,7 +1403,7 @@ void trs_gui_disk_management(void)
 
   while (1) {
     for (i = 0; i < 8; i++) {
-      trs_gui_limit_string(trs_disk_getfilename(i), &disk_menu[i].text[8], 52);
+      trs_gui_limit_string(trs_disk_getfilename(i), &disk_menu[i].text[4], 56);
       disk_menu[i].text[0] = trs_disk_getwriteprotect(i) ? '*' : ' ';
     }
     trs_gui_clear_screen();
@@ -1422,10 +1431,10 @@ void trs_gui_disk_management(void)
 void trs_gui_hard_management(void)
 {
   MENU_ENTRY hard_menu[] =
-  {{" Hard 0:", MENU_HARD_BROWSE},
-   {" Hard 1:", MENU_HARD_BROWSE},
-   {" Hard 2:", MENU_HARD_BROWSE},
-   {" Hard 3:", MENU_HARD_BROWSE},
+  {{" 0: ", MENU_HARD_BROWSE},
+   {" 1: ", MENU_HARD_BROWSE},
+   {" 2: ", MENU_HARD_BROWSE},
+   {" 3: ", MENU_HARD_BROWSE},
    {"", MENU_TITLE},
    {"Save Disk Set", MENU_NORMAL},
    {"Load Disk Set", MENU_NORMAL},
@@ -1436,7 +1445,6 @@ void trs_gui_hard_management(void)
    {"Insert Created Disk Into This Drive                      ", MENU_NORMAL},
    {"Create Hard Disk Image with Above Parameters", MENU_NORMAL},
    {"", 0}};
-  const char *drive_choices[] = {"  None", "Hard 0", "Hard 1", "Hard 2", "Hard 3"};
   static int cylinder_count = 202;
   static int sector_count = 256;
   static int granularity = 8;
@@ -1448,7 +1456,7 @@ void trs_gui_hard_management(void)
 
   while (1) {
     for (i = 0; i < 4; i++) {
-      trs_gui_limit_string(trs_hard_getfilename(i), &hard_menu[i].text[8], 52);
+      trs_gui_limit_string(trs_hard_getfilename(i), &hard_menu[i].text[4], 56);
       hard_menu[i].text[0] = trs_hard_getwriteprotect(i) ? '*' : ' ';
     }
     snprintf(&hard_menu[7].text[57], 4, "%3d", cylinder_count);
@@ -1557,32 +1565,30 @@ void trs_gui_hard_management(void)
 void trs_gui_stringy_management(void)
 {
   MENU_ENTRY stringy_menu[] =
-  {{" Wafer 0:", MENU_WAFER_BROWSE},
-   {" Wafer 1:", MENU_WAFER_BROWSE},
-   {" Wafer 2:", MENU_WAFER_BROWSE},
-   {" Wafer 3:", MENU_WAFER_BROWSE},
-   {" Wafer 4:", MENU_WAFER_BROWSE},
-   {" Wafer 5:", MENU_WAFER_BROWSE},
-   {" Wafer 6:", MENU_WAFER_BROWSE},
-   {" Wafer 7:", MENU_WAFER_BROWSE},
+  {{" 0: ", MENU_WAFER_BROWSE},
+   {" 1: ", MENU_WAFER_BROWSE},
+   {" 2: ", MENU_WAFER_BROWSE},
+   {" 3: ", MENU_WAFER_BROWSE},
+   {" 4: ", MENU_WAFER_BROWSE},
+   {" 5: ", MENU_WAFER_BROWSE},
+   {" 6: ", MENU_WAFER_BROWSE},
+   {" 7: ", MENU_WAFER_BROWSE},
    {"", MENU_TITLE},
    {"Save Disk Set", MENU_NORMAL},
    {"Load Disk Set", MENU_NORMAL},
-   {"Insert Created Image Into This Wafer                ", MENU_NORMAL},
+   {"Insert Created Image Into This Wafer                  ", MENU_NORMAL},
    {"Create Blank Floppy Wafer", MENU_NORMAL},
    {"", 0}};
-  const char *wafer_choices[] = {"   None", "Wafer 0", "Wafer 1", "Wafer 2", "Wafer 3",
-                                 "Wafer 4", "Wafer 5", "Wafer 6", "Wafer 7"};
   static int wafer_insert;
   int selection = 0;
   int i;
 
   while (1) {
     for (i = 0; i < 8; i++) {
-      trs_gui_limit_string(stringy_get_name(i), &stringy_menu[i].text[9], 52);
+      trs_gui_limit_string(stringy_get_name(i), &stringy_menu[i].text[4], 56);
       stringy_menu[i].text[0] = stringy_get_writeprotect(i) ? '*' : ' ';
     }
-    snprintf(&stringy_menu[11].text[52], 10, "%8s", wafer_choices[wafer_insert]);
+    snprintf(&stringy_menu[11].text[54], 7, "%6s", drive_choices[wafer_insert]);
     trs_gui_clear_screen();
 
     selection = trs_gui_display_menu("Stringy Wafer Management", stringy_menu, selection);
@@ -1594,7 +1600,7 @@ void trs_gui_stringy_management(void)
         trs_gui_diskset_load();
         break;
       case 11:
-        wafer_insert = trs_gui_display_popup("Wafer", wafer_choices, 9, wafer_insert);
+        wafer_insert = trs_gui_display_popup("Wafer", drive_choices, 9, wafer_insert);
         break;
       case 12:
         filename[0] = 0;
