@@ -81,7 +81,6 @@ Uint8 cp500_rom[CP500_ROM_SIZE + 1];
 int trs_rom_size;
 int lowercase = 1;
 int lubomir; /* Lubomir Soft Banker */
-int romin; /* Model 4p */
 int huffman_ram;
 int hypermem;
 int supermem;
@@ -100,6 +99,7 @@ static int bank_offset[2];
 static int video_offset = (-VIDEO_START + VIDEO_PAGE_0);
 static unsigned int bank_base = 0x10000;
 static Uint8 mem_command;
+static int romin; /* Model 4p */
 static int supermem_base;
 static unsigned int supermem_hi;
 static int selector_reg;
@@ -340,6 +340,7 @@ void trs_reset(int poweron)
     bank_base = 0x10000;
     eg3200 = 0;
     mem_command = 0;
+    romin = 0;
     supermem_base = 0;
     supermem_hi = 0x8000;
 
