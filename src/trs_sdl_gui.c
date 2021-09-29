@@ -679,11 +679,12 @@ read_directory:
           first_row = filenamecount - drawcount;
           redraw = 1;
           break;
+        case SDLK_TAB:
+          if (browse_dir)
+            goto done;
+          /* Fall through */
         case SDLK_RETURN:
         case SDLK_SPACE:
-        case SDLK_TAB:
-          if (key == SDLK_TAB && browse_dir)
-            goto done;
           new_dir = filenamelist[first_row + selection];
           if (new_dir[0] == '<') {
             if (new_dir[1] == '.' && new_dir[2] == '.') {
