@@ -597,7 +597,7 @@ read_directory:
 
   if (browse_dir) {
     snprintf(text, 63, "Choose %sDirectory", type);
-    trs_gui_center_text(" TAB selects directory ", 15, 1);
+    trs_gui_center_text(" INS/TAB selects directory ", 15, 1);
   }
   else
     snprintf(text, 63, "Select %s File To Load", type);
@@ -679,6 +679,7 @@ read_directory:
           first_row = filenamecount - drawcount;
           redraw = 1;
           break;
+        case SDLK_INSERT:
         case SDLK_TAB:
           if (browse_dir)
             goto done;
@@ -714,6 +715,7 @@ read_directory:
           else
             goto done;
           break;
+        case SDLK_BACKSPACE:
         case SDLK_ESCAPE:
           selection = -1;
           goto done;
@@ -943,7 +945,6 @@ int trs_gui_display_menu(const char *title, MENU_ENTRY *entry, int selection)
           selection = num;
           break;
         case SDLK_DELETE:
-        case SDLK_BACKSPACE:
           switch (entry[selection].type) {
             case MENU_DISK_BROWSE:
               trs_disk_remove(selection);
@@ -963,6 +964,7 @@ int trs_gui_display_menu(const char *title, MENU_ENTRY *entry, int selection)
             return selection;
           }
           break;
+        case SDLK_INSERT:
         case SDLK_RETURN:
         case SDLK_TAB:
           switch (entry[selection].type) {
@@ -1008,6 +1010,7 @@ int trs_gui_display_menu(const char *title, MENU_ENTRY *entry, int selection)
               break;
           }
           return selection;
+        case SDLK_BACKSPACE:
         case SDLK_ESCAPE:
           return -1;
       }
@@ -1075,10 +1078,12 @@ int trs_gui_display_popup(const char *title, const char **entry,
         case SDLK_PAGEDOWN:
           selection = num - 1;
           break;
+        case SDLK_INSERT:
         case SDLK_RETURN:
         case SDLK_SPACE:
         case SDLK_TAB:
           return selection;
+        case SDLK_BACKSPACE:
         case SDLK_ESCAPE:
           return saved_selection;
       }
@@ -1159,10 +1164,12 @@ int trs_gui_display_popup_matrix(const char* title, const char **entry,
       case SDLK_PAGEDOWN:
         row = rows - 1;
         break;
+      case SDLK_INSERT:
       case SDLK_RETURN:
       case SDLK_SPACE:
       case SDLK_TAB:
         return selection;
+      case SDLK_BACKSPACE:
       case SDLK_ESCAPE:
         return -1;
     }
