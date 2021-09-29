@@ -120,7 +120,6 @@ extern void clear_key_queue(void);
 extern int stretch_amount;
 extern int trs_kb_bracket_state;
 
-extern int romin;
 extern int scale;
 extern int resize3;
 extern int resize4;
