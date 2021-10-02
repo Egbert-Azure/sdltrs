@@ -154,9 +154,6 @@ void z80_out(int port, int value)
       case 0xF7:
         m6845_crt(value);
         break;
-      case 0xF8:
-        trs_uart_data_out(value);
-        break;
       case 0xFA:
         eg3200 = value;
         break;
@@ -410,7 +407,6 @@ void z80_out(int port, int value)
       break;
     }
   }
-  return;
 }
 
 /*ARGSUSED*/
@@ -528,9 +524,6 @@ int z80_in(int port)
   /* EG 3200 Genie III */
   if (eg3200) {
     switch (port) {
-      case 0xF9:
-        value = trs_uart_data_in();
-        break;
       case 0xFD:
         value = trs_printer_read();
         break;
