@@ -1510,7 +1510,7 @@ static void ProcessCopySelection(int selectAll)
       }
       break;
     case COPY_DEFINED:
-      if (mouse & (SDL_BUTTON(SDL_BUTTON_LEFT) | SDL_BUTTON(SDL_BUTTON_RIGHT))) {
+      if (mouse & SDL_BUTTON(SDL_BUTTON_LEFT)) {
         DrawSelectionRectangle(orig_x, orig_y, end_x, end_y);
         orig_x = end_x = copy_x;
         orig_y = end_y = copy_y;
@@ -2263,7 +2263,7 @@ void trs_get_event(int wait)
       case SDL_MOUSEBUTTONDOWN:
         if (event.type == SDL_MOUSEBUTTONDOWN) {
           if (mousepointer) {
-            if (event.button.button == SDL_BUTTON_MIDDLE) {
+            if (event.button.button == SDL_BUTTON_RIGHT) {
 #if defined(SDL2) || !defined(NOX)
               if (copyStatus != COPY_IDLE) {
                 copyStatus = COPY_CLEAR;
