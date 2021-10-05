@@ -102,6 +102,68 @@ void z80_out(int port, int value)
     debug("out (0x%02x), 0x%02x; pc 0x%04x\n", port, value, z80_state.pc.word);
   }
 
+  /* EG 3200 Genie III & TCS Genie IIIs */
+  if (eg3200 || genie3s) {
+    switch (port) {
+      case 0x5B:
+        if (genie3s)
+          rtc_reg = value;
+        break;
+      case 0xE0:
+        if (eg3200)
+          rtc_reg = value;
+        else
+          trs_disk_select_write(value);
+        break;
+      case 0xE1:
+      case 0xE2:
+      case 0xE3:
+        trs_disk_select_write(value);
+        break;
+      case 0xEC:
+        trs_disk_command_write(value);
+        break;
+      case 0xED:
+        trs_disk_track_write(value);
+        break;
+      case 0xEE:
+        trs_disk_sector_write(value);
+        break;
+      case 0xEF:
+        trs_disk_data_write(value);
+        break;
+      case 0xF5:
+        trs_screen_inverse(value & 1);
+        break;
+      case 0xF6:
+        ctrlimage = value;
+        break;
+      case 0xF7:
+        m6845_crt(value);
+        break;
+      case 0xF9:
+        genie3s_bank_out(value);
+        break;
+      case 0xFA:
+        if (genie3s)
+          sys_byte_out(value);
+        else
+          eg3200 = value;
+        break;
+      case 0xFD:
+        trs_printer_write(value);
+        break;
+      case 0xFF:
+        modesel = (value >> 3) & 1;
+        trs_screen_expanded(modesel);
+        trs_cassette_motor((value >> 2) & 1);
+        trs_cassette_out(value & 0x3);
+        break;
+      default:
+        break;
+    }
+    return;
+  }
   /* First, ports common to all models */
   switch (port) {
   case TRS_HARD_WP:       /* 0xC0 */
@@ -139,37 +201,7 @@ void z80_out(int port, int value)
     break;
   }
 
-  /* EG 3200 Genie III */
-  if (eg3200) {
-    switch (port) {
-      case 0xE0:
-        rtc_reg = value;
-        break;
-      case 0xF5:
-        trs_screen_inverse(value & 1);
-        break;
-      case 0xF6:
-        ctrlimage = value;
-        break;
-      case 0xF7:
-        m6845_crt(value);
-        break;
-      case 0xFA:
-        eg3200 = value;
-        break;
-      case 0xFD:
-        trs_printer_write(value);
-        break;
-      case 0xFF:
-        modesel = (value >> 3) & 1;
-        trs_screen_expanded(modesel);
-        trs_cassette_motor((value >> 2) & 1);
-        trs_cassette_out(value & 0x3);
-        break;
-      default:
-        break;
-     }
-  } else if (trs_model == 1) {
+  if (trs_model == 1) {
     /* Next, Model I only */
     switch (port) {
     case 0x00: /* HRG off */
@@ -229,6 +261,9 @@ void z80_out(int port, int value)
       break;
     case 0xF8:
       trs_uart_data_out(value);
+      break;
+    case 0xF9:
+      genie3s_init_out(value);
       break;
     case 0xFA:
       eg3200_init_out(value);
@@ -436,11 +471,12 @@ int z80_in(int port)
 
   if ((port >= 0x70 && port <= 0x7C)
       || (port >= 0xB0 && port <= 0xBC)
-      || (port == 0xE0 && eg3200)) {
+      || (port == 0xE0 && eg3200)
+      || (port == 0x5A && genie3s)) {
     time_t time_secs = time(NULL);
     struct tm *time_info = localtime(&time_secs);
 
-    if (eg3200)
+    if (eg3200 || genie3s)
       port = (rtc_reg >> 4);
 
     switch (port & 0x0F) {
@@ -486,6 +522,44 @@ int z80_in(int port)
     }
   }
 
+  /* EG 3200 Genie III & TCS Genie IIIs */
+  if (eg3200 || genie3s) {
+    switch (port) {
+      case 0xE0:
+      case 0xE1:
+      case 0xE2:
+      case 0xE3:
+        value = trs_interrupt_latch_read();
+        break;
+      case 0xEC:
+        value = trs_disk_status_read();
+        break;
+      case 0xED:
+        value = trs_disk_track_read();
+        break;
+      case 0xEE:
+        value = trs_disk_sector_read();
+        break;
+      case 0xEF:
+        value = trs_disk_data_read();
+        break;
+      case 0xF9:
+        value = genie3s;
+        break;
+      case 0xFA:
+        value = sys_byte_in();
+        break;
+      case 0xFD:
+        value = trs_printer_read();
+        break;
+      case 0xFF:
+        value = (!modesel ? 0x7f : 0x3f) | trs_cassette_in();
+        break;
+      default:
+        break;
+    }
+    goto done;
+  }
   switch (port) {
   case 0x00:
     value = trs_joystick_in();
@@ -521,18 +595,7 @@ int z80_in(int port)
     }
   }
 
-  /* EG 3200 Genie III */
-  if (eg3200) {
-    switch (port) {
-      case 0xFD:
-        value = trs_printer_read();
-        break;
-      case 0xFF:
-        value = (!modesel ? 0x7f : 0x3f) | trs_cassette_in();
-        break;
-    }
-    goto done;
-  } else if (trs_model == 1) {
+  if (trs_model == 1) {
     /* Model I only */
     switch (port) {
 #if 0 /* Conflicts with joystick port */

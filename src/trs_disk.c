@@ -1233,8 +1233,8 @@ trs_disk_select_write(Uint8 data)
   }
 
   state.status &= ~TRSDISK_NOTRDY;
-  /* EG 3200 uses bit 4 to select side */
-  if (eg3200) {
+  /* EG 3200 & TCS Genie IIIs uses bit 4 to select side */
+  if (eg3200 || genie3s) {
     state.curside = (data & 0x10) != 0;
   } else if (trs_model == 1) {
     /* Disk 3 and side select share a bit.  You can't have a drive :3

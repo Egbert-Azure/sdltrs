@@ -764,7 +764,7 @@ static int kb_mem_value(int address)
 {
   int i, bitpos, data = 0;
 
-  if (eg3200 == 0 || (address & 0x00e0) < 0x00a0) {
+  if ((eg3200 == 0 && genie3s == 0) || (address & 0x00e0) < 0x00a0) {
     for (i = 0, bitpos = 1; i < 7; i++, bitpos <<= 1) {
       if (address & bitpos) {
         data |= keystate[i];

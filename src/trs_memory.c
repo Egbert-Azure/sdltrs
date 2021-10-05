@@ -86,6 +86,7 @@ int hypermem;
 int supermem;
 int selector;
 int eg3200; /* EACA EG 3200 Genie III */
+int genie3s; /* TCS Genie IIIs */
 
 /* private data */
 static Uint8 video[MAX_VIDEO_SIZE + 1];
@@ -249,6 +250,23 @@ void eg64_mba_out(Uint8 value)
 	memory_map = 0x21;
 }
 
+void genie3s_bank_out(Uint8 value)
+{
+	genie3s = value;
+	bank_base = (value & 0xC0) << 10; /* Bits 6 and 7: 64K Banks */
+}
+
+void genie3s_init_out(Uint8 value)
+{
+	genie3s = value;
+	bank_base = 0;
+	memory_map = 0x24;
+
+	trs_timer_init();
+	trs_screen_inverse(0);
+	trs_screen_init();
+}
+
 void lsb_bank_out(Uint8 value)
 {
 	system_byte = value;
@@ -278,14 +296,19 @@ void selector_out(Uint8 value)
 
 void sys_byte_out(Uint8 value)
 {
-	/* TRS-80 Model I memory map */
-	memory_map = 0x10;
+	system_byte = value;
+
+	/* No Speedup for TCS Genie IIIs */
+	if (genie3s)
+		return;
 
 	switch (speedup) {
 		case 6: /* TCS SpeedMaster CP/M banking */
 			if ((value & (1 << 7)) == 0) {
 				if (value & 1)
 					memory_map = 0x14;
+				else
+					memory_map = 0x10;
 			}
 			/* Fall through */
 		case 5: /* HRG only in TRS-80 memory map */
@@ -302,9 +325,11 @@ void sys_byte_out(Uint8 value)
 				case 0x54:
 					memory_map = 0x14;
 					break;
+				default:
+					memory_map = 0x10;
+					break;
 			}
 	}
-	system_byte = value;
 }
 
 Uint8 sys_byte_in(void)
@@ -339,6 +364,7 @@ void trs_reset(int poweron)
     m_a11_flipflop = 0;
     bank_base = 0x10000;
     eg3200 = 0;
+    genie3s = 0;
     mem_command = 0;
     romin = 0;
     supermem_base = 0;
@@ -569,6 +595,32 @@ int mem_read(int address)
 	}
 	/* Bank 0: RAM */
 	return memory[address];
+      case 0x24: /* TCS Genie IIIs */
+	if ((system_byte & (1 << 2)) == 0) {
+	  if (address <= 0x2FFF)
+	    return rom[address];
+	}
+	if ((system_byte & (1 << 0)) == 0) {
+	  if (address >= 0x37E0 && address <= 0x37EF)
+	    return trs80_model1_mmio(address);
+	  if ((system_byte & (1 << 4)) == 0) {
+	    if (address >= KEYBOARD_START && address <= 0x38FF)
+	      return trs_kb_mem_read(address);
+	    if (address >= VIDEO_START && address <= 0x3FFF)
+	      return video[address - VIDEO_START];
+	  } else {
+	    /* 2K Video RAM starts at keyboard address */
+	    if (address >= KEYBOARD_START && address <= 0x3FFF)
+	      return video[address - KEYBOARD_START];
+
+	  }
+	}
+	/* "Constant bit" points to Bank 0 */
+	if ((address <= 0x3FFF && (genie3s & (1 << 0)) == 0) ||
+	    (address >= 0xE000 && (genie3s & (1 << 0))))
+	  return memory[address];
+	else
+	  return memory[address + bank_base];
 
       case 0x30: /* Model III */
 	if (address >= RAM_START) return memory[address];
@@ -815,6 +867,36 @@ void mem_write(int address, int value)
 	/* Bank 0: RAM */
 	memory[address] = value;
 	return;
+      case 0x24: /* TCS Genie IIIs */
+	if ((system_byte & (1 << 5))) {
+	  if (address <= 0x2FFF)
+	    return;
+	}
+	if ((system_byte & (1 << 0)) == 0) {
+	  if (address >= 0x37E0 && address <= 0x37EF) {
+	    trs80_model1_write_mmio(address, value);
+	    return;
+	  }
+	  if ((system_byte & (1 << 4)) == 0) {
+	    if (address >= VIDEO_START && address <= 0x3FFF) {
+	      trs80_screen_write_char(address - VIDEO_START, value);
+	      return;
+	    }
+	  } else {
+	     /* 2K Video RAM starts at keyboard address */
+	     if (address >= KEYBOARD_START && address <= 0x3FFF) {
+	      trs80_screen_write_char(address - KEYBOARD_START, value);
+	      return;
+	    }
+	  }
+	}
+	/* "Constant bit" points to Bank 0 */
+	if ((address <= 0x3FFF && (genie3s & (1 << 0)) == 0) ||
+	    (address >= 0xE000 && (genie3s & (1 << 0))))
+	  memory[address] = value;
+	else
+	  memory[address + bank_base] = value;
+	return;
 
       case 0x30: /* Model III */
 	if (address >= RAM_START) {
@@ -1021,6 +1103,28 @@ Uint8 *mem_pointer(int address, int writing)
 	}
 	/* Bank 0: RAM */
 	return &memory[address];
+      case 0x24: /* TCS Genie IIIs */
+      case 0x2C:
+	if ((system_byte & (1 << 2)) == 0) {
+	  if (address <= 0x2FFF)
+	    return &rom[address];
+	}
+	if ((system_byte & (1 << 0)) == 0) {
+	  if ((system_byte & (1 << 4)) == 0) {
+	    if (address >= VIDEO_START && address <= 0x3FFF)
+	      return &video[address - VIDEO_START];
+	  } else {
+	    /* 2K Video RAM starts at keyboard address */
+	    if (address >= KEYBOARD_START && address <= 0x3FFF)
+	      return &video[address - KEYBOARD_START];
+	  }
+	}
+	/* "Constant bit" points to Bank 0 */
+	if ((address <= 0x3FFF && (genie3s & (1 << 0)) == 0) ||
+	    (address >= 0xE000 && (genie3s & (1 << 0))))
+	  return &memory[address];
+	else
+	  return &memory[address + bank_base];
       case 0x30: /* Model III reading */
         if (trs_model < 4 && address >= 32768)
 	    return &memory[address + bank_base];
@@ -1120,6 +1224,7 @@ void trs_mem_save(FILE *file)
   trs_save_int(file, &lubomir, 1);
   trs_save_int(file, &m_a11_flipflop, 1);
   trs_save_int(file, &eg3200, 1);
+  trs_save_int(file, &genie3s, 1);
   trs_save_int(file, &system_byte, 1);
 }
 
@@ -1147,6 +1252,7 @@ void trs_mem_load(FILE *file)
   trs_load_int(file, &lubomir, 1);
   trs_load_int(file, &m_a11_flipflop, 1);
   trs_load_int(file, &eg3200, 1);
+  trs_load_int(file, &genie3s, 1);
   trs_load_int(file, &system_byte, 1);
 }
 
