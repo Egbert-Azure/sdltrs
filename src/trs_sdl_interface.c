@@ -1214,8 +1214,8 @@ void trs_screen_caption(void)
 
     snprintf(title, 79, "%s%s %s (%.2f MHz) %s%s",
              timer_overclock ? "Turbo " : "",
-             eg3200 ? "EACA" : "TRS-80 Model",
-             eg3200 ? "EG 3200 Genie III" : trs_name[trs_model],
+             eg3200 ? "EACA" : genie3s ? "TCS" : "TRS-80 Model",
+             eg3200 ? "EG 3200 Genie III" : genie3s ? "Genie IIIs" : trs_name[trs_model],
              z80_state.clockMHz,
              trs_paused ? "PAUSED " : "",
              trs_sound ? "" : "(Mute)");
@@ -1240,7 +1240,8 @@ void trs_screen_init(void)
           trs_charset = 14;
         else
           trs_charset = 13;
-      }
+      } else if (genie3s)
+          trs_charset = 13;
       else {
         trs_charset = trs_charset1;
         currentmode = NORMAL;
@@ -1835,7 +1836,7 @@ void trs_get_event(int wait)
         switch (keysym.sym) {
           /* Trap some function keys here */
           case SDLK_F7:
-            if (eg3200 == 0) {
+            if (eg3200 == 0 && genie3s == 0) {
               if (SDL_GetModState() & KMOD_SHIFT)
                 call_function(EMULATOR);
               else
@@ -1844,7 +1845,7 @@ void trs_get_event(int wait)
             }
             break;
           case SDLK_F8:
-            if (eg3200 == 0) {
+            if (eg3200 == 0 && genie3s == 0) {
               trs_exit(!(SDL_GetModState() & KMOD_SHIFT));
               continue;
             }
@@ -2096,7 +2097,7 @@ void trs_get_event(int wait)
         if (keysym.sym == SDLK_RSHIFT && trs_model == 1)
           keysym.sym = SDLK_LSHIFT;
 
-        if (eg3200) {
+        if (eg3200 || genie3s) {
           if (keysym.sym == SDLK_LCTRL)
             keysym.sym = 0x12f;
           else if (keysym.sym >= SDLK_F1 && keysym.sym <= SDLK_F8)
@@ -2680,7 +2681,7 @@ void trs_screen_refresh(void)
     trs_hard_led(-1, 0);
     trs_turbo_led();
   }
-  if (eg3200) {
+  if (eg3200 || genie3s) {
     z80_out(0xF6, 0xFF);
     z80_out(0xF7, 0xFF);
   }
@@ -2815,7 +2816,10 @@ void trs_screen_write_char(unsigned int position, Uint8 char_index)
   dstRect.x = col * cur_char_width + left_margin;
   dstRect.y = row * cur_char_height + top_margin;
 
-  if (trs_model == 1 && eg3200 == 0) {
+  if (genie3s)
+    currentmode = (char_index >= 0x80) ? INVERSE : NORMAL;
+
+  if (trs_model == 1 && eg3200 == 0 && genie3s == 0) {
     /* On Model I, 0xc0-0xff is another copy of 0x80-0xbf */
     if (char_index >= 0xc0)
       char_index -= 0x40;

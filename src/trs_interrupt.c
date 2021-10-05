@@ -367,6 +367,8 @@ trs_timer_init(void)
       timer_hz = TIMER_HZ_1;
       if (eg3200)
         z80_state.clockMHz = 4.0000;
+      else if (genie3s)
+        z80_state.clockMHz = 7.2000;
       else {
         switch (speedup) {
           case 5: /* LNW80 */
@@ -393,7 +395,7 @@ trs_timer_init(void)
   trs_timer_event();
   trs_turbo_mode(-1);
 
-  if (eg3200)
+  if (eg3200 || genie3s)
     return;
 
   /* Also initialize the clock in memory - hack */

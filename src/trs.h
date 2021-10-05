@@ -71,6 +71,7 @@ extern char trs_state_file[FILENAME_MAX];
 
 extern int trs_model; /* 1, 3, 4, 5(=4p) */
 extern int eg3200;    /* EACA EG 3200: Genie III */
+extern int genie3s;   /* TCS Genie IIIs */
 extern unsigned int foreground;
 extern unsigned int background;
 extern unsigned int gui_foreground;
@@ -211,6 +212,8 @@ extern int mem_read_bank_base(void);
 extern void mem_romin(int state);
 extern int cp500_a11_flipflop_toggle(void);
 extern void eg3200_init_out(Uint8 value);
+extern void genie3s_bank_out(Uint8 value);
+extern void genie3s_init_out(Uint8 value);
 extern void m6845_cursor(int position, int line, int visible);
 extern void m6845_screen(int chars, int lines);
 
