@@ -1018,20 +1018,7 @@ int trs_gui_display_menu(const char *title, MENU_ENTRY *entry, int selection)
           }
           return selection;
         case SDLK_SPACE:
-          switch (entry[selection].type) {
-            case MENU_DISK_BROWSE:
-              trs_protect_disk(selection, !trs_disk_getwriteprotect(selection));
-              break;
-            case MENU_HARD_BROWSE:
-              trs_protect_hard(selection, !trs_hard_getwriteprotect(selection));
-              break;
-            case MENU_CASS_BROWSE:
-              trs_protect_cass(!trs_cass_getwriteprotect());
-              break;
-            case MENU_WAFER_BROWSE:
-              trs_protect_stringy(selection, !stringy_get_writeprotect(selection));
-              break;
-          }
+          trs_write_protect(entry[selection].type, selection);
           return selection;
         case SDLK_BACKSPACE:
         case SDLK_ESCAPE:

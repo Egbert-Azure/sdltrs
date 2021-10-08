@@ -37,214 +37,162 @@
 #include <SDL_types.h>
 
 #include "error.h"
+#include "reed.h"
 #include "trs_cassette.h"
 #include "trs_disk.h"
 #include "trs_hard.h"
 #include "trs_mkdisk.h"
 #include "trs_stringy.h"
 
-#include "reed.h"
+#define DISK  3
+#define HARD  4
+#define WAFER 5
+#define CASS  6
 
 #ifdef _WIN32
 #include "wtypes.h"
 #include "winnt.h"
 
-static void win_set_readonly(char *filename, int readonly)
+static void win_set_readonly(const char *filename, int readonly)
 {
-  DWORD attr;
-  attr = GetFileAttributes(filename);
+  DWORD attr = GetFileAttributes(filename);
   SetFileAttributes(filename, readonly != 0
                     ? (attr | FILE_ATTRIBUTE_READONLY)
                     : (attr & ~FILE_ATTRIBUTE_READONLY));
 }
 #endif
 
-void trs_protect_cass(int writeprot)
+void trs_write_protect(int type, int drive)
 {
   char prot_filename[FILENAME_MAX];
+  const char *filename = NULL;
+  FILE *f = NULL;
+  int emutype = 0;
+  int writeprot = 0;
+  int newmode;
 #ifndef _WIN32
   struct stat st = { 0 };
-  int newmode;
 #endif
 
-  const char *cassname = trs_cassette_getfilename();
-  if (cassname[0] == 0)
+  switch (type) {
+    case DISK:
+      filename = trs_disk_getfilename(drive);
+      break;
+    case HARD:
+      filename = trs_hard_getfilename(drive);
+      break;
+    case WAFER:
+      filename = stringy_get_name(drive);
+      break;
+    case CASS:
+      filename = trs_cassette_getfilename();
+      break;
+    default:
+      return;
+  }
+  if (filename[0] == 0)
     return;
 
-  snprintf(prot_filename, FILENAME_MAX, "%s", cassname);
-
-#ifndef _WIN32
+  snprintf(prot_filename, FILENAME_MAX, "%s", filename);
+#ifdef _WIN32
+  win_set_readonly(prot_filename, 0);
+#else
   if (stat(prot_filename, &st) < 0)
     return;
-#endif
-  trs_cassette_remove();
 
-#ifdef _WIN32
-  win_set_readonly(prot_filename, writeprot);
-#else
-  if (writeprot)
-    newmode = st.st_mode & ~(S_IWUSR);
-  else
-    newmode = st.st_mode | (S_IWUSR);
-  chmod(prot_filename, newmode);
+  if (chmod(prot_filename, st.st_mode | (S_IWUSR|S_IWGRP|S_IWOTH)) < 0)
+    error("failed to chmod '%s': %s", prot_filename, strerror(errno));
 #endif
-  trs_cassette_insert(prot_filename);
-}
-
-void trs_protect_disk(int drive, int writeprot)
-{
-  char prot_filename[FILENAME_MAX];
-#ifndef _WIN32
-  struct stat st = { 0 };
-  int newmode;
-#endif
-  FILE *f;
-  int emutype = trs_disk_getdisktype(drive);
-
-  const char *diskname = trs_disk_getfilename(drive);
-  if (diskname[0] == 0)
-    return;
-
-  snprintf(prot_filename, FILENAME_MAX, "%s", diskname);
-#ifndef _WIN32
-  if (stat(prot_filename, &st) < 0)
-    return;
-#endif
-  trs_disk_remove(drive);
-
-  if (emutype == JV3 || emutype == DMK) {
-#ifdef _WIN32
-    win_set_readonly(prot_filename, 0);
-#else
-    chmod(prot_filename, st.st_mode | (S_IWUSR|S_IWGRP|S_IWOTH));
-#endif
-    f = fopen(prot_filename, "r+");
-    if (f != NULL) {
-      if (emutype == JV3) {
-        /* Set the magic byte */
-        fseek(f, 256*34-1, 0);
-        putc(writeprot ? 0 : 0xff, f);
-      } else {
-        /* Set the magic byte */
-        putc(writeprot ? 0xff : 0, f);
+  switch (type) {
+    case DISK:
+      emutype = trs_disk_getdisktype(drive);
+      writeprot = !trs_disk_getwriteprotect(drive);
+      trs_disk_remove(drive);
+      if (emutype == JV3 || emutype == DMK) {
+        f = fopen(prot_filename, "r+");
+        if (f != NULL) {
+          /* Set the magic byte */
+          if (emutype == JV3) {
+            fseek(f, 256 * 34 - 1, 0);
+            putc(writeprot ? 0 : 0xff, f);
+          } else {
+            putc(writeprot ? 0xff : 0, f);
+          }
+        }
+        fclose(f);
       }
-      fclose(f);
-    }
+      break;
+    case HARD:
+      writeprot = !trs_hard_getwriteprotect(drive);
+      trs_hard_remove(drive);
+      f = fopen(prot_filename, "r+");
+      if (f != NULL) {
+        fseek(f, 7, 0);
+        newmode = getc(f);
+        if (newmode != EOF) {
+          newmode = (newmode & 0x7f) | (writeprot ? 0x80 : 0);
+          fseek(f, 7, 0);
+          putc(newmode, f);
+        }
+        fclose(f);
+      }
+      break;
+    case WAFER:
+      writeprot = !stringy_get_writeprotect(drive);
+      stringy_remove(drive);
+      f = fopen(prot_filename, "r+");
+      if (f != NULL) {
+        fseek(f, 5, 0);
+        newmode = getc(f);
+        if (newmode != EOF) {
+          if (writeprot)
+            newmode |= 1 << 0;
+          else
+            newmode &= ~(1 << 0);
+          fseek(f, 5, 0);
+          putc(newmode, f);
+        }
+        fclose(f);
+      }
+      break;
+    case CASS:
+      writeprot = !trs_cass_getwriteprotect();
+      trs_cassette_remove();
+      break;
+    default:
+      break;
   }
-
 #ifdef _WIN32
   win_set_readonly(prot_filename, writeprot);
 #else
-  if (writeprot)
-    newmode = st.st_mode & ~(S_IWUSR);
-  else
-    newmode = st.st_mode | (S_IWUSR);
-  chmod(prot_filename, newmode);
-#endif
-  trs_disk_insert(drive, prot_filename);
-}
+  if (writeprot) {
+    newmode = st.st_mode & ~S_IWUSR;
+  } else {
+    int const oumask = umask(0);
 
-void trs_protect_hard(int drive, int writeprot)
-{
-  char prot_filename[FILENAME_MAX];
-#ifndef _WIN32
-  struct stat st = { 0 };
-#endif
-  int newmode;
-  FILE *f;
-
-  const char *diskname = trs_hard_getfilename(drive);
-  if (diskname[0] == 0)
-    return;
-
-  snprintf(prot_filename, FILENAME_MAX, "%s", diskname);
-
-#ifndef _WIN32
-  if (stat(prot_filename, &st) < 0)
-    return;
-#endif
-  trs_hard_remove(drive);
-
-#ifdef _WIN32
-  win_set_readonly(prot_filename, 0);
-#else
-  chmod(prot_filename, st.st_mode | (S_IWUSR|S_IWGRP|S_IWOTH));
-#endif
-  f = fopen(prot_filename, "r+");
-  if (f != NULL) {
-    fseek(f, 7, 0);
-    newmode = getc(f);
-    if (newmode != EOF) {
-      newmode = (newmode & 0x7f) | (writeprot ? 0x80 : 0);
-      fseek(f, 7, 0);
-      putc(newmode, f);
-    }
-    fclose(f);
+    umask(oumask);
+    newmode = st.st_mode |
+      (( (st.st_mode & (S_IRUSR|S_IRGRP|S_IROTH)) >> 1 ) & ~oumask);
   }
-
-#ifdef _WIN32
-  win_set_readonly(prot_filename, writeprot);
-#else
-  if (writeprot)
-    newmode = st.st_mode & ~(S_IWUSR);
-  else
-    newmode = st.st_mode | (S_IWUSR);
-  chmod(prot_filename, newmode);
+  if (chmod(prot_filename, newmode) < 0)
+    error("failed to chmod '%s': %s", prot_filename, strerror(errno));
 #endif
-  trs_hard_attach(drive, prot_filename);
-}
-
-void trs_protect_stringy(int drive, int writeprot)
-{
-  char prot_filename[FILENAME_MAX];
-#ifndef _WIN32
-  struct stat st = { 0 };
-#endif
-  int newmode;
-  FILE *f;
-
-  const char *diskname = stringy_get_name(drive);
-  if (diskname[0] == 0)
-    return;
-
-  snprintf(prot_filename, FILENAME_MAX, "%s", diskname);
-
-#ifndef _WIN32
-  if (stat(prot_filename, &st) < 0)
-    return;
-#endif
-  stringy_remove(drive);
-
-#ifdef _WIN32
-  win_set_readonly(prot_filename, 0);
-#else
-  chmod(prot_filename, st.st_mode | (S_IWUSR|S_IWGRP|S_IWOTH));
-#endif
-  f = fopen(prot_filename, "r+");
-  if (f != NULL) {
-    fseek(f, 5, 0);
-    newmode = getc(f);
-    if (newmode != EOF) {
-      if (writeprot)
-        newmode |= 1 << 0;
-      else
-        newmode &= ~(1 << 0);
-      fseek(f, 5, 0);
-      putc(newmode, f);
-    }
-    fclose(f);
+  switch (type) {
+    case DISK:
+      trs_disk_insert(drive, prot_filename);
+      break;
+    case HARD:
+      trs_hard_attach(drive, prot_filename);
+      break;
+    case WAFER:
+      stringy_insert(drive, prot_filename);
+      break;
+    case CASS:
+      trs_cassette_insert(prot_filename);
+      break;
+    default:
+      break;
   }
-
-#ifdef _WIN32
-  win_set_readonly(prot_filename, writeprot);
-#else
-  if (writeprot)
-    newmode = st.st_mode & ~(S_IWUSR);
-  else
-    newmode = st.st_mode | (S_IWUSR);
-  chmod(prot_filename, newmode);
-#endif
-  stringy_insert(drive, prot_filename);
 }
 
 int trs_create_blank_jv1(const char *fname)
