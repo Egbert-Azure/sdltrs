@@ -26,10 +26,8 @@
    Last modified on Wed May 07 09:12:00 MST 2006 by markgrebe
 */
 
-void trs_protect_cass(int writeprot);
-void trs_protect_disk(int drive, int writeprot);
-void trs_protect_hard(int drive, int writeprot);
-void trs_protect_stringy(int drive, int writeprot);
+void trs_write_protect(int type, int drive);
+
 int trs_create_blank_jv1(const char *fname);
 int trs_create_blank_jv3(const char *fname);
 int trs_create_blank_dmk(const char *fname, int sides, int density,
