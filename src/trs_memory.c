@@ -226,7 +226,7 @@ int cp500_a11_flipflop_toggle(void)
 	return 0x00; /* really?! */
 }
 
-void eg3200_init_out(Uint8 value)
+void eg3200_init_out(int value)
 {
 	eg3200 = value;
 	memory_map = 0x23;
@@ -237,7 +237,7 @@ void eg3200_init_out(Uint8 value)
 	trs_screen_init();
 }
 
-void eg64_mba_out(Uint8 value)
+void eg64_mba_out(int value)
 {
 	if (value == 7) {
 		memory_map = 0x10;
@@ -253,7 +253,7 @@ void eg64_mba_out(Uint8 value)
 	memory_map = 0x21;
 }
 
-void genie3s_bank_out(Uint8 value)
+void genie3s_bank_out(int value)
 {
 	genie3s = value;
 	bank_base = (value & 0xC0) << 10; /* Bits 6 and 7: 64K Banks */
@@ -261,7 +261,7 @@ void genie3s_bank_out(Uint8 value)
 	trs_screen_inverse((value & (1 << 4)) != 0);
 }
 
-void genie3s_init_out(Uint8 value)
+void genie3s_init_out(int value)
 {
 	genie3s = value;
 	bank_base = 0;
@@ -272,7 +272,7 @@ void genie3s_init_out(Uint8 value)
 	trs_screen_init();
 }
 
-void lsb_bank_out(Uint8 value)
+void lsb_bank_out(int value)
 {
 	system_byte = value;
 	memory_map = 0x22;
@@ -299,7 +299,7 @@ void selector_out(Uint8 value)
 		bank_base = 0;
 }
 
-void sys_byte_out(Uint8 value)
+void sys_byte_out(int value)
 {
 	system_byte = value;
 
@@ -337,7 +337,7 @@ void sys_byte_out(Uint8 value)
 	}
 }
 
-Uint8 sys_byte_in(void)
+int sys_byte_in(void)
 {
 	return system_byte;
 }

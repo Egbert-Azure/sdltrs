@@ -211,16 +211,16 @@ extern void mem_bank_base(int bits);
 extern int mem_read_bank_base(void);
 extern void mem_romin(int state);
 extern int cp500_a11_flipflop_toggle(void);
-extern void eg3200_init_out(Uint8 value);
-extern void genie3s_bank_out(Uint8 value);
-extern void genie3s_init_out(Uint8 value);
+extern void eg3200_init_out(int value);
+extern void genie3s_bank_out(int value);
+extern void genie3s_init_out(int value);
 extern void m6845_cursor(int position, int line, int visible);
 extern void m6845_screen(int chars, int lines);
 
-extern void eg64_mba_out(Uint8 value);
-extern void lsb_bank_out(Uint8 value);
-extern void sys_byte_out(Uint8 value);
-extern Uint8 sys_byte_in(void);
+extern void eg64_mba_out(int value);
+extern void lsb_bank_out(int value);
+extern void sys_byte_out(int value);
+extern int  sys_byte_in(void);
 
 extern void trs_debug(void);
 
