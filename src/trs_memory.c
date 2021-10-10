@@ -109,7 +109,10 @@ static int system_byte;
 
 void mem_video_page(int which)
 {
-    video_offset = -VIDEO_START + (which ? VIDEO_PAGE_1 : VIDEO_PAGE_0);
+    if (genie3s)
+      video_offset = which ? KEYBOARD_START : VIDEO_START;
+    else
+      video_offset = -VIDEO_START + (which ? VIDEO_PAGE_1 : VIDEO_PAGE_0);
 }
 
 void mem_bank(int command)
@@ -254,6 +257,7 @@ void genie3s_bank_out(Uint8 value)
 {
 	genie3s = value;
 	bank_base = (value & 0xC0) << 10; /* Bits 6 and 7: 64K Banks */
+	mem_video_page((value & (1 << 4)) != 0);
 	trs_screen_inverse((value & (1 << 4)) != 0);
 }
 
@@ -607,14 +611,15 @@ int mem_read(int address)
 	  if ((system_byte & (1 << 4)) == 0) {
 	    if (address >= KEYBOARD_START && address <= 0x38FF)
 	      return trs_kb_mem_read(address);
-	    if (address >= VIDEO_START && address <= 0x3FFF)
-	      return video[address - VIDEO_START];
-	  } else {
-	    /* 2K Video RAM starts at keyboard address */
-	    if (address >= KEYBOARD_START && address <= 0x3FFF)
-	      return video[address - KEYBOARD_START];
-
 	  }
+	  /* 1K / 2K Video RAM */
+	  if (address >= video_offset && address <= 0x3FFF)
+	    return video[address - video_offset];
+	}
+	/* FIXME: skip graphic and font RAM */
+	if (address >= 0x8000) {
+	  if ((system_byte & (1 << 3)) || (genie3s & (1 << 1)))
+	    return 0xff;
 	}
 	/* "Constant bit" points to Bank 0 */
 	if ((address <= 0x3FFF && (genie3s & (1 << 0)) == 0) ||
@@ -878,18 +883,16 @@ void mem_write(int address, int value)
 	    trs80_model1_write_mmio(address, value);
 	    return;
 	  }
-	  if ((system_byte & (1 << 4)) == 0) {
-	    if (address >= VIDEO_START && address <= 0x3FFF) {
-	      trs80_screen_write_char(address - VIDEO_START, value);
-	      return;
-	    }
-	  } else {
-	     /* 2K Video RAM starts at keyboard address */
-	     if (address >= KEYBOARD_START && address <= 0x3FFF) {
-	      trs80_screen_write_char(address - KEYBOARD_START, value);
-	      return;
-	    }
+	  /* 1K / 2K Video RAM */
+	  if (address >= video_offset && address <= 0x3FFF) {
+	    trs80_screen_write_char(address - video_offset, value);
+	    return;
 	  }
+	}
+	/* FIXME: skip graphic and font RAM */
+	if (address >= 0x8000) {
+	  if ((system_byte & (1 << 3)) || (genie3s & (1 << 1)))
+	    return;
 	}
 	/* "Constant bit" points to Bank 0 */
 	if ((address <= 0x3FFF && (genie3s & (1 << 0)) == 0) ||
@@ -1111,14 +1114,14 @@ Uint8 *mem_pointer(int address, int writing)
 	    return &rom[address];
 	}
 	if ((system_byte & (1 << 0)) == 0) {
-	  if ((system_byte & (1 << 4)) == 0) {
-	    if (address >= VIDEO_START && address <= 0x3FFF)
-	      return &video[address - VIDEO_START];
-	  } else {
-	    /* 2K Video RAM starts at keyboard address */
-	    if (address >= KEYBOARD_START && address <= 0x3FFF)
-	      return &video[address - KEYBOARD_START];
-	  }
+	  /* 1K / 2K Video RAM */
+	  if (address >= video_offset && address <= 0x3FFF)
+	    return &video[address - video_offset];
+	}
+	/* FIXME: skip graphic and font RAM */
+	if (address >= 0x8000) {
+	  if ((system_byte & (1 << 3)) || (genie3s & (1 << 1)))
+	    return NULL;
 	}
 	/* "Constant bit" points to Bank 0 */
 	if ((address <= 0x3FFF && (genie3s & (1 << 0)) == 0) ||
