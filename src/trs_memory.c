@@ -254,6 +254,7 @@ void genie3s_bank_out(Uint8 value)
 {
 	genie3s = value;
 	bank_base = (value & 0xC0) << 10; /* Bits 6 and 7: 64K Banks */
+	trs_screen_inverse((value & (1 << 4)) != 0);
 }
 
 void genie3s_init_out(Uint8 value)
