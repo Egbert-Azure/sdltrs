@@ -2766,9 +2766,6 @@ void trs_screen_write_char(unsigned int position, Uint8 char_index)
   dstRect.x = col * cur_char_width + left_margin;
   dstRect.y = row * cur_char_height + top_margin;
 
-  if (genie3s)
-    currentmode = (char_index >= 0x80) ? INVERSE : NORMAL;
-
   if (trs_model == 1 && eg3200 == 0 && genie3s == 0) {
     /* On Model I, 0xc0-0xff is another copy of 0x80-0xbf */
     if (char_index >= 0xc0)
