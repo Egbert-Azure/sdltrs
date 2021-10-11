@@ -274,6 +274,14 @@ void genie3s_sys_out(int value)
 	if (value == system_byte)
 		return;
 
+	if ((value & (1 << 2)) != (system_byte & (1 << 2)))
+		trs_timer_speed((value & (1 << 2)) != 0);
+
+	if ((value & (1 << 6)) != (system_byte & (1 << 6))) {
+		if (value & (1 << 6))
+			trs_timer_speed((value & (1 << 2)) != 0);
+	}
+
 	system_byte = value;
 }
 
