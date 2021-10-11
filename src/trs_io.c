@@ -146,7 +146,7 @@ void z80_out(int port, int value)
         break;
       case 0xFA:
         if (genie3s)
-          sys_byte_out(value);
+          genie3s_sys_out(value);
         else
           eg3200 = value;
         break;

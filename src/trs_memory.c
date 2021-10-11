@@ -272,6 +272,14 @@ void genie3s_init_out(int value)
 	trs_screen_init();
 }
 
+void genie3s_sys_out(int value)
+{
+	if (value == system_byte)
+		return;
+
+	system_byte = value;
+}
+
 void lsb_bank_out(int value)
 {
 	system_byte = value;
@@ -302,10 +310,6 @@ void selector_out(Uint8 value)
 void sys_byte_out(int value)
 {
 	system_byte = value;
-
-	/* No Speedup for TCS Genie IIIs */
-	if (genie3s)
-		return;
 
 	switch (speedup) {
 		case 6: /* TCS SpeedMaster CP/M banking */
