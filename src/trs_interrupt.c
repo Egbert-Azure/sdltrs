@@ -475,6 +475,9 @@ trs_timer_speed(int fast)
   } else {
     switch (trs_model) {
       case 1:
+        if (genie3s)
+          z80_state.clockMHz = (fast & 1) ? 7.2000 : clock_mhz_1;
+        else
         switch (speedup) {
         case 1: /*Archbold*/
           z80_state.clockMHz = clock_mhz_1 * ((fast & 1) + 1);
