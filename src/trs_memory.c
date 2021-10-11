@@ -263,13 +263,10 @@ void genie3s_bank_out(int value)
 
 void genie3s_init_out(int value)
 {
-	genie3s = value;
-	bank_base = 0;
-	memory_map = 0x24;
-
+	genie3s_bank_out(value);
 	trs_timer_init();
-	trs_screen_inverse(0);
 	trs_screen_init();
+	memory_map = 0x24;
 }
 
 void genie3s_sys_out(int value)
