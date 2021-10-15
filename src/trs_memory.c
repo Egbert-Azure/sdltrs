@@ -255,8 +255,11 @@ void eg64_mba_out(int value)
 
 void genie3s_bank_out(int value)
 {
-	genie3s = value;
+	if (value == genie3s)
+		return;
+
 	bank_base = (value & 0xC0) << 10; /* Bits 6 and 7: 64K Banks */
+	genie3s = value;
 }
 
 void genie3s_init_out(int value)
@@ -313,7 +316,8 @@ void selector_out(Uint8 value)
 
 void sys_byte_out(int value)
 {
-	system_byte = value;
+	if (value == system_byte)
+		return;
 
 	switch (speedup) {
 		case 6: /* TCS SpeedMaster CP/M banking */
@@ -343,6 +347,8 @@ void sys_byte_out(int value)
 					break;
 			}
 	}
+
+	system_byte = value;
 }
 
 int sys_byte_in(void)
