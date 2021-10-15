@@ -3534,6 +3534,13 @@ void m6845_screen(int chars, int lines)
   if (screen_chars == row_chars * col_chars)
     return;
 
+  if (genie3s) {
+    int const screen_mode = (row_chars != 64) && (col_chars != 16);
+
+    mem_video_page(screen_mode);
+    trs_screen_inverse(screen_mode);
+  }
+
   screen_chars = row_chars * col_chars;
   screen_init();
 #if defined(SDL2) && !defined(_WIN32)

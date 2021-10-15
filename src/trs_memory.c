@@ -257,8 +257,6 @@ void genie3s_bank_out(int value)
 {
 	genie3s = value;
 	bank_base = (value & 0xC0) << 10; /* Bits 6 and 7: 64K Banks */
-	mem_video_page((value & (1 << 4)) != 0);
-	trs_screen_inverse((value & (1 << 4)) != 0);
 }
 
 void genie3s_init_out(int value)
@@ -266,6 +264,7 @@ void genie3s_init_out(int value)
 	genie3s_bank_out(value);
 	trs_timer_init();
 	trs_screen_init();
+	mem_video_page(0);
 	memory_map = 0x24;
 }
 
