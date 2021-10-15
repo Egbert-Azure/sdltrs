@@ -319,13 +319,14 @@ void sys_byte_out(int value)
 	if (value == system_byte)
 		return;
 
+	/* TRS-80 default memory map */
+	memory_map = 0x10;
+
 	switch (speedup) {
 		case 6: /* TCS SpeedMaster CP/M banking */
 			if ((value & (1 << 7)) == 0) {
 				if (value & 1)
 					memory_map = 0x14;
-				else
-					memory_map = 0x10;
 			}
 			/* Fall through */
 		case 5: /* HRG only in TRS-80 memory map */
@@ -341,9 +342,6 @@ void sys_byte_out(int value)
 				case 0x11:
 				case 0x54:
 					memory_map = 0x14;
-					break;
-				default:
-					memory_map = 0x10;
 					break;
 			}
 	}
