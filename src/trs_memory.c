@@ -353,8 +353,8 @@ int sys_byte_in(void)
 static void mem_init(void)
 {
     /* Initialize RAM, ROM & Video memory */
-    memset(&memory, 0, sizeof(memory));
-    memset(&supermem_ram, 0, sizeof(supermem_ram));
+    memset(&memory, 0xFF, sizeof(memory));
+    memset(&supermem_ram, 0xFF, sizeof(supermem_ram));
     memset(&rom, 0, sizeof(rom));
     memset(&cp500_rom, 0, sizeof(cp500_rom));
     memset(&video, ' ', sizeof(video));
