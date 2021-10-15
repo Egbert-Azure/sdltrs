@@ -358,7 +358,7 @@ static void mem_init(void)
     memset(&supermem_ram, 0, sizeof(supermem_ram));
     memset(&rom, 0, sizeof(rom));
     memset(&cp500_rom, 0, sizeof(cp500_rom));
-    memset(&video, 0, sizeof(video));
+    memset(&video, ' ', sizeof(video));
 
     if (trs_model < 4) {
         /* Fill memory of random seed buffer */
