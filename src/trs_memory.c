@@ -628,9 +628,9 @@ int mem_read(int address)
 	  if (address <= 0x2FFF)
 	    return rom[address];
 	}
-	/* FIXME: skip graphic and font RAM */
+	/* FIXME: skip graphic RAM */
 	if (address >= 0x8000) {
-	  if ((system_byte & (1 << 3)) || (genie3s & (1 << 1)))
+	  if (system_byte & (1 << 3))
 	    return 0xff;
 	}
 	/* "Constant bit" points to Bank 0 */
@@ -897,14 +897,22 @@ void mem_write(int address, int value)
 	    return;
 	  }
 	}
+	/* FIXME: skip graphic RAM */
+	if (system_byte & (1 << 3)) {
+	  if (address >= 0x8000)
+	    return;
+	}
 	if (system_byte & (1 << 5)) {
 	  if (address <= 0x2FFF)
 	    return;
 	}
-	/* FIXME: skip graphic and font RAM */
-	if (address >= 0x8000) {
-	  if ((system_byte & (1 << 3)) || (genie3s & (1 << 1)))
-	    return;
+	/* Write to font RAM */
+	if (genie3s & (1 << 1)) {
+	  if (address >= 0x8000) {
+	    genie3s_char(video[(video_offset == KEYBOARD_START) ?
+	        VIDEO_PAGE_1 : VIDEO_PAGE_0], address - 0x8000, value);
+	  return;
+	  }
 	}
 	/* "Constant bit" points to Bank 0 */
 	if ((address <= 0x3FFF && (genie3s & (1 << 0)) == 0) ||
@@ -1130,9 +1138,9 @@ Uint8 *mem_pointer(int address, int writing)
 	  if (address <= 0x2FFF)
 	    return &rom[address];
 	}
-	/* FIXME: skip graphic and font RAM */
+	/* FIXME: skip graphic RAM */
 	if (address >= 0x8000) {
-	  if ((system_byte & (1 << 3)) || (genie3s & (1 << 1)))
+	  if (system_byte & (1 << 3))
 	    return NULL;
 	}
 	/* "Constant bit" points to Bank 0 */
