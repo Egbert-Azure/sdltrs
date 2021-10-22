@@ -215,6 +215,7 @@ extern void eg3200_init_out(int value);
 extern void genie3s_bank_out(int value);
 extern void genie3s_init_out(int value);
 extern void genie3s_sys_out(int value);
+extern void genie3s_char(int index, int address, int byte);
 extern void m6845_cursor(int position, int line, int visible);
 extern void m6845_screen(int chars, int lines);
 
