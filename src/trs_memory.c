@@ -614,8 +614,6 @@ int mem_read(int address)
 	return memory[address];
       case 0x24: /* TCS Genie IIIs */
 	if ((system_byte & (1 << 0)) == 0) {
-	  if (address >= 0x37E0 && address <= 0x37EF)
-	    return trs80_model1_mmio(address);
 	  if ((system_byte & (1 << 4)) == 0) {
 	    if (address >= KEYBOARD_START && address <= 0x38FF)
 	      return trs_kb_mem_read(address);
@@ -623,6 +621,8 @@ int mem_read(int address)
 	  /* 1K / 2K Video RAM */
 	  if (address >= video_offset && address <= 0x3FFF)
 	    return video[address - video_offset];
+	  if (address >= 0x37E0 && address <= 0x37EF)
+	    return trs80_model1_mmio(address);
 	}
 	if ((system_byte & (1 << 2)) == 0) {
 	  if (address <= 0x2FFF)
@@ -887,13 +887,13 @@ void mem_write(int address, int value)
 	return;
       case 0x24: /* TCS Genie IIIs */
 	if ((system_byte & (1 << 0)) == 0) {
-	  if (address >= 0x37E0 && address <= 0x37EF) {
-	    trs80_model1_write_mmio(address, value);
-	    return;
-	  }
 	  /* 1K / 2K Video RAM */
 	  if (address >= video_offset && address <= 0x3FFF) {
 	    trs80_screen_write_char(address - video_offset, value);
+	    return;
+	  }
+	  if (address >= 0x37E0 && address <= 0x37EF) {
+	    trs80_model1_write_mmio(address, value);
 	    return;
 	  }
 	}
