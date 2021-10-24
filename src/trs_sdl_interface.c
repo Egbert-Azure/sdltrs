@@ -1214,7 +1214,7 @@ void trs_screen_caption(void)
     snprintf(title, 79, "AF:%04X BC:%04X DE:%04X HL:%04X IX/IY:%04X/%04X PC/SP:%04X/%04X",
              Z80_AF, Z80_BC, Z80_DE, Z80_HL, Z80_IX, Z80_IY, Z80_PC, Z80_SP);
   else {
-    const char *trs_name[] = { "", "I", "", "III", "4", "4P" };
+    static const char *trs_name[] = { "", "I", "", "III", "4", "4P" };
 
     snprintf(title, 79, "%s%s %s (%.2f MHz) %s%s",
              timer_overclock ? "Turbo " : "",
