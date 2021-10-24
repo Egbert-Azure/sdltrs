@@ -3214,8 +3214,7 @@ int lowe_le18_read(void)
 
 void lowe_le18_write_data(int value)
 {
-  if (lowe_le18)
-    grafyx_write_byte(le18_x, le18_y, expand6to8(value & 0x3F));
+  grafyx_write_byte(le18_x, le18_y, expand6to8(value & 0x3F));
 }
 
 void lowe_le18_write_control(int value)
