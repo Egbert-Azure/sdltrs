@@ -136,6 +136,11 @@ int key_queue_entries;
 #define TK_EG3200_F6    TK(8, 5)
 #define TK_EG3200_F7    TK(8, 6)
 #define TK_EG3200_F8    TK(8, 7)
+#define TK_GENIE3S_P1   TK(7, 7)  /* TCS Genie IIIs special keys P1-P5 */
+#define TK_GENIE3S_P2   TK(7, 6)
+#define TK_GENIE3S_P3   TK(7, 5)
+#define TK_GENIE3S_P4   TK(7, 4)
+#define TK_GENIE3S_P5   TK(7, 3)
 
 /* Fake keycodes with special meanings */
 #define TK_NULL                 TK(9, 0)
@@ -300,11 +305,11 @@ KeyTable ascii_key_table[] = {
 /* 0x85 */    { TK_EG3200_F6, TK_Neutral },
 /* 0x86 */    { TK_EG3200_F7, TK_Neutral },
 /* 0x87 */    { TK_EG3200_F8, TK_Neutral },
-/* 0x88 */    { TK_NULL, TK_Neutral },
-/* 0x89 */    { TK_NULL, TK_Neutral },
-/* 0x8a */    { TK_NULL, TK_Neutral },
-/* 0x8b */    { TK_NULL, TK_Neutral },
-/* 0x8c */    { TK_NULL, TK_Neutral },
+/* 0x88 */    { TK_GENIE3S_P1, TK_Neutral },
+/* 0x89 */    { TK_GENIE3S_P2, TK_Neutral },
+/* 0x8a */    { TK_GENIE3S_P3, TK_Neutral },
+/* 0x8b */    { TK_GENIE3S_P4, TK_Neutral },
+/* 0x8c */    { TK_GENIE3S_P5, TK_Neutral },
 /* 0x8d */    { TK_NULL, TK_Neutral },
 /* 0x8e */    { TK_NULL, TK_Neutral },
 /* 0x8f */    { TK_NULL, TK_Neutral },
