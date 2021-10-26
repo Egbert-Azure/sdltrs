@@ -102,6 +102,43 @@ void z80_out(int port, int value)
     debug("out (0x%02x), 0x%02x; pc 0x%04x\n", port, value, z80_state.pc.word);
   }
 
+  /* First, ports common to all models */
+  switch (port) {
+  case TRS_HARD_WP:       /* 0xC0 */
+    if (trs_model == 1 && lubomir) {
+      lsb_bank_out(value);
+      return;
+    }
+    /* Fall through */
+  case TRS_HARD_CONTROL:  /* 0xC1 */
+  case TRS_HARD_DATA:     /* 0xC8 */
+  case TRS_HARD_ERROR:    /* 0xC9 */ /*=TRS_HARD_PRECOMP*/
+  case TRS_HARD_SECCNT:   /* 0xCA */
+  case TRS_HARD_SECNUM:   /* 0xCB */
+  case TRS_HARD_CYLLO:    /* 0xCC */
+  case TRS_HARD_CYLHI:    /* 0xCD */
+  case TRS_HARD_SDH:      /* 0xCE */
+  case TRS_HARD_STATUS:   /* 0xCF */ /*=TRS_HARD_COMMAND*/
+    trs_hard_out(port, value);
+    break;
+  case TRS_UART_RESET:    /* 0xE8 */
+    trs_uart_reset_out(value);
+    break;
+  case TRS_UART_BAUD:     /* 0xE9 */
+    trs_uart_baud_out(value);
+    break;
+  case TRS_UART_CONTROL:  /* 0xEA */
+    trs_uart_control_out(value);
+    break;
+  case TRS_UART_DATA:     /* 0xEB */
+    trs_uart_data_out(value);
+    break;
+  case 0x43: /* Alpha Technologies SuperMem */
+    if (trs_model < 4 && supermem)
+      mem_bank_base(value);
+    break;
+  }
+
   /* EG 3200 Genie III & TCS Genie IIIs */
   if (eg3200 || genie3s) {
     switch (port) {
@@ -163,42 +200,6 @@ void z80_out(int port, int value)
         break;
     }
     return;
-  }
-  /* First, ports common to all models */
-  switch (port) {
-  case TRS_HARD_WP:       /* 0xC0 */
-    if (trs_model == 1 && lubomir) {
-      lsb_bank_out(value);
-      return;
-    }
-    /* Fall through */
-  case TRS_HARD_CONTROL:  /* 0xC1 */
-  case TRS_HARD_DATA:     /* 0xC8 */
-  case TRS_HARD_ERROR:    /* 0xC9 */ /*=TRS_HARD_PRECOMP*/
-  case TRS_HARD_SECCNT:   /* 0xCA */
-  case TRS_HARD_SECNUM:   /* 0xCB */
-  case TRS_HARD_CYLLO:    /* 0xCC */
-  case TRS_HARD_CYLHI:    /* 0xCD */
-  case TRS_HARD_SDH:      /* 0xCE */
-  case TRS_HARD_STATUS:   /* 0xCF */ /*=TRS_HARD_COMMAND*/
-    trs_hard_out(port, value);
-    break;
-  case TRS_UART_RESET:    /* 0xE8 */
-    trs_uart_reset_out(value);
-    break;
-  case TRS_UART_BAUD:     /* 0xE9 */
-    trs_uart_baud_out(value);
-    break;
-  case TRS_UART_CONTROL:  /* 0xEA */
-    trs_uart_control_out(value);
-    break;
-  case TRS_UART_DATA:     /* 0xEB */
-    trs_uart_data_out(value);
-    break;
-  case 0x43: /* Alpha Technologies SuperMem */
-    if (trs_model < 4 && supermem)
-      mem_bank_base(value);
-    break;
   }
 
   if (trs_model == 1) {
@@ -450,6 +451,40 @@ int z80_in(int port)
   int value = 0xff; /* value returned for nonexistent ports */
 
   /* First, ports common to all models */
+  switch (port) {
+  case 0x00:
+    value = trs_joystick_in();
+    goto done;
+  case TRS_HARD_WP:       /* 0xC0 */
+  case TRS_HARD_CONTROL:  /* 0xC1 */
+  case TRS_HARD_DATA:     /* 0xC8 */
+  case TRS_HARD_ERROR:    /* 0xC9 */ /*=TRS_HARD_PRECOMP*/
+  case TRS_HARD_SECCNT:   /* 0xCA */
+  case TRS_HARD_SECNUM:   /* 0xCB */
+  case TRS_HARD_CYLLO:    /* 0xCC */
+  case TRS_HARD_CYLHI:    /* 0xCD */
+  case TRS_HARD_SDH:      /* 0xCE */
+  case TRS_HARD_STATUS:   /* 0xCF */ /*=TRS_HARD_COMMAND*/
+    value = trs_hard_in(port);
+    goto done;
+  case TRS_UART_MODEM:    /* 0xE8 */
+    value = trs_uart_modem_in();
+    goto done;
+  case TRS_UART_SWITCHES: /* 0xE9 */
+    value = trs_uart_switches_in();
+    goto done;
+  case TRS_UART_STATUS:   /* 0xEA */
+    value = trs_uart_status_in();
+    goto done;
+  case TRS_UART_DATA:     /* 0xEB */
+    value = trs_uart_data_in();
+    goto done;
+  case 0x43: /* Supermem memory expansion */
+    if (trs_model < 4 && supermem) {
+      value = mem_read_bank_base();
+      goto done;
+    }
+  }
 
   /* Support for a special HW real-time clock (TimeDate80?)
    * I used to have.  It was a small card-edge unit with a
@@ -559,40 +594,6 @@ int z80_in(int port)
         break;
     }
     goto done;
-  }
-  switch (port) {
-  case 0x00:
-    value = trs_joystick_in();
-    goto done;
-  case TRS_HARD_WP:       /* 0xC0 */
-  case TRS_HARD_CONTROL:  /* 0xC1 */
-  case TRS_HARD_DATA:     /* 0xC8 */
-  case TRS_HARD_ERROR:    /* 0xC9 */ /*=TRS_HARD_PRECOMP*/
-  case TRS_HARD_SECCNT:   /* 0xCA */
-  case TRS_HARD_SECNUM:   /* 0xCB */
-  case TRS_HARD_CYLLO:    /* 0xCC */
-  case TRS_HARD_CYLHI:    /* 0xCD */
-  case TRS_HARD_SDH:      /* 0xCE */
-  case TRS_HARD_STATUS:   /* 0xCF */ /*=TRS_HARD_COMMAND*/
-    value = trs_hard_in(port);
-    goto done;
-  case TRS_UART_MODEM:    /* 0xE8 */
-    value = trs_uart_modem_in();
-    goto done;
-  case TRS_UART_SWITCHES: /* 0xE9 */
-    value = trs_uart_switches_in();
-    goto done;
-  case TRS_UART_STATUS:   /* 0xEA */
-    value = trs_uart_status_in();
-    goto done;
-  case TRS_UART_DATA:     /* 0xEB */
-    value = trs_uart_data_in();
-    goto done;
-  case 0x43: /* Supermem memory expansion */
-    if (trs_model < 4 && supermem) {
-      value = mem_read_bank_base();
-      goto done;
-    }
   }
 
   if (trs_model == 1) {
