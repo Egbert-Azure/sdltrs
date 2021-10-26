@@ -384,7 +384,6 @@ void trs_reset(int poweron)
     m_a11_flipflop = 0;
     bank_base = 0x10000;
     eg3200 = 0;
-    genie3s = 0;
     mem_command = 0;
     romin = 0;
     supermem_base = 0;
@@ -427,10 +426,12 @@ void trs_reset(int poweron)
 
     trs_cancel_event();
     trs_timer_interrupt(0);
-    if (poweron || trs_model >= 4) {
+    if (poweron || genie3s || trs_model >= 4) {
+	genie3s = 0;
         /* Reset processor */
 	z80_reset();
-	mem_init();
+	if (poweron || trs_model >=4)
+		mem_init();
 	trs_rom_init();
 	trs_timer_init();
 	if (trs_show_led) {
