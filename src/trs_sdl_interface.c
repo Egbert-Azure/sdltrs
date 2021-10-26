@@ -2101,8 +2101,13 @@ void trs_get_event(int wait)
         if (eg3200 || genie3s) {
           /* 1-5 on numeric keypad for TCS Genie IIIs P1-P5 */
           if (genie3s) {
+#ifdef SDL2
             if (keysym.sym >= SDLK_KP_1 && keysym.sym <= SDLK_KP_5)
               keysym.sym = (keysym.sym - SDLK_KP_1) + 0x88;
+#else
+            if (keysym.sym >= SDLK_KP1 && keysym.sym <= SDLK_KP5)
+              keysym.sym = (keysym.sym - SDLK_KP1) + 0x88;
+#endif
           }
           if (keysym.sym == SDLK_LCTRL)
             keysym.sym = 0x12f;
