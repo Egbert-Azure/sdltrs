@@ -359,12 +359,11 @@ int sys_byte_in(void)
 
 static void mem_init(void)
 {
-    /* Initialize RAM, ROM & Video memory */
+    /* Initialize RAM & ROM */
     memset(&memory, 0xFF, sizeof(memory));
     memset(&supermem_ram, 0xFF, sizeof(supermem_ram));
     memset(&rom, 0, sizeof(rom));
     memset(&cp500_rom, 0, sizeof(cp500_rom));
-    memset(&video, ' ', sizeof(video));
 
     if (trs_model < 4) {
         /* Fill memory of random seed buffer */
@@ -430,7 +429,7 @@ void trs_reset(int poweron)
 	genie3s = 0;
         /* Reset processor */
 	z80_reset();
-	if (poweron || trs_model >=4)
+	if (poweron || trs_model >= 4)
 		mem_init();
 	trs_rom_init();
 	trs_timer_init();
@@ -446,6 +445,7 @@ void trs_reset(int poweron)
 	trs_schedule_event(trs_reset_button_interrupt, 0, 2000);
     }
     /* Clear screen */
+    memset(&video, ' ', sizeof(video));
     screen_init();
 }
 
