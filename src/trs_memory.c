@@ -279,6 +279,9 @@ void genie3s_sys_out(int value)
 	if (value == system_byte)
 		return;
 
+	if ((value & (1 << 1)) != (system_byte & (1 << 1)))
+		genie3s_hrg((value & (1 << 1)) != 0);
+
 	if ((value & (1 << 2)) != (system_byte & (1 << 2)))
 		trs_timer_speed((value & (1 << 2)) != 0);
 
@@ -632,10 +635,9 @@ int mem_read(int address)
 	  if (address <= 0x2FFF)
 	    return rom[address];
 	}
-	/* FIXME: skip graphic RAM */
-	if (address >= 0x8000) {
-	  if (system_byte & (1 << 3))
-	    return 0xff;
+	if (system_byte & (1 << 3)) {
+	  if (address >= 0x8000)
+	    return genie3s_hrg_read(address - 0x8000);
 	}
 	/* "Constant bit" points to Bank 0 */
 	if ((address <= 0x3FFF && (genie3s & (1 << 0)) == 0) ||
@@ -901,10 +903,11 @@ void mem_write(int address, int value)
 	    return;
 	  }
 	}
-	/* FIXME: skip graphic RAM */
 	if (system_byte & (1 << 3)) {
-	  if (address >= 0x8000)
+	  if (address >= 0x8000) {
+	    genie3s_hrg_write(address - 0x8000, value);
 	    return;
+	  }
 	}
 	if (system_byte & (1 << 5)) {
 	  if (address <= 0x2FFF)
@@ -1141,11 +1144,6 @@ Uint8 *mem_pointer(int address, int writing)
 	if ((system_byte & (1 << 2)) == 0) {
 	  if (address <= 0x2FFF)
 	    return &rom[address];
-	}
-	/* FIXME: skip graphic RAM */
-	if (address >= 0x8000) {
-	  if (system_byte & (1 << 3))
-	    return NULL;
 	}
 	/* "Constant bit" points to Bank 0 */
 	if ((address <= 0x3FFF && (genie3s & (1 << 0)) == 0) ||

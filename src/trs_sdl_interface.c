@@ -175,7 +175,7 @@ static unsigned int cycles_saved;
 
 /* True size of graphics memory -- some is offscreen */
 #define G_XSIZE 128
-#define G_YSIZE 256
+#define G_YSIZE 320
 static char grafyx[(G_YSIZE * 2) * G_XSIZE];
 static Uint8 grafyx_unscaled[G_YSIZE][G_XSIZE];
 
@@ -3470,6 +3470,40 @@ void genie3s_char(int index, int address, int byte)
     trs_char[2][index] = CreateSurfaceFromDataScale(
         char_ram[index], background, foreground, 1, 2);
   }
+}
+
+static Uint8 mirror_bits(Uint8 byte)
+{
+  byte = ((byte >> 4) & 0x0F) | ((byte << 4) & 0xF0);
+  byte = ((byte >> 2) & 0x33) | ((byte << 2) & 0xCC);
+  byte = ((byte >> 1) & 0x55) | ((byte << 1) & 0xAA);
+
+  return byte;
+}
+
+void genie3s_hrg(int value)
+{
+  int const changed = (value != grafyx_enable);
+
+  grafyx_enable = value;
+  grafyx_overlay = value;
+  if (changed) trs_screen_refresh();
+}
+
+void genie3s_hrg_write(int position, int byte)
+{
+  int const region = position & 0x7FF;
+
+  grafyx_write_byte(region % row_chars, (region / row_chars) * 11 +
+      (position >> 11), mirror_bits(byte));
+}
+
+Uint8 genie3s_hrg_read(int position)
+{
+  int const region = position & 0x7FF;
+
+  return mirror_bits(grafyx_unscaled[(region / row_chars) * 11 +
+     (position >> 11)][region % row_chars]);
 }
 
 void trs_get_mouse_pos(int *x, int *y, unsigned int *buttons)

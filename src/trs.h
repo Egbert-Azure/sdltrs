@@ -216,6 +216,9 @@ extern void genie3s_bank_out(int value);
 extern void genie3s_init_out(int value);
 extern void genie3s_sys_out(int value);
 extern void genie3s_char(int index, int address, int byte);
+extern void genie3s_hrg(int value);
+extern void genie3s_hrg_write(int position, int byte);
+extern Uint8 genie3s_hrg_read(int position);
 extern void m6845_cursor(int position, int line, int visible);
 extern void m6845_screen(int chars, int lines);
 
