@@ -3566,6 +3566,9 @@ void trs_main_save(FILE *file)
   trs_save_uint8(file, &grafyx_xoffset, 1);
   trs_save_uint8(file, &grafyx_yoffset, 1);
   trs_save_uint8(file, &grafyx_x, 1);
+  trs_save_uint8(file, hrg_screen, sizeof(hrg_screen));
+  trs_save_int(file, &hrg_enable, 1);
+  trs_save_int(file, &hrg_addr, 1);
   trs_save_int(file, key_queue, KEY_QUEUE_SIZE);
   trs_save_int(file, &key_queue_head, 1);
   trs_save_int(file, &key_queue_entries, 1);
@@ -3599,6 +3602,9 @@ void trs_main_load(FILE *file)
   trs_load_uint8(file, &grafyx_xoffset, 1);
   trs_load_uint8(file, &grafyx_yoffset, 1);
   trs_load_uint8(file, &grafyx_x, 1);
+  trs_load_uint8(file, hrg_screen, sizeof(hrg_screen));
+  trs_load_int(file, &hrg_enable, 1);
+  trs_load_int(file, &hrg_addr, 1);
   trs_load_int(file, key_queue, KEY_QUEUE_SIZE);
   trs_load_int(file, &key_queue_head, 1);
   trs_load_int(file, &key_queue_entries, 1);
