@@ -3557,6 +3557,8 @@ void trs_main_save(FILE *file)
   trs_save_int(file, &trs_charset1, 1);
   trs_save_int(file, &trs_charset3, 1);
   trs_save_int(file, &trs_charset4, 1);
+  for (i = 0; i < MAXCHARS; i++)
+    trs_save_uint8(file, char_ram[i], 16);
   for (i = 0; i < G_YSIZE; i++)
     trs_save_uint8(file, grafyx_unscaled[i], G_XSIZE);
   trs_save_uint8(file, &grafyx_x, 1);
@@ -3593,6 +3595,8 @@ void trs_main_load(FILE *file)
   trs_load_int(file, &trs_charset1, 1);
   trs_load_int(file, &trs_charset3, 1);
   trs_load_int(file, &trs_charset4, 1);
+  for (i = 0; i < MAXCHARS; i++)
+    trs_load_uint8(file, char_ram[i], 16);
   for (i = 0; i < G_YSIZE; i++)
     trs_load_uint8(file, grafyx_unscaled[i], G_XSIZE);
   trs_load_uint8(file, &grafyx_x, 1);
