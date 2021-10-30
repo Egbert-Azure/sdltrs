@@ -204,13 +204,8 @@ static Uint8 grafyx_xoffset, grafyx_yoffset;
 
 #define HRG_MEMSIZE (1024 * 16)        /* 16k * 8 bit graphics memory */
 static Uint8 hrg_screen[HRG_MEMSIZE];
-static int hrg_pixel_x[2][6 + 1];
-static int hrg_pixel_y[12 + 1];
-static int hrg_pixel_width[2][6];
-static int hrg_pixel_height[12];
 static int hrg_enable;
 static int hrg_addr;
-static void hrg_update_char(int position);
 
 /* Option handling */
 typedef struct trs_opt_struct {
@@ -404,7 +399,7 @@ static const int num_options = sizeof(options) / sizeof(trs_opt);
 
 /* Private routines */
 static void bitmap_init(int ram);
-static void hrg_init(void);
+static Uint8 mirror_bits(Uint8 byte);
 
 static void stripWhitespace(char *inputStr)
 {
@@ -1371,7 +1366,6 @@ void trs_screen_init(void)
 
   TrsBlitMap(image->format->palette, screen->format);
   bitmap_init(genie3s);
-  hrg_init();
 
   trs_screen_caption();
   trs_screen_refresh();
@@ -2624,14 +2618,11 @@ void trs_screen_refresh(void)
     for (i = 0; i < screen_chars; i++)
       trs_screen_write_char(i, trs_screen[i]);
 
-    /* Redraw HRG extension region */
+    /* Redraw HRG screen */
     if (hrg_enable == 2) {
-      for (i = 0x3000; i <= 0x3FFF; i++) {
-        int old_data = hrg_screen[i];
-
-        hrg_screen[i] = 0;
+      for (i = 0; i <= 0x3FFF; i++) {
         hrg_write_addr(i, 0x3FFF);
-        hrg_write_data(old_data);
+        hrg_write_data(hrg_screen[i]);
       }
     }
   }
@@ -2817,9 +2808,6 @@ void trs_screen_write_char(unsigned int position, Uint8 char_index)
     }
   }
 
-  if (hrg_enable)
-    hrg_update_char(position);
-
   drawnRectCount = MAX_RECTS;
 }
 
@@ -2894,6 +2882,7 @@ static void grafyx_write_byte(int x, int y, char byte)
   int const screen_y = ((y - grafyx_yoffset + G_YSIZE) % G_YSIZE);
   int const on_screen = screen_x < row_chars &&
     screen_y < col_chars*cur_char_height / 2;
+  int const hrg_ext = (hrg_enable == 2) && (x >= 64);
   SDL_Rect srcRect, dstRect;
 
   if (grafyx_enable && grafyx_overlay && on_screen) {
@@ -2912,7 +2901,7 @@ static void grafyx_write_byte(int x, int y, char byte)
   grafyx[position] = byte;
   grafyx[position + G_XSIZE] = byte;
 
-  if (grafyx_enable && on_screen) {
+  if (grafyx_enable && (on_screen || hrg_ext)) {
     /* Draw new byte */
     srcRect.x = x * cur_char_width;
     srcRect.y = y * 2;
@@ -2920,7 +2909,7 @@ static void grafyx_write_byte(int x, int y, char byte)
     srcRect.h = 2;
     dstRect.x = left_margin + screen_x * cur_char_width;
     dstRect.y = top_margin + screen_y * 2;
-    TrsSoftBlit(image, &srcRect, screen, &dstRect, grafyx_overlay);
+    TrsSoftBlit(image, &srcRect, screen, &dstRect, hrg_ext ? 0 : grafyx_overlay);
     drawnRectCount = MAX_RECTS;
   }
 }
@@ -3188,34 +3177,15 @@ void lowe_le18_write_control(int value)
  *      <-column->  <MSB> <row addr>  <LSB>   1   1   <n.u.>
  */
 
-/* Initialize HRG. */
-static void
-hrg_init(void)
-{
-  int i;
-
-  /* Precompute arrays of pixel sizes and offsets. */
-  for (i = 0; i <= 6; i++) {
-    hrg_pixel_x[0][i] = cur_char_width * i / 6;
-    hrg_pixel_x[1][i] = cur_char_width * 2 * i / 6;
-    if (i) {
-      hrg_pixel_width[0][i - 1] = hrg_pixel_x[0][i] - hrg_pixel_x[0][i - 1];
-      hrg_pixel_width[1][i - 1] = hrg_pixel_x[1][i] - hrg_pixel_x[1][i - 1];
-    }
-  }
-  for (i = 0; i <= 12; i++) {
-    hrg_pixel_y[i] = cur_char_height * i / 12;
-    if (i)
-      hrg_pixel_height[i - 1] = hrg_pixel_y[i] - hrg_pixel_y[i - 1];
-  }
-}
-
 /* Switch HRG on (1 = 384*192, 2 = 480*192) or off (0). */
 void
 hrg_onoff(int enable)
 {
   if (hrg_enable == enable) return; /* State does not change. */
+
   hrg_enable = enable;
+  grafyx_enable = enable;
+  grafyx_overlay = enable;
 
   if (speedup > 4)
     trs_screen_init();
@@ -3234,99 +3204,25 @@ hrg_write_addr(int addr, int mask)
 void
 hrg_write_data(int data)
 {
-  int old_data;
-  int position, line, cols;
-  int bits0, bits1;
+  int position, line;
 
   if (hrg_addr >= HRG_MEMSIZE) return; /* nonexistent address */
-  old_data = hrg_screen[hrg_addr];
   hrg_screen[hrg_addr] = data;
 
   if (!hrg_enable) return;
   if ((currentmode & EXPANDED) && (hrg_addr & 1)) return;
-  if ((data &= 0x3f) == (old_data &= 0x3f)) return;
 
   /* Check for 96*192 extension region */
   if (hrg_enable == 2 && hrg_addr >= 0x3000) {
-    position = 64 + (hrg_addr & 0x0F) + (((hrg_addr >> 6) & 0x0F) * 80);
+    position = 64 + (hrg_addr & 0x0F);
     line = 4 * ((hrg_addr >> 4) & 0x03) + ((hrg_addr >> 10) & 0x03);
-    cols = 80;
+    grafyx_write_byte(position, ((hrg_addr >> 6) & 0x0F) * 12 + line,
+        mirror_bits(expand6to8(data & 0x3F)));
   } else { /* 384*192 inner region */
     position = hrg_addr & 0x3ff; /* bits 0-9: "PRINT @" screen position */
     line = hrg_addr >> 10;       /* vertical offset inside character cell */
-    cols = 64;
-  }
-
-  bits0 = ~data & old_data;    /* pattern to clear */
-  bits1 = data & ~old_data;    /* pattern to set */
-
-  if (bits0 == 0
-      || cols == 80
-      || trs_screen[position] == 0x20
-      || trs_screen[position] == 0x80
-      /*|| (trs_screen[position] < 0x80 && line >= 8 && !usefont)*/
-     ) {
-    /* Only additional bits set, or blank text character.
-       No need for update of text. */
-    int const destx = (position % cols) * cur_char_width + left_margin;
-    int const desty = (position / cols) * cur_char_height + top_margin
-      + hrg_pixel_y[line];
-    int const *x = hrg_pixel_x[(currentmode & EXPANDED) != 0];
-    int const *w = hrg_pixel_width[(currentmode & EXPANDED) != 0];
-    int const h = hrg_pixel_height[line];
-    int n0 = 0;
-    int n1 = 0;
-    int flag = 0;
-    int j, b;
-    SDL_Rect rect0[3];    /* 6 bits => max. 3 groups of adjacent "0" bits */
-    SDL_Rect rect1[3];
-
-    /* Compute arrays of rectangles to clear and to set. */
-    for (j = 0, b = 1; j < 6; j++, b <<= 1) {
-      if (bits0 & b) {
-        if (flag >= 0) {       /* Start new rectangle. */
-          rect0[n0].x = destx + x[j];
-          rect0[n0].y = desty;
-          rect0[n0].w = w[j];
-          rect0[n0].h = h;
-          n0++;
-          flag = -1;
-        }
-        else {                 /* Increase width of rectangle. */
-          rect0[n0 - 1].w += w[j];
-        }
-      }
-      else if (bits1 & b) {
-        if (flag <= 0) {
-          rect1[n1].x = destx + x[j];
-          rect1[n1].y = desty;
-          rect1[n1].w = w[j];
-          rect1[n1].h = h;
-          n1++;
-          flag = 1;
-        }
-        else {
-          rect1[n1 - 1].w += w[j];
-        }
-      }
-      else {
-        flag = 0;
-      }
-    }
-    if (n0 != 0)
-      SDL_FillRects(screen, &rect0[0], n0, back_color);
-    if (n1 != 0)
-      SDL_FillRects(screen, &rect1[0], n1, fore_color);
-    drawnRectCount = MAX_RECTS;
-  }
-  else {
-    /* Unfortunately, HRG1B combines text and graphics with an
-       (inclusive) OR. Thus, in the general case, we cannot erase
-       the old graphics byte without losing the text information.
-       Call trs_screen_write_char to restore the text character
-       (erasing the graphics). This function will in turn call
-       hrg_update_char and restore 6*12 graphics pixels. Sigh. */
-    trs_screen_write_char(position, trs_screen[position]);
+    grafyx_write_byte(position % 64, (position / 64) * 12 + line,
+        mirror_bits(expand6to8(data & 0x3F)));
   }
 }
 
@@ -3336,55 +3232,6 @@ hrg_read_data(void)
 {
   if (hrg_addr >= HRG_MEMSIZE) return 0xff; /* nonexistent address */
   return hrg_screen[hrg_addr];
-}
-
-/* Update graphics at given screen position.
-   Called by trs_screen_write_char. */
-static void
-hrg_update_char(int position)
-{
-  int const destx = (position % row_chars) * cur_char_width + left_margin;
-  int const desty = (position / row_chars) * cur_char_height + top_margin;
-  int const *x = hrg_pixel_x[(currentmode & EXPANDED) != 0];
-  int const *w = hrg_pixel_width[(currentmode & EXPANDED) != 0];
-  int byte;
-  int prev_byte = 0;
-  int n = 0;
-  int np = 0;
-  int i, j, flag;
-  SDL_Rect rect[3 * 12];
-
-  /* Compute array of rectangles. */
-  for (i = 0; i < 12; i++) {
-    if ((byte = hrg_screen[position + (i << 10)] & 0x3f) == 0) {
-    }
-    else if (byte != prev_byte) {
-      np = n;
-      flag = 0;
-      for (j = 0; j < 6; j++) {
-        if (!(byte & 1 << j)) {
-          flag = 0;
-        }
-        else if (!flag) {     /* New rectangle. */
-          rect[n].x = destx + x[j];
-          rect[n].y = desty + hrg_pixel_y[i];
-          rect[n].w = w[j];
-          rect[n].h = hrg_pixel_height[i];
-          n++;
-          flag = 1;
-        }
-        else {                /* Increase width. */
-          rect[n - 1].w += w[j];
-        }
-      }
-    }
-    else {                    /* Increase heights. */
-      for (j = np; j < n; j++)
-        rect[j].h += hrg_pixel_height[i];
-    }
-    prev_byte = byte;
-  }
-  SDL_FillRects(screen, &rect[0], n, fore_color);
 }
 
 void m6845_cursor(int position, int line, int visible)
