@@ -180,7 +180,7 @@ static unsigned int cycles_saved;
 
 /* True size of graphics memory -- some is offscreen */
 #define G_XSIZE 128
-#define G_YSIZE 320
+#define G_YSIZE 288
 static char grafyx[(2 * G_YSIZE * MAX_SCALE) * (G_XSIZE * MAX_SCALE)];
 static Uint8 grafyx_unscaled[G_YSIZE][G_XSIZE];
 
@@ -1253,7 +1253,7 @@ void trs_screen_init(void)
            resize = resize4;
   }
 
-  if (trs_model == 1) {
+  if (trs_model == 1 && genie3s == 0) {
     if (trs_charset < 3)
       cur_char_width = 6 * scale;
     else
@@ -1261,7 +1261,7 @@ void trs_screen_init(void)
     cur_char_height = TRS_CHAR_HEIGHT * (scale * 2);
   } else {
     cur_char_width = TRS_CHAR_WIDTH * scale;
-    if (screen640x240 || text80x24)
+    if (screen640x240 || text80x24 || (genie3s && row_chars == 80))
       cur_char_height = TRS_CHAR_HEIGHT4 * (scale * 2);
     else
       cur_char_height = TRS_CHAR_HEIGHT * (scale * 2);
@@ -3403,7 +3403,10 @@ void genie3s_char(int index, int address, int byte)
 {
   int const scanline = address >> 11;
 
-  char_ram[index][scanline] = byte;
+  char_ram[index][scanline] = 0;
+
+  if (scanline > 0)
+    char_ram[index][scanline - 1] = byte;
 
   if (scanline == 15) {
     if (trs_char[0][index]) {
@@ -3444,7 +3447,7 @@ void genie3s_hrg_write(int position, int byte)
 {
   int const region = position & 0x7FF;
 
-  grafyx_write_byte(region % row_chars, (region / row_chars) * 11 +
+  grafyx_write_byte(region % row_chars, (region / row_chars) * 10 +
       (position >> 11), mirror_bits(byte));
 }
 
@@ -3452,7 +3455,7 @@ Uint8 genie3s_hrg_read(int position)
 {
   int const region = position & 0x7FF;
 
-  return mirror_bits(grafyx_unscaled[(region / row_chars) * 11 +
+  return mirror_bits(grafyx_unscaled[(region / row_chars) * 10 +
      (position >> 11)][region % row_chars]);
 }
 
