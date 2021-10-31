@@ -3429,6 +3429,13 @@ void genie3s_char(int index, int address, int byte)
     }
     trs_char[0][index] = CreateSurfaceFromDataScale(
         char_ram[index], foreground, background, scale, scale * 2);
+
+    if (trs_char[2][index]) {
+      free(trs_char[2][index]->pixels);
+      SDL_FreeSurface(trs_char[2][index]);
+    }
+    trs_char[2][index] = CreateSurfaceFromDataScale(
+        char_ram[index], background, foreground, scale, scale * 2);
   }
 }
 
