@@ -113,6 +113,7 @@ static int screen_chars = 1024;
 static int row_chars = 64;
 static int col_chars = 16;
 static int border_width = 2;
+static int m6845_raster = 12;
 static int resize;
 static int text80x24, screen640x240;
 static int drawnRectCount;
@@ -1254,15 +1255,18 @@ void trs_screen_init(void)
            resize = resize4;
   }
 
-  if (trs_model == 1 && genie3s == 0) {
+  if (trs_model == 1) {
     if (trs_charset < 3)
       cur_char_width = 6;
     else
       cur_char_width = 8;
-    cur_char_height = TRS_CHAR_HEIGHT * 2;
+    if (genie3s && row_chars == 80)
+      cur_char_height = m6845_raster * 2;
+    else
+      cur_char_height = TRS_CHAR_HEIGHT * 2;
   } else {
     cur_char_width = TRS_CHAR_WIDTH;
-    if (screen640x240 || text80x24 || (genie3s && row_chars == 80))
+    if (screen640x240 || text80x24)
       cur_char_height = TRS_CHAR_HEIGHT4 * 2;
     else
       cur_char_height = TRS_CHAR_HEIGHT * 2;
@@ -2770,7 +2774,7 @@ void trs_screen_write_char(unsigned int position, Uint8 char_index)
   dstRect.x = col * cur_char_width + left_margin;
   dstRect.y = row * cur_char_height + top_margin;
 
-  if (genie3s && row_chars == 80) {
+  if (genie3s) {
     SDL_BlitSurface(trs_char[0][char_index], &srcRect, screen, &dstRect);
   } else {
     if (trs_model == 1 && eg3200 == 0) {
@@ -3284,7 +3288,7 @@ void m6845_cursor(int position, int line, int visible)
   drawnRectCount = MAX_RECTS;
 }
 
-void m6845_screen(int chars, int lines)
+void m6845_screen(int chars, int lines, int raster)
 {
   if (chars)
     row_chars = chars;
@@ -3294,7 +3298,11 @@ void m6845_screen(int chars, int lines)
 
   if (genie3s) {
     mem_video_page(row_chars != 64 && col_chars != 16);
-    bitmap_init(genie3s);
+    if (m6845_raster != raster) {
+      m6845_raster = raster;
+      trs_screen_init();
+      return;
+    }
   }
 
   if (screen_chars == row_chars * col_chars)
@@ -3310,9 +3318,6 @@ void genie3s_char(int index, int address, int byte)
   int const scanline = address >> 11;
 
   char_ram[index][scanline] = byte;
-
-  if (scanline > 0)
-    char_ram[index][scanline - 1] = byte;
 
   if (scanline == 15) {
     if (trs_char[0][index]) {
@@ -3346,7 +3351,7 @@ void genie3s_hrg_write(int position, int byte)
 {
   int const region = position & 0x7FF;
 
-  grafyx_write_byte(region % row_chars, (region / row_chars) * 10 +
+  grafyx_write_byte(region % row_chars, (region / row_chars) * m6845_raster +
       (position >> 11), mirror_bits(byte));
 }
 
@@ -3354,7 +3359,7 @@ Uint8 genie3s_hrg_read(int position)
 {
   int const region = position & 0x7FF;
 
-  return mirror_bits(grafyx_unscaled[(region / row_chars) * 10 +
+  return mirror_bits(grafyx_unscaled[(region / row_chars) * m6845_raster +
      (position >> 11)][region % row_chars]);
 }
 
@@ -3449,6 +3454,7 @@ void trs_main_save(FILE *file)
   trs_save_int(file, &col_chars, 1);
   trs_save_int(file, &row_chars, 1);
   trs_save_int(file, &currentmode, 1);
+  trs_save_int(file, &m6845_raster, 1);
   trs_save_int(file, &text80x24, 1);
   trs_save_int(file, &screen640x240, 1);
   trs_save_int(file, &trs_charset, 1);
@@ -3487,6 +3493,7 @@ void trs_main_load(FILE *file)
   trs_load_int(file, &col_chars, 1);
   trs_load_int(file, &row_chars, 1);
   trs_load_int(file, &currentmode, 1);
+  trs_load_int(file, &m6845_raster, 1);
   trs_load_int(file, &text80x24, 1);
   trs_load_int(file, &screen640x240, 1);
   trs_load_int(file, &trs_charset, 1);

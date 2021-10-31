@@ -75,10 +75,13 @@ static void m6845_crt(int value)
     m6845_cursor(cursor_pos, cursor_csr, 0);
   switch (ctrlimage) {
     case 0x01: /* Chars displayed */
-      m6845_screen(value, 0);
+      m6845_screen(value, 0, 0);
       break;
     case 0x06: /* Lines displayed */
-      m6845_screen(0, value);
+      m6845_screen(0, value, 0);
+      break;
+    case 0x09: /* Maximum Raster address */
+      m6845_screen(0, 0, value + 1);
       break;
     case 0x0A: /* Cursor visible / Cursor Start Line */
       cursor_vis = !(value & (1 << 5)) || (value & (1 << 6));
