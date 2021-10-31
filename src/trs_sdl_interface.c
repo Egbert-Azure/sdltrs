@@ -2822,25 +2822,29 @@ void trs_screen_write_char(unsigned int position, Uint8 char_index)
   dstRect.x = col * cur_char_width + left_margin;
   dstRect.y = row * cur_char_height + top_margin;
 
-  if (trs_model == 1 && eg3200 == 0 && genie3s == 0) {
-    /* On Model I, 0xc0-0xff is another copy of 0x80-0xbf */
-    if (char_index >= 0xc0)
-      char_index -= 0x40;
-  }
-  if (char_index >= 0x80 && char_index <= 0xbf && !(currentmode & INVERSE)) {
-    /* Use box graphics character bitmap */
-    SDL_BlitSurface(trs_box[expanded][char_index - 0x80], &srcRect, screen, &dstRect);
+  if (genie3s && row_chars == 80) {
+    SDL_BlitSurface(trs_char[0][char_index], &srcRect, screen, &dstRect);
   } else {
-    /* Use regular character bitmap */
-    if (trs_model > 1 && char_index >= 0xc0 &&
-        (currentmode & (ALTERNATE + INVERSE)) == 0) {
-      char_index -= 0x40;
+    if (trs_model == 1 && eg3200 == 0) {
+      /* On Model I, 0xc0-0xff is another copy of 0x80-0xbf */
+      if (char_index >= 0xc0)
+        char_index -= 0x40;
     }
-    if ((currentmode & INVERSE) && (char_index & 0x80)) {
-      expanded += 2;
-      char_index &= 0x7f;
+    if (char_index >= 0x80 && char_index <= 0xbf && !(currentmode & INVERSE)) {
+      /* Use box graphics character bitmap */
+      SDL_BlitSurface(trs_box[expanded][char_index - 0x80], &srcRect, screen, &dstRect);
+    } else {
+      /* Use regular character bitmap */
+      if (trs_model > 1 && char_index >= 0xc0 &&
+          (currentmode & (ALTERNATE + INVERSE)) == 0) {
+        char_index -= 0x40;
+      }
+      if ((currentmode & INVERSE) && (char_index & 0x80)) {
+        expanded += 2;
+        char_index &= 0x7f;
+      }
+      SDL_BlitSurface(trs_char[expanded][char_index], &srcRect, screen, &dstRect);
     }
-    SDL_BlitSurface(trs_char[expanded][char_index], &srcRect, screen, &dstRect);
   }
   addToDrawList(&dstRect);
 
@@ -3380,15 +3384,13 @@ void m6845_screen(int chars, int lines)
   if (lines)
     col_chars = lines;
 
+  if (genie3s) {
+    mem_video_page(row_chars != 64 && col_chars != 16);
+    bitmap_init(genie3s);
+  }
+
   if (screen_chars == row_chars * col_chars)
     return;
-
-  if (genie3s) {
-    int const screen_mode = (row_chars != 64) && (col_chars != 16);
-
-    mem_video_page(screen_mode);
-    trs_screen_inverse(screen_mode);
-  }
 
   screen_chars = row_chars * col_chars;
   screen_init();
@@ -3403,7 +3405,7 @@ void genie3s_char(int index, int address, int byte)
 {
   int const scanline = address >> 11;
 
-  char_ram[index][scanline] = 0;
+  char_ram[index][scanline] = byte;
 
   if (scanline > 0)
     char_ram[index][scanline - 1] = byte;
@@ -3415,13 +3417,6 @@ void genie3s_char(int index, int address, int byte)
     }
     trs_char[0][index] = CreateSurfaceFromDataScale(
         char_ram[index], foreground, background, scale, scale * 2);
-
-    if (trs_char[2][index]) {
-      free(trs_char[2][index]->pixels);
-      SDL_FreeSurface(trs_char[2][index]);
-    }
-    trs_char[2][index] = CreateSurfaceFromDataScale(
-        char_ram[index], background, foreground, scale, scale * 2);
   }
 }
 
