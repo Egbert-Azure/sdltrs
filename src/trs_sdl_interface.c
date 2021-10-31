@@ -2621,8 +2621,11 @@ void trs_screen_refresh(void)
     /* Redraw HRG screen */
     if (hrg_enable == 2) {
       for (i = 0; i <= 0x3FFF; i++) {
+        int old_data = hrg_screen[i];
+
         hrg_write_addr(i, 0x3FFF);
-        hrg_write_data(hrg_screen[i]);
+        hrg_write_data(0);
+        hrg_write_data(old_data);
       }
     }
   }
@@ -2881,40 +2884,44 @@ void trs_gui_write_char(int col, int row, Uint8 char_index, int invert)
 
 static void grafyx_write_byte(int x, int y, char byte)
 {
-  int const position = (y * 2) * G_XSIZE + x;
-  int const screen_x = ((x - grafyx_xoffset + G_XSIZE) % G_XSIZE);
-  int const screen_y = ((y - grafyx_yoffset + G_YSIZE) % G_YSIZE);
-  int const on_screen = screen_x < row_chars &&
-    screen_y < col_chars*cur_char_height / 2;
-  int const hrg_ext = (hrg_enable == 2) && (x >= 64);
-  SDL_Rect srcRect, dstRect;
+  if (grafyx_unscaled[y][x] == byte) {
+    return;
+  } else {
+    int const position = (y * 2) * G_XSIZE + x;
+    int const screen_x = ((x - grafyx_xoffset + G_XSIZE) % G_XSIZE);
+    int const screen_y = ((y - grafyx_yoffset + G_YSIZE) % G_YSIZE);
+    int const on_screen = screen_x < row_chars &&
+      screen_y < col_chars*cur_char_height / 2;
+    int const hrg_ext = (hrg_enable == 2) && (x >= 64);
+    SDL_Rect srcRect, dstRect;
 
-  if (grafyx_enable && grafyx_overlay && on_screen) {
-    srcRect.x = x * cur_char_width;
-    srcRect.y = y * 2;
-    srcRect.w = cur_char_width;
-    srcRect.h = 2;
-    dstRect.x = left_margin + screen_x * cur_char_width;
-    dstRect.y = top_margin + screen_y * 2;
-    /* Erase old byte, preserving text */
-    TrsSoftBlit(image, &srcRect, screen, &dstRect, 1);
-  }
+    if (grafyx_enable && grafyx_overlay && on_screen) {
+      srcRect.x = x * cur_char_width;
+      srcRect.y = y * 2;
+      srcRect.w = cur_char_width;
+      srcRect.h = 2;
+      dstRect.x = left_margin + screen_x * cur_char_width;
+      dstRect.y = top_margin + screen_y * 2;
+      /* Erase old byte, preserving text */
+      TrsSoftBlit(image, &srcRect, screen, &dstRect, 1);
+    }
 
-  /* Save new byte in local memory */
-  grafyx_unscaled[y][x] = byte;
-  grafyx[position] = byte;
-  grafyx[position + G_XSIZE] = byte;
+    /* Save new byte in local memory */
+    grafyx_unscaled[y][x] = byte;
+    grafyx[position] = byte;
+    grafyx[position + G_XSIZE] = byte;
 
-  if (grafyx_enable && (on_screen || hrg_ext)) {
-    /* Draw new byte */
-    srcRect.x = x * cur_char_width;
-    srcRect.y = y * 2;
-    srcRect.w = cur_char_width;
-    srcRect.h = 2;
-    dstRect.x = left_margin + screen_x * cur_char_width;
-    dstRect.y = top_margin + screen_y * 2;
-    TrsSoftBlit(image, &srcRect, screen, &dstRect, hrg_ext ? 0 : grafyx_overlay);
-    drawnRectCount = MAX_RECTS;
+    if (grafyx_enable && (on_screen || hrg_ext)) {
+      /* Draw new byte */
+      srcRect.x = x * cur_char_width;
+      srcRect.y = y * 2;
+      srcRect.w = cur_char_width;
+      srcRect.h = 2;
+      dstRect.x = left_margin + screen_x * cur_char_width;
+      dstRect.y = top_margin + screen_y * 2;
+      TrsSoftBlit(image, &srcRect, screen, &dstRect, hrg_ext ? 0 : grafyx_overlay);
+      drawnRectCount = MAX_RECTS;
+    }
   }
 }
 
