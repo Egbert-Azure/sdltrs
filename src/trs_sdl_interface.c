@@ -399,7 +399,6 @@ static const trs_opt options[] = {
 static const int num_options = sizeof(options) / sizeof(trs_opt);
 
 /* Private routines */
-static void bitmap_init(int ram);
 static Uint8 mirror_bits(Uint8 byte);
 
 static void stripWhitespace(char *inputStr)
@@ -1369,8 +1368,7 @@ void trs_screen_init(void)
   SDL_SetPaletteColors(image->format->palette, colors, 0, 2);
 
   TrsBlitMap(image->format->palette, screen->format);
-  bitmap_init(genie3s);
-
+  trs_bitmap_init(genie3s);
   trs_screen_caption();
   trs_screen_refresh();
 }
@@ -2492,7 +2490,7 @@ static SDL_Surface *CreateSurfaceFromDataScale(const Uint8 *data,
 #endif
 }
 
-static void bitmap_init(int ram)
+void trs_bitmap_init(int ram)
 {
   /* Initialize from built-in font bitmaps. */
   int i;
