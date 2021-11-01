@@ -406,7 +406,6 @@ static const trs_opt options[] = {
 static const int num_options = sizeof(options) / sizeof(trs_opt);
 
 /* Private routines */
-static void bitmap_init(int ram);
 static void grafyx_rescale(int y, int x, char byte);
 static Uint8 mirror_bits(Uint8 byte);
 
@@ -1361,8 +1360,7 @@ void trs_screen_init(void)
 #endif
 
   TrsBlitMap(image->format->palette, screen->format);
-  bitmap_init(genie3s);
-
+  trs_bitmap_init(genie3s);
   trs_screen_caption();
   trs_screen_refresh();
 }
@@ -2543,7 +2541,7 @@ static SDL_Surface *CreateSurfaceFromDataScale(const Uint8 *data,
 #endif
 }
 
-static void bitmap_init(int ram)
+void trs_bitmap_init(int ram)
 {
   /* Initialize from built-in font bitmaps. */
   int i;

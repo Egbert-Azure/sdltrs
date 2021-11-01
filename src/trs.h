@@ -91,6 +91,7 @@ extern int trs_write_config_file(const char *filename);
 extern int trs_load_cmd(const char *filename);
 extern int trs_load_config_file(void);
 
+extern void trs_bitmap_init(int ram);
 extern void trs_screen_init(void);
 extern void screen_init(void);
 extern void trs_rom_init(void);
