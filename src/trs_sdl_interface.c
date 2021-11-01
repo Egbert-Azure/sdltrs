@@ -3290,27 +3290,25 @@ void m6845_cursor(int position, int line, int visible)
 
 void m6845_screen(int chars, int lines, int raster)
 {
-  if (chars)
+  int changed = 0;
+
+  if (chars && (changed = (chars != row_chars)))
     row_chars = chars;
 
-  if (lines)
+  if (lines && (changed = (lines != col_chars)))
     col_chars = lines;
 
-  if (genie3s) {
-    mem_video_page(row_chars != 64 && col_chars != 16);
-    if (m6845_raster != raster) {
-      m6845_raster = raster;
-      trs_screen_init();
-      return;
-    }
+  if (raster && (changed = (raster != m6845_raster)))
+    m6845_raster = raster;
+
+  if (changed) {
+    if (genie3s)
+      mem_video_page(row_chars != 64 && col_chars != 16);
+
+    screen_chars = row_chars * col_chars;
+    screen_init();
+    trs_screen_init();
   }
-
-  if (screen_chars == row_chars * col_chars)
-    return;
-
-  screen_chars = row_chars * col_chars;
-  screen_init();
-  trs_screen_init();
 }
 
 void genie3s_char(int index, int address, int byte)
