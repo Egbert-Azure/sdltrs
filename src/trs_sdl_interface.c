@@ -3313,25 +3313,7 @@ void m6845_screen(int chars, int lines, int raster)
 
 void genie3s_char(int index, int address, int byte)
 {
-  int const scanline = address >> 11;
-
-  char_ram[index][scanline] = byte;
-
-  if (scanline == 15) {
-    if (trs_char[0][index]) {
-      free(trs_char[0][index]->pixels);
-      SDL_FreeSurface(trs_char[0][index]);
-    }
-    trs_char[0][index] = CreateSurfaceFromDataScale(
-        char_ram[index], foreground, background, 1, 2);
-
-    if (trs_char[2][index]) {
-      free(trs_char[2][index]->pixels);
-      SDL_FreeSurface(trs_char[2][index]);
-    }
-    trs_char[2][index] = CreateSurfaceFromDataScale(
-        char_ram[index], background, foreground, 1, 2);
-  }
+  char_ram[index][address >> 11] = byte;
 }
 
 static Uint8 mirror_bits(Uint8 byte)
