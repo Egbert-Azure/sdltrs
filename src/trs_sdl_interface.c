@@ -2545,9 +2545,9 @@ static void bitmap_init(int ram)
     }
     /* For the GUI, make sure we have brackets, backslash and block graphics */
     if ((i >= '[' && i <= ']') || i >= 128) {
-      trs_char[4][i] = CreateSurfaceFromDataScale(trs_char_data[0][i],
+      trs_char[4][i] = CreateSurfaceFromDataScale(trs_char_data[trs_charset][i],
           gui_foreground, gui_background, 1, 2);
-      trs_char[5][i] = CreateSurfaceFromDataScale(trs_char_data[0][i],
+      trs_char[5][i] = CreateSurfaceFromDataScale(trs_char_data[trs_charset][i],
           gui_background, gui_foreground, 1, 2);
     } else {
       trs_char[4][i] = CreateSurfaceFromDataScale(trs_char_data[trs_charset][i],
