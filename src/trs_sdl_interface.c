@@ -1296,14 +1296,12 @@ void trs_screen_init(void)
                               SDL_WINDOWPOS_CENTERED,
                               SDL_WINDOWPOS_CENTERED,
                               OrigWidth, OrigHeight,
-                              SDL_WINDOW_HIDDEN);
+                              SDL_WINDOW_SHOWN);
     if (window == NULL)
       fatal("failed to create window: %s", SDL_GetError());
   }
   SDL_SetWindowFullscreen(window, fullscreen ? SDL_WINDOW_FULLSCREEN : 0);
   SDL_SetWindowSize(window, OrigWidth, OrigHeight);
-  SDL_SetWindowPosition(window, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
-  SDL_ShowWindow(window);
   screen = SDL_GetWindowSurface(window);
   if (screen == NULL)
     fatal("failed to get window surface: %s", SDL_GetError());
@@ -3404,10 +3402,6 @@ void m6845_screen(int chars, int lines, int raster)
 
     screen_chars = row_chars * col_chars;
     screen_init();
-#if defined(SDL2) && !defined(_WIN32)
-    /* Needed for OpenBox */
-    SDL_HideWindow(window);
-#endif
     trs_screen_init();
   }
 }

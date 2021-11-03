@@ -205,7 +205,6 @@ int main(int argc, char *argv[])
     fatal("failed to register SDL cleanup");
 
 #ifndef SDL2
-  putenv("SDL_VIDEO_CENTERED=center");
   /* For NumLock on SDL >= 1.2.14 */
   putenv("SDL_DISABLE_LOCK_KEYS=1");
 
