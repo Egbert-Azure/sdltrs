@@ -2535,22 +2535,17 @@ void trs_bitmap_init(int ram)
       free(trs_char[4][i]->pixels);
       SDL_FreeSurface(trs_char[4][i]);
     }
+    trs_char[4][i] = CreateSurfaceFromDataScale(
+        ram ? char_ram[i] : trs_char_data[trs_charset][i],
+        gui_foreground, gui_background, 1, 2);
+
     if (trs_char[5][i]) {
       free(trs_char[5][i]->pixels);
       SDL_FreeSurface(trs_char[5][i]);
     }
-    /* For the GUI, make sure we have brackets, backslash and block graphics */
-    if ((i >= '[' && i <= ']') || i >= 128) {
-      trs_char[4][i] = CreateSurfaceFromDataScale(trs_char_data[trs_charset][i],
-          gui_foreground, gui_background, 1, 2);
-      trs_char[5][i] = CreateSurfaceFromDataScale(trs_char_data[trs_charset][i],
-          gui_background, gui_foreground, 1, 2);
-    } else {
-      trs_char[4][i] = CreateSurfaceFromDataScale(trs_char_data[trs_charset][i],
-          gui_foreground, gui_background, 1, 2);
-      trs_char[5][i] = CreateSurfaceFromDataScale(trs_char_data[trs_charset][i],
-          gui_background, gui_foreground, 1, 2);
-    }
+    trs_char[5][i] = CreateSurfaceFromDataScale(
+        ram ? char_ram[i] : trs_char_data[trs_charset][i],
+        gui_background, gui_foreground, 1, 2);
   }
 
   boxes_init(foreground, background,
