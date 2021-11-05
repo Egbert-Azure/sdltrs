@@ -453,6 +453,7 @@ void trs_reset(int poweron)
     /* Clear screen */
     memset(&video, ' ', sizeof(video));
     screen_init();
+    trs_screen_refresh();
 }
 
 void mem_map(int which)
