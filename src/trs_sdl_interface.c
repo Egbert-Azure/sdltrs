@@ -552,7 +552,8 @@ static void trs_opt_color(char *arg, int intarg, int *color)
 
 static void trs_opt_disk(char *arg, int intarg, int *stringarg)
 {
-  trs_disk_insert(intarg, arg);
+  if (arg[0])
+    trs_disk_insert(intarg, arg);
 }
 
 static void trs_opt_diskset(char *arg, int intarg, int *stringarg)
@@ -612,7 +613,8 @@ static void trs_opt_stepmap(char *arg, int intarg, int *stringarg)
 
 static void trs_opt_hard(char *arg, int intarg, int *stringarg)
 {
-  trs_hard_attach(intarg, arg);
+  if (arg[0])
+    trs_hard_attach(intarg, arg);
 }
 
 static void trs_opt_huffman(char *arg, int intarg, int *stringarg)
@@ -837,7 +839,8 @@ static void trs_opt_value(char *arg, int intarg, int *variable)
 
 static void trs_opt_wafer(char *arg, int intarg, int *stringarg)
 {
-  stringy_insert(intarg, arg);
+  if (arg[0])
+    stringy_insert(intarg, arg);
 }
 
 static void trs_disk_setsizes(void)
