@@ -1073,8 +1073,7 @@ int trs_write_config_file(const char *filename)
   fprintf(config_file, "clock3=%.2f\n", clock_mhz_3);
   fprintf(config_file, "clock4=%.2f\n", clock_mhz_4);
   for (i = 0; i < 8; i++) {
-    if (trs_disk_getfilename(i)[0])
-      fprintf(config_file, "disk%d=%s\n", i, trs_disk_getfilename(i));
+    fprintf(config_file, "disk%d=%s\n", i, trs_disk_getfilename(i));
   }
   fprintf(config_file, "diskdir=%s\n", trs_disk_dir);
   fprintf(config_file, "disksetdir=%s\n", trs_disk_set_dir);
@@ -1099,8 +1098,7 @@ int trs_write_config_file(const char *filename)
   fprintf(config_file, "guibackground=0x%x\n", gui_background);
   fprintf(config_file, "guiforeground=0x%x\n", gui_foreground);
   for (i = 0; i < 4; i++) {
-    if (trs_hard_getfilename(i)[0])
-      fprintf(config_file, "hard%d=%s\n", i, trs_hard_getfilename(i));
+    fprintf(config_file, "hard%d=%s\n", i, trs_hard_getfilename(i));
   }
   fprintf(config_file, "harddir=%s\n", trs_hard_dir);
   fprintf(config_file, "%shdboot\n", trs_hd_boot ? "" : "no");
@@ -1184,8 +1182,7 @@ int trs_write_config_file(const char *filename)
   fprintf(config_file, "%sturbopaste\n", turbo_paste ? "" : "no");
   fprintf(config_file, "turborate=%d\n", timer_overclock_rate);
   for (i = 0; i < 8; i++) {
-    if (stringy_get_name(i)[0])
-      fprintf(config_file, "wafer%d=%s\n", i, stringy_get_name(i));
+    fprintf(config_file, "wafer%d=%s\n", i, stringy_get_name(i));
   }
 
   fclose(config_file);
