@@ -180,10 +180,11 @@ trs_timer_interrupt(int state)
 void
 trs_disk_intrq_interrupt(int state)
 {
-  if (trs_model == 1 && genie3s == 0) {
+  if (trs_model == 1) {
     if (state) {
       interrupt_latch |= M1_DISK_BIT;
-      z80_state.irq = 1;
+      if (genie3s == 0)
+        z80_state.irq = 1;
     } else {
       interrupt_latch &= ~M1_DISK_BIT;
     }
