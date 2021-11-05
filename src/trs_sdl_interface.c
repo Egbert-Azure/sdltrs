@@ -1259,12 +1259,14 @@ void trs_screen_init(void)
       cur_char_width = 6;
     else
       cur_char_width = 8;
+
     if (genie3s && row_chars == 80)
       cur_char_height = m6845_raster * 2;
     else
       cur_char_height = TRS_CHAR_HEIGHT * 2;
   } else {
     cur_char_width = TRS_CHAR_WIDTH;
+
     if (screen640x240 || text80x24)
       cur_char_height = TRS_CHAR_HEIGHT4 * 2;
     else
