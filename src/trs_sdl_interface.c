@@ -1236,9 +1236,7 @@ void trs_screen_init(void)
           trs_charset = 14;
         else
           trs_charset = 13;
-      } else if (genie3s)
-          trs_charset = 13;
-      else {
+      } else {
         trs_charset = trs_charset1;
         currentmode = NORMAL;
       }
