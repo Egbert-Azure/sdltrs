@@ -267,10 +267,12 @@ void z80_out(int port, int value)
       trs_uart_data_out(value);
       break;
     case 0xF9:
-      genie3s_init_out(value);
+      if (speedup < 4)
+        genie3s_init_out(value);
       break;
     case 0xFA:
-      eg3200_init_out(value);
+      if (speedup < 4)
+        eg3200_init_out(value);
       break;
     case 0xFD:
       /* GENIE location of printer port */
