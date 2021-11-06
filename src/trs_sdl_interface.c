@@ -2433,7 +2433,9 @@ void screen_init(void)
 {
   /* initially, screen is blank (i.e. full of spaces) */
   memset(trs_screen, ' ', sizeof(trs_screen));
-  memset(grafyx, 0, (2 * G_YSIZE * MAX_SCALE) * (G_XSIZE * MAX_SCALE));
+  memset(grafyx, 0, sizeof(grafyx));
+  memset(grafyx_unscaled, 0, sizeof(grafyx_unscaled));
+  memset(hrg_screen, 0, sizeof(hrg_screen));
 }
 
 static void
