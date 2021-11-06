@@ -2670,9 +2670,9 @@ void trs_screen_refresh(void)
     for (i = 0; i < screen_chars; i++)
       trs_screen_write_char(i, trs_screen[i]);
 
-    /* Redraw HRG screen */
+    /* Redraw HRG extension region */
     if (hrg_enable == 2) {
-      for (i = 0; i <= 0x3FFF; i++) {
+      for (i = 0x3000; i <= 0x3FFF; i++) {
         int old_data = hrg_screen[i];
 
         hrg_write_addr(i, 0x3FFF);
@@ -2945,7 +2945,7 @@ static void grafyx_write_byte(int x, int y, char byte)
     int const screen_y = ((y - grafyx_yoffset + G_YSIZE) % G_YSIZE);
     int const on_screen = screen_x < row_chars &&
       screen_y < col_chars * cur_char_height / (scale * 2);
-    int const hrg_ext = (hrg_enable == 2) && (x >= 64);
+    int const hrg_ext = (hrg_enable == 2 && y < 192);
     SDL_Rect srcRect, dstRect;
 
     if (grafyx_enable && grafyx_overlay && on_screen) {
