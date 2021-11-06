@@ -641,7 +641,7 @@ int z80_in(int port)
       value = trs_printer_read();
       goto done;
     case 0xFE:
-      if (speedup == 4)
+      if (speedup >= 4)
         value = sys_byte_in();
       goto done;
     case 0xFF:
