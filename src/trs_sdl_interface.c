@@ -3220,17 +3220,16 @@ hrg_write_data(int data)
   if (!hrg_enable) return;
   if ((currentmode & EXPANDED) && (hrg_addr & 1)) return;
 
+  data = mirror_bits(expand6to8(data));
   /* Check for 96*192 extension region */
   if (hrg_enable == 2 && hrg_addr >= 0x3000) {
     position = 64 + (hrg_addr & 0x0F);
     line = 4 * ((hrg_addr >> 4) & 0x03) + ((hrg_addr >> 10) & 0x03);
-    grafyx_write_byte(position, ((hrg_addr >> 6) & 0x0F) * 12 + line,
-        mirror_bits(expand6to8(data & 0x3F)));
+    grafyx_write_byte(position, ((hrg_addr >> 6) & 0x0F) * 12 + line, data);
   } else { /* 384*192 inner region */
     position = hrg_addr & 0x3ff; /* bits 0-9: "PRINT @" screen position */
     line = hrg_addr >> 10;       /* vertical offset inside character cell */
-    grafyx_write_byte(position % 64, (position / 64) * 12 + line,
-        mirror_bits(expand6to8(data & 0x3F)));
+    grafyx_write_byte(position % 64, (position / 64) * 12 + line, data);
   }
 }
 
