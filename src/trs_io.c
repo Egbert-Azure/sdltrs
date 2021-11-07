@@ -123,6 +123,12 @@ void z80_out(int port, int value)
       case 0xE3:
         trs_disk_select_write(value);
         break;
+      case 0xE8:
+      case 0xE9:
+      case 0xEA:
+      case 0xEB:
+        trs_printer_write(value);
+        break;
       case 0xEC:
         trs_disk_command_write(value);
         break;
@@ -534,6 +540,12 @@ int z80_in(int port)
       case 0xE2:
       case 0xE3:
         value = trs_interrupt_latch_read();
+        break;
+      case 0xE8:
+      case 0xE9:
+      case 0xEA:
+      case 0xEB:
+        value = trs_printer_read();
         break;
       case 0xEC:
         value = trs_disk_status_read();
