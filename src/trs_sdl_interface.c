@@ -1999,6 +1999,7 @@ void trs_get_event(int wait)
               call_function(LOAD);
               break;
             case SDLK_m:
+            case SDLK_COMMA:
               call_function(GUI);
               break;
             case SDLK_n:
