@@ -3346,13 +3346,16 @@ void m6845_cursor(int position, int line, int visible)
   int row, col;
   SDL_Rect rect, srcRect;
 
+  if (screen_chars == 1024)
+    position &= 0x3FF;
+
+  if (position >= screen_chars)
+    return;
+
   if (visible == 0) {
     trs_screen_write_char(position, trs_screen[position]);
     return;
   }
-  if (position >= screen_chars)
-    return;
-
   if (row_chars == 64) {
     row = position / 64;
     col = position - (row * 64);
