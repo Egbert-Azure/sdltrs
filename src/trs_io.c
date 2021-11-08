@@ -141,6 +141,9 @@ void z80_out(int port, int value)
       case 0xEF:
         trs_disk_data_write(value);
         break;
+      case 0xF1:
+        modeimage = value;
+        break;
       case 0xF5:
         trs_screen_inverse(value & 1);
         break;
@@ -559,6 +562,9 @@ int z80_in(int port)
         break;
       case 0xEF:
         value = trs_disk_data_read();
+        break;
+      case 0xF1:
+        value = modeimage;
         break;
       case 0xF9:
         value = genie3s;
