@@ -3334,18 +3334,32 @@ void genie3s_hrg(int value)
 
 void genie3s_hrg_write(int position, int byte)
 {
-  int const region = position & 0x7FF;
+  if (row_chars == 64) {
+    int const region = position & 0x3FF;
 
-  grafyx_write_byte(region % row_chars, (region / row_chars) * m6845_raster +
+    grafyx_write_byte(region % 64, (region / 64) * 12 +
       (position >> 11), mirror_bits(byte));
+  } else {
+    int const region = position & 0x7FF;
+
+    grafyx_write_byte(region % 80, (region / 80) * m6845_raster +
+      (position >> 11), mirror_bits(byte));
+  }
 }
 
 Uint8 genie3s_hrg_read(int position)
 {
-  int const region = position & 0x7FF;
+  if (row_chars == 64) {
+    int const region = position & 0x3FF;
 
-  return mirror_bits(grafyx_unscaled[(region / row_chars) * m6845_raster +
-     (position >> 11)][region % row_chars]);
+    return mirror_bits(grafyx_unscaled[(region / 64) * 12 +
+      (position >> 11)][region % 64]);
+  } else {
+    int const region = position & 0x7FF;
+
+    return mirror_bits(grafyx_unscaled[(region / 80) * m6845_raster +
+      (position >> 11)][region % 80]);
+  }
 }
 
 void trs_get_mouse_pos(int *x, int *y, unsigned int *buttons)
