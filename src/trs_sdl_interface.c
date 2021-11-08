@@ -1257,7 +1257,7 @@ void trs_screen_init(void)
     else
       cur_char_width = 8 * scale;
 
-    if (genie3s && row_chars == 80)
+    if (genie3s)
       cur_char_height = m6845_raster * (scale * 2);
     else
       cur_char_height = TRS_CHAR_HEIGHT * (scale * 2);
@@ -3394,9 +3394,11 @@ void m6845_screen(int chars, int lines, int raster)
     m6845_raster = raster;
 
   if (changed) {
-    if (genie3s)
+    if (genie3s) {
       mem_video_page(row_chars != 64 && col_chars != 16);
-
+      if (row_chars == 64 && col_chars == 16)
+        m6845_raster = 12;
+    }
     screen_chars = row_chars * col_chars;
     screen_init();
     trs_screen_init();
