@@ -399,6 +399,8 @@ static const trs_opt options[] = {
 static const int num_options = sizeof(options) / sizeof(trs_opt);
 
 /* Private routines */
+static void bitmap_init(int ram);
+static void trs_bitmap_init(int char_index, int ram);
 static Uint8 mirror_bits(Uint8 byte);
 
 static void stripWhitespace(char *inputStr)
@@ -1366,7 +1368,7 @@ void trs_screen_init(void)
   SDL_SetPaletteColors(image->format->palette, colors, 0, 2);
 
   TrsBlitMap(image->format->palette, screen->format);
-  trs_bitmap_init(genie3s);
+  bitmap_init(genie3s);
   trs_screen_caption();
   trs_screen_refresh();
 }
@@ -2451,7 +2453,7 @@ static SDL_Surface *CreateSurfaceFromDataScale(const Uint8 *data,
    * Allocate a bit more room than necessary - There shouldn't be
    * any proportional characters, but just in case...
    * The memory allocated for "mydata" will be released in the
-   * "bitmap_init" and "trs_sdl_cleanup" functions.
+   * "trs_bitmap_init" and "trs_sdl_cleanup" functions.
    */
   mydata = (unsigned int *)malloc(TRS_CHAR_WIDTH * TRS_CHAR_HEIGHT *
       scale_x * scale_y * sizeof(unsigned int));
@@ -2491,65 +2493,13 @@ static SDL_Surface *CreateSurfaceFromDataScale(const Uint8 *data,
 #endif
 }
 
-void trs_bitmap_init(int ram)
+static void
+bitmap_init(int ram)
 {
-  /* Initialize from built-in font bitmaps. */
   int i;
 
-  for (i = 0; i < MAXCHARS; i++) {
-    /* Normal */
-    if (trs_char[0][i]) {
-      free(trs_char[0][i]->pixels);
-      SDL_FreeSurface(trs_char[0][i]);
-    }
-    trs_char[0][i] = CreateSurfaceFromDataScale(
-        ram ? char_ram[i] : trs_char_data[trs_charset][i],
-        foreground, background, 1, 2);
-
-    /* Expanded */
-    if (trs_char[1][i]) {
-      free(trs_char[1][i]->pixels);
-      SDL_FreeSurface(trs_char[1][i]);
-    }
-    trs_char[1][i] = CreateSurfaceFromDataScale(
-        ram ? char_ram[i] : trs_char_data[trs_charset][i],
-        foreground, background, 2, 2);
-
-    /* Inverse */
-    if (trs_char[2][i]) {
-      free(trs_char[2][i]->pixels);
-      SDL_FreeSurface(trs_char[2][i]);
-    }
-    trs_char[2][i] = CreateSurfaceFromDataScale(
-        ram ? char_ram[i] : trs_char_data[trs_charset][i],
-        background, foreground, 1, 2);
-
-    /* Expanded + Inverse */
-    if (trs_char[3][i]) {
-      free(trs_char[3][i]->pixels);
-      SDL_FreeSurface(trs_char[3][i]);
-    }
-    trs_char[3][i] = CreateSurfaceFromDataScale(
-        ram ? char_ram[i] : trs_char_data[trs_charset][i],
-        background, foreground, 2, 2);
-
-    /* GUI Normal + Inverse */
-    if (trs_char[4][i]) {
-      free(trs_char[4][i]->pixels);
-      SDL_FreeSurface(trs_char[4][i]);
-    }
-    trs_char[4][i] = CreateSurfaceFromDataScale(
-        ram ? char_ram[i] : trs_char_data[trs_charset][i],
-        gui_foreground, gui_background, 1, 2);
-
-    if (trs_char[5][i]) {
-      free(trs_char[5][i]->pixels);
-      SDL_FreeSurface(trs_char[5][i]);
-    }
-    trs_char[5][i] = CreateSurfaceFromDataScale(
-        ram ? char_ram[i] : trs_char_data[trs_charset][i],
-        gui_background, gui_foreground, 1, 2);
-  }
+  for (i = 0; i < MAXCHARS; i++)
+    trs_bitmap_init(i, ram);
 
   boxes_init(foreground, background,
       cur_char_width, TRS_CHAR_HEIGHT * 2, 0);
@@ -2557,6 +2507,39 @@ void trs_bitmap_init(int ram)
       cur_char_width * 2, TRS_CHAR_HEIGHT * 2, 1);
   boxes_init(gui_foreground, gui_background,
       cur_char_width, TRS_CHAR_HEIGHT * 2, 2);
+}
+
+static void
+trs_bitmap_init(int char_index, int ram)
+{
+  Uint8 const *char_data = ram ?
+      char_ram[char_index] : trs_char_data[trs_charset][char_index];
+  int i;
+
+  /* Free all surface pixels */
+  for (i = 0; i < 6; i++) {
+    if (trs_char[i][char_index]) {
+      free(trs_char[i][char_index]->pixels);
+      SDL_FreeSurface(trs_char[i][char_index]);
+    }
+  }
+  /* Normal */
+  trs_char[0][char_index] = CreateSurfaceFromDataScale(char_data,
+      foreground, background, 1, 2);
+  /* Expanded */
+  trs_char[1][char_index] = CreateSurfaceFromDataScale(char_data,
+      foreground, background, 2, 2);
+  /* Inverse */
+  trs_char[2][char_index] = CreateSurfaceFromDataScale(char_data,
+      background, foreground, 1, 2);
+  /* Expanded + Inverse */
+  trs_char[3][char_index] = CreateSurfaceFromDataScale(char_data,
+      background, foreground, 2, 2);
+  /* GUI Normal + Inverse */
+  trs_char[4][char_index] = CreateSurfaceFromDataScale(char_data,
+      gui_foreground, gui_background, 1, 2);
+  trs_char[5][char_index] = CreateSurfaceFromDataScale(char_data,
+      gui_background, gui_foreground, 1, 2);
 }
 
 void trs_screen_refresh(void)
@@ -3311,7 +3294,12 @@ void m6845_screen(int chars, int lines, int raster)
 
 void genie3s_char(int index, int address, int byte)
 {
-  char_ram[index][address >> 11] = byte;
+  int const scanline = address >> 11;
+
+  char_ram[index][scanline] = byte;
+
+  if (scanline == 15)
+    trs_bitmap_init(index, 1);
 }
 
 static Uint8 mirror_bits(Uint8 byte)
