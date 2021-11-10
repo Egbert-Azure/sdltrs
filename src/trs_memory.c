@@ -364,10 +364,10 @@ int sys_byte_in(void)
 static void mem_init(void)
 {
     /* Initialize RAM & ROM */
-    memset(&memory, 0xFF, sizeof(memory));
-    memset(&supermem_ram, 0xFF, sizeof(supermem_ram));
-    memset(&rom, 0, sizeof(rom));
-    memset(&cp500_rom, 0, sizeof(cp500_rom));
+    memset(&memory, 0xFF, MAX_MEMORY_SIZE);
+    memset(&supermem_ram, 0xFF, MAX_SUPERMEM_SIZE);
+    memset(&rom, 0, MAX_ROM_SIZE);
+    memset(&cp500_rom, 0, CP500_ROM_SIZE);
 
     if (trs_model < 4) {
         /* Fill memory of random seed buffer */
@@ -449,7 +449,7 @@ void trs_reset(int poweron)
 	trs_schedule_event(trs_reset_button_interrupt, 0, 2000);
     }
     /* Clear screen */
-    memset(&video, ' ', sizeof(video));
+    memset(&video, ' ', MAX_VIDEO_SIZE);
     screen_init();
     trs_screen_refresh();
 }

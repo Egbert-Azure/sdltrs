@@ -177,7 +177,8 @@ static unsigned int cycles_saved;
 /* True size of graphics memory -- some is offscreen */
 #define G_XSIZE 128
 #define G_YSIZE 288
-static char grafyx[(G_YSIZE * 2) * G_XSIZE];
+#define G_MSIZE (2 * G_YSIZE) * G_XSIZE
+static char grafyx[G_MSIZE];
 static Uint8 grafyx_unscaled[G_YSIZE][G_XSIZE];
 
 static Uint8 grafyx_microlabs;
@@ -2383,10 +2384,10 @@ void trs_screen_80x24(int flag)
 void screen_init(void)
 {
   /* initially, screen is blank (i.e. full of spaces) */
-  memset(trs_screen, ' ', sizeof(trs_screen));
-  memset(grafyx, 0, sizeof(grafyx));
-  memset(grafyx_unscaled, 0, sizeof(grafyx_unscaled));
-  memset(hrg_screen, 0, sizeof(hrg_screen));
+  memset(trs_screen, ' ', 2048);
+  memset(grafyx, 0, G_MSIZE);
+  memset(grafyx_unscaled, 0, G_YSIZE * G_XSIZE);
+  memset(hrg_screen, 0, HRG_MEMSIZE);
   SDL_FillRect(image, NULL, background);
 }
 
@@ -3459,7 +3460,7 @@ void trs_main_save(FILE *file)
   trs_save_uint8(file, &grafyx_xoffset, 1);
   trs_save_uint8(file, &grafyx_yoffset, 1);
   trs_save_uint8(file, &grafyx_x, 1);
-  trs_save_uint8(file, hrg_screen, sizeof(hrg_screen));
+  trs_save_uint8(file, hrg_screen, HRG_MEMSIZE);
   trs_save_int(file, &hrg_enable, 1);
   trs_save_int(file, &hrg_addr, 1);
   trs_save_int(file, key_queue, KEY_QUEUE_SIZE);
@@ -3498,7 +3499,7 @@ void trs_main_load(FILE *file)
   trs_load_uint8(file, &grafyx_xoffset, 1);
   trs_load_uint8(file, &grafyx_yoffset, 1);
   trs_load_uint8(file, &grafyx_x, 1);
-  trs_load_uint8(file, hrg_screen, sizeof(hrg_screen));
+  trs_load_uint8(file, hrg_screen, HRG_MEMSIZE);
   trs_load_int(file, &hrg_enable, 1);
   trs_load_int(file, &hrg_addr, 1);
   trs_load_int(file, key_queue, KEY_QUEUE_SIZE);
