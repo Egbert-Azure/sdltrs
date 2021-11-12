@@ -154,7 +154,7 @@ void z80_out(int port, int value)
         m6845_crt(value);
         break;
       case 0xF9:
-        genie3s_bank_out(0x8 | value);
+        genie3s_bank_out(0x100 | value);
         break;
       case 0xFA:
         if (genie3s)
