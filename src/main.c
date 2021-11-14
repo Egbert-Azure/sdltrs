@@ -108,10 +108,12 @@ static int trs_load_rom(const char *filename)
       return 0;
   } else if (c == 1 || c == 5) {
     /* Assume MODELA/III file */
+    extern Uint8 memory[];
     extern Uint8 rom[];
     Uint8 loadmap[Z80_ADDRESS_LIMIT];
+
     rewind(program);
-    if (load_cmd(program, rom, loadmap, 0, NULL, -1, NULL, NULL, 1) == LOAD_CMD_OK) {
+    if (load_cmd(program, memory, loadmap, 0, NULL, -1, NULL, NULL, 1) == LOAD_CMD_OK) {
       trs_rom_size = Z80_ADDRESS_LIMIT;
       while (trs_rom_size > 0) {
         if (loadmap[--trs_rom_size] != 0) {
@@ -120,6 +122,11 @@ static int trs_load_rom(const char *filename)
         }
       }
       fclose(program);
+      if (trs_rom_size > 0x3800) {
+        error("ROM file '%s' size %d exceeds 14 kB", filename, trs_rom_size);
+        return -1;
+      }
+      memcpy(rom, memory, trs_rom_size);
       return 0;
     } else {
       /* Guess it wasn't one */
