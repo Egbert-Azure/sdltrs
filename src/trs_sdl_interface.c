@@ -2457,20 +2457,20 @@ static SDL_Surface *CreateSurfaceFromDataScale(const Uint8 *data,
    * The memory allocated for "mydata" will be released in the
    * "trs_bitmap_init" and "trs_sdl_cleanup" functions.
    */
-  mydata = (unsigned int *)malloc(TRS_CHAR_WIDTH * TRS_CHAR_HEIGHT *
+  mydata = (unsigned int *)malloc(TRS_CHAR_WIDTH * MAX_CHAR_HEIGHT *
       scale_x * scale_y * sizeof(unsigned int));
-  mypixels = (Uint8 *)malloc(TRS_CHAR_WIDTH * TRS_CHAR_HEIGHT * 8);
+  mypixels = (Uint8 *)malloc(TRS_CHAR_WIDTH * MAX_CHAR_HEIGHT * 8);
   if (mydata == NULL || mypixels == NULL)
     fatal("CreateSurfaceFromDataScale: failed to allocate memory");
 
   /* Read the character data */
-  for (j = 0; (unsigned)j < TRS_CHAR_WIDTH * TRS_CHAR_HEIGHT; j += 8)
+  for (j = 0; (unsigned)j < TRS_CHAR_WIDTH * MAX_CHAR_HEIGHT; j += 8)
     for (i = j + 7; i >= j; i--)
       *(mypixels + i) = (*(data + (j >> 3)) >> (i - j)) & 1;
 
   currdata = mydata;
   /* And prepare our rescaled character. */
-  for (j = 0; (unsigned)j < TRS_CHAR_HEIGHT * scale_y; j++) {
+  for (j = 0; (unsigned)j < MAX_CHAR_HEIGHT * scale_y; j++) {
     currpixel = mypixels + ((j / scale_y) * TRS_CHAR_WIDTH);
     for (w = 0; w < TRS_CHAR_WIDTH; w++) {
       if (*currpixel++ == 0) {
@@ -2487,7 +2487,7 @@ static SDL_Surface *CreateSurfaceFromDataScale(const Uint8 *data,
   free(mypixels);
 
   return SDL_CreateRGBSurfaceFrom(mydata, TRS_CHAR_WIDTH * scale_x,
-         TRS_CHAR_HEIGHT * scale_y, 32, TRS_CHAR_WIDTH * scale_x * 4,
+         MAX_CHAR_HEIGHT * scale_y, 32, TRS_CHAR_WIDTH * scale_x * 4,
 #if defined(big_endian) && !defined(__linux)
          0x000000ff, 0x0000ff00, 0x00ff0000, 0);
 #else

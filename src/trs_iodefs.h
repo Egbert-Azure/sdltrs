@@ -38,6 +38,7 @@
  */
 
 #define MAXCHARS 256
+#define MAX_CHAR_HEIGHT 16
 #define TRS_CHAR_WIDTH 8
 #define TRS_CHAR_HEIGHT 12
 #define TRS_CHAR_HEIGHT4 10
