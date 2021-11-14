@@ -127,19 +127,24 @@ void z80_out(int port, int value)
       case 0xE9:
       case 0xEA:
       case 0xEB:
-        trs_printer_write(value);
+        if (genie3s)
+          trs_printer_write(value);
         break;
       case 0xEC:
-        trs_disk_command_write(value);
+        if (genie3s)
+          trs_disk_command_write(value);
         break;
       case 0xED:
-        trs_disk_track_write(value);
+        if (genie3s)
+          trs_disk_track_write(value);
         break;
       case 0xEE:
-        trs_disk_sector_write(value);
+        if (genie3s)
+          trs_disk_sector_write(value);
         break;
       case 0xEF:
-        trs_disk_data_write(value);
+        if (genie3s)
+          trs_disk_data_write(value);
         break;
       case 0xF1:
         modeimage = value;
@@ -549,19 +554,24 @@ int z80_in(int port)
       case 0xE9:
       case 0xEA:
       case 0xEB:
-        value = trs_printer_read();
+        if (genie3s)
+          value = trs_printer_read();
         break;
       case 0xEC:
-        value = trs_disk_status_read();
+        if (genie3s)
+          value = trs_disk_status_read();
         break;
       case 0xED:
-        value = trs_disk_track_read();
+        if (genie3s)
+          value = trs_disk_track_read();
         break;
       case 0xEE:
-        value = trs_disk_sector_read();
+        if (genie3s)
+          value = trs_disk_sector_read();
         break;
       case 0xEF:
-        value = trs_disk_data_read();
+        if (genie3s)
+          value = trs_disk_data_read();
         break;
       case 0xF1:
         value = modeimage;
