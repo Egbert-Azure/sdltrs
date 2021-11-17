@@ -258,10 +258,8 @@ void genie3s_bank_out(int value)
 	if (value == genie3s)
 		return;
 
-	if ((value & (1 << 1)) != (genie3s & (1 << 1))) {
-		if ((value & (1 << 1)) == 0)
-			trs_screen_init();
-	}
+	if ((value & (1 << 1)) == 0 && (genie3s & (1 << 1)))
+		trs_screen_refresh();
 
 	bank_base = (value & 0xC0) << 10; /* Bits 6 and 7: 64K Banks */
 	genie3s = value;

@@ -3400,7 +3400,7 @@ void genie3s_char(int index, int address, int byte)
 
   char_ram[index][scanline] = byte;
 
-  if (scanline == 15)
+  if (scanline == (m6845_raster - 1))
     trs_bitmap_init(index, 1);
 }
 
