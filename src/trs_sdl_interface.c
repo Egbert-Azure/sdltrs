@@ -2760,7 +2760,7 @@ void trs_screen_write_char(unsigned int position, Uint8 char_index)
   dstRect.y = row * cur_char_height + top_margin;
 
   if (genie3s) {
-    SDL_BlitSurface(trs_char[0][char_index], &srcRect, screen, &dstRect);
+    SDL_BlitSurface(trs_char[expanded][char_index], &srcRect, screen, &dstRect);
   } else {
     if (trs_model == 1 && eg3200 == 0) {
       /* On Model I, 0xc0-0xff is another copy of 0x80-0xbf */
