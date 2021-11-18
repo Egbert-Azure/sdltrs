@@ -402,7 +402,15 @@ static const int num_options = sizeof(options) / sizeof(trs_opt);
 /* Private routines */
 static void bitmap_init(int ram);
 static void trs_bitmap_init(int char_index, int ram);
-static Uint8 mirror_bits(Uint8 byte);
+
+static Uint8 mirror_bits(Uint8 byte)
+{
+  byte = ((byte >> 4) & 0x0F) | ((byte << 4) & 0xF0);
+  byte = ((byte >> 2) & 0x33) | ((byte << 2) & 0xCC);
+  byte = ((byte >> 1) & 0x55) | ((byte << 1) & 0xAA);
+
+  return byte;
+}
 
 static void stripWhitespace(char *inputStr)
 {
@@ -3304,15 +3312,6 @@ void genie3s_char(int index, int address, int byte)
 
   if (scanline == (m6845_raster - 1))
     trs_bitmap_init(index, 1);
-}
-
-static Uint8 mirror_bits(Uint8 byte)
-{
-  byte = ((byte >> 4) & 0x0F) | ((byte << 4) & 0xF0);
-  byte = ((byte >> 2) & 0x33) | ((byte << 2) & 0xCC);
-  byte = ((byte >> 1) & 0x55) | ((byte << 1) & 0xAA);
-
-  return byte;
 }
 
 void genie3s_hrg(int value)
