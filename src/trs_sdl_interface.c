@@ -3339,7 +3339,7 @@ void m6845_cursor(int position, int line, int visible)
 {
   int row, col;
   int expanded;
-  SDL_Rect rect, srcRect;
+  SDL_Rect srcRect, dstRect;
 
   if (screen_chars == 1024)
     position &= 0x3FF;
@@ -3362,8 +3362,8 @@ void m6845_cursor(int position, int line, int visible)
     col = position - (row * 80);
   }
 
-  rect.x = col * cur_char_width + left_margin;
-  rect.y = row * cur_char_height + top_margin;
+  dstRect.x = col * cur_char_width + left_margin;
+  dstRect.y = row * cur_char_height + top_margin;
 
   if (line == 0) {
     /* Draw block cursor with inverse char */
@@ -3371,14 +3371,14 @@ void m6845_cursor(int position, int line, int visible)
     srcRect.y = 0;
     srcRect.w = cur_char_width;
     srcRect.h = cur_char_height;
-    SDL_BlitSurface(trs_char[2 + expanded][trs_screen[position]], &srcRect, screen, &rect);
+    SDL_BlitSurface(trs_char[2 + expanded][trs_screen[position]], &srcRect, screen, &dstRect);
   } else {
-    rect.h = 2 * scale;
-    rect.w = cur_char_width * (expanded + 1);
-    rect.y = rect.y + line * (scale * 2);
-    SDL_FillRect(screen, &rect, fore_color);
+    dstRect.h = 2 * scale;
+    dstRect.w = cur_char_width * (expanded + 1);
+    dstRect.y = dstRect.y + line * (scale * 2);
+    SDL_FillRect(screen, &dstRect, fore_color);
   }
-  addToDrawList(&rect);
+  addToDrawList(&dstRect);
 }
 
 void m6845_screen(int chars, int lines, int raster)
