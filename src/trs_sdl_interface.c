@@ -3338,6 +3338,7 @@ hrg_read_data(void)
 void m6845_cursor(int position, int line, int visible)
 {
   int row, col;
+  int expanded;
   SDL_Rect rect, srcRect;
 
   if (screen_chars == 1024)
@@ -3350,6 +3351,9 @@ void m6845_cursor(int position, int line, int visible)
     trs_screen_write_char(position, trs_screen[position]);
     return;
   }
+
+  expanded = (currentmode & EXPANDED) != 0;
+
   if (row_chars == 64) {
     row = position / 64;
     col = position - (row * 64);
@@ -3367,10 +3371,10 @@ void m6845_cursor(int position, int line, int visible)
     srcRect.y = 0;
     srcRect.w = cur_char_width;
     srcRect.h = cur_char_height;
-    SDL_BlitSurface(trs_char[2][trs_screen[position]], &srcRect, screen, &rect);
+    SDL_BlitSurface(trs_char[2 + expanded][trs_screen[position]], &srcRect, screen, &rect);
   } else {
     rect.h = 2 * scale;
-    rect.w = cur_char_width;
+    rect.w = cur_char_width * (expanded + 1);
     rect.y = rect.y + line * (scale * 2);
     SDL_FillRect(screen, &rect, fore_color);
   }
