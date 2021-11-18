@@ -3427,6 +3427,8 @@ void genie3s_hrg(int value)
 
 void genie3s_hrg_write(int position, int byte)
 {
+  if ((currentmode & EXPANDED) && (position & 1)) return;
+
   if (row_chars == 64) {
     int const region = position & 0x3FF;
 
