@@ -577,7 +577,7 @@ int z80_in(int port)
         value = modeimage;
         break;
       case 0xF9:
-        value = genie3s;
+        value = genie3s & 0xFF;
         break;
       case 0xFA:
         value = sys_byte_in();
