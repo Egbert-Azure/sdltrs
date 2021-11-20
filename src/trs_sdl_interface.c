@@ -107,7 +107,7 @@ char trs_state_file[FILENAME_MAX];
 #include "trs_chars.c"
 
 static Uint8 trs_screen[2048];
-static Uint8 char_ram[MAXCHARS][16];
+static Uint8 char_ram[MAXCHARS][MAX_CHAR_HEIGHT];
 static int cpu_panel;
 static int debugger;
 static int screen_chars = 1024;
