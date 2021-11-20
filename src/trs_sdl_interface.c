@@ -3303,7 +3303,6 @@ void m6845_screen(int chars, int lines, int raster)
         m6845_raster = 12;
     }
     screen_chars = row_chars * col_chars;
-    screen_init();
     trs_screen_init();
   }
 }
