@@ -3283,7 +3283,7 @@ void m6845_cursor(int position, int line, int visible)
   } else {
     dstRect.h = 2 * scale;
     dstRect.w = cur_char_width * (expanded + 1);
-    dstRect.y = dstRect.y + line * (scale * 2);
+    dstRect.y = dstRect.y + (line & (m6845_raster - 1)) * (scale * 2);
     SDL_FillRect(screen, &dstRect, fore_color);
   }
   drawnRectCount = MAX_RECTS;
