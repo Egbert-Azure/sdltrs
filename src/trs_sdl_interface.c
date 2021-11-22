@@ -2073,8 +2073,8 @@ void trs_get_event(int wait)
 
         if (eg3200 || genie3s) {
           if (genie3s) {
-            /* 1-5 on numeric keypad for TCS Genie IIIs P1-P5 */
-            if (keysym.sym >= SDLK_KP_1 && keysym.sym <= SDLK_KP_5)
+            /* 1-5 on numeric keypad for TCS Genie IIIs P1-P5, 6 for ESC */
+            if (keysym.sym >= SDLK_KP_1 && keysym.sym <= SDLK_KP_6)
               keysym.sym = (keysym.sym - SDLK_KP_1) + 0x88;
             /* End for Escape */
             else if (keysym.sym == SDLK_END)
