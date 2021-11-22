@@ -141,6 +141,7 @@ int key_queue_entries;
 #define TK_GENIE3S_P3   TK(7, 5)
 #define TK_GENIE3S_P4   TK(7, 4)
 #define TK_GENIE3S_P5   TK(7, 3)
+#define TK_GENIE3S_ESC  TK(7, 2)
 
 /* Fake keycodes with special meanings */
 #define TK_NULL                 TK(9, 0)
@@ -310,7 +311,7 @@ KeyTable ascii_key_table[] = {
 /* 0x8a */    { TK_GENIE3S_P3, TK_Neutral },
 /* 0x8b */    { TK_GENIE3S_P4, TK_Neutral },
 /* 0x8c */    { TK_GENIE3S_P5, TK_Neutral },
-/* 0x8d */    { TK_NULL, TK_Neutral },
+/* 0x8d */    { TK_GENIE3S_ESC, TK_Neutral },
 /* 0x8e */    { TK_NULL, TK_Neutral },
 /* 0x8f */    { TK_NULL, TK_Neutral },
 /* 0x90 */    { TK_NULL, TK_Neutral },
