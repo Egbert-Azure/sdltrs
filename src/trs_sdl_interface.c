@@ -3281,9 +3281,9 @@ void m6845_cursor(int position, int line, int visible)
     srcRect.h = cur_char_height;
     SDL_BlitSurface(trs_char[2 + expanded][cur_char], &srcRect, screen, &dstRect);
   } else {
-    dstRect.h = 2 * scale;
+    dstRect.h = 2;
     dstRect.w = cur_char_width * (expanded + 1);
-    dstRect.y = dstRect.y + (line & (m6845_raster - 1)) * (scale * 2);
+    dstRect.y = dstRect.y + (line & (m6845_raster - 1)) * 2;
     SDL_FillRect(screen, &dstRect, fore_color);
   }
   drawnRectCount = MAX_RECTS;
