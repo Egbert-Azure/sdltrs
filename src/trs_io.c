@@ -108,6 +108,38 @@ void z80_out(int port, int value)
   /* EG 3200 Genie III & TCS Genie IIIs */
   if (eg3200 || genie3s) {
     switch (port) {
+      case 0x48:
+      case 0x50:
+        trs_hard_out(TRS_HARD_DATA, value);
+        break;
+      case 0x49:
+      case 0x51:
+        trs_hard_out(TRS_HARD_PRECOMP, value);
+        break;
+      case 0x4A:
+      case 0x52:
+        trs_hard_out(TRS_HARD_SECCNT, value);
+        break;
+      case 0x4B:
+      case 0x53:
+        trs_hard_out(TRS_HARD_SECNUM, value);
+        break;
+      case 0x4C:
+      case 0x54:
+        trs_hard_out(TRS_HARD_CYLLO, value);
+        break;
+      case 0x4D:
+      case 0x55:
+        trs_hard_out(TRS_HARD_CYLHI, value);
+        break;
+      case 0x4E:
+      case 0x56:
+        trs_hard_out(TRS_HARD_SDH, value);
+        break;
+      case 0x4F:
+      case 0x57:
+        trs_hard_out(TRS_HARD_COMMAND, value);
+        break;
       case 0x5B:
         if (genie3s)
           rtc_reg = value;
@@ -544,6 +576,38 @@ int z80_in(int port)
   /* EG 3200 Genie III & TCS Genie IIIs */
   if (eg3200 || genie3s) {
     switch (port) {
+      case 0x48:
+      case 0x50:
+        value = trs_hard_in(TRS_HARD_DATA);
+        break;
+      case 0x49:
+      case 0x51:
+        value = trs_hard_in(TRS_HARD_ERROR);
+        break;
+      case 0x4A:
+      case 0x52:
+        value = trs_hard_in(TRS_HARD_SECCNT);
+        break;
+      case 0x4B:
+      case 0x53:
+        value = trs_hard_in(TRS_HARD_SECNUM);
+        break;
+      case 0x4C:
+      case 0x54:
+        value = trs_hard_in(TRS_HARD_CYLLO);
+        break;
+      case 0x4D:
+      case 0x55:
+        value = trs_hard_in(TRS_HARD_CYLHI);
+        break;
+      case 0x4E:
+      case 0x56:
+        value = trs_hard_in(TRS_HARD_SDH);
+        break;
+      case 0x4F:
+      case 0x57:
+        value = trs_hard_in(TRS_HARD_STATUS);
+        break;
       case 0xE0:
       case 0xE1:
       case 0xE2:
