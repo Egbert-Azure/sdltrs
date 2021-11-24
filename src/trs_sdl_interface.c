@@ -1886,6 +1886,13 @@ void trs_get_event(int wait)
               trs_turbo_mode(!timer_overclock);
             }
             continue;
+          case SDLK_PAGEDOWN:
+          case SDLK_PAGEUP:
+            if (SDL_GetModState() & KMOD_SHIFT) {
+              trs_timer_speed(keysym.sym == SDLK_PAGEDOWN);
+              continue;
+            }
+            break;
           case SDLK_PAUSE:
             call_function(PAUSE);
             continue;
