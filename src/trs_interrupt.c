@@ -64,9 +64,17 @@ int timer_overclock_rate = 5;
 int speedup = 1;
 unsigned int cycles_per_timer;
 
-float clock_mhz_1 = 1.77408;
-float clock_mhz_3 = 2.02752;
-float clock_mhz_4 = 4.05504;
+#define CLOCK_1_MHZ 1.77408
+#define CLOCK_2_MHZ 2.02752
+#define CLOCK_4_MHZ 4.05504
+#define CLOCK_5_MHZ 5.06880
+#define CLOCK_8_MHZ 8.11008
+#define EG_3200_MHZ 4.00000
+#define TCS_SPM_MHZ 5.35000
+#define TCS_G3S_MHZ 7.20000
+float clock_mhz_1 = CLOCK_1_MHZ;
+float clock_mhz_3 = CLOCK_2_MHZ;
+float clock_mhz_4 = CLOCK_4_MHZ;
 
 /* Kludge: LDOS hides the date (not time) in a memory area across reboots. */
 /* We put it there on powerup, so LDOS magically knows the date! */
@@ -367,16 +375,16 @@ trs_timer_init(void)
     case 1:
       timer_hz = TIMER_HZ_1;
       if (eg3200)
-        z80_state.clockMHz = 4.0000;
+        z80_state.clockMHz = EG_3200_MHZ;
       else if (genie3s)
-        z80_state.clockMHz = 7.2000;
+        z80_state.clockMHz = TCS_G3S_MHZ;
       else {
         switch (speedup) {
           case 5: /* LNW80 */
-            z80_state.clockMHz = 4.0000;
+            z80_state.clockMHz = CLOCK_4_MHZ;
             break;
           case 6: /* TCS SpeedMaster 5.3 */
-            z80_state.clockMHz = 5.3500;
+            z80_state.clockMHz = TCS_SPM_MHZ;
             break;
           default:
             z80_state.clockMHz = clock_mhz_1;
@@ -464,20 +472,20 @@ trs_timer_speed(int fast)
      */
     if ((fast & 0x80) >> 7) {
       if ((fast & 0x40) >> 6)
-        z80_state.clockMHz = 8.11008;
+        z80_state.clockMHz = CLOCK_8_MHZ;
       else
-        z80_state.clockMHz = 5.06880;
+        z80_state.clockMHz = CLOCK_5_MHZ;
     } else {
       if ((fast & 0x40) >> 6)
-        z80_state.clockMHz = 4.05504;
+        z80_state.clockMHz = CLOCK_4_MHZ;
       else
-        z80_state.clockMHz = 2.02752;
+        z80_state.clockMHz = CLOCK_2_MHZ;
     }
   } else {
     switch (trs_model) {
       case 1:
         if (genie3s)
-          z80_state.clockMHz = (fast & 1) ? 7.2000 : clock_mhz_1;
+          z80_state.clockMHz = (fast & 1) ? TCS_G3S_MHZ : clock_mhz_1;
         else
         switch (speedup) {
         case 1: /*Archbold*/
@@ -487,10 +495,10 @@ trs_timer_speed(int fast)
           z80_state.clockMHz = 10.6445 / (((fast + 4) & 7) + 2);
           break;
         case 5: /*LNW80*/
-          z80_state.clockMHz = (fast & 1) ? 4.0000 : clock_mhz_1;
+          z80_state.clockMHz = (fast & 1) ? CLOCK_4_MHZ : clock_mhz_1;
           break;
         case 6: /*TCS SpeedMaster*/
-          z80_state.clockMHz = (fast & 1) ? 5.3500 : clock_mhz_1;
+          z80_state.clockMHz = (fast & 1) ? TCS_SPM_MHZ : clock_mhz_1;
           break;
         default:
           break;
@@ -499,7 +507,7 @@ trs_timer_speed(int fast)
       case 3:
         if (speedup == 2)
           /* Switch to fastest possible speed of Sprinter III */
-          z80_state.clockMHz = (fast & 1) ? 5.07 /* 3.4 */ : clock_mhz_3;
+          z80_state.clockMHz = (fast & 1) ? CLOCK_5_MHZ : clock_mhz_3;
         break;
       default:
         /* Model 4/4P */
