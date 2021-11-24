@@ -1468,9 +1468,8 @@ static void ProcessCopySelection(int selectAll)
     if (copy_y > screen_height - scale)
       copy_y = screen_height - scale;
     if ((copyStatus == COPY_IDLE) &&
-        ((mouse & SDL_BUTTON(SDL_BUTTON_LEFT)) == 0)) {
+        ((mouse & SDL_BUTTON(SDL_BUTTON_LEFT)) == 0))
       return;
-    }
   }
 
   switch (copyStatus) {
@@ -1882,9 +1881,8 @@ void trs_get_event(int wait)
           case SDLK_F12:
             if (SDL_GetModState() & KMOD_SHIFT)
               trs_timer_init();
-            else {
+            else
               trs_turbo_mode(!timer_overclock);
-            }
             continue;
           case SDLK_PAGEDOWN:
           case SDLK_PAGEUP:
@@ -2312,9 +2310,8 @@ void trs_get_event(int wait)
             trs_xlate_keysym(key);
           else if (key == -1)
             trs_joy_button_down();
-          else {
+          else
             call_function(key);
-          }
         }
         else
           trs_joy_button_down();
@@ -2502,9 +2499,8 @@ boxes_init(int fg_color, int bg_color, int width, int height, int expanded)
     SDL_FillRect(trs_box[expanded][graphics_char], &fullrect, bg_color);
 
     for (bit = 0; bit < 6; ++bit) {
-      if (graphics_char & (1 << bit)) {
+      if (graphics_char & (1 << bit))
         SDL_FillRect(trs_box[expanded][graphics_char], &bits[bit], fg_color);
-      }
     }
   }
 }
