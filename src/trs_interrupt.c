@@ -484,6 +484,9 @@ trs_timer_speed(int fast)
   } else {
     switch (trs_model) {
       case 1:
+        if (eg3200)
+          z80_state.clockMHz = (fast & 1) ? EG_3200_MHZ : CLOCK_1_MHZ;
+        else
         if (genie3s)
           z80_state.clockMHz = (fast & 1) ? TCS_G3S_MHZ : CLOCK_1_MHZ;
         else
