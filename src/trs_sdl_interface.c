@@ -1303,7 +1303,7 @@ void trs_screen_init(void)
     window = SDL_CreateWindow(NULL,
                               SDL_WINDOWPOS_CENTERED,
                               SDL_WINDOWPOS_CENTERED,
-                              1024, 768,
+                              1024, 1024,
                               SDL_WINDOW_HIDDEN|SDL_WINDOW_RESIZABLE);
     if (window == NULL)
       fatal("failed to create window: %s", SDL_GetError());
@@ -1319,7 +1319,7 @@ void trs_screen_init(void)
     debug("SDL_VIDEODRIVER=%s\n", SDL_GetCurrentVideoDriver());
     debug("SDL_RENDER_DRIVER=%s\n", renderinfo.name);
 #endif
-    screen = SDL_CreateRGBSurface(0, 1024, 768, 32, 0, 0, 0, 0);
+    screen = SDL_CreateRGBSurface(0, 1024, 1024, 32, 0, 0, 0, 0);
     if (screen == NULL)
       fatal("failed to create surface: %s", SDL_GetError());
 
