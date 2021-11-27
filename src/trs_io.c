@@ -640,6 +640,16 @@ int z80_in(int port)
       case 0xF1:
         value = modeimage;
         break;
+      case 0xF7:
+        switch (ctrlimage) {
+          case 0x0E: /* Cursor LSB */
+            value = (cursor_pos >> 8) & 0xFF;
+            break;
+          case 0x0F: /* Cursor MSB */
+            value = (cursor_pos >> 0) & 0xFF;
+            break;
+        }
+        break;
       case 0xF9:
         value = genie3s & 0xFF;
         break;
