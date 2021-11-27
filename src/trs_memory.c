@@ -258,10 +258,18 @@ void genie3s_bank_out(int value)
 	if (value == genie3s)
 		return;
 
+	/* Redraw if Font SRAM is disabled */
 	if ((value & (1 << 1)) == 0 && (genie3s & (1 << 1)))
 		trs_screen_refresh();
 
-	bank_base = (value & 0xC0) << 10; /* Bits 6 and 7: 64K Banks */
+	/* Bit 7 : Bit 6 : Bank# : Memory
+	 *   0   :   0   :   0   :    64K
+	 *   0   :   1   :   1   :   128K
+	 *   1   :   0   :   2   :   192K
+	 *   1   :   1   :   3   :   256K
+	 */
+	bank_base = (value & 0xC0) << 10;
+
 	genie3s = value;
 }
 
@@ -278,12 +286,15 @@ void genie3s_sys_out(int value)
 	if (value == system_byte)
 		return;
 
+	/* HRG page */
 	if ((value & (1 << 1)) != (system_byte & (1 << 1)))
 		genie3s_hrg((value & (1 << 1)) != 0);
 
+	/* Slow Down on ROM access */
 	if ((value & (1 << 2)) != (system_byte & (1 << 2)))
 		trs_timer_speed((value & (1 << 2)) != 0);
 
+	/* Slow Down Bit */
 	if ((value & (1 << 6)) != (system_byte & (1 << 6))) {
 		if (value & (1 << 6))
 			trs_timer_speed((value & (1 << 2)) != 0);
@@ -625,9 +636,10 @@ int mem_read(int address)
 	    if (address >= KEYBOARD_START && address <= 0x38FF)
 	      return trs_kb_mem_read(address);
 	  }
-	  /* 1K / 2K Video RAM */
+	  /* 1K or 2K Video RAM */
 	  if (address >= video_offset && address <= 0x3FFF)
 	    return video[address - video_offset];
+	  /* Disk I/O */
 	  if (address >= 0x37E0 && address <= 0x37EF)
 	    return trs80_model1_mmio(address);
 	}
@@ -893,11 +905,12 @@ void mem_write(int address, int value)
 	return;
       case 0x24: /* TCS Genie IIIs */
 	if ((system_byte & (1 << 0)) == 0) {
-	  /* 1K / 2K Video RAM */
+	  /* 1K or 2K Video RAM */
 	  if (address >= video_offset && address <= 0x3FFF) {
 	    trs80_screen_write_char(address - video_offset, value);
 	    return;
 	  }
+	  /* Disk I/O */
 	  if (address >= 0x37E0 && address <= 0x37EF) {
 	    trs80_model1_write_mmio(address, value);
 	    return;
@@ -909,11 +922,12 @@ void mem_write(int address, int value)
 	    return;
 	  }
 	}
+	/* Write protect "Pseudo-ROM" */
 	if (system_byte & (1 << 5)) {
 	  if (address <= 0x2FFF)
 	    return;
 	}
-	/* Write to font RAM */
+	/* Write to Font SRAM */
 	if (genie3s & (1 << 1)) {
 	  if (address >= 0x8000) {
 	    genie3s_char(video[(video_offset == KEYBOARD_START) ?
@@ -1137,7 +1151,7 @@ Uint8 *mem_pointer(int address, int writing)
       case 0x24: /* TCS Genie IIIs */
       case 0x2C:
 	if ((system_byte & (1 << 0)) == 0) {
-	  /* 1K / 2K Video RAM */
+	  /* 1K or 2K Video RAM */
 	  if (address >= video_offset && address <= 0x3FFF)
 	    return &video[address - video_offset];
 	}
