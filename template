@@ -1,7 +1,7 @@
 # Template file for 'sdl2trs'
 pkgname=sdl2trs
 branch=sdl2
-version=1.2.20
+version=1.2.21
 revision=1
 create_wrksrc=yes
 build_style=gnu-configure
