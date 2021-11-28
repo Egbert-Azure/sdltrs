@@ -30,7 +30,6 @@
   <li><a href="#Display_Settings">Display Settings</a></li>
   <li><a href="#Miscellaneous_Settings">Miscellaneous Settings</a></li>
   <li><a href="#ConfigurationState">Configuration/State Files</a></li>
-  <li><a href="#Printer_Management">Printer Management</a></li>
   <li><a href="#Joystick_Settings">Joystick Settings</a></li>
   <li><a href="#Default_Directories">Default Directories</a></li>
   <li><a href="#ROM_File_Selection">ROM File_Selection</a></li>
@@ -45,10 +44,11 @@ through the menu items using the arrow keys. The <b>Home</b> and <b>End</b>
 keys moves to the first or last menu item. Typing the first letter of a menu
 item marks it for selection. Pressing a number key from <b>0</b> to <b>9</b>
 jumps to the line in the menu. A menu item may be selected by pressing the
-<b>Enter</b>, <b>Space</b> or <b>Tab</b> key when the item is highlighted.
-Pressing <b>ESC</b> moves up a menu level (or exits the GUI if you are at the
-top level). Besides entering the GUI using <b>F7</b> or <b>Alt-M</b>, submenus
-may be entered by using the key shortcuts shown after the menu items.</p>
+<b>Enter</b>, <b>Insert</b>, <b>Space</b> or <b>Tab</b> key when the item is
+highlighted. Pressing <b>BackSpace</b> or <b>ESC</b> moves up a menu level
+(or exits the GUI if you are at the top level). Besides entering the GUI using
+<b>F7</b>, <b>Alt-Comma</b> or <b>Alt-M</b>, submenus may be entered by using
+the key shortcuts shown after the menu items.</p>
 
 <h2><a name="Floppy_Disk_Management"></a><u>Floppy Disk Management</u></h2>
 
@@ -61,10 +61,9 @@ new disk images, and set emulated disk drive options.</p>
 <p>For the first 8 options in the menu, there are three options:</p>
 
 <ul>
-  <li>Hitting <b>Enter</b> or <b>Tab</b> while the item is selected, will
-      move to the image selection screen, which is explained below.</li>
-  <li>Hitting <b>Backspace</b> or <b>Delete</b> will remove a disk image if
-      there is one in the drive.</li>
+  <li>Hitting <b>Enter</b>, <b>Insert</b> or <b>Tab</b> while the item
+      is selected, will move to the disk image selection screen.</li>
+  <li>Hitting <b>Delete</b> will remove a disk image in the drive.</li>
   <li>Hitting <b>Space</b> will toggle the write protect for the drive.
       The indicator for write protect is an asterisk "*" in front of the
       "Disk" in the menu item.</li>
@@ -145,11 +144,10 @@ create new disk images.</p>
 <p>For the first 4 options in the menu, there are three options:</p>
 
 <ul>
-  <li>Hitting <b>Enter</b> or <b>Tab</b> while the item is selected, will
-      move to the image selection screen, which is explained above in the
-      floppy disk section.</li>
-  <li>Hitting <b>Backspace</b> or <b>Delete</b> will remove a disk image if
-      there is one in the drive.</li>
+  <li>Hitting <b>Enter</b>, <b>Insert</b> or <b>Tab</b> while the item is
+      selected, will move to the image selection screen, which is explained
+      above in the floppy disk section.</li>
+  <li>Hitting <b>Delete</b> will remove a disk image in the drive.</li>
   <li>Hitting <b>Space</b> will toggle the write protect for the drive.
       The indicator for write protect is an asterisk "*" in front of the
       "Hard" in the menu item.</li>
@@ -191,11 +189,10 @@ images into the emulated drive, as well as create new cassette images.</p>
 <p>For the first option in the menu, there are three options:</p>
 
 <ul>
-  <li>Hitting <b>Enter</b> or <b>Tab</b> while the item is selected, will
-      move to the image selection screen, which is explained above in the
-      floppy disk section.</li>
-  <li>Hitting <b>Backspace</b> or <b>Delete</b> will remove a cassette image
-      if there is one in the drive.</li>
+  <li>Hitting <b>Enter</b>, <b>Insert</b> or <b>Tab</b> while the item is
+      selected, will move to the image selection screen, which is explained
+      above in the floppy disk section.</li>
+  <li>Hitting <b>Delete</b> will remove a cassette image in the drive.</li>
   <li>Hitting <b>Space</b> will toggle the write protect for the cassette.
       The indicator for write protect is an asterisk "*" in front of the
       "Cass" in the menu item.</li>
@@ -226,11 +223,10 @@ create new wafer images with default parameters.</p>
 <p>For the first 8 options in the menu, there are three options:</p>
 
 <ul>
-  <li>Hitting <b>Enter</b> or <b>Tab</b> while the item is selected, will
-      move to the image selection screen, which is explained above in the
-      floppy disk section.</li>
-  <li>Hitting <b>Backspace</b> or <b>Delete</b> will remove a wafer image if
-      there is one in the drive.</li>
+  <li>Hitting <b>Enter</b>, <b>Insert</b> or <b>Tab</b> while the item is
+      selected, will move to the image selection screen, which is explained
+      above in the floppy disk section.</li>
+  <li>Hitting <b>Delete</b> will remove a wafer image in the drive.</li>
   <li>Hitting <b>Space</b> will toggle the write protect for the wafer.
       The indicator for write protect is an asterisk "*" in front of the
       "Wafer" in the menu item.</li>
@@ -238,7 +234,7 @@ create new wafer images with default parameters.</p>
 
 <h2><a name="Emulator_Settings"></a><u>Emulator Settings</u></h2>
 
-<p><img alt="" src="images/ModelMenu.png"></p>
+<p><img alt="" src="images/EmulatorMenu.png"></p>
 
 <h3>Model:</h3>
 
@@ -250,14 +246,6 @@ create new wafer images with default parameters.</p>
 but use this with CAUTION: overclocking the Z80 will result in all forms of
 "timing-errors"!</p>
 
-<h3>Exatron Stringy Floppy:</h3>
-
-<p>Emulates up to 8 Stringy Floppy Drives for the TRS-80 Model I.</p>
-
-<h3>Lowercase:</h3>
-
-<p>Emulate a "Lowercase Modification Kit" for the TRS-80 Model I.</p>
-
 <h3>Speedup Kit Emulation:</h3>
 
 <p>Selects the speed-up modification for the TRS-80 Model I: <b>None</b>,
@@ -266,6 +254,14 @@ some memory banking for CP/M on I/O-port <code>0xFE</code>. <b>LNW80</b>
 sets the CPU clock to 4 MHz and enables banking for the 480*192 HRG in the
 lower 16 KB. Select <b>TCS SpeedMaster</b> for this enhanced Model I clone
 running at 5.35 MHz, with 480*192 HRG and memory banking for CP/M.
+
+<h3>Exatron Stringy Floppy:</h3>
+
+<p>Emulates up to 8 Stringy Floppy Drives for the TRS-80 Model I.</p>
+
+<h3>Lowercase:</h3>
+
+<p>Emulate a "Lowercase Modification Kit" for the TRS-80 Model I.</p>
 
 <h3>Graphics Emulations:</h3>
 
@@ -371,7 +367,12 @@ the scanlines can be adjusted from 0 (= dark) to 255 (= light).</p>
 
 <p><img alt="" src="images/MiscMenu.png"></p>
 
-<h3>Emtsafe:</h3>
+<h3>Close and Reopen Printer Output File:</h3>
+
+<p>Selecting this option will cause the printer output file to be closed, and
+the next file will be automatically created.</p>
+
+<h3>Emulator Traps Safe:</h3>
 
 <p>Turn on/off ability for emts (Emulation traps) to write to unexpected
 places in the host filesystem.</p>
@@ -387,6 +388,13 @@ program to see another key transition. Key transitions that are received
 during the waiting period or when the Z80 program is not reading the
 keyboard are held in a queue. The default stretch value is 4000 cycles; it
 should seldom if ever be necessary to change it.</p>
+
+<h3>Printer Type:</h3>
+
+<p>Controls the type of printer emulation that is used for outputting to the
+TRS-80 printer: <b>None</b> and <b>Text</b>.
+<b>Text</b> simply sends the printer output to a text file (automatically
+created from <code>trsprn0000.txt</code> to <code>trsprn9999.txt</code>).</p>
 
 <h3>Serial Port Name:</h3>
 
@@ -462,24 +470,6 @@ href="Features.html#Configuration_Files">Features</a> page.</p>
 <p>This menu item allows you load a Configuration file (<code>.t8c</code>)
 previous saved with the Save Configuration command.</p>
 
-<h2><a name="Printer_Management"></a><u>Printer Management</u></h2>
-
-<p><img alt="" src="images/PrinterMenu.png"></p>
-
-<h3>Close and Reopen Printer Output File:</h3>
-
-<p>Selecting this option will cause the printer output file to be closed, and
-the printer command to be executed using the file name.</p>
-
-<h3>Printer Type:</h3>
-
-<p>Controls the type of printer emulation that is used for outputting to the
-TRS-80 printer: <b>None</b> and <b>Text</b>.</p>
-
-<p><b>Text</b> simply sends the printer output to a text file (automatically
-created from <code>trsprn0000.txt</code> to <code>trsprn9999.txt</code>)
-with optional script processing.</p>
-
 <h2><a name="Joystick_Settings"></a><u>Joystick Settings</u></h2>
 
 <p><img alt="" src="images/JoystickMenu.png"></p>
@@ -516,7 +506,7 @@ Home/End may be used to scroll through the list of directories. Pressing
 <b>Enter</b> on the &lt;..&gt; item will take you to the parent directory. On
 Windows, the Drive letters are listed as the last items in the menu, and you
 can change drives by pressing <b>Enter</b> on those items. The directory is
-selected by pressing the <b>Tab</b> key.</p>
+selected by pressing the <b>Insert</b> or <b>Tab</b> key.</p>
 
 <p><img alt="" src="images/DirectorySelect.png"></p>
 
