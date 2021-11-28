@@ -1,3 +1,9 @@
+## Version 1.2.21 Release 11-28-2021:
+
+ * Added emulation of TCS Genie IIIs system.
+ * Added support for Lubomir Soft Banker.
+ * Added key bindings to switch Z80 CPU clock speed.
+
 ## Version 1.2.20 Release 07-31-2021:
 
   * Added 480x192 HRG resolution for LNW80 and TCS SpeedMaster/Genie IIs.

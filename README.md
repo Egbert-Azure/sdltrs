@@ -27,6 +27,8 @@ Updated version of Mark Grebe's [SDLTRS]:
   * 480x192 HRG resolution for LNW80 and TCS SpeedMaster/Genie IIs
   * CP/M banking support for TRS-80 Model I clones
   * Support EG-64 Memory-Banking-Adaptor from TCS
+  * Support Lubomir Soft Banker for TRS-80 Model I
+  * Emulation of the TCS Genie IIIs system
 
 ## License
 
