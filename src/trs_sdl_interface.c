@@ -1074,8 +1074,7 @@ int trs_write_config_file(const char *filename)
   fprintf(config_file, "background=0x%x\n", background);
   fprintf(config_file, "borderwidth=%d\n", window_border_width);
   fprintf(config_file, "cassdir=%s\n", trs_cass_dir);
-  if (trs_cassette_getfilename()[0])
-    fprintf(config_file, "cassette=%s\n", trs_cassette_getfilename());
+  fprintf(config_file, "cassette=%s\n", trs_cassette_getfilename());
   fprintf(config_file, "charset1=%s\n", charset_name(trs_charset1));
   fprintf(config_file, "charset3=%s\n", charset_name(trs_charset3));
   fprintf(config_file, "charset4=%s\n", charset_name(trs_charset4));
