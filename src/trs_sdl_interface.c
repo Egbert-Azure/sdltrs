@@ -472,7 +472,8 @@ static void trs_opt_borderwidth(char *arg, int intarg, int *stringarg)
 
 static void trs_opt_cass(char *arg, int intarg, int *stringarg)
 {
-  trs_cassette_insert(arg);
+  if (arg[0])
+    trs_cassette_insert(arg);
 }
 
 static void trs_opt_charset(char *arg, int intarg, int *stringarg)
@@ -577,20 +578,23 @@ static void trs_opt_disk(char *arg, int intarg, int *stringarg)
 
 static void trs_opt_diskset(char *arg, int intarg, int *stringarg)
 {
-  trs_diskset_load(arg);
+  if (arg[0])
+    trs_diskset_load(arg);
 }
 
 static void trs_opt_dirname(char *arg, int intarg, int *stringarg)
 {
-  struct stat st = { 0 };
+  if (arg[0]) {
+    struct stat st = { 0 };
 
-  if (stat(arg, &st) < 0)
-    strcpy(arg, ".");
+    if (stat(arg, &st) < 0)
+      strcpy(arg, ".");
 
-  if (arg[strlen(arg) - 1] == DIR_SLASH)
-    snprintf((char *)stringarg, FILENAME_MAX, "%s", arg);
-  else
-    snprintf((char *)stringarg, FILENAME_MAX, "%s%c", arg, DIR_SLASH);
+    if (arg[strlen(arg) - 1] == DIR_SLASH)
+      snprintf((char *)stringarg, FILENAME_MAX, "%s", arg);
+    else
+      snprintf((char *)stringarg, FILENAME_MAX, "%s%c", arg, DIR_SLASH);
+  }
 }
 
 static void trs_opt_doubler(char *arg, int intarg, int *stringarg)
