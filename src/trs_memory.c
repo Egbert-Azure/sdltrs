@@ -836,7 +836,8 @@ void mem_write(int address, int value)
 	if (address < RAM_START)
 	  trs80_model1_write_mmio(address, value);
 	else
-	  trs80_model1_ram(address);
+	  trs80_model1_write_mem(address, value);
+	break;
       case 0x17: /* Model 1: Described in the selector doc as 'not useful' */
         break;	/* Not clear what really happens */
       case 0x20: /* LNW80/TCS SpeedMaster: HRG in low 16K */
