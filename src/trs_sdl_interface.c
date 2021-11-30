@@ -1637,6 +1637,7 @@ void trs_sdl_cleanup(void)
   SDL_FreeSurface(image);
   /* Will free screen */
 #ifdef SDL2
+  SDL_FreeSurface(screen);
   SDL_DestroyWindow(window);
 #endif
   SDL_Quit();
