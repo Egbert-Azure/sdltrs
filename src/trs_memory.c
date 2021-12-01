@@ -554,14 +554,16 @@ int mem_read(int address)
 	  return trs80_model1_ram(address);
       case 0x11: /* Model 1: selector mode 1 (all RAM except I/O high */
         if (address >= 0xF7E0 && address <= 0xF7FF)
-          return trs80_model1_mmio(address & 0x3FFF);
-	return trs80_model1_ram(address);
+	  return trs80_model1_mmio(address & 0x3FFF);
+	else
+	  return trs80_model1_ram(address);
       case 0x12: /* Model 1 selector mode 2 (ROM disabled) */
         if (address < 0x37E0)
           return trs80_model1_ram(address);
 	if (address < RAM_START)
 	  return trs80_model1_mmio(address);
-	return trs80_model1_ram(address);
+	else
+	  return trs80_model1_ram(address);
       case 0x13: /* Model 1: selector mode 3 (CP/M mode) */
         if (address >= 0xF7E0)
           return trs80_model1_mmio(address & 0x3FFF);
@@ -572,7 +574,8 @@ int mem_read(int address)
       case 0x16: /* Model 1: Low 16K in top 16K */
 	if (address < RAM_START)
 	  return trs80_model1_mmio(address);
-	return trs80_model1_ram(address);
+	else
+	  return trs80_model1_ram(address);
       case 0x17: /* Model 1: Described in the selector doc as 'not useful' */
         return 0xFF;	/* Not clear what really happens */
       case 0x20: /* LNW80/TCS SpeedMaster: HRG in low 16K */
@@ -1086,7 +1089,8 @@ Uint8 *mem_pointer(int address, int writing)
           return trs80_model1_ram_addr(address);
 	if (address < RAM_START)
 	  return trs80_model1_mmio_addr(address, writing);
-	return trs80_model1_ram_addr(address);
+	else
+	  return trs80_model1_ram_addr(address);
       case 0x13: /* Model 1: selector mode 3 (CP/M mode) */
       case 0x1B:
         if (address >= 0xF7E0)
@@ -1101,7 +1105,8 @@ Uint8 *mem_pointer(int address, int writing)
       case 0x1F:
 	if (address < RAM_START)
 	  return trs80_model1_mmio_addr(address, writing);
-	return trs80_model1_ram_addr(address);
+	else
+	  return trs80_model1_ram_addr(address);
       case 0x17: /* Model 1: Described in the selector doc as 'not useful' */
 	return NULL;	/* Not clear what really happens */
       case 0x21: /* EG-64 Memory-Banking-Adaptor */
