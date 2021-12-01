@@ -966,6 +966,10 @@ int trs_gui_display_menu(const char *title, MENU_ENTRY *entry, int selection)
         case SDLK_END:
         case SDLK_PAGEDOWN:
           selection = num;
+          while (entry[selection].type == MENU_TITLE) {
+            if (selection > 0)
+              selection--;
+          }
           break;
         case SDLK_DELETE:
           switch (entry[selection].type) {
