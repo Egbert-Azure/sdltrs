@@ -786,7 +786,7 @@ static void trs80_model1_write_mmio(int address, int value)
     trs_disk_sector_write(value);
   } else if (TRSDISK_SELECT(address)) {
     trs_disk_select_write(value);
-  } else if (address >= 0x3900)
+  } else if (address >= 0x3900 && selector)
     trs80_model1_write_mem(address, value);
 }
 
