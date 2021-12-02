@@ -341,6 +341,9 @@ void z80_out(int port, int value)
       /* do cassette emulation */
       trs_cassette_motor((value >> 2) & 1);
       trs_cassette_out(value & 0x3);
+      /* Lubomir Bits 7 - 5 for EG 64.1 */
+      if (lubomir)
+        lsb_bank_out(value & 0xE0);
       break;
     default:
       break;
