@@ -126,6 +126,7 @@ static int trs_load_rom(const char *filename)
         return -1;
       } else {
         extern Uint8 rom[];
+
         memcpy(rom, loadrom, trs_rom_size);
         return 0;
       }
@@ -151,6 +152,7 @@ static void trs_load_compiled_rom(int address, int size, const Uint8 rom[])
 
   for (i = 0; i < size; i++)
     mem_write_rom(address + i, rom[i]);
+
   trs_rom_size = address + i;
 }
 
