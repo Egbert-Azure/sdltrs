@@ -273,22 +273,26 @@ int trs_create_blank_dmk(const char *fname, int sides, int density,
 int trs_create_blank_hard(const char *fname, int cyl, int sec,
                           int gran, int dir)
 {
-  FILE *f;
-  int i;
-    /* Unformatted hard disk */
-    /* We don't care about most of this header, but we generate
-       it just in case some user wants to exchange hard drives with
-       Matthew Reed's emulator or with Pete Cervasio's port of
-       xtrshard/dct to Jeff Vavasour's Model III/4 emulator.
-    */
+  /* Unformatted hard disk */
+  /* We don't care about most of this header, but we generate
+     it just in case some user wants to exchange hard drives with
+     Matthew Reed's emulator or with Pete Cervasio's port of
+     xtrshard/dct to Jeff Vavasour's Model III/4 emulator.
+  */
   time_t tt = time(0);
   struct tm *lt = localtime(&tt);
   ReedHardHeader rhh;
   Uint8 *rhhp = (Uint8 *) &rhh;
   int cksum = 0;
+  int i;
+  FILE *f = fopen(fname, "wb");
+
+  if (f == NULL) {
+    error("failed to create hard disk '%s': %s", fname, strerror(errno));
+    return -1;
+  }
 
   memset(&rhh, 0, sizeof(rhh));
-
   rhh.id1 = 0x56;
   rhh.id2 = 0xcb;
   rhh.ver = 0x10;
@@ -311,15 +315,10 @@ int trs_create_blank_hard(const char *fname, int cyl, int sec,
   snprintf(rhh.label, 9, "%s", "xtrshard");
 
   for (i = 0; i <= 31; i++) {
-    cksum += rhhp[i];
+    cksum += *rhhp++;
   }
   rhh.cksum = ((Uint8) cksum) ^ 0x4c;
 
-  f = fopen(fname, "wb");
-  if (f == NULL) {
-    error("failed to create hard disk '%s': %s", fname, strerror(errno));
-    return 1;
-  }
   fwrite(&rhh, sizeof(rhh), 1, f);
   fclose(f);
   return 0;
