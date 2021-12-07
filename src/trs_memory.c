@@ -245,10 +245,10 @@ void eg64_mba_out(int value)
 		return;
 	}
 
-	if (value < 7)
-		system_byte &= ~(1UL << value);
-	else if (value < 15)
-		system_byte |= 1UL << (value - 8);
+	if (value & (1 << 4))
+		system_byte &= ~(1 << (value & 7));
+	else
+		system_byte |=  (1 << (value & 7));
 
 	memory_map = 0x21;
 }
