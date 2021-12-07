@@ -165,8 +165,8 @@ void trs_rom_init(void)
       if (stringy)
         trs_load_compiled_rom(0x3000, sizeof(trs_romesf), trs_romesf);
       /* Do not overwrite memory mapped disk I/O */
-      if (trs_rom_size > 0x37DE)
-          trs_rom_size = 0x37DE;
+      if (trs_rom_size > 0x37E0)
+          trs_rom_size = 0x37E0;
       if (trs_hd_boot)
         trs_boot_hd();
       break;
