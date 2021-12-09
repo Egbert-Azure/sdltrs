@@ -97,7 +97,7 @@ static int memory_map;
 static int bank_offset[2];
 #define VIDEO_PAGE_0 0
 #define VIDEO_PAGE_1 1024
-static int video_offset = (-VIDEO_START + VIDEO_PAGE_0);
+static int video_ram = VIDEO_START + VIDEO_PAGE_0;
 static unsigned int bank_base = 0x10000;
 static Uint8 mem_command;
 static int romin; /* Model 4p */
@@ -110,9 +110,9 @@ static int system_byte;
 void mem_video_page(int which)
 {
     if (genie3s)
-      video_offset = which ? KEYBOARD_START : VIDEO_START;
+      video_ram = which ? KEYBOARD_START : VIDEO_START;
     else
-      video_offset = -VIDEO_START + (which ? VIDEO_PAGE_1 : VIDEO_PAGE_0);
+      video_ram = VIDEO_START + (which ? VIDEO_PAGE_1 : VIDEO_PAGE_0);
 }
 
 void mem_bank(int command)
@@ -516,7 +516,7 @@ static int trs80_model1_ram(int address)
 
 static int trs80_model1_mmio(int address)
 {
-  if (address >= VIDEO_START) return video[address + video_offset];
+  if (address >= VIDEO_START) return video[address - video_ram];
   if (address < trs_rom_size) return rom[address];
   if (address == TRSDISK_DATA) return trs_disk_data_read();
   if (TRS_INTLATCH(address)) return trs_interrupt_latch_read();
@@ -640,8 +640,8 @@ int mem_read(int address)
 	      return trs_kb_mem_read(address);
 	  }
 	  /* 1K or 2K Video RAM */
-	  if (address >= video_offset && address <= 0x3FFF)
-	    return video[address - video_offset];
+	  if (address >= video_ram && address <= 0x3FFF)
+	    return video[address - video_ram];
 	  /* Disk I/O */
 	  if (address >= 0x37E0 && address <= 0x37EF)
 	    return trs80_model1_mmio(address);
@@ -678,7 +678,7 @@ int mem_read(int address)
 	if (address == PRINTER_ADDRESS) return trs_printer_read();
 	if (address < trs_rom_size) return rom[address];
 	if (address >= VIDEO_START) {
-	    return video[address + video_offset];
+	    return video[address - video_ram];
 	}
 	if (address >= KEYBOARD_START) return trs_kb_mem_read(address);
 	return 0xff;
@@ -694,7 +694,7 @@ int mem_read(int address)
 	    return memory[address + bank_offset[address >> 15]];
 	}
 	if (address >= VIDEO_START) {
-	    return video[address + video_offset];
+	    return video[address - video_ram];
 	}
 	if (address >= KEYBOARD_START) return trs_kb_mem_read(address);
 	return 0xff;
@@ -776,7 +776,7 @@ static void trs80_model1_write_mmio(int address, int value)
           value |= 0x40;
       }
     }
-    trs80_screen_write_char(address + video_offset, value);
+    trs80_screen_write_char(address - video_ram, value);
   } else if (address == PRINTER_ADDRESS) {
     trs_printer_write(value);
   } else if (address == TRSDISK_DATA) {
@@ -910,8 +910,8 @@ void mem_write(int address, int value)
       case 0x24: /* TCS Genie IIIs */
 	if ((system_byte & (1 << 0)) == 0) {
 	  /* 1K or 2K Video RAM */
-	  if (address >= video_offset && address <= 0x3FFF) {
-	    trs80_screen_write_char(address - video_offset, value);
+	  if (address >= video_ram && address <= 0x3FFF) {
+	    trs80_screen_write_char(address - video_ram, value);
 	    return;
 	  }
 	  /* Disk I/O */
@@ -934,7 +934,7 @@ void mem_write(int address, int value)
 	/* Write to Font SRAM */
 	if (genie3s & (1 << 1)) {
 	  if (address >= 0x8000) {
-	    genie3s_char(video[(video_offset == KEYBOARD_START) ?
+	    genie3s_char(video[(video_ram == KEYBOARD_START) ?
 	        VIDEO_PAGE_1 : VIDEO_PAGE_0], address - 0x8000, value);
 	  return;
 	  }
@@ -951,8 +951,8 @@ void mem_write(int address, int value)
 	if (address >= RAM_START) {
 	    memory[address] = value;
 	} else if (address >= VIDEO_START) {
-	    if (grafyx_m3_write_byte(address + video_offset, value)) return;
-	    trs80_screen_write_char(address + video_offset, value);
+	    if (grafyx_m3_write_byte(address - video_ram, value)) return;
+	    trs80_screen_write_char(address - video_ram, value);
 	} else if (address == PRINTER_ADDRESS) {
 	    trs_printer_write(value);
 	}
@@ -964,7 +964,7 @@ void mem_write(int address, int value)
 	if (address >= RAM_START) {
 	    memory[address + bank_offset[address >> 15]] = value;
 	} else if (address >= VIDEO_START) {
-	    trs80_screen_write_char(address + video_offset, value);
+	    trs80_screen_write_char(address - video_ram, value);
 	} else if (address == PRINTER_ADDRESS) {
 	    trs_printer_write(value);
 	}
@@ -976,7 +976,7 @@ void mem_write(int address, int value)
 	if (address >= RAM_START || address < KEYBOARD_START) {
 	    memory[address + bank_offset[address >> 15]] = value;
 	} else if (address >= VIDEO_START) {
-	    trs80_screen_write_char(address + video_offset, value);
+	    trs80_screen_write_char(address - video_ram, value);
 	}
 	break;
 
@@ -1158,8 +1158,8 @@ Uint8 *mem_pointer(int address, int writing)
       case 0x2C:
 	if ((system_byte & (1 << 0)) == 0) {
 	  /* 1K or 2K Video RAM */
-	  if (address >= video_offset && address <= 0x3FFF)
-	    return &video[address - video_offset];
+	  if (address >= video_ram && address <= 0x3FFF)
+	    return &video[address - video_ram];
 	}
 	if ((system_byte & (1 << 2)) == 0) {
 	  if (address <= 0x2FFF)
@@ -1180,7 +1180,7 @@ Uint8 *mem_pointer(int address, int writing)
 
       case 0x38: /* Model III writing */
 	if (address >= RAM_START) return &memory[address];
-	if (address >= VIDEO_START) return &video[address + video_offset];
+	if (address >= VIDEO_START) return &video[address - video_ram];
 	return NULL;
 
       case 0x40: /* Model 4 map 0 reading */
@@ -1189,7 +1189,7 @@ Uint8 *mem_pointer(int address, int writing)
 	}
 	if (address < trs_rom_size) return &rom[address];
 	if (address >= VIDEO_START) {
-	    return &video[address + video_offset];
+	    return &video[address - video_ram];
 	}
 	return NULL;
 
@@ -1200,7 +1200,7 @@ Uint8 *mem_pointer(int address, int writing)
 	    return &memory[address + bank_offset[address >> 15]];
 	}
 	if (address >= VIDEO_START) {
-	    return &video[address + video_offset];
+	    return &video[address - video_ram];
 	}
 	return NULL;
 
@@ -1218,7 +1218,7 @@ Uint8 *mem_pointer(int address, int writing)
 	    return &memory[address + bank_offset[address >> 15]];
 	}
 	if (address >= VIDEO_START) {
-	    return &video[address + video_offset];
+	    return &video[address - video_ram];
 	}
 	return NULL;
 
@@ -1256,7 +1256,7 @@ void trs_mem_save(FILE *file)
   trs_save_int(file, &trs_rom_size, 1);
   trs_save_int(file, &memory_map, 1);
   trs_save_int(file, bank_offset, 2);
-  trs_save_int(file, &video_offset, 1);
+  trs_save_int(file, &video_ram, 1);
   trs_save_int(file, &romin, 1);
   trs_save_uint32(file, &bank_base, 1);
   trs_save_uint8(file, &mem_command, 1);
@@ -1284,7 +1284,7 @@ void trs_mem_load(FILE *file)
   trs_load_int(file, &trs_rom_size, 1);
   trs_load_int(file, &memory_map, 1);
   trs_load_int(file, bank_offset, 2);
-  trs_load_int(file, &video_offset, 1);
+  trs_load_int(file, &video_ram, 1);
   trs_load_int(file, &romin, 1);
   trs_load_uint32(file, &bank_base, 1);
   trs_load_uint8(file, &mem_command, 1);
