@@ -1734,7 +1734,7 @@ void trs_gui_emulator_settings(void)
                                  "       Archbold",
                                  "         Holmes",
                                  "     Seatronics",
-                                 "   CP/M banking",
+                                 "        Banking",
                                  "          LNW80",
                                  "TCS SpeedMaster"};
   float clock_mhz[4];
