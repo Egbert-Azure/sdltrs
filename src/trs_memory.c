@@ -352,14 +352,10 @@ void sys_byte_out(int value)
 				hrg_onoff((value & (1 << 1)) ? 2 : 0);
 			}
 			break;
-		case 4: /* Other CP/M banking */
-			switch (value) {
-				case 0x10:
-				case 0x11:
-				case 0x54:
-					memory_map = 0x14;
-					break;
-			}
+		case 4: /* Banking-Modification from Martin Doppelbauer */
+			if (value & (1 << 4))
+				memory_map = 0x14;
+			break;
 	}
 
 	system_byte = value;

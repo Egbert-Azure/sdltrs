@@ -800,7 +800,8 @@ static void trs_opt_speedup(char *arg, int intarg, int *stringarg)
     case 's': /*Seatronics*/
       speedup = 3;
       break;
-    case 'c': /*CP/M banking */
+    case 'b': /*Banking*/
+    case 'c': /* CP/M */
       speedup = 4;
       break;
     case 'l': /*LNW80*/
@@ -1170,7 +1171,7 @@ int trs_write_config_file(const char *filename)
       fprintf(config_file, "seatronics\n");
       break;
     case 4:
-      fprintf(config_file, "cp/m banking\n");
+      fprintf(config_file, "banking\n");
       break;
     case 5:
       fprintf(config_file, "lnw80\n");
