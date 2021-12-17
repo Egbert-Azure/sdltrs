@@ -302,7 +302,7 @@ void do_emt_lseek(void)
   }
   offset = 0;
   for (i = 0; i < 8; i++) {
-    offset = offset + (mem_read(Z80_HL + i) << i*8);
+    offset = offset + ((off_t)mem_read(Z80_HL + i) << i*8);
   }
   offset = lseek(Z80_DE, offset, Z80_BC);
   if (offset != (off_t) -1) {
@@ -617,7 +617,7 @@ void do_emt_ftruncate(void)
   }
   offset = 0;
   for (i = 0; i < 8; i++) {
-    offset = offset + (mem_read(Z80_HL + i) << i*8);
+    offset = offset + ((off_t)mem_read(Z80_HL + i) << i*8);
   }
 #ifdef _WIN32
   result = chsize(Z80_DE, offset);
