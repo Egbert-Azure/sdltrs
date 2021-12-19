@@ -61,7 +61,7 @@ static int modeimage = 0x8; /* Model III/4/4p */
 static int ctrlimage;       /* Model 4/4p & M6845 */
 static int rominimage;      /* Model 4p */
 
-/* EG 3200 RTC */
+/* RTC addr/data */
 static int rtc_reg;
 
 /* M6845 CRT */
