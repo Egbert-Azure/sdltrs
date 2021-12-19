@@ -176,7 +176,7 @@ static unsigned int cycles_saved;
 
 /* True size of graphics memory -- some is offscreen */
 #define G_XSIZE 128
-#define G_YSIZE 448
+#define G_YSIZE 512
 #define G_MSIZE (2 * G_YSIZE) * G_XSIZE
 static char grafyx[G_MSIZE];
 static Uint8 grafyx_unscaled[G_YSIZE][G_XSIZE];
