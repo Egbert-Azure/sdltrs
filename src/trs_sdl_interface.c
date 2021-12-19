@@ -1206,6 +1206,8 @@ int trs_write_config_file(const char *filename)
 
 void trs_screen_var_reset(void)
 {
+  genie3s = 0;
+  m6845_raster = 12;
   text80x24 = 0;
   screen640x240 = 0;
   screen_chars = 1024;
