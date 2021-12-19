@@ -239,6 +239,7 @@ void eg3200_init_out(int value)
 
 void eg64_mba_out(int value)
 {
+	/* Disable EG-64 MBA */
 	if (value == 7) {
 		memory_map = 0x10;
 		system_byte = 0;
@@ -246,8 +247,10 @@ void eg64_mba_out(int value)
 	}
 
 	if (value & (1 << 4))
+		/* ROM access */
 		system_byte &= ~(1 << (value & 7));
 	else
+		/* RAM access */
 		system_byte |=  (1 << (value & 7));
 
 	memory_map = 0x21;
@@ -339,7 +342,7 @@ void sys_byte_out(int value)
 	memory_map = 0x10;
 
 	switch (speedup) {
-		case 6: /* TCS SpeedMaster CP/M banking */
+		case 6: /* TCS SpeedMaster Banking */
 			if ((value & (1 << 7)) == 0) {
 				if (value & 1)
 					memory_map = 0x14;
