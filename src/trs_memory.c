@@ -335,6 +335,15 @@ void selector_out(Uint8 value)
 
 void sys_byte_out(int value)
 {
+	/* Hack for Schmidtke CP/M with Doppelbauer banking */
+	if (memory_map == 0x25) {
+		if (value & (1 << 4))
+			system_byte |=  (1 << 3);
+		else
+			system_byte &= ~(1 << 3);
+		return;
+	}
+
 	if (value == system_byte)
 		return;
 
@@ -367,6 +376,24 @@ void sys_byte_out(int value)
 int sys_byte_in(void)
 {
 	return system_byte;
+}
+
+void s80z_out(int value)
+{
+	if (value & (1 << 2)) {
+		if (speedup == 4)
+			video_ram = 0x3900; /* Homebrew 80*22 SYS80.SYS */
+		else
+			video_ram = (value & (1 << 1)) ? 0xB000 : 0xF000;
+	} else {
+		video_ram = VIDEO_START;
+	}
+
+	if ((value & (1 << 6)) != (system_byte & (1 << 6)))
+		trs_screen_inverse((value & (1 << 6)) != 0);
+
+	system_byte = value;
+	memory_map = 0x25;
 }
 
 static void mem_init(void)
@@ -659,6 +686,15 @@ int mem_read(int address)
 	  return memory[address];
 	else
 	  return memory[address + bank_base];
+      case 0x25: /* Schmidtke 80-Z Video Card */
+	if (system_byte & (1 << 0)) {
+	  if (address >= video_ram && address <= video_ram + 0xFFF)
+	    return video[((address - video_ram) & 0x7FF)];
+	}
+	if ((system_byte & (1 << 3)) || address >= RAM_START)
+	  return memory[address];
+	else
+	  return trs80_model1_mmio(address);
 
       case 0x30: /* Model III */
 	if (address >= RAM_START) return memory[address];
@@ -945,6 +981,18 @@ void mem_write(int address, int value)
 	else
 	  memory[address + bank_base] = value;
 	return;
+      case 0x25: /* Schmidtke 80-Z Video Card */
+	if (system_byte & (1 << 0)) {
+	  if (address >= video_ram && address <= video_ram + 0xFFF) {
+	    trs80_screen_write_char(((address - video_ram) & 0x7FF), value);
+	    return;
+	  }
+	}
+	if ((system_byte & (1 << 3)) || address >= RAM_START)
+	  memory[address] = value;
+	else
+	  trs80_model1_write_mmio(address, value);
+	return;
 
       case 0x30: /* Model III */
 	if (address >= RAM_START) {
@@ -1170,6 +1218,15 @@ Uint8 *mem_pointer(int address, int writing)
 	  return &memory[address];
 	else
 	  return &memory[address + bank_base];
+      case 0x25: /* Schmidtke 80-Z Video Card */
+      case 0x2D:
+	if (system_byte & (1 << 0)) {
+	  if (address >= video_ram && address <= video_ram + 0xFFF)
+	    return &video[((address - video_ram) & 0x7FF)];
+	}
+	if ((system_byte & (1 << 3)) || address >= RAM_START)
+	  return &memory[address];
+	return NULL;
       case 0x30: /* Model III reading */
         if (trs_model < 4 && address >= 32768)
 	    return &memory[address + bank_base];

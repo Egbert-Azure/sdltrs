@@ -3364,6 +3364,10 @@ void m6845_cursor(int position, int line, int visible)
   int expanded;
   SDL_Rect srcRect, dstRect;
 
+  /* Hack for homebrew 80*22 SYS80.SYS */
+  if (screen_chars == 1760)
+    position -= 256;
+
   if (screen_chars == 1024)
     position &= 0x3FF;
 
