@@ -227,6 +227,8 @@ extern void lsb_bank_out(int value);
 extern void sys_byte_out(int value);
 extern int  sys_byte_in(void);
 
+extern void s80z_out(int value);
+
 extern void trs_debug(void);
 
 typedef void (*trs_event_func)(int arg);

@@ -280,6 +280,17 @@ void z80_out(int port, int value)
     case 0xB5: /* Orchestra-85 right channel */
       trs_orch90_out(2, value);
       break;
+    case 0xD0:
+    case 0x10: /* Homebrew 80*22 SYS80.SYS */
+      ctrlimage = value;
+      break;
+    case 0xD1:
+    case 0x11: /* Homebrew 80*22 SYS80.SYS */
+      m6845_crt(value);
+      break;
+    case 0xD2:
+      s80z_out(value);
+      break;
     case 0xDF:
       if (lubomir == 0)
         eg64_mba_out(value);
