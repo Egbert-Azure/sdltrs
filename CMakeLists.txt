@@ -6,7 +6,7 @@ include(GNUInstallDirs)
 include(TestBigEndian)
 
 set(CMAKE_C_FLAGS
-	"-g -Wall -O2 ${CMAKE_C_FLAGS}"
+	"-g -Wall -Wextra -Wno-unused-parameter -Wno-unused-result -O2 ${CMAKE_C_FLAGS}"
 )
 
 set(SOURCES
