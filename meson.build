@@ -1,9 +1,11 @@
 project('sdl2trs', 'c',
 	version: '1.2.21',
 	license: 'BSD',
-	default_options: [ 'buildtype=debugoptimized', 'c_std=gnu89' ],
+	default_options: [ 'buildtype=debugoptimized', 'c_std=gnu89', 'warning_level=2' ],
 	meson_version: '>= 0.36.0'
 )
+
+add_project_arguments('-Wno-unused-parameter', '-Wno-unused-result', language: 'c')
 
 sources = files([
 	'src/blit.c',
