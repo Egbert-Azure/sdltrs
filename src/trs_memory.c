@@ -297,11 +297,13 @@ void genie3s_sys_out(int value)
 	if ((value & (1 << 2)) != (system_byte & (1 << 2)))
 		trs_timer_speed((value & (1 << 2)) != 0);
 
+#if 0	/* Disabled to prevent high CPU load by flipping this bit */
 	/* Slow Down Bit */
 	if ((value & (1 << 6)) != (system_byte & (1 << 6))) {
 		if (value & (1 << 6))
 			trs_timer_speed((value & (1 << 2)) != 0);
 	}
+#endif
 
 	system_byte = value;
 }
