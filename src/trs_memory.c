@@ -927,10 +927,15 @@ void mem_write(int address, int value)
 	    return;
 	  }
 	}
-	/* Bit 2 - Bank 3: Video Memory 1 (additional 1k for 80x24 video mode) */
+	/* Bit 2 - Bank 3: Video Memory 1 (additional 1k for 80x24 video mode)
+	 *                 Video Memory 2 (EG 3210: Programmable Graphics Adaptor) */
 	if ((eg3200 & (1 << 2)) == 0) {
 	  if (address >= 0x4000 && address <= 0x43FF) {
 	    trs80_screen_write_char(address - VIDEO_START, value);
+	    return;
+	  }
+	  if (address >= 0x4400 && address <= 0x47FF) {
+	    genie3s_char(((address - 0x4400) / 16) + 192, address - 0x4400, value);
 	    return;
 	  }
 	}

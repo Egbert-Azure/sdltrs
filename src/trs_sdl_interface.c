@@ -3436,12 +3436,15 @@ void m6845_screen(int chars, int lines, int raster)
 
 void genie3s_char(int index, int address, int byte)
 {
-  int const scanline = address >> 11;
+  int const scanline = genie3s ? address >> 11 : address & 0xF;
 
-  char_ram[index][scanline] = byte;
+  char_ram[index][scanline] = genie3s ? byte : mirror_bits(byte);
 
-  if (scanline == (m6845_raster - 1))
+  if (scanline == (m6845_raster - 1)) {
     trs_bitmap_init(index, 1);
+    if (eg3200)
+      trs_screen_refresh();
+  }
 }
 
 void genie3s_hrg(int value)
