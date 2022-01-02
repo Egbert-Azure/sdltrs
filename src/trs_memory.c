@@ -935,7 +935,8 @@ void mem_write(int address, int value)
 	    return;
 	  }
 	  if (address >= 0x4400 && address <= 0x47FF) {
-	    genie3s_char(((address - 0x4400) / 16) + 192, address - 0x4400, value);
+	    genie3s_char(((address - 0x4400) / 16) + 192,
+			  (address - 0x4400) & 0x0F, value);
 	    return;
 	  }
 	}
@@ -977,7 +978,7 @@ void mem_write(int address, int value)
 	if (genie3s & (1 << 1)) {
 	  if (address >= 0x8000) {
 	    genie3s_char(video[(video_ram == KEYBOARD_START) ?
-	        VIDEO_PAGE_1 : VIDEO_PAGE_0], address - 0x8000, value);
+	        VIDEO_PAGE_1 : VIDEO_PAGE_0], (address - 0x8000) >> 11, value);
 	  return;
 	  }
 	}
