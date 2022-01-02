@@ -92,7 +92,7 @@ extern int trs_load_cmd(const char *filename);
 extern int trs_load_config_file(void);
 
 extern void trs_screen_init(void);
-extern void screen_init(void);
+extern void trs_screen_reset(void);
 extern void trs_rom_init(void);
 extern void trs_screen_write_char(unsigned int position, Uint8 char_index);
 extern void trs_screen_update(void);
@@ -101,7 +101,6 @@ extern void trs_screen_alternate(int flag);
 extern void trs_screen_80x24(int flag);
 extern void trs_screen_inverse(int flag);
 extern void trs_screen_refresh(void);
-extern void trs_screen_var_reset(void);
 extern void trs_screen_caption(void);
 
 extern void trs_disk_led(int drive, int on_off);

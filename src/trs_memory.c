@@ -467,7 +467,6 @@ void trs_reset(int poweron)
     trs_cancel_event();
     trs_timer_interrupt(0);
     if (poweron || genie3s || trs_model >= 4) {
-	genie3s = 0;
         /* Reset processor */
 	z80_reset();
 	if (poweron || trs_model >= 4)
@@ -487,7 +486,7 @@ void trs_reset(int poweron)
     }
     /* Clear screen */
     memset(&video, ' ', MAX_VIDEO_SIZE);
-    screen_init();
+    trs_screen_reset();
     trs_screen_refresh();
 }
 

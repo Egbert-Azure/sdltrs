@@ -1184,7 +1184,7 @@ int trs_gui_file_overwrite(void)
 
 void trs_gui_new_machine(void)
 {
-  trs_screen_var_reset();
+  trs_screen_reset();
   trs_screen_init();
   trs_reset(1);
 }

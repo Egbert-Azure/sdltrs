@@ -1207,7 +1207,7 @@ int trs_write_config_file(const char *filename)
   return 0;
 }
 
-void trs_screen_var_reset(void)
+void trs_screen_reset(void)
 {
   genie3s = 0;
   m6845_raster = 12;
@@ -1216,6 +1216,14 @@ void trs_screen_var_reset(void)
   screen_chars = 1024;
   row_chars = 64;
   col_chars = 16;
+
+  /* initially, screen is blank (i.e. full of spaces) */
+  memset(trs_screen, ' ', 2048);
+  memset(char_ram, 0, 1024);
+  memset(grafyx, 0, G_MSIZE);
+  memset(grafyx_unscaled, 0, G_YSIZE * G_XSIZE);
+  memset(hrg_screen, 0, HRG_MEMSIZE);
+  SDL_FillRect(image, NULL, background);
 }
 
 void trs_screen_caption(void)
@@ -2401,16 +2409,6 @@ void trs_screen_80x24(int flag)
   if (!grafyx_enable || grafyx_overlay)
     trs_screen_640x240(flag);
   text80x24 = flag;
-}
-
-void screen_init(void)
-{
-  /* initially, screen is blank (i.e. full of spaces) */
-  memset(trs_screen, ' ', 2048);
-  memset(grafyx, 0, G_MSIZE);
-  memset(grafyx_unscaled, 0, G_YSIZE * G_XSIZE);
-  memset(hrg_screen, 0, HRG_MEMSIZE);
-  SDL_FillRect(image, NULL, background);
 }
 
 static void
