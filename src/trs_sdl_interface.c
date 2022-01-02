@@ -2573,7 +2573,7 @@ bitmap_init(int ram)
   int i;
 
   for (i = 0; i < MAXCHARS; i++)
-    trs_bitmap_init(i, ram);
+    trs_bitmap_init(i, (i > 191 && eg3200) ? 1 : ram);
 
   boxes_init(foreground, background, cur_char_width, height, 0);
   boxes_init(foreground, background, cur_char_width * 2, height, 1);
