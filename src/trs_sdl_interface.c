@@ -2645,7 +2645,7 @@ void trs_screen_refresh(void)
     trs_turbo_led();
   }
   if (eg3200 || genie3s) {
-    z80_out(0xF6, 0xFF);
+    z80_out(0xF6, 0x09);
     z80_out(0xF7, 0xFF);
   }
   drawnRectCount = MAX_RECTS; /* Will force redraw of whole screen */
