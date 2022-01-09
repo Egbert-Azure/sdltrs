@@ -71,8 +71,6 @@ static int cursor_vis;
 
 static void m6845_crt(int value)
 {
-  if (cursor_vis)
-    m6845_cursor(cursor_pos, cursor_csr, 0);
   switch (ctrlimage) {
     case 0x01: /* Chars displayed */
       m6845_screen(value <= 80 ? value : 0, 0, 0);
@@ -82,20 +80,24 @@ static void m6845_crt(int value)
       break;
     case 0x09: /* Maximum Raster address */
       m6845_screen(0, 0, value < 16 ? (value + 1) : 0);
+      m6845_cursor(cursor_pos, cursor_csr, cursor_vis);
       break;
     case 0x0A: /* Cursor visible / Cursor Start Line */
       cursor_vis = !(value & (1 << 5)) || (value & (1 << 6));
       cursor_csr = value & 0x0F;
+      m6845_cursor(cursor_pos, cursor_csr, cursor_vis);
       break;
     case 0x0E: /* Cursor LSB */
+      if (cursor_vis)
+        m6845_cursor(cursor_pos, cursor_csr, 0);
       cursor_pos = ((value & 0x3F) << 8) | (cursor_pos & 0x00FF);
       break;
     case 0x0F: /* Cursor MSB */
       cursor_pos = ((value & 0xFF) << 0) | (cursor_pos & 0xFF00);
+      if (cursor_vis)
+        m6845_cursor(cursor_pos, cursor_csr, cursor_vis);
       break;
   }
-  if (cursor_vis)
-    m6845_cursor(cursor_pos, cursor_csr, cursor_vis);
 }
 
 /*ARGSUSED*/
