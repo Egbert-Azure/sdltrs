@@ -537,11 +537,39 @@ int z80_in(int port)
    */
 
   if ((port >= 0x70 && port <= 0x7C)
+      || (port >= 0x68 && port <= 0x6D)
       || (port >= 0xB0 && port <= 0xBC)
       || (port == 0xE0 && eg3200)
       || (port == 0x5A && genie3s)) {
     time_t time_secs = time(NULL);
     struct tm *time_info = localtime(&time_secs);
+
+    /* Ports in David Keil's TRS-80 Emulator */
+    if (port >= 0x68 && port <= 0x6D) {
+      switch (port) {
+        case 0x68:
+          value = time_info->tm_sec;
+          break;
+        case 0x69:
+          value = time_info->tm_min;
+          break;
+        case 0x6A:
+          value = time_info->tm_hour;
+          break;
+        case 0x6B:
+          value = (time_info->tm_year + 1900) % 100;
+          break;
+        case 0x6C:
+          value = time_info->tm_mday;
+          break;
+        case 0x6D:
+          value = (time_info->tm_mon) + 1;
+          break;
+      }
+      /* BCD value */
+      value = (value / 10 * 16 + value % 10);
+      goto done;
+    }
 
     if (eg3200 || genie3s)
       port = (rtc_reg >> 4);
