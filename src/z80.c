@@ -2864,6 +2864,10 @@ static int do_ED_instruction(void)
       case 0x2b:        /* emt_setddir */
 	do_emt_setddir();
 	break;
+      case 0x2e:        /* SSPD A (David Keil) */
+	timer_overclock = ((Z80_A & (1 << 2)) != 0);
+	trs_turbo_mode(timer_overclock);
+	break;
       case 0x2f:        /* emt_debug */
 	if (trs_continuous > 0) trs_continuous = 0;
 	debug = 1;
