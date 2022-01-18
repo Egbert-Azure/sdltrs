@@ -1320,8 +1320,8 @@ void trs_screen_init(void)
     debug("SDL_VIDEODRIVER=%s\n", SDL_GetCurrentVideoDriver());
 #endif
     window = SDL_CreateWindow(NULL,
-                              SDL_WINDOWPOS_CENTERED,
-                              SDL_WINDOWPOS_CENTERED,
+                              SDL_WINDOWPOS_UNDEFINED,
+                              SDL_WINDOWPOS_UNDEFINED,
                               OrigWidth, OrigHeight,
                               SDL_WINDOW_SHOWN);
     if (window == NULL)
