@@ -1318,8 +1318,8 @@ void trs_screen_init(void)
 
   if (window == NULL) {
     window = SDL_CreateWindow(NULL,
-                              SDL_WINDOWPOS_CENTERED,
-                              SDL_WINDOWPOS_CENTERED,
+                              SDL_WINDOWPOS_UNDEFINED,
+                              SDL_WINDOWPOS_UNDEFINED,
                               1024, 1024,
                               SDL_WINDOW_HIDDEN|SDL_WINDOW_RESIZABLE);
     if (window == NULL)
