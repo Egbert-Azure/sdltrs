@@ -2920,6 +2920,9 @@ static int do_ED_instruction(void)
       case 0x3f:	/* emt_closedisk */
 	do_emt_closedisk();
 	break;
+      case 0xf6:	/* Exit in David Keil's TRS-80 emulator */
+	trs_exit(0);
+	break;
 
       default:
 	/* undocumented no-op */
