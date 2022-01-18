@@ -231,9 +231,7 @@ void eg3200_init_out(int value)
 	eg3200 = value;
 	memory_map = 0x23;
 	trs_disk_doubler = TRSDISK_PERCOM;
-
 	trs_timer_init();
-	trs_screen_inverse(0);
 	trs_screen_init();
 }
 
@@ -487,7 +485,6 @@ void trs_reset(int poweron)
     /* Clear screen */
     memset(&video, ' ', MAX_VIDEO_SIZE);
     trs_screen_reset();
-    trs_screen_inverse(0);
     trs_screen_refresh();
 }
 
