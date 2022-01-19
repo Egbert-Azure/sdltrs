@@ -2098,9 +2098,8 @@ int disassemble(Uint16 pc)
 {
     int	i, j;
     const struct opcode	*code;
-    int	addr;
+    int	const addr = pc;
 
-    addr = pc;
     i = mem_read(pc++);
     if (!major[i].name)
     {
