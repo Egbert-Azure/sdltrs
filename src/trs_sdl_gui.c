@@ -2490,17 +2490,17 @@ void trs_gui_joystick_settings(void)
 void trs_gui_default_dirs(void)
 {
   MENU_ENTRY menu[] =
-  {{"Floppy Disk Directory:", MENU_TITLE},
+  {{"Floppy Disk:", MENU_TITLE},
    {"   ", MENU_NORMAL},
-   {"Hard Disk Directory:", MENU_TITLE},
+   {"Hard Disk:", MENU_TITLE},
    {"   ", MENU_NORMAL},
-   {"Cassette/Wafer Directory:", MENU_TITLE},
+   {"Cassette/Wafer:", MENU_TITLE},
    {"   ", MENU_NORMAL},
-   {"Disk Set Directory:", MENU_TITLE},
+   {"Disk Set:", MENU_TITLE},
    {"   ", MENU_NORMAL},
-   {"State/Configuration Directory:", MENU_TITLE},
+   {"State/Configuration:", MENU_TITLE},
    {"   ", MENU_NORMAL},
-   {"Printer Output/Screenshot Directory:", MENU_TITLE},
+   {"Printer Output/Screenshot:", MENU_TITLE},
    {"   ", MENU_NORMAL},
    {"", 0}};
   int selection = 1;
@@ -2532,7 +2532,7 @@ void trs_gui_default_dirs(void)
         trs_gui_file_browse(trs_state_dir, trs_state_dir, NULL, 1, "State/Configuration ");
         break;
       case 11:
-        trs_gui_file_browse(trs_printer_dir, trs_printer_dir, NULL, 1, "Printer Output ");
+        trs_gui_file_browse(trs_printer_dir, trs_printer_dir, NULL, 1, "Printer/Screenshot ");
         break;
       case -1:
         return;
@@ -2543,13 +2543,13 @@ void trs_gui_default_dirs(void)
 void trs_gui_rom_files(void)
 {
   MENU_ENTRY menu[] =
-  {{"Model I ROM File:", MENU_TITLE},
+  {{"Model I ROM:", MENU_TITLE},
    {"   ", MENU_NORMAL},
    {"", MENU_TITLE},
-   {"Model III ROM File:", MENU_TITLE},
+   {"Model III ROM:", MENU_TITLE},
    {"   ", MENU_NORMAL},
    {"", MENU_TITLE},
-   {"Model 4P ROM File:", MENU_TITLE},
+   {"Model 4P ROM:", MENU_TITLE},
    {"   ", MENU_NORMAL},
    {"", MENU_TITLE},
    {"Patch Model I ROM for auto-boot from hard drive   ", MENU_NORMAL},
