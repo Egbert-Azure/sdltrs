@@ -620,7 +620,7 @@ read_directory:
 
   if (browse_dir) {
     snprintf(text, 63, "Choose %sDirectory", type);
-    trs_gui_center_text(" INS/TAB selects directory ", 15, 1);
+    trs_gui_center_text(" INS/TAB:Select Directory ", 15, 1);
   }
   else
     snprintf(text, 63, "Select %s File To Load", type);
@@ -798,7 +798,7 @@ redraw:
   trs_gui_frame(1, 6, 62, 8);
   trs_gui_center_text(title, 6, 0);
   if (file)
-    trs_gui_center_text(" TAB selects directory ", 8, 1);
+    trs_gui_center_text(" TAB:Select Directory ", 8, 1);
 
   while (1) {
     for (i = 0; i < 60; i++) {
