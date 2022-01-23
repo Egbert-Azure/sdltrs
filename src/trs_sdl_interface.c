@@ -3336,7 +3336,7 @@ void m6845_screen(int chars, int lines, int raster)
 
 void genie3s_char(int index, int scanline, int byte)
 {
-  char_ram[index][scanline] = genie3s ? byte : mirror_bits(byte);
+  char_ram[index][scanline] = eg3200 ? mirror_bits(byte) : byte;
 
   if (scanline == (m6845_raster - 1)) {
     trs_bitmap_init(index, 1);
