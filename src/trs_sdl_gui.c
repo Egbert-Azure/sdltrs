@@ -1113,12 +1113,13 @@ int trs_gui_display_popup_matrix(const char* title, const char **entry,
   while (1) {
     if (col < 0)
       col = cols - 1;
-    if (col > cols - 1)
+    else if (col > cols - 1)
       col = 0;
     if (row < 0)
       row = rows - 1;
-    if (row > rows - 1)
-       row = 0;
+    else if (row > rows - 1)
+      row = 0;
+
     selection = row * cols + col;
     trs_gui_write_text(entry[selection], x + col * len, y + row, 1);
     trs_screen_update();
