@@ -692,19 +692,15 @@ static void trs_opt_microlabs(char *arg, int intarg, int *stringarg)
 
 static void trs_opt_model(char *arg, int intarg, int *stringarg)
 {
-  if (strcmp(arg, "1") == 0 ||
-      strcasecmp(arg, "I") == 0) {
+  if (strcmp(arg, "1") == 0 || strcasecmp(arg, "I") == 0)
     trs_model = 1;
-  } else if (strcmp(arg, "3") == 0 ||
-             strcasecmp(arg, "III") == 0) {
+  else if (strcmp(arg, "3") == 0 || strcasecmp(arg, "III") == 0)
     trs_model = 3;
-  } else if (strcmp(arg, "4") == 0 ||
-             strcasecmp(arg, "IV") == 0) {
+  else if (strcmp(arg, "4") == 0 || strcasecmp(arg, "IV") == 0)
     trs_model = 4;
-  } else if (strcasecmp(arg, "4P") == 0 ||
-             strcasecmp(arg, "IVp") == 0) {
+  else if (strcasecmp(arg, "4P") == 0 || strcasecmp(arg, "IVp") == 0)
     trs_model = 5;
-  } else
+  else
     error("TRS-80 Model '%s' not supported", arg);
 }
 
