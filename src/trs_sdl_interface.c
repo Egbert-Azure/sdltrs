@@ -1623,7 +1623,7 @@ void trs_exit(int confirm)
       return;
     }
   }
-  exit(0);
+  exit(EXIT_SUCCESS);
 }
 
 void trs_sdl_cleanup(void)
