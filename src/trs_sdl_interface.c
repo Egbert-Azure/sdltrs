@@ -2148,6 +2148,9 @@ void trs_get_event(int wait)
               case SDLK_LCTRL: /* P1 on SpeedMaster or Control */
                 keysym.sym = (speedup == 6) ? 0x11c : 0x11a;
                 break;
+              case SDLK_END:   /* P2 on SpeedMaster or Shifted Down Arrow */
+                keysym.sym = (speedup == 6) ? 0x088 : 0x117;
+                break;
               default:
                 break;
             }
