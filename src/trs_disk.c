@@ -522,8 +522,8 @@ static int
 jv3_id_compare(const void* p1, const void* p2)
 {
   DiskState *d = &disk[state.curdrive];
-  int i1 = *(short*)p1;
-  int i2 = *(short*)p2;
+  int const i1 = *(short*)p1;
+  int const i2 = *(short*)p2;
   int r = d->u.jv3.id[i1].track - d->u.jv3.id[i2].track;
   if (r != 0) return r;
   r = (d->u.jv3.id[i1].flags & JV3_SIDE) - (d->u.jv3.id[i2].flags & JV3_SIDE);
@@ -536,7 +536,7 @@ static void
 jv3_sort_ids(int drive)
 {
   DiskState *d = &disk[drive];
-  int olddrive = state.curdrive;
+  int const olddrive = state.curdrive;
   int i, track, side;
 
   for (i = 0; i <= JV3_SECSMAX; i++) {
@@ -663,7 +663,7 @@ static void
 jv3_free_sector(DiskState *d, int id_index)
 {
   int c;
-  int size_code = (d->u.jv3.id[id_index].flags & JV3_SIZE) ^ 1;
+  int const size_code = (d->u.jv3.id[id_index].flags & JV3_SIZE) ^ 1;
   if (d->u.jv3.free_id[size_code] > id_index) {
     d->u.jv3.free_id[size_code] = id_index;
   }
@@ -870,7 +870,7 @@ trs_disk_insert(int drive, const char *diskname)
     d->u.jv3.last_used_id = -1;
     for (id_index = 0; id_index < JV3_SECSMAX; id_index++) {
       if (d->u.jv3.id[id_index].track == JV3_FREE) {
-	int size_code = id_index_to_size_code(d, id_index);
+	int const size_code = id_index_to_size_code(d, id_index);
 	if (d->u.jv3.free_id[size_code] == JV3_SECSMAX) {
 	  d->u.jv3.free_id[size_code] = id_index;
 	}
@@ -933,13 +933,12 @@ cmd_type(Uint8 cmd)
 int
 trs_disk_motoroff(void)
 {
-  int stopped;
-  int cmdtype;
+  int const stopped = (state.motor_timeout - z80_state.t_count > TSTATE_T_MID);
 
-  stopped = (state.motor_timeout - z80_state.t_count > TSTATE_T_MID);
   if (stopped) {
+    int const cmdtype = cmd_type(state.currcommand);
+
     state.status |= TRSDISK_NOTRDY;
-    cmdtype = cmd_type(state.currcommand);
     if ((cmdtype == 2 || cmdtype == 3) && (state.status & TRSDISK_DRQ)) {
       /* Also end the command and set Lost Data for good measure */
       state.status = (state.status | TRSDISK_LOSTDATA) &
@@ -1027,7 +1026,7 @@ search(int sector, int side)
        back.  would deal more realistically with disks that have more
        than one of the same sector. */
     int i;
-    int incr = dmk_incr(d);
+    int const incr = dmk_incr(d);
 
     /* get current phytrack into buffer */
     dmk_get_track(d);
@@ -1164,12 +1163,12 @@ angle(void)
   DiskState *d = &disk[state.curdrive];
   float a;
   /* Set revus to number of microseconds per revolution */
-  int revus = d->inches == 5 ? 200000 /* 300 RPM */ : 166666 /* 360 RPM */;
+  int const revus = d->inches == 5 ? 200000 /* 300 RPM */ : 166666 /* 360 RPM */;
 #if TSTATEREV
   /* Lock revolution rate to emulated time measured in T-states */
   /* Minor bug: there will be a glitch when t_count wraps around on
      a 32-bit machine */
-  int revt = (int)(revus * z80_state.clockMHz);
+  int const revt = (int)(revus * z80_state.clockMHz);
   a = ((float)(z80_state.t_count % revt)) / ((float)revt);
 #else
   /* Old way: lock revolution rate to real time */
@@ -1725,7 +1724,7 @@ trs_disk_data_write(Uint8 data)
 	  break;
 	case 0xfe:
 	  if (!state.density || state.format == FMT_PREAM) {
-	    Uint16 idamp = d->u.dmk.curbyte +
+	    Uint16 const idamp = d->u.dmk.curbyte +
 	      (state.density ? DMK_DDEN_FLAG : 0);
 	    if (d->u.dmk.nextidam >= DMK_TKHDR_SIZE) {
 	      error("DMK formatting too many address marks on track");
@@ -1748,7 +1747,7 @@ trs_disk_data_write(Uint8 data)
 	     xtrs 4.5a and earlier, so we disable it, at least for now. */
 	case 0xfc:
 	  if (!state.density || state.format == FMT_IPREAM) {
-	    Uint16 idamp = d->u.dmk.curbyte +
+	    Uint16 const idamp = d->u.dmk.curbyte +
 	      (state.density ? DMK_DDEN_FLAG : 0);
 	    if (d->u.dmk.nextidam >= DMK_TKHDR_SIZE) {
 	      error("DMK formatting too many address marks on track");
@@ -1925,8 +1924,7 @@ trs_disk_data_write(Uint8 data)
 	trs_disk_unimpl(state.currcommand, "invalid sector size");
       }
       if (d->emutype == JV3) {
-	int id_index;
-	id_index = jv3_alloc_sector(d, data);
+	int const id_index = jv3_alloc_sector(d, data);
 	if (id_index == -1) {
 	  /* Data structure full */
 	  state.status |= TRSDISK_WRITEFLT;

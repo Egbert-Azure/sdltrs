@@ -548,7 +548,7 @@ static void trs_opt_charset(char *arg, int intarg, int *stringarg)
 
 static void trs_opt_clock(char *arg, int intarg, int *stringarg)
 {
-  float clock_mhz = atof(arg);
+  float const clock_mhz = atof(arg);
 
   if (clock_mhz >= 0.1 && clock_mhz <= 99.0) {
     switch (intarg) {
@@ -1036,7 +1036,7 @@ void trs_parse_command_line(int argc, char **argv, int *debug)
   trs_load_config_file();
 
   for (i = 1; i < argc; i++) {
-    int argAvail = ((i + 1) < argc); /* is argument available? */
+    int const argAvail = ((i + 1) < argc); /* is argument available? */
 
     for (j = 0; j < num_options; j++) {
       if (argv[i][0] == '-') {
@@ -2684,7 +2684,7 @@ void trs_screen_refresh(void)
     /* Redraw HRG */
     if (hrg_enable == 2) {
       for (i = 0; i <= 0x3FFF; i++) {
-        int old_data = hrg_screen[i];
+        int const old_data = hrg_screen[i];
 
         hrg_write_addr(i, 0x3FFF);
         hrg_write_data(0);

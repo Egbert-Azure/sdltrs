@@ -425,7 +425,7 @@ void do_emt_opendir(void)
 
 void do_emt_closedir(void)
 {
-  int i = Z80_DE;
+  int const i = Z80_DE;
   int ok;
   if (i < 0 || i >= MAX_OPENDIR || dir[i].dir == NULL) {
     Z80_A = EBADF;
@@ -445,7 +445,8 @@ void do_emt_closedir(void)
 
 void do_emt_readdir(void)
 {
-  int size, i = Z80_DE;
+  int const i = Z80_DE;
+  int size;
   struct dirent *result;
 
   if (i < 0 || i >= MAX_OPENDIR || dir[i].dir == NULL) {
@@ -482,7 +483,7 @@ void do_emt_readdir(void)
 
 void do_emt_chdir(void)
 {
-  int ok = chdir((char *)mem_pointer(Z80_HL, 0));
+  int const ok = chdir((char *)mem_pointer(Z80_HL, 0));
   if (trs_emtsafe) {
     error("emt_chdir: potentially dangerous emulator trap blocked");
     Z80_A = EACCES;
@@ -652,7 +653,7 @@ void do_emt_ftruncate(void)
  */
 void do_emt_opendisk(void)
 {
-  int drive = Z80_A % TRS_HARD_MAXDRIVES;
+  int const drive = Z80_A % TRS_HARD_MAXDRIVES;
   int i;
   int readonly = 0;
 

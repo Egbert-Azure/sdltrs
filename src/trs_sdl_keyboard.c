@@ -628,7 +628,7 @@ void trs_set_keypad_joystick(void)
 void trs_open_joystick(void)
 {
   static SDL_Joystick *open_joy = NULL;
-  int num_joysticks = SDL_NumJoysticks() - 1;
+  int const num_joysticks = SDL_NumJoysticks() - 1;
 
   if (open_joy != NULL) {
     SDL_JoystickClose(open_joy);
