@@ -779,7 +779,7 @@ redraw:
 
   while (1) {
     for (i = 0; i < 60; i++) {
-      unsigned int cur_pos = first_disp + i;
+      unsigned int const cur_pos = first_disp + i;
 
       trs_gui_write_char(i + 2, 7,
           (cur_pos >= len) ? ' ' : output[cur_pos],
@@ -1774,7 +1774,7 @@ void trs_gui_emulator_settings(void)
         snprintf(input, 6, "%.2f", clock_mhz[model_selection]);
         if (trs_gui_input_string("Enter CPU Clock Speed in MHz",
             input, input, 6, 0) == 0) {
-          float value = atof(input);
+          float const value = atof(input);
 
           if (value >= 0.1 && value <= 99.0) {
             clock_mhz[model_selection] = value;
@@ -2278,7 +2278,7 @@ int trs_gui_virtual_keyboard(void)
 
 void trs_gui_get_virtual_key(void)
 {
-  int key = trs_gui_virtual_keyboard();
+  int const key = trs_gui_virtual_keyboard();
 
   if (key != -1)
     trs_xlate_keysym(key);
@@ -2286,7 +2286,7 @@ void trs_gui_get_virtual_key(void)
 
 void trs_gui_joy_gui(void)
 {
-  int selection = trs_gui_display_popup_matrix("Joystick GUI", function_choices, 3, 2, 0);
+  int const selection = trs_gui_display_popup_matrix("Joystick GUI", function_choices, 3, 2, 0);
 
   if (selection == -1)
     return;

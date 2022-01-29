@@ -139,7 +139,7 @@ static int cassette_speed = SPEED_500;
 
 /* Pulse shapes for conversion from .cas on input */
 #define CAS_MAXSTATES 8
-static struct {
+const static struct {
   const int delta_us;
   const int next;
 } pulse_shape[3][2][CAS_MAXSTATES] = {
@@ -212,10 +212,10 @@ static struct {
    changed; we ignore the difference.  Actually, we ignore more than
    that; we convert the values as if 0 were really halfway between
    high and low.  */
-Uint8 value_to_sample[] = { 127, /* 0.46 V */
-			    254, /* 0.85 V */
-			    0,   /* 0.00 V */
-			    127, /* unused, but close to 0.46 V */
+Uint8 const value_to_sample[] = { 127, /* 0.46 V */
+			          254, /* 0.85 V */
+			          0,   /* 0.00 V */
+			          127, /* unused, but close to 0.46 V */
 };
 
 /* .wav file definitions */
