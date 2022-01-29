@@ -2582,7 +2582,7 @@ void trs_gui_rom_files(void)
   {{"Model I ROM:", MENU_TITLE},
    {"   ", MENU_NORMAL},
    {"", MENU_TITLE},
-   {"Model III ROM:", MENU_TITLE},
+   {"Model III / 4 ROM:", MENU_TITLE},
    {"   ", MENU_NORMAL},
    {"", MENU_TITLE},
    {"Model 4P ROM:", MENU_TITLE},
@@ -2605,7 +2605,7 @@ void trs_gui_rom_files(void)
         trs_gui_file_browse(romfile, romfile, NULL, 0, "Model I ROM");
         break;
       case 4:
-        trs_gui_file_browse(romfile3, romfile3, NULL, 0, "Model III ROM");
+        trs_gui_file_browse(romfile3, romfile3, NULL, 0, "Model III / 4 ROM");
         break;
       case 7:
         trs_gui_file_browse(romfile4p, romfile4p, NULL, 0, "Model 4P ROM");
