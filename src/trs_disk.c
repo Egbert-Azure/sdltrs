@@ -2202,7 +2202,7 @@ trs_disk_command_write(Uint8 cmd)
       return;
     }
   }
-  if (genie3s) {
+  if (genie3s || speedup == 6) {
     if (cmd == 0xFE || cmd == 0xFF) {
       state.density = (cmd == 0xFF) ? 1 : 0;
       return;
