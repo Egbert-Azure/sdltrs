@@ -357,12 +357,10 @@ void sys_byte_out(int value)
 					memory_map = 0x14;
 			}
 			/* Fall through */
-		case 5: /* HRG only in TRS-80 memory map */
-			if (memory_map == 0x10) {
-				if ((value & (1 << 3)))
-					memory_map = 0x20;
-				hrg_onoff((value & (1 << 1)) ? 2 : 0);
-			}
+		case 5: /* HRG in low 16 kB */
+			if ((value & (1 << 3)))
+				memory_map = 0x20;
+			hrg_onoff((value & (1 << 1)) ? 2 : 0);
 			break;
 		case 4: /* Banking-Modification from Martin Doppelbauer */
 			if (value & (1 << 4))
