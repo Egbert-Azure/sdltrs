@@ -278,6 +278,7 @@ void genie3s_init_out(int value)
 {
 	genie3s_bank_out(value);
 	trs_timer_init();
+	trs_screen_init();
 	mem_video_page(0);
 	memory_map = 0x24;
 }
