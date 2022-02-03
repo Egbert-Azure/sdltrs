@@ -2196,18 +2196,6 @@ trs_disk_command_write(Uint8 cmd)
     debug("command_write(0x%02x) pc 0x%04x\n", cmd, Z80_PC);
   }
 
-  if (eg3200) {
-    if ((cmd & 0xF8) == 0xF8) {
-      state.density = cmd & 1;
-      return;
-    }
-  }
-  if (genie3s || speedup == 6) {
-    if (cmd == 0xFE || cmd == 0xFF) {
-      state.density = (cmd == 0xFF) ? 1 : 0;
-      return;
-    }
-  }
   /* Handle DMK partial track reformat */
   if (d->emutype == DMK &&
       (state.currcommand & ~TRSDISK_EBIT) == TRSDISK_WRITETRK &&
@@ -2283,6 +2271,20 @@ trs_disk_command_write(Uint8 cmd)
   trs_disk_intrq_interrupt(0);
   state.bytecount = 0;
   state.currcommand = cmd;
+
+  if (eg3200) {
+    if ((cmd & 0xF8) == 0xF8) {
+      state.density = cmd & 1;
+      return;
+    }
+  }
+  if (genie3s || speedup == 6) {
+    if (cmd == 0xFE || cmd == 0xFF) {
+      state.density = (cmd == 0xFF) ? 1 : 0;
+      return;
+    }
+  }
+
   switch (cmd & TRSDISK_CMDMASK) {
 
   case TRSDISK_RESTORE:
