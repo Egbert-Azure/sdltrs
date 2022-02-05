@@ -1086,21 +1086,10 @@ int trs_write_config_file(const char *filename)
   }
   fprintf(config_file, "diskdir=%s\n", trs_disk_dir);
   fprintf(config_file, "disksetdir=%s\n", trs_disk_set_dir);
-  fprintf(config_file, "doubler=");
-  switch (trs_disk_doubler) {
-    case TRSDISK_PERCOM:
-      fprintf(config_file, "percom\n");
-      break;
-    case TRSDISK_TANDY:
-      fprintf(config_file, "tandy\n");
-      break;
-    case TRSDISK_BOTH:
-      fprintf(config_file, "both\n");
-      break;
-    case TRSDISK_NODOUBLER:
-      fprintf(config_file, "none\n");
-      break;
-  }
+  fprintf(config_file, "doubler=%s\n",
+    (trs_disk_doubler == TRSDISK_PERCOM) ? "percom" :
+    (trs_disk_doubler == TRSDISK_TANDY)  ? "tandy"  :
+    (trs_disk_doubler == TRSDISK_BOTH)   ? "both"   : "none");
   fprintf(config_file, "%semtsafe\n", trs_emtsafe ? "" : "no");
   fprintf(config_file, "%sfullscreen\n", fullscreen ? "" : "no");
   fprintf(config_file, "foreground=0x%x\n", foreground);
@@ -1150,31 +1139,13 @@ int trs_write_config_file(const char *filename)
       trs_disk_getsize(0), trs_disk_getsize(1), trs_disk_getsize(2), trs_disk_getsize(3),
       trs_disk_getsize(4), trs_disk_getsize(5), trs_disk_getsize(6), trs_disk_getsize(7));
   fprintf(config_file, "%ssound\n", trs_sound ? "" : "no");
-  fprintf(config_file, "speedup=");
-  switch (speedup) {
-    case 0:
-    default:
-      fprintf(config_file, "none\n");
-      break;
-    case 1:
-      fprintf(config_file, "archbold\n");
-      break;
-    case 2:
-      fprintf(config_file, "holmes\n");
-      break;
-    case 3:
-      fprintf(config_file, "seatronics\n");
-      break;
-    case 4:
-      fprintf(config_file, "banking\n");
-      break;
-    case 5:
-      fprintf(config_file, "lnw80\n");
-      break;
-    case 6:
-      fprintf(config_file, "tcs speedmaster\n");
-      break;
-  }
+  fprintf(config_file, "speedup=%s\n",
+    (speedup == 1) ? "archbold"        :
+    (speedup == 2) ? "holmes"          :
+    (speedup == 3) ? "seatronics"      :
+    (speedup == 4) ? "banking"         :
+    (speedup == 5) ? "lnw80"           :
+    (speedup == 6) ? "tcs speedmaster" : "none");
   fprintf(config_file, "statedir=%s\n", trs_state_dir);
 #ifdef __linux
   /* Corrected to trs_disk_getstep vs getsize by Larry Kraemer 08-01-2011 */
