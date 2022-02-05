@@ -508,7 +508,7 @@ static void trs_opt_charset(char *arg, int intarg, int *stringarg)
           trs_charset1 = 12;
           break;
         default:
-          error("unknown charset1 name: '%s'", arg);
+          error("unknown charset1: '%s'", arg);
     }
   } else {
     if (isdigit((int)*arg)) {
@@ -535,7 +535,7 @@ static void trs_opt_charset(char *arg, int intarg, int *stringarg)
           charset = 6;
           break;
         default:
-          error("unknown charset%d name: '%s'", intarg, arg);
+          error("unknown charset%d: '%s'", intarg, arg);
           return;
       }
       if (intarg == 3)
@@ -968,7 +968,7 @@ int trs_load_config_file(void)
       snprintf(trs_config_file, FILENAME_MAX, "./sdltrs.t8c");
 
     if ((config_file = fopen(trs_config_file, "r")) == NULL) {
-      debug("create default configuration file: '%s'\n", trs_config_file);
+      debug("create default configuration: '%s'\n", trs_config_file);
       trs_write_config_file(trs_config_file);
       return -1;
     }
