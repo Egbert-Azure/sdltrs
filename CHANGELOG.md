@@ -1,3 +1,12 @@
+## Version 1.2.22 Release 02-06-2022:
+
+ * Added EG 64.1 memory expansion for TRS-80 Model I.
+ * Added Schmidtke 80-Z Video Card for TRS-80 Model I.
+ * Added EG 3210 Programmable Graphics Adaptor for Genie III.
+ * Added some David Keil's TRS-80 Emulator extensions.
+ * Added P2 key for TCS Genie IIs/SpeedMaster.
+ * Fixed TRS-80 Selector mode 6.
+
 ## Version 1.2.21 Release 11-28-2021:
 
  * Added emulation of TCS Genie IIIs system.
