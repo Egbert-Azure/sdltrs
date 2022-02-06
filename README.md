@@ -29,6 +29,10 @@ Updated version of Mark Grebe's [SDLTRS]:
   * Support EG-64 Memory-Banking-Adaptor from TCS
   * Support Lubomir Soft Banker for TRS-80 Model I
   * Emulation of the TCS Genie IIIs system
+  * Support EG 64.1 memory expansion for TRS-80 Model I
+  * Support Schmidtke 80-Z Video Card for TRS-80 Model I
+  * Emulate EG 3210 Programmable Graphics Adaptor for Genie III
+  * Support some David Keil's TRS-80 Emulator extensions
 
 ## License
 
