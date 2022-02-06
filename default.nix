@@ -8,14 +8,14 @@
 with lib;
 stdenv.mkDerivation rec {
   pname   = "sdl2trs";
-  version = "1.2.21";
+  version = "1.2.22";
 
   src = fetchFromGitLab {
     owner  = "jengun";
     repo   = "sdltrs";
-    rev    = "ab9b1f7f58f4c9e1425b9be0cb62375c1065ba03";
-    sha256 = "jaj8vC70IK6a/m9g134DSUrT78thAoXDGLGpPMHD2G8=";
-  };
+    rev    = "feece96cb10111178b9231b33101f967a1af7c76";
+    sha256 = "VV2L/OeSoE2/S8Pzjf91GxiObmgGCKz1KJpeYvV6KOA=";
+};
 
   nativeBuildInputs = [ cmake ];
   buildInputs       = [ readline SDL2 ];
