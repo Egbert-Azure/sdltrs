@@ -139,7 +139,7 @@ static int cassette_speed = SPEED_500;
 
 /* Pulse shapes for conversion from .cas on input */
 #define CAS_MAXSTATES 8
-const static struct {
+static const struct {
   const int delta_us;
   const int next;
 } pulse_shape[3][2][CAS_MAXSTATES] = {
