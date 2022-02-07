@@ -34,6 +34,10 @@ Updated version of Mark Grebe's [SDLTRS]:
   * Emulate EG 3210 Programmable Graphics Adaptor for Genie III
   * Support some David Keil's TRS-80 Emulator extensions
 
+SDL(2)TRS is based on Tim Mann's excellent TRS-80 emulator [xtrs] and also
+has very low system requirements: it works on all platforms supported by the
+[SDL] library, even on machines with only a few hundred MHz of CPU speed.
+
 ## License
 
   [BSD 2-Clause](LICENSE)
@@ -84,6 +88,7 @@ Lupi's fork of [RetroPie-Setup] ...
 [MinGW-w64]: http://mingw-w64.org
 [RetroPie]: https://github.com/RetroPie
 [RetroPie-Setup]: https://github.com/valerino/RetroPie-Setup
+[SDL]: https://www.libsdl.org
 [SDL2]: https://gitlab.com/jengun/sdltrs/-/tree/sdl2
 [SDL.DLL]: https://www.libsdl.org/download-1.2.php
 [SDL2.DLL]: https://www.libsdl.org/download-2.0.php
@@ -98,3 +103,4 @@ Lupi's fork of [RetroPie-Setup] ...
 [sdl2trs_1.2.22-1_i386.deb]: bin/sdl2trs_1.2.22-1_i386.deb
 [sdltrs_1.2.22-1_amd64.deb]: bin/sdltrs_1.2.22-1_amd64.deb
 [sdl2trs_1.2.22-1_amd64.deb]: bin/sdl2trs_1.2.22-1_amd64.deb
+[xtrs]: https://www.tim-mann.org/xtrs.html
