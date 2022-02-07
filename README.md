@@ -34,6 +34,10 @@ Updated version of Mark Grebe's [SDLTRS]:
   * Emulate EG 3210 Programmable Graphics Adaptor for Genie III
   * Support some David Keil's TRS-80 Emulator extensions
 
+SDL(2)TRS is based on Tim Mann's excellent TRS-80 emulator [xtrs] and also
+has very low system requirements: it works on all platforms supported by the
+[SDL] library, even on machines with only a few hundred MHz of CPU speed.
+
 ## License
 
   [BSD 2-Clause](LICENSE)
@@ -59,4 +63,6 @@ Thanks to Tércio Martins a package for Arch Linux is available in the [AUR].
 [EtchedPixels]: https://www.github.com/EtchedPixels/xtrs
 [RetroPie]: https://github.com/RetroPie
 [RetroPie-Setup]: https://github.com/valerino/RetroPie-Setup
+[SDL]: https://www.libsdl.org
 [SDLTRS]: http://sdltrs.sourceforge.net
+[xtrs]: https://www.tim-mann.org/xtrs.html
