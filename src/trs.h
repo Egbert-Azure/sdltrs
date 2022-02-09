@@ -194,9 +194,11 @@ extern int trs_disk_motoroff(void);
 
 extern int huffman_ram;
 extern int hypermem;
+extern int megamem;
 extern int supermem;
 extern int selector;
 
+extern void megamem_out(int mem_slot, Uint8 value);
 extern void selector_out(Uint8);
 
 extern int lowercase;

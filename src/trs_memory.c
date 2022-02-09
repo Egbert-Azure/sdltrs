@@ -57,12 +57,15 @@
 #define MAX_VIDEO_SIZE	(0x0800)
 #define CP500_ROM_SIZE	(0x4000)
 
-#define MAX_MEMORY_SIZE	(0x200000)
+#define MAX_MEMORY_SIZE	(4 * 1024 * 1024) + 65536
 
 /* 512K is the largest we support. There were it seems 1MByte
    options at some point which is the full range of the mapping.
    How the mapping register worked for > 1MB is not known */
 #define MAX_SUPERMEM_SIZE 	(0x80000)
+
+/* Start MegaMem > 1MB to leave space for HyperMem */
+#define MEGAMEM_START	(1 * 1024 * 1024) + 65536
 
 /* Locations for Model I, Model III, and Model 4 map 0 */
 #define KEYBOARD_START	(0x3800)
@@ -81,6 +84,7 @@ Uint8 cp500_rom[CP500_ROM_SIZE + 1];
 int trs_rom_size;
 int lowercase = 1;
 int lubomir; /* Lubomir Soft Banker */
+int megamem;
 int huffman_ram;
 int hypermem;
 int supermem;
@@ -99,6 +103,8 @@ static int bank_offset[2];
 #define VIDEO_PAGE_1 1024
 static int video_ram = VIDEO_START + VIDEO_PAGE_0;
 static unsigned int bank_base = 0x10000;
+static unsigned int megamem_addr;
+static unsigned int megamem_base;
 static Uint8 mem_command;
 static int romin; /* Model 4p */
 static int supermem_base;
@@ -169,8 +175,6 @@ void mem_bank(int command)
  *	design IMHO as sound using apps can randomly change the
  *	upper bank. Fine for a ramdisc but means other software
  *	must take great care.
- *
- *	The MegaMem mappings are not known and not emulated.
  */
 
 void mem_bank_base(int bits)
@@ -212,6 +216,18 @@ int mem_read_bank_base(void)
 			((supermem_hi == 0) ? 0x20 : 0);
 	/* And the HyperMem appears to be write-only */
 	return 0xFF;
+}
+
+void megamem_out(int mem_slot, Uint8 value)
+{
+	if (mem_slot == 0 && value == 0) {
+		megamem_base = 0;
+		return;
+	}
+
+	megamem_addr = (value & 0xC0) * 256;
+	megamem_base = (((value - (value & 0xC0)) * 16) +
+			(mem_slot * 1024)) * 1024 + MEGAMEM_START;
 }
 
 /* The A11 flipflop is used for enabling access to the CP-500
@@ -421,6 +437,8 @@ void trs_reset(int poweron)
     m_a11_flipflop = 0;
     bank_base = 0x10000;
     eg3200 = 0;
+    megamem_addr = 0;
+    megamem_base = 0;
     mem_command = 0;
     romin = 0;
     supermem_base = 0;
@@ -564,6 +582,11 @@ int mem_read(int address)
        the address. Deal with these first so that we take their
        output and feed it into the memory map */
 
+    /* Anitek's MegaMem */
+    if (megamem_base) {
+      if (address >= megamem_addr && address <= megamem_addr + 0x3FFF)
+        return memory[megamem_base + (address & 0x3FFF)];
+    }
     /* The SuperMem sits between the system and the Z80 */
     if (supermem) {
       if (!((address ^ supermem_hi) & 0x8000))
@@ -830,6 +853,13 @@ void mem_write(int address, int value)
 {
     address &= 0xffff;
 
+    /* Anitek's MegaMem */
+    if (megamem_base) {
+      if (address >= megamem_addr && address <= megamem_addr + 0x3FFF) {
+        memory[megamem_base + (address & 0x3FFF)] = value;
+        return;
+      }
+    }
     /* The SuperMem sits between the system and the Z80 */
     if (supermem) {
       if (!((address ^ supermem_hi) & 0x8000)) {
@@ -1117,6 +1147,11 @@ Uint8 *mem_pointer(int address, int writing)
 {
     address &= 0xffff;
 
+    /* Anitek's MegaMem */
+    if (megamem_base) {
+      if (address >= megamem_addr && address <= megamem_addr + 0x3FFF)
+        return &memory[megamem_base + (address & 0x3FFF)];
+    }
     /* The SuperMem sits between the system and the Z80 */
     if (supermem) {
       if (!((address ^ supermem_hi) & 0x8000))
@@ -1329,6 +1364,9 @@ void trs_mem_save(FILE *file)
   trs_save_int(file, &selector_reg, 1);
   trs_save_int(file, &lubomir, 1);
   trs_save_int(file, &m_a11_flipflop, 1);
+  trs_save_int(file, &megamem, 1);
+  trs_save_uint32(file, &megamem_addr, 1);
+  trs_save_uint32(file, &megamem_base, 1);
   trs_save_int(file, &eg3200, 1);
   trs_save_int(file, &genie3s, 1);
   trs_save_int(file, &system_byte, 1);
@@ -1357,6 +1395,9 @@ void trs_mem_load(FILE *file)
   trs_load_int(file, &selector_reg, 1);
   trs_load_int(file, &lubomir, 1);
   trs_load_int(file, &m_a11_flipflop, 1);
+  trs_load_int(file, &megamem, 1);
+  trs_load_uint32(file, &megamem_addr, 1);
+  trs_load_uint32(file, &megamem_base, 1);
   trs_load_int(file, &eg3200, 1);
   trs_load_int(file, &genie3s, 1);
   trs_load_int(file, &system_byte, 1);

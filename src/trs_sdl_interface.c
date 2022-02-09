@@ -326,6 +326,7 @@ static const trs_opt options[] = {
   { "m3",              trs_opt_value,         0, 3, &trs_model           },
   { "m4",              trs_opt_value,         0, 4, &trs_model           },
   { "m4p",             trs_opt_value,         0, 5, &trs_model           },
+  { "megamem",         trs_opt_value,         0, 1, &megamem             },
   { "model",           trs_opt_model,         1, 0, NULL                 },
   { "mousepointer",    trs_opt_value,         0, 1, &mousepointer        },
 #ifdef ZBX
@@ -346,6 +347,7 @@ static const trs_opt options[] = {
   { "nolower",         trs_opt_value,         0, 0, &lowercase           },
   { "nolowercase",     trs_opt_value,         0, 0, &lowercase           },
   { "nolubomir",       trs_opt_value,         0, 0, &lubomir             },
+  { "nomegamem",       trs_opt_value,         0, 0, &megamem             },
   { "nomicrolabs",     trs_opt_microlabs,     0, 0, NULL                 },
   { "nomousepointer",  trs_opt_value,         0, 0, &mousepointer        },
   { "noresize3",       trs_opt_value,         0, 0, &resize3             },
@@ -1116,6 +1118,7 @@ int trs_write_config_file(const char *filename)
   fprintf(config_file, "%sle18\n", lowe_le18 ? "" : "no");
   fprintf(config_file, "%slowercase\n", lowercase ? "" : "no");
   fprintf(config_file, "%slubomir\n", lubomir ? "" : "no");
+  fprintf(config_file, "%smegamem\n", megamem ? "" : "no");
   fprintf(config_file, "%smicrolabs\n", grafyx_microlabs ? "" : "no");
   fprintf(config_file, "model=%d%s\n",
           trs_model == 5 ? 4 : trs_model, trs_model == 5 ? "P" : "");
