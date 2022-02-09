@@ -364,6 +364,15 @@ void z80_out(int port, int value)
   } else {
     /* Next, Models III/4/4P only */
     switch (port) {
+    case 0x50: /* MegaMem memory slot */
+    case 0x51:
+    case 0x52:
+    case 0x60:
+    case 0x61:
+    case 0x62:
+      if (megamem)
+        megamem_out(port & 0x0F, value);
+      break;
     case 0x5f: /* Sprinter III */
       if (trs_model == 3)
           trs_timer_speed(value);
