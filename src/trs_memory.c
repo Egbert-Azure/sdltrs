@@ -221,13 +221,13 @@ int mem_read_bank_base(void)
 void megamem_out(int mem_slot, Uint8 value)
 {
 	if (mem_slot == 0 && value == 0) {
+		megamem_addr = 0;
 		megamem_base = 0;
-		return;
+	} else {
+		megamem_addr = (value & 0xC0) * 256;
+		megamem_base = (((value - (value & 0xC0)) * 16) +
+				(mem_slot * 1024)) * 1024 + MEGAMEM_START;
 	}
-
-	megamem_addr = (value & 0xC0) * 256;
-	megamem_base = (((value - (value & 0xC0)) * 16) +
-			(mem_slot * 1024)) * 1024 + MEGAMEM_START;
 }
 
 /* The A11 flipflop is used for enabling access to the CP-500
@@ -583,7 +583,7 @@ int mem_read(int address)
        output and feed it into the memory map */
 
     /* Anitek's MegaMem */
-    if (megamem_base) {
+    if (megamem_addr) {
       if (address >= megamem_addr && address <= megamem_addr + 0x3FFF)
         return memory[megamem_base + (address & 0x3FFF)];
     }
@@ -854,7 +854,7 @@ void mem_write(int address, int value)
     address &= 0xffff;
 
     /* Anitek's MegaMem */
-    if (megamem_base) {
+    if (megamem_addr) {
       if (address >= megamem_addr && address <= megamem_addr + 0x3FFF) {
         memory[megamem_base + (address & 0x3FFF)] = value;
         return;
@@ -1148,7 +1148,7 @@ Uint8 *mem_pointer(int address, int writing)
     address &= 0xffff;
 
     /* Anitek's MegaMem */
-    if (megamem_base) {
+    if (megamem_addr) {
       if (address >= megamem_addr && address <= megamem_addr + 0x3FFF)
         return &memory[megamem_base + (address & 0x3FFF)];
     }
