@@ -183,6 +183,7 @@ void mem_bank_base(int bits)
 		bits &= 0x1F;
 		bank_base = bits << 16;
 		mem_bank(mem_command);
+		return;
 	}
 	if (hypermem) {
 	        /* HyperMem replaces the upper 64K bank with multiple
@@ -192,6 +193,7 @@ void mem_bank_base(int bits)
 		bits += 2;
 		bank_base = bits << 15;
 		mem_bank(mem_command);
+		return;
 	}
 	if (supermem) {
 		/* Emulate a 512Kb system. A standard model 1 SuperMEM is 256K
