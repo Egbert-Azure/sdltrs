@@ -586,17 +586,15 @@ static void trs_opt_diskset(char *arg, int intarg, int *stringarg)
 
 static void trs_opt_dirname(char *arg, int intarg, int *stringarg)
 {
-  if (arg[0]) {
-    struct stat st = { 0 };
+  struct stat st = { 0 };
 
-    if (stat(arg, &st) < 0)
-      strcpy(arg, ".");
+  if (stat(arg, &st) < 0)
+    strcpy(arg, ".");
 
-    if (arg[strlen(arg) - 1] == DIR_SLASH)
-      snprintf((char *)stringarg, FILENAME_MAX, "%s", arg);
-    else
-      snprintf((char *)stringarg, FILENAME_MAX, "%s%c", arg, DIR_SLASH);
-  }
+  if (arg[strlen(arg) - 1] == DIR_SLASH)
+    snprintf((char *)stringarg, FILENAME_MAX, "%s", arg);
+  else
+    snprintf((char *)stringarg, FILENAME_MAX, "%s%c", arg, DIR_SLASH);
 }
 
 static void trs_opt_doubler(char *arg, int intarg, int *stringarg)
