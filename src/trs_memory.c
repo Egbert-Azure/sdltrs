@@ -62,7 +62,7 @@
 /* 512K is the largest we support. There were it seems 1MByte
    options at some point which is the full range of the mapping.
    How the mapping register worked for > 1MB is not known */
-#define MAX_SUPERMEM_SIZE 	(0x80000)
+#define MAX_SUPERMEM_SIZE	(512 * 1024)
 
 /* Start MegaMem > 1MB to leave space for HyperMem */
 #define MEGAMEM_START	(1 * 1024 * 1024) + 65536
