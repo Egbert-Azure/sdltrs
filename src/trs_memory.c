@@ -504,7 +504,7 @@ void trs_reset(int poweron)
     /* Clear screen */
     memset(&video, ' ', MAX_VIDEO_SIZE);
     trs_screen_reset();
-    trs_screen_refresh();
+    trs_screen_init();
 }
 
 void mem_map(int which)
