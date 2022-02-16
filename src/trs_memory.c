@@ -80,7 +80,6 @@
    of the port mods rather than anything normal (512K might be more 'normal' */
 Uint8 memory[MAX_MEMORY_SIZE + 1]; /* +1 so strings from mem_pointer are NUL-terminated */
 Uint8 rom[MAX_ROM_SIZE + 1];
-Uint8 cp500_rom[CP500_ROM_SIZE + 1];
 int trs_rom_size;
 int lowercase = 1;
 int lubomir; /* Lubomir Soft Banker */
@@ -94,6 +93,7 @@ int genie3s; /* TCS Genie IIIs */
 
 /* private data */
 static Uint8 video[MAX_VIDEO_SIZE + 1];
+static Uint8 cp500_rom[CP500_ROM_SIZE + 1];
 /* We map the SuperMem separately, otherwise it can get really
    confusing when combining with other stuff */
 static Uint8 supermem_ram[MAX_SUPERMEM_SIZE + 1];
