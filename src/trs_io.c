@@ -440,7 +440,7 @@ void z80_out(int port, int value)
       trs_sound_out(value & 1);
       break;
     case 0x94:			/* Huffman memory expansion */
-      if (trs_model >= 4 && huffman_ram)
+      if (trs_model >= 4 && huffman)
         mem_bank_base(value);
       break;
     case 0x9C:

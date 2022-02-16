@@ -1762,7 +1762,7 @@ void trs_gui_emulator_settings(void)
     snprintf(&menu[8].text[50], 11, "%s", yes_no_choices[supermem]);
     snprintf(&menu[9].text[50], 11, "%s", yes_no_choices[grafyx_get_microlabs()]);
     snprintf(&menu[10].text[50], 11, "%s", yes_no_choices[megamem]);
-    snprintf(&menu[11].text[50], 11, "%s", yes_no_choices[huffman_ram]);
+    snprintf(&menu[11].text[50], 11, "%s", yes_no_choices[huffman]);
     snprintf(&menu[12].text[50], 11, "%s", yes_no_choices[hypermem]);
     trs_gui_clear_screen();
 
@@ -1829,14 +1829,14 @@ void trs_gui_emulator_settings(void)
         megamem = trs_gui_display_popup("MegaMem", yes_no_choices, 2, megamem);
         break;
       case 11:
-        huffman_ram = trs_gui_display_popup("Huffman", yes_no_choices, 2, huffman_ram);
-        if (huffman_ram)
+        huffman = trs_gui_display_popup("Huffman", yes_no_choices, 2, huffman);
+        if (huffman)
           hypermem = 0;
         break;
       case 12:
         hypermem = trs_gui_display_popup("HyperMem", yes_no_choices, 2, hypermem);
         if (hypermem)
-          huffman_ram = 0;
+          huffman = 0;
         break;
       case -1:
         model_selection = (model_selection == 0 ? 1 : model_selection + 2);
