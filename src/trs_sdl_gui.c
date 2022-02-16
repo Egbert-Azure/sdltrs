@@ -160,7 +160,6 @@ static int  trs_gui_display_popup_matrix(const char *title, const char **entry,
                                          int rows, int cols, int selection);
 static int  trs_gui_display_question(const char *text);
 static int  trs_gui_file_overwrite(void);
-static void trs_gui_new_machine(void);
 static void trs_gui_disk_creation(void);
 #ifdef __linux
 static void trs_gui_disk_steps(void);
@@ -1208,13 +1207,6 @@ int trs_gui_file_overwrite(void)
   return 1;
 }
 
-void trs_gui_new_machine(void)
-{
-  trs_screen_reset();
-  trs_screen_init();
-  trs_reset(1);
-}
-
 void trs_gui_disk_creation(void)
 {
   MENU_ENTRY menu[] =
@@ -1865,7 +1857,7 @@ void trs_gui_emulator_settings(void)
         model_selection = (model_selection == 0 ? 1 : model_selection + 2);
         if (trs_model != model_selection) {
           trs_model = model_selection;
-          trs_gui_new_machine();
+          trs_reset(1);
         }
         return;
     }
@@ -2222,7 +2214,7 @@ int trs_gui_read_config(void)
   if (trs_gui_file_browse(trs_config_file, trs_config_file, ".t8c", 0,
       "Configuration (.t8c)") >= 0) {
     if (trs_load_config_file() == 0) {
-      trs_gui_new_machine();
+      trs_reset(1);
       return 0;
     }
     trs_gui_display_error(trs_config_file);
