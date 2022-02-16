@@ -141,7 +141,7 @@ void do_emt_mouse(void)
     }
     break;
   default:
-    error("undefined emt_mouse function code");
+    error("undefined emt_mouse function code %d", Z80_B);
     break;
   }
 }
@@ -391,7 +391,7 @@ void do_emt_time(void)
     }
 #endif
   } else if (Z80_A != 0) {
-    error("unsupported function code to emt_time");
+    error("unsupported function code %d to emt_time", Z80_A);
   }
   Z80_BC = (now >> 16) & 0xffff;
   Z80_DE = now & 0xffff;
@@ -602,7 +602,7 @@ void do_emt_misc(void)
     lowercase = Z80_HL;
     break;
   default:
-    error("unsupported function code to emt_misc");
+    error("unsupported function code %d to emt_misc", Z80_A);
     break;
   }
 }
