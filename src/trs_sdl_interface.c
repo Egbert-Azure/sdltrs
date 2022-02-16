@@ -642,8 +642,8 @@ static void trs_opt_hard(char *arg, int intarg, int *stringarg)
 
 static void trs_opt_huffman(char *arg, int intarg, int *stringarg)
 {
-  huffman_ram = intarg;
-  if (huffman_ram)
+  huffman = intarg;
+  if (huffman)
     hypermem = 0;
 }
 
@@ -651,7 +651,7 @@ static void trs_opt_hypermem(char *arg, int intarg, int *stringarg)
 {
   hypermem = intarg;
   if (hypermem)
-    huffman_ram = 0;
+    huffman = 0;
 }
 
 static void trs_opt_joybuttonmap(char *arg, int intarg, int *stringarg)
@@ -1100,7 +1100,7 @@ int trs_write_config_file(const char *filename)
   }
   fprintf(config_file, "harddir=%s\n", trs_hard_dir);
   fprintf(config_file, "%shdboot\n", trs_hd_boot ? "" : "no");
-  fprintf(config_file, "%shuffman\n", huffman_ram ? "" : "no");
+  fprintf(config_file, "%shuffman\n", huffman ? "" : "no");
   fprintf(config_file, "%shypermem\n", hypermem ? "" : "no");
   fprintf(config_file, "%sjoyaxismapped\n", jaxis_mapped ? "" : "no");
   fprintf(config_file, "joybuttonmap=");

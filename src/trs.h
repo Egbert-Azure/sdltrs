@@ -192,7 +192,7 @@ extern void trs_uart_set_empty(int dummy);
 extern void trs_disk_debug(void);
 extern int trs_disk_motoroff(void);
 
-extern int huffman_ram;
+extern int huffman;
 extern int hypermem;
 extern int megamem;
 extern int supermem;

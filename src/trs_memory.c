@@ -84,7 +84,7 @@ int trs_rom_size;
 int lowercase = 1;
 int lubomir; /* Lubomir Soft Banker */
 int megamem;
-int huffman_ram;
+int huffman;
 int hypermem;
 int supermem;
 int selector;
@@ -179,7 +179,7 @@ void mem_bank(int command)
 
 void mem_bank_base(int bits)
 {
-	if (huffman_ram) {
+	if (huffman) {
 		bits &= 0x1F;
 		bank_base = bits << 16;
 		mem_bank(mem_command);
@@ -211,7 +211,7 @@ void mem_bank_base(int bits)
 
 int mem_read_bank_base(void)
 {
-	if (huffman_ram)
+	if (huffman)
 		return (bank_base >> 16) & 0x1F;
 	if (supermem)
 		return (supermem_base >> 15) |
@@ -459,7 +459,7 @@ void trs_reset(int poweron)
     if (trs_model >= 4) {
         /* Turn off various memory map and video mode bits */
 	z80_out(0x84, 0);
-	if (huffman_ram)
+	if (huffman)
 		z80_out(0x94, 0);
         if (hypermem)
                 z80_out(0x90, 0);
@@ -1357,7 +1357,7 @@ void trs_mem_save(FILE *file)
   trs_save_int(file, &romin, 1);
   trs_save_uint32(file, &bank_base, 1);
   trs_save_uint8(file, &mem_command, 1);
-  trs_save_int(file, &huffman_ram, 1);
+  trs_save_int(file, &huffman, 1);
   trs_save_int(file, &hypermem, 1);
   trs_save_int(file, &supermem, 1);
   trs_save_int(file, &supermem_base, 1);
@@ -1388,7 +1388,7 @@ void trs_mem_load(FILE *file)
   trs_load_int(file, &romin, 1);
   trs_load_uint32(file, &bank_base, 1);
   trs_load_uint8(file, &mem_command, 1);
-  trs_load_int(file, &huffman_ram, 1);
+  trs_load_int(file, &huffman, 1);
   trs_load_int(file, &hypermem, 1);
   trs_load_int(file, &supermem, 1);
   trs_load_int(file, &supermem_base, 1);
