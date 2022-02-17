@@ -178,7 +178,7 @@ static unsigned int cycles_saved;
 #define G_XSIZE 128
 #define G_YSIZE 512
 #define G_MSIZE (2 * G_YSIZE) * G_XSIZE
-static char grafyx[G_MSIZE];
+static Uint8 grafyx[G_MSIZE];
 static Uint8 grafyx_unscaled[G_YSIZE][G_XSIZE];
 
 static Uint8 grafyx_microlabs;
@@ -2862,7 +2862,7 @@ void trs_gui_write_char(int col, int row, Uint8 char_index, int invert)
     SDL_BlitSurface(trs_char[invert ? 5 : 4][char_index], &srcRect, screen, &dstRect);
 }
 
-static void grafyx_write_byte(int x, int y, char byte)
+static void grafyx_write_byte(int x, int y, Uint8 byte)
 {
   if (grafyx_unscaled[y][x] == byte) {
     return;
