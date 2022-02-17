@@ -183,9 +183,8 @@ static unsigned int cycles_saved;
 #define G_XSIZE 128
 #define G_YSIZE 512
 #define G_MSIZE (2 * G_YSIZE * MAX_SCALE) * (G_XSIZE * MAX_SCALE)
-static char grafyx[G_MSIZE];
+static Uint8 grafyx[G_MSIZE];
 static Uint8 grafyx_unscaled[G_YSIZE][G_XSIZE];
-
 static Uint8 grafyx_microlabs;
 static Uint8 grafyx_x, grafyx_y, grafyx_mode;
 static Uint8 grafyx_enable;
@@ -409,7 +408,7 @@ static const trs_opt options[] = {
 static const int num_options = sizeof(options) / sizeof(trs_opt);
 
 /* Private routines */
-static void grafyx_rescale(int y, int x, char byte);
+static void grafyx_rescale(int y, int x, Uint8 byte);
 static void bitmap_init(int ram);
 static void trs_bitmap_init(int char_index, int ram);
 
@@ -2919,7 +2918,7 @@ void trs_gui_write_char(int col, int row, Uint8 char_index, int invert)
     SDL_BlitSurface(trs_char[invert ? 5 : 4][char_index], &srcRect, screen, &dstRect);
 }
 
-static void grafyx_write_byte(int x, int y, char byte)
+static void grafyx_write_byte(int x, int y, Uint8 byte)
 {
   if (grafyx_unscaled[y][x] == byte) {
     return;
@@ -2960,7 +2959,7 @@ static void grafyx_write_byte(int x, int y, char byte)
   }
 }
 
-static void grafyx_rescale(int y, int x, char byte)
+static void grafyx_rescale(int y, int x, Uint8 byte)
 {
   if (scale == 1) {
     int const p = y * 2 * G_XSIZE + x;
@@ -2968,7 +2967,7 @@ static void grafyx_rescale(int y, int x, char byte)
     grafyx[p] = byte;
     grafyx[p + G_XSIZE] = byte;
   } else {
-    char exp[MAX_SCALE];
+    Uint8 exp[MAX_SCALE];
     int i, j;
     int p = y * (scale * 2) * (G_XSIZE * scale) + x * scale;
     int const s = (G_XSIZE * scale) - scale;
