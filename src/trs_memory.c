@@ -413,12 +413,11 @@ void s80z_out(int value)
 
 static void mem_init(void)
 {
-    /* Initialize RAM/ROM & Video */
+    /* Initialize RAM & ROM */
     memset(&memory, 0xFF, MAX_MEMORY_SIZE);
     memset(&supermem_ram, 0xFF, MAX_SUPERMEM_SIZE);
     memset(&rom, 0, MAX_ROM_SIZE);
     memset(&cp500_rom, 0, CP500_ROM_SIZE);
-    memset(&video, ' ', MAX_VIDEO_SIZE);
 
     if (trs_model < 4) {
         /* Fill memory of random seed buffer */
@@ -485,11 +484,13 @@ void trs_reset(int poweron)
     if (poweron || genie3s || trs_model >= 4) {
         /* Reset processor */
 	z80_reset();
-	trs_screen_reset();
-	trs_screen_init();
 	if (poweron || trs_model >= 4)
 		mem_init();
+	/* Blank Video */
+	memset(&video, ' ', MAX_VIDEO_SIZE);
 	trs_rom_init();
+	trs_screen_reset();
+	trs_screen_init();
 	trs_timer_init();
 	if (trs_show_led) {
 	  trs_disk_led(-1, -1);
