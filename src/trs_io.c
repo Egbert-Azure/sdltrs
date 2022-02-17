@@ -536,6 +536,7 @@ int z80_in(int port)
    * T-Timer is accessible at high ports 0xC0-0xCC.  It does
    * not say where the low ports were; Joe's code had 0x70-0x7C,
    * so I presume that's correct at least for the TimeDate80.
+   * Newclock-80 (by Alpha Products) uses 0x70-0x7C or 0xB0-0xBC.
    * Note: 0xC0-0xCC conflicts with Radio Shack hard disk, so
    * clock access at these ports is disabled starting in xtrs 4.1.
    *
