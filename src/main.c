@@ -226,8 +226,6 @@ int main(int argc, char *argv[])
   trs_parse_command_line(argc, argv, &debug);
   trs_set_keypad_joystick();
   trs_open_joystick();
-  trs_screen_reset();
-  trs_screen_init();
   trs_reset(1);
 
   if (trs_state_file[0]) {

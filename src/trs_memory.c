@@ -415,11 +415,12 @@ void s80z_out(int value)
 
 static void mem_init(void)
 {
-    /* Initialize RAM & ROM */
+    /* Initialize RAM/ROM & Video */
     memset(&memory, 0xFF, MAX_MEMORY_SIZE);
     memset(&supermem_ram, 0xFF, MAX_SUPERMEM_SIZE);
     memset(&rom, 0, MAX_ROM_SIZE);
     memset(&cp500_rom, 0, CP500_ROM_SIZE);
+    memset(&video, ' ', MAX_VIDEO_SIZE);
 
     if (trs_model < 4) {
         /* Fill memory of random seed buffer */
@@ -486,6 +487,8 @@ void trs_reset(int poweron)
     if (poweron || genie3s || trs_model >= 4) {
         /* Reset processor */
 	z80_reset();
+	trs_screen_reset();
+	trs_screen_init();
 	if (poweron || trs_model >= 4)
 		mem_init();
 	trs_rom_init();
@@ -500,11 +503,8 @@ void trs_reset(int poweron)
 	/* Signal a nonmaskable interrupt. */
 	trs_reset_button_interrupt(1);
 	trs_schedule_event(trs_reset_button_interrupt, 0, 2000);
+	trs_screen_refresh();
     }
-    /* Clear screen */
-    memset(&video, ' ', MAX_VIDEO_SIZE);
-    trs_screen_reset();
-    trs_screen_init();
 }
 
 void mem_map(int which)
