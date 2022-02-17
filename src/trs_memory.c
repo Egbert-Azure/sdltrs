@@ -434,16 +434,16 @@ static void mem_init(void)
    handle hard reset or initial poweron if poweron=1 */
 void trs_reset(int poweron)
 {
-    trs_emu_mouse = FALSE;
-    m_a11_flipflop = 0;
     bank_base = 0x10000;
     eg3200 = 0;
+    m_a11_flipflop = 0;
     megamem_addr = 0;
     megamem_base = 0;
     mem_command = 0;
     romin = 0;
     supermem_base = 0;
     supermem_hi = 0x8000;
+    trs_emu_mouse = FALSE;
 
     /* Close disks opened by Z80 programs */
     do_emt_resetdisk();
