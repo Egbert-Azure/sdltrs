@@ -88,13 +88,13 @@ static void m6845_crt(int value)
       break;
     case 0x0E: /* Cursor LSB */
       if (cursor_vis)
-        m6845_cursor(cursor_pos, cursor_csr, 0);
+        m6845_cursor(cursor_pos, 0, 0);
       cursor_pos = ((value & 0x3F) << 8) | (cursor_pos & 0x00FF);
       break;
     case 0x0F: /* Cursor MSB */
       cursor_pos = ((value & 0xFF) << 0) | (cursor_pos & 0xFF00);
       if (cursor_vis)
-        m6845_cursor(cursor_pos, cursor_csr, cursor_vis);
+        m6845_cursor(cursor_pos, cursor_csr, 1);
       break;
   }
 }
