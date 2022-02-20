@@ -377,7 +377,8 @@ void sys_byte_out(int value)
 		case 5: /* HRG in low 16 kB */
 			if ((value & (1 << 3)))
 				memory_map = 0x20;
-			hrg_onoff((value & (1 << 1)) ? 2 : 0);
+			if ((value & (1 << 1)) != (system_byte & (1 << 1)))
+				hrg_onoff((value & (1 << 1)) ? 2 : 0);
 			break;
 		case 4: /* Banking-Modification from Martin Doppelbauer */
 			if (value & (1 << 4))
