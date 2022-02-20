@@ -40,7 +40,6 @@
 #include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include <SDL.h>
 #include "error.h"
 #include "load_cmd.h"
@@ -60,27 +59,14 @@
 int trs_model = 1;
 char *program_name;
 
-int trs_load_cmd(const char *filename)
+static void trs_load_compiled_rom(int address, int size, const Uint8 rom[])
 {
-  FILE *program;
-  extern Uint8 memory[];
-  int entry;
+  int i;
 
-  if ((program = fopen(filename,"rb")) == NULL) {
-    error("failed to load CMD file '%s': %s", filename, strerror(errno));
-    return -1;
-  }
-  if (load_cmd(program, memory, NULL, 0, NULL, -1, NULL, &entry, 1) == LOAD_CMD_OK) {
-    debug("entry point of '%s': 0x%x (%d) ...\n", filename, entry, entry);
-    if (entry >= 0)
-      Z80_PC = entry;
-  } else {
-    error("unknown CMD format");
-    fclose(program);
-    return -1;
-  }
-  fclose(program);
-  return 0;
+  for (i = 0; i < size; i++)
+    mem_write_rom(address + i, rom[i]);
+
+  trs_rom_size = address + i;
 }
 
 static int trs_load_rom(const char *filename)
@@ -124,9 +110,7 @@ static int trs_load_rom(const char *filename)
         error("ROM file '%s' size %d exceeds 14 kB", filename, trs_rom_size);
         return -1;
       } else {
-        extern Uint8 rom[];
-
-        memcpy(rom, loadrom, trs_rom_size);
+        trs_load_compiled_rom(0, trs_rom_size, loadrom);
         return 0;
       }
     } else {
@@ -145,14 +129,27 @@ static int trs_load_rom(const char *filename)
   return 0;
 }
 
-static void trs_load_compiled_rom(int address, int size, const Uint8 rom[])
+int trs_load_cmd(const char *filename)
 {
-  int i;
+  FILE *program;
+  extern Uint8 memory[];
+  int entry;
 
-  for (i = 0; i < size; i++)
-    mem_write_rom(address + i, rom[i]);
-
-  trs_rom_size = address + i;
+  if ((program = fopen(filename,"rb")) == NULL) {
+    error("failed to load CMD file '%s': %s", filename, strerror(errno));
+    return -1;
+  }
+  if (load_cmd(program, memory, NULL, 0, NULL, -1, NULL, &entry, 1) == LOAD_CMD_OK) {
+    debug("entry point of '%s': 0x%x (%d) ...\n", filename, entry, entry);
+    if (entry >= 0)
+      Z80_PC = entry;
+  } else {
+    error("unknown CMD format");
+    fclose(program);
+    return -1;
+  }
+  fclose(program);
+  return 0;
 }
 
 void trs_rom_init(void)
