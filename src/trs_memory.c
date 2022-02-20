@@ -103,7 +103,7 @@ static int bank_offset[2];
 #define VIDEO_PAGE_1 1024
 static int video_ram = VIDEO_START + VIDEO_PAGE_0;
 static unsigned int bank_base = 0x10000;
-static unsigned int megamem_addr;
+static int megamem_addr;
 static unsigned int megamem_base;
 static Uint8 mem_command;
 static int romin; /* Model 4p */
@@ -1366,7 +1366,7 @@ void trs_mem_save(FILE *file)
   trs_save_int(file, &lubomir, 1);
   trs_save_int(file, &m_a11_flipflop, 1);
   trs_save_int(file, &megamem, 1);
-  trs_save_uint32(file, &megamem_addr, 1);
+  trs_save_int(file, &megamem_addr, 1);
   trs_save_uint32(file, &megamem_base, 1);
   trs_save_int(file, &eg3200, 1);
   trs_save_int(file, &genie3s, 1);
@@ -1397,7 +1397,7 @@ void trs_mem_load(FILE *file)
   trs_load_int(file, &lubomir, 1);
   trs_load_int(file, &m_a11_flipflop, 1);
   trs_load_int(file, &megamem, 1);
-  trs_load_uint32(file, &megamem_addr, 1);
+  trs_load_int(file, &megamem_addr, 1);
   trs_load_uint32(file, &megamem_base, 1);
   trs_load_int(file, &eg3200, 1);
   trs_load_int(file, &genie3s, 1);
