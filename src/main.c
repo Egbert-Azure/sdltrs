@@ -65,7 +65,7 @@ static void trs_load_compiled_rom(int address, int size, const Uint8 rom[])
   int i;
 
   for (i = 0; i < size; i++)
-    mem_write_rom(address + i, rom[i]);
+    rom_write(address + i, rom[i]);
 
   trs_rom_size = address + i;
 }
@@ -124,7 +124,7 @@ static int trs_load_rom(const char *filename)
   /* Assume raw binary */
   trs_rom_size = 0;
   while (c != EOF) {
-    mem_write_rom(trs_rom_size++, c);
+    rom_write(trs_rom_size++, c);
     c = getc(program);
   }
   return 0;

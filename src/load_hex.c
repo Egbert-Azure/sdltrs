@@ -43,7 +43,7 @@
 #define BUFFER_SIZE 256
 
 int load_hex(FILE *file);
-extern void mem_write_rom(int address, int value);
+extern void rom_write(int address, int value);
 
 static int hex_byte(char *string)
 {
@@ -94,7 +94,7 @@ int load_hex(FILE *file)
 		while(num_bytes--)
 		{
 		    value = hex_byte(b);  b += 2;
-		    mem_write_rom(address++, value);
+		    rom_write(address++, value);
 		    check += value;
 		}
 		if (address > high) high = address;

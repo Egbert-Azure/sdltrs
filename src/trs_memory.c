@@ -520,7 +520,7 @@ void mem_romin(int state)
 /*
  * hack to let us initialize the ROM memory
  */
-void mem_write_rom(unsigned int address, int value)
+void rom_write(int address, int value)
 {
     if (address < MAX_ROM_SIZE)
       rom[address] = value;
