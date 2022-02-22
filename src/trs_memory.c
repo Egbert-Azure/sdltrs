@@ -91,8 +91,8 @@ int eg3200; /* EACA EG 3200 Genie III */
 int genie3s; /* TCS Genie IIIs */
 
 /* private data */
-static Uint8 rom[MAX_ROM_SIZE + 1];
 static Uint8 video[MAX_VIDEO_SIZE + 1];
+static Uint8 rom[MAX_ROM_SIZE + 1];
 static Uint8 cp500_rom[CP500_ROM_SIZE + 1];
 /* We map the SuperMem separately, otherwise it can get really
    confusing when combining with other stuff */
