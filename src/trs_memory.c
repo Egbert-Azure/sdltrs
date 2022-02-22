@@ -64,7 +64,7 @@
    How the mapping register worked for > 1MB is not known */
 #define MAX_SUPERMEM_SIZE	(512 * 1024)
 
-/* Start MegaMem > 1MB to leave space for HyperMem */
+/* Start MegaMem > 1MB to leave space for SuperMem or HyperMem */
 #define MEGAMEM_START	(1 * 1024 * 1024) + 65536
 
 /* Locations for Model I, Model III, and Model 4 map 0 */
@@ -276,7 +276,7 @@ void genie3s_bank_out(int value)
 	if (value == genie3s)
 		return;
 
-	/* Redraw if Font SRAM is disabled */
+	/* Redraw if Font-SRAM is disabled */
 	if ((value & (1 << 1)) == 0 && (genie3s & (1 << 1)))
 		trs_screen_refresh();
 
@@ -308,7 +308,7 @@ void genie3s_sys_out(int value)
 	if ((value & (1 << 1)) != (system_byte & (1 << 1)))
 		genie3s_hrg((value & (1 << 1)) != 0);
 
-	/* Slow Down on ROM access */
+	/* Slow-Down on ROM access */
 	if ((value & (1 << 2)) != (system_byte & (1 << 2)))
 		trs_timer_speed((value & (1 << 2)) != 0);
 
@@ -352,7 +352,7 @@ void selector_out(Uint8 value)
 
 void sys_byte_out(int value)
 {
-	/* Hack for Schmidtke CP/M with Doppelbauer banking */
+	/* Hack for Schmidtke-CP/M with Doppelbauer banking */
 	if (memory_map == 0x25) {
 		if (value & (1 << 4))
 			system_byte |=  (1 << 3);
@@ -368,13 +368,13 @@ void sys_byte_out(int value)
 	memory_map = 0x10;
 
 	switch (speedup) {
-		case 6: /* TCS SpeedMaster Banking */
+		case 6: /* TCS Genie IIs/SpeedMaster */
 			if ((value & (1 << 7)) == 0) {
 				if (value & 1)
 					memory_map = 0x14;
 			}
 			/* Fall through */
-		case 5: /* HRG in low 16 kB */
+		case 5: /* LNW80: HRG in low 16 kB */
 			if ((value & (1 << 3)))
 				memory_map = 0x20;
 			if ((value & (1 << 1)) != (system_byte & (1 << 1)))
@@ -627,7 +627,7 @@ int mem_read(int address)
 	  return trs80_model1_ram(address);
       case 0x17: /* Model 1: Described in the selector doc as 'not useful' */
         return 0xFF;	/* Not clear what really happens */
-      case 0x20: /* LNW80/TCS SpeedMaster: HRG in low 16K */
+      case 0x20: /* LNW80 and TCS Genie IIs/SpeedMaster: HRG in low 16K */
 	if (address < RAM_START) {
 	  hrg_write_addr(address, 0x3FFF);
 	  return hrg_read_data();
@@ -657,7 +657,7 @@ int mem_read(int address)
 	  return memory[address + 0x8000];
 	else
 	  return memory[address];
-      case 0x23: /* EG 3200 bank switching (bit set to 0 => bank enabled) */
+      case 0x23: /* EG 3200: bit set to 0 => bank enabled */
 	/* Bit 0 - Bank 1: ROM/EPROM */
 	if ((eg3200 & (1 << 0)) == 0) {
 	  if (address < trs_rom_size)
@@ -908,7 +908,7 @@ void mem_write(int address, int value)
 	break;
       case 0x17: /* Model 1: Described in the selector doc as 'not useful' */
         break;	/* Not clear what really happens */
-      case 0x20: /* LNW80/TCS SpeedMaster: HRG in low 16K */
+      case 0x20: /* LNW80 and TCS Genie IIs/SpeedMaster: HRG in low 16K */
 	if (address < RAM_START) {
 	  hrg_write_addr(address, 0x3FFF);
 	  hrg_write_data(value);
@@ -947,7 +947,7 @@ void mem_write(int address, int value)
 	else
 	  memory[address] = value;
 	return;
-      case 0x23: /* EG 3200 bank switching (bit set to 0 => bank enabled) */
+      case 0x23: /* EG 3200: bit set to 0 => bank enabled */
 	/* Bit 1 - Bank 2: Video Memory 0 (1k, 64x16, TRS-80 M1 compatible) */
 	if ((eg3200 & (1 << 1)) == 0) {
 	  if (address >= VIDEO_START && address <= 0x3FFF) {
@@ -1002,7 +1002,7 @@ void mem_write(int address, int value)
 	  if (address <= 0x2FFF)
 	    return;
 	}
-	/* Write to Font SRAM */
+	/* Write to Font-SRAM */
 	if (genie3s & (1 << 1)) {
 	  if (address >= 0x8000) {
 	    genie3s_char(video[(video_ram == KEYBOARD_START) ?
@@ -1223,7 +1223,7 @@ Uint8 *mem_pointer(int address, int writing)
 	  return &memory[address + 0x8000];
 	else
 	  return &memory[address];
-      case 0x23: /* EG 3200 bank switching (bit set to 0 => bank enabled) */
+      case 0x23: /* EG 3200: bit set to 0 => bank enabled */
       case 0x2B:
 	/* Bit 0 - Bank 1: ROM/EPROM */
 	if ((eg3200 & (1 << 0)) == 0) {
