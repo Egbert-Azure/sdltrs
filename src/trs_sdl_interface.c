@@ -80,10 +80,11 @@ int trs_charset4;
 int trs_paused;
 int trs_emu_mouse;
 int trs_show_led;
-int scale;
 int fullscreen;
+int lowe_le18;
 int resize3;
 int resize4;
+int scale;
 int scanlines;
 int scanshade;
 int window_border_width;
@@ -208,6 +209,8 @@ static Uint8 grafyx_xoffset, grafyx_yoffset;
 static Uint8 hrg_screen[HRG_MEMSIZE];
 static int hrg_enable;
 static int hrg_addr;
+
+static Uint8 le18_x, le18_y, le18_on;  /* Lowe LE18 */
 
 /* Option handling */
 typedef struct trs_opt_struct {
@@ -3060,10 +3063,6 @@ Uint8 grafyx_m3_read_byte(int position)
  *     7-1: unused
  *     0: hi res (1 = on)
  */
-
-static Uint8 le18_x, le18_y, le18_on;
-int lowe_le18;
-
 void lowe_le18_write_x(int value)
 {
   /* This really is 0-255. The unit has 16K x 6bit of RAM
