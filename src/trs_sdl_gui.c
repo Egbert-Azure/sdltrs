@@ -492,7 +492,7 @@ int trs_gui_readdirectory(const char *path, const char *mask, int browse_dir)
     trs_gui_create_filename_list();
     while ((dir_entry = readdir(directory))) {
 
-      if (dir_entry->d_name[0] == '.' && dir_entry->d_name[1] == 0)
+      if (dir_entry->d_name[0] == '.' && dir_entry->d_name[1] != '.')
         continue;
 
       if (snprintf(pathname, FILENAME_MAX, "%s%s",
