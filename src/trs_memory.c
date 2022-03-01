@@ -492,19 +492,18 @@ void trs_reset(int poweron)
 	trs_rom_init();
 	trs_screen_reset();
 	trs_screen_init();
-	trs_timer_init();
 	if (trs_show_led) {
 	  trs_disk_led(-1, -1);
 	  trs_hard_led(-1, -1);
 	  trs_turbo_led();
 	}
     } else {
-	trs_timer_speed(0);
 	/* Signal a nonmaskable interrupt. */
 	trs_reset_button_interrupt(1);
 	trs_schedule_event(trs_reset_button_interrupt, 0, 2000);
 	trs_screen_refresh();
     }
+    trs_timer_init();
 }
 
 void mem_map(int which)
