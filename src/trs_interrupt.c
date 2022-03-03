@@ -326,12 +326,6 @@ trs_nmi_mask_write(Uint8 value)
   if (!z80_state.nmi) z80_state.nmi_seen = 0;
 }
 
-void
-trs_timer_cycles(void)
-{
-  cycles_per_timer = z80_state.clockMHz * 1000000 / timer_hz;
-}
-
 static void
 trs_timer_event(void)
 {
@@ -400,9 +394,8 @@ trs_timer_init(void)
       timer_hz = TIMER_HZ_4;
       z80_state.clockMHz = clock_mhz_4;
   }
-  trs_timer_cycles();
   trs_timer_event();
-  trs_turbo_mode(-1);
+  trs_timer_mode(timer_overclock);
 
   if (eg3200 || genie3s)
     return;
@@ -524,24 +517,25 @@ trs_timer_speed(int fast)
     else
       timer_hz = TIMER_HZ_3;
   }
-  trs_timer_cycles();
-  trs_turbo_mode(-1);
+  trs_timer_mode(-1);
 }
 
 void
-trs_turbo_mode(int mode)
+trs_timer_mode(int mode)
 {
-  if (mode != -1)
+  if (mode != -1) {
     timer_overclock = mode;
+    if (timer_overclock)
+      deltatime = 1000 / (timer_overclock_rate * timer_hz);
+    else
+      deltatime = 1000 / timer_hz;
 
-  if (timer_overclock)
-    deltatime = 1000 / (timer_overclock_rate * timer_hz);
-  else
-    deltatime = 1000 / timer_hz;
-
-  if (trs_show_led)
-    trs_turbo_led();
+    if (trs_show_led)
+      trs_turbo_led();
+  }
   trs_screen_caption();
+
+  cycles_per_timer = z80_state.clockMHz * 1000000 / timer_hz;
 }
 
 static trs_event_func event_func = NULL;

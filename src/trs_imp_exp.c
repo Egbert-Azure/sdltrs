@@ -570,7 +570,7 @@ void do_emt_misc(void)
     break;
   case 13:
     timer_overclock = !Z80_BC;
-    trs_turbo_mode(timer_overclock);
+    trs_timer_mode(timer_overclock);
     break;
   case 14:
     Z80_HL = stretch_amount;
