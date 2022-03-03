@@ -1758,7 +1758,7 @@ void trs_get_event(int wait)
         if (paste_lastkey) {
           paste_state = PASTE_IDLE;
           if (turbo_paste)
-            trs_turbo_mode(timer_saved);
+            trs_timer_mode(timer_saved);
           cycles_per_timer = cycles_saved;
         }
         else
@@ -1847,7 +1847,7 @@ void trs_get_event(int wait)
             if (SDL_GetModState() & KMOD_SHIFT)
               trs_timer_init();
             else
-              trs_turbo_mode(!timer_overclock);
+              trs_timer_mode(!timer_overclock);
             continue;
           case SDLK_PAGEDOWN:
           case SDLK_PAGEUP:
@@ -1877,7 +1877,7 @@ void trs_get_event(int wait)
             case SDLK_INSERT:
               if (turbo_paste) {
                 timer_saved = timer_overclock;
-                trs_turbo_mode(1);
+                trs_timer_mode(1);
               }
               cycles_saved = cycles_per_timer;
               cycles_per_timer *= 4;
@@ -1928,16 +1928,14 @@ void trs_get_event(int wait)
             case SDLK_8:
               if (z80_state.clockMHz > 0.1) {
                 z80_state.clockMHz -= 0.1;
-                trs_timer_cycles();
-                trs_screen_caption();
+                trs_timer_mode(-1);
               }
               break;
             case SDLK_PLUS:
             case SDLK_9:
               if (z80_state.clockMHz < 99.0) {
                 z80_state.clockMHz += 0.1;
-                trs_timer_cycles();
-                trs_screen_caption();
+                trs_timer_mode(-1);
               }
               break;
             case SDLK_PERIOD:
@@ -1979,7 +1977,7 @@ void trs_get_event(int wait)
               call_function(GUI);
               break;
             case SDLK_n:
-              trs_turbo_mode(!timer_overclock);
+              trs_timer_mode(!timer_overclock);
               break;
             case SDLK_o:
               call_function(OTHER);
