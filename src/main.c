@@ -65,9 +65,9 @@ static void trs_load_compiled_rom(int address, int size, const Uint8 rom[])
   int i;
 
   for (i = 0; i < size; i++)
-    rom_write(address + i, rom[i]);
+    rom_write(address++, rom[i]);
 
-  trs_rom_size = address + i;
+  trs_rom_size = address;
 }
 
 static int trs_load_rom(const char *filename)
