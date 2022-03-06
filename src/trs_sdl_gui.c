@@ -197,21 +197,22 @@ static void trs_gui(void);
 void trs_gui_write_text(const char *text, int x, int y, int invert)
 {
   int const len = strlen(text);
+  int const end = 62 - x;
   int i;
 
-  if (len > 62 - x) {
+  if (len > end) {
     int const len_1st_part = (59 - x) / 2;
     int pos_2nd_part = len - (59 - x - len_1st_part);
 
     for (i = 0; i < len_1st_part; i++)
-      trs_gui_write_char(x + i, y, text[i], invert);
+      trs_gui_write_char(x++, y, text[i], invert);
     for (; i < len_1st_part + 3; i++)
-      trs_gui_write_char(x + i, y, '.', invert);
-    for (; i < 62 - x; i++)
-      trs_gui_write_char(x + i, y, text[pos_2nd_part++], invert);
+      trs_gui_write_char(x++, y, '.', invert);
+    for (; i < end; i++)
+      trs_gui_write_char(x++, y, text[pos_2nd_part++], invert);
   } else {
     for (i = 0; i < len; i++)
-      trs_gui_write_char(x + i, y, text[i], invert);
+      trs_gui_write_char(x++, y, text[i], invert);
   }
 }
 
