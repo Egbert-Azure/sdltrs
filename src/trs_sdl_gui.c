@@ -144,6 +144,7 @@ static void trs_gui_clear_screen(void);
 static void trs_gui_limit_string(const char *orig, char *limited, unsigned int limit);
 static void trs_add_extension(char *name, const char *ext);
 static int  trs_gui_get_key(void);
+static int  trs_gui_select(const char *text, int x, int y);
 static void trs_gui_display_error(const char *name);
 static void trs_gui_display_message(const char *title, const char *message);
 static void trs_gui_create_filename_list(void);
@@ -419,6 +420,18 @@ int trs_gui_get_key(void)
   }
 }
 
+int trs_gui_select(const char *text, int x, int y)
+{
+  int key;
+
+  trs_gui_write_text(text, x, y, 1);
+  trs_screen_update();
+  key = trs_gui_get_key();
+  trs_gui_write_text(text, x, y, 0);
+
+  return key;
+}
+
 void trs_gui_display_error(const char *name)
 {
   if (errno != 0) {
@@ -637,10 +650,7 @@ read_directory:
         trs_gui_write_text(filenamelist[first_row + i], 2, i + 2, 0);
       redraw = 0;
     }
-    trs_gui_write_text(filenamelist[first_row + selection], 2, selection + 2, 1);
-    trs_screen_update();
-    key = trs_gui_get_key();
-    trs_gui_write_text(filenamelist[first_row + selection], 2, selection + 2, 0);
+    key = trs_gui_select(filenamelist[first_row + selection], 2, selection + 2);
     if (key >= '0' && key <= 'z') {
       key = tolower(key);
       i = j = first_row + selection;
@@ -919,10 +929,7 @@ int trs_gui_display_menu(const char *title, MENU_ENTRY *entry, int selection)
   num--;
 
   while (1) {
-    trs_gui_write_text(entry[selection].text, 2, selection + 2, 1);
-    trs_screen_update();
-    key = trs_gui_get_key();
-    trs_gui_write_text(entry[selection].text, 2, selection + 2, 0);
+    key = trs_gui_select(entry[selection].text, 2, selection + 2);
     if (key >= '0' && key <= '9') {
       key -= '0';
       if (key <= num && entry[key].type != MENU_TITLE)
@@ -1050,10 +1057,7 @@ int trs_gui_display_popup(const char *title, const char **entry,
     trs_gui_write_text(entry[i], x, y + i, 0);
 
   while (1) {
-    trs_gui_write_text(entry[selection], x, selection + y, 1);
-    trs_screen_update();
-    key = trs_gui_get_key();
-    trs_gui_write_text(entry[selection], x, selection + y, 0);
+    key = trs_gui_select(entry[selection], x, selection + y);
     if (num == 2) {
       switch (key) {
         case 'n':
@@ -1116,7 +1120,6 @@ int trs_gui_display_popup_matrix(const char* title, const char **entry,
   int const x = (64 - width) / 2;
   int const y = (16 - rows) / 2;
   int row, col;
-  int key;
 
   trs_gui_frame(x - 1, y - 1, x + width, y + rows);
   trs_gui_clear_rect(x, y, width, rows);
@@ -1144,11 +1147,7 @@ int trs_gui_display_popup_matrix(const char* title, const char **entry,
       row = 0;
 
     selection = row * cols + col;
-    trs_gui_write_text(entry[selection], x + col * len, y + row, 1);
-    trs_screen_update();
-    key = trs_gui_get_key();
-    trs_gui_write_text(entry[selection], x + col * len, y + row, 0);
-    switch (key) {
+    switch (trs_gui_select(entry[selection], x + col * len, y + row)) {
       case SDLK_DOWN:
         row++;
         if (row > rows - 1)
