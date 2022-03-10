@@ -1266,12 +1266,18 @@ void trs_gui_disk_creation(void)
           if (trs_gui_file_overwrite()) {
             int ret = 0;
 
-            if (image_type == 0)
-              ret = trs_create_blank_jv1(filename);
-            else if (image_type == 1)
-              ret = trs_create_blank_jv3(filename);
-            else
-              ret = trs_create_blank_dmk(filename, num_sides, density, eight, ignore_density);
+            switch (image_type) {
+              case 0:
+                ret = trs_create_blank_jv1(filename);
+                break;
+              case 1:
+                ret = trs_create_blank_jv3(filename);
+                break;
+              default:
+                ret = trs_create_blank_dmk(filename, num_sides, density, eight, ignore_density);
+                break;
+            }
+
             if (ret)
               trs_gui_display_error(filename);
             else if (drive_insert)
