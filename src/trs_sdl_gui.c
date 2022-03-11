@@ -1882,7 +1882,7 @@ void trs_gui_display_settings(void)
    {"Model 4/4P Character Set                               ", MENU_NORMAL},
    {"Border Width                                           ", MENU_NORMAL},
    {"Resize Window on Mode Change for Model III             ", MENU_NORMAL},
-   {"Resize Window on Mode Change for Model 4               ", MENU_NORMAL},
+   {"Resize Window on Mode Change for Model 4/4P            ", MENU_NORMAL},
    {"Scale Factor for Window                                ", MENU_NORMAL},
    {"LED Display for Disks and Turbo Mode                   ", MENU_NORMAL},
 #ifdef OLD_SCANLINES
