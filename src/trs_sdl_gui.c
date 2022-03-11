@@ -73,7 +73,7 @@ typedef struct menu_entry_type {
   int const type;
 } MENU_ENTRY;
 
-static const char *drive_choices[] = {
+static const char *drives[] = {
   "  None",
   "     0",
   "     1",
@@ -85,12 +85,12 @@ static const char *drive_choices[] = {
   "     7"
 };
 
-static const char *yes_no_choices[] = {
+static const char *yes_no[] = {
   "        No",
   "       Yes"
 };
 
-static const char *function_choices[] = {
+static const char *function_menu[] = {
   "  GUI Menu  ", "  Keyboard  ",
   " Save State ", " Load State ",
   "   Reset    ", "    Quit    ",
@@ -1194,7 +1194,7 @@ int trs_gui_display_popup_matrix(const char* title, const char **entry,
 
 int trs_gui_display_question(const char *text)
 {
-  return trs_gui_display_popup(text, yes_no_choices, 2, 0);
+  return trs_gui_display_popup(text, yes_no, 2, 0);
 }
 
 int trs_gui_file_overwrite(void)
@@ -1218,46 +1218,46 @@ void trs_gui_disk_creation(void)
    {"Insert Created Disk Into This Drive                   ", MENU_NORMAL},
    {"Create Disk Image with Above Parameters", MENU_NORMAL},
    {"", 0}};
-  const char *image_type_choices[] = {"   JV1", "   JV3", "   DMK"};
-  const char *num_sides_choices[]  = {"     1", "     2"};
-  const char *density_choices[]    = {"Single", "Double"};
-  const char *size_choices[]       = {"5 Inch", "8 Inch"};
-  static int image_type = 1;
-  static int num_sides = 1;
+  const char *disk_type[] = {"   JV1", "   JV3", "   DMK"};
+  const char *disk_side[] = {"     1", "     2"};
+  const char *disk_dens[] = {"Single", "Double"};
+  const char *disk_size[] = {"5 Inch", "8 Inch"};
+  static int type = 1;
+  static int sides = 1;
   static int density = 1;
-  static int eight;
+  static int size;
   static int ignore_density;
-  static int drive_insert;
+  static int insert;
   int selection = 6;
 
   while (1) {
-    snprintf(&menu[0].text[54], 7, "%s", image_type_choices[image_type]);
-    snprintf(&menu[1].text[54], 7, "%s", num_sides_choices[num_sides - 1]);
-    snprintf(&menu[2].text[54], 7, "%s", density_choices[density - 1]);
-    snprintf(&menu[3].text[54], 7, "%s", size_choices[eight]);
-    snprintf(&menu[4].text[50], 11, "%s", yes_no_choices[ignore_density]);
-    snprintf(&menu[5].text[54], 7, "%s", drive_choices[drive_insert]);
+    snprintf(&menu[0].text[54], 7, "%s", disk_type[type]);
+    snprintf(&menu[1].text[54], 7, "%s", disk_side[sides - 1]);
+    snprintf(&menu[2].text[54], 7, "%s", disk_dens[density - 1]);
+    snprintf(&menu[3].text[54], 7, "%s", disk_size[size]);
+    snprintf(&menu[4].text[50], 11, "%s", yes_no[ignore_density]);
+    snprintf(&menu[5].text[54], 7, "%s", drives[insert]);
     trs_gui_clear_screen();
 
     selection = trs_gui_display_menu("Floppy Disk Creation", menu, selection);
     switch (selection) {
       case 0:
-        image_type = trs_gui_display_popup("Type", image_type_choices, 3, image_type);
+        type = trs_gui_display_popup("Type", disk_type, 3, type);
         break;
       case 1:
-        num_sides = trs_gui_display_popup("Sides", num_sides_choices, 2, num_sides - 1) + 1;
+        sides = trs_gui_display_popup("Sides", disk_side, 2, sides - 1) + 1;
         break;
       case 2:
-        density = trs_gui_display_popup("Dens", density_choices, 2, density - 1) + 1;
+        density = trs_gui_display_popup("Dens", disk_dens, 2, density - 1) + 1;
         break;
       case 3:
-        eight = trs_gui_display_popup("Size", size_choices, 2, eight);
+        size = trs_gui_display_popup("Size", disk_size, 2, size);
         break;
       case 4:
-        ignore_density = trs_gui_display_popup("Ignore", yes_no_choices, 2, ignore_density);
+        ignore_density = trs_gui_display_popup("Ignore", yes_no, 2, ignore_density);
         break;
       case 5:
-        drive_insert = trs_gui_display_popup("Disk", drive_choices, 9, drive_insert);
+        insert = trs_gui_display_popup("Disk", drives, 9, insert);
         break;
       case 6:
         filename[0] = 0;
@@ -1266,7 +1266,7 @@ void trs_gui_disk_creation(void)
           if (trs_gui_file_overwrite()) {
             int ret = 0;
 
-            switch (image_type) {
+            switch (type) {
               case 0:
                 ret = trs_create_blank_jv1(filename);
                 break;
@@ -1274,14 +1274,14 @@ void trs_gui_disk_creation(void)
                 ret = trs_create_blank_jv3(filename);
                 break;
               default:
-                ret = trs_create_blank_dmk(filename, num_sides, density, eight, ignore_density);
+                ret = trs_create_blank_dmk(filename, sides, density, size, ignore_density);
                 break;
             }
 
             if (ret)
               trs_gui_display_error(filename);
-            else if (drive_insert)
-              trs_disk_insert(drive_insert - 1, filename);
+            else if (insert)
+              trs_disk_insert(insert - 1, filename);
             return;
           }
         }
@@ -1305,7 +1305,7 @@ void trs_gui_disk_steps(void)
    {"", MENU_NORMAL},
    {"", MENU_NORMAL},
    {"", 0}};
-  const char *step_choices[] = {"Single", "Double"};
+  const char *steps[] = {"Single", "Double"};
   int selection = 0;
   int i, step;
 
@@ -1313,12 +1313,12 @@ void trs_gui_disk_steps(void)
     for (i = 0; i < 8; i++) {
       snprintf(menu[i].text, 63,
           "Drive # %d Step                                        %s",
-          i, step_choices[trs_disk_getstep(i) == 1 ? 0 : 1]);
+          i, steps[trs_disk_getstep(i) == 1 ? 0 : 1]);
     }
     trs_gui_clear_screen();
     if ((selection = trs_gui_display_menu("Floppy Disk Step", menu, selection)) == -1)
       return;
-    step = trs_gui_display_popup("Step", step_choices, 2, trs_disk_getstep(selection) == 2);
+    step = trs_gui_display_popup("Step", steps, 2, trs_disk_getstep(selection) == 2);
     trs_disk_setstep(selection, step == 0 ? 1 : 2);
   }
 }
@@ -1343,8 +1343,8 @@ void trs_gui_disk_options(void)
    {"Set Drive Steps", MENU_NORMAL},
 #endif
    {"", 0}};
-  const char *doubler_choices[] = {"     None", "   Percom", "    Tandy", "     Both"};
-  const char *size_choices[]    = {"5 Inch", "8 Inch"};
+  const char *doubler[]   = {"     None", "   Percom", "    Tandy", "     Both"};
+  const char *disk_size[] = {"5 Inch", "8 Inch"};
   int selection = 0;
   int i, size;
 
@@ -1352,23 +1352,23 @@ void trs_gui_disk_options(void)
     for (i = 0; i < 8; i++) {
       snprintf(menu[i].text, 63,
           "Drive # %d Size                                        %s",
-          i, size_choices[trs_disk_getsize(i) == 5 ? 0 : 1]);
+          i, disk_size[trs_disk_getsize(i) == 5 ? 0 : 1]);
     }
-    snprintf(&menu[9].text[51], 10, "%s", doubler_choices[trs_disk_doubler]);
-    snprintf(&menu[10].text[50], 11, "%s", yes_no_choices[trs_disk_truedam]);
+    snprintf(&menu[9].text[51], 10, "%s", doubler[trs_disk_doubler]);
+    snprintf(&menu[10].text[50], 11, "%s", yes_no[trs_disk_truedam]);
     trs_gui_clear_screen();
 
     selection = trs_gui_display_menu("Floppy Disk Options", menu, selection);
     if (selection >= 0 && selection < 8) {
-      size = trs_gui_display_popup("Size", size_choices, 2, trs_disk_getsize(selection) == 8);
+      size = trs_gui_display_popup("Size", disk_size, 2, trs_disk_getsize(selection) == 8);
       trs_disk_setsize(selection, size == 0 ? 5 : 8);
     }
     else switch (selection) {
       case 9:
-        trs_disk_doubler = trs_gui_display_popup("Doubler", doubler_choices, 4, trs_disk_doubler);
+        trs_disk_doubler = trs_gui_display_popup("Doubler", doubler, 4, trs_disk_doubler);
         break;
       case 10:
-        trs_disk_truedam = trs_gui_display_popup("True DAM", yes_no_choices, 2, trs_disk_truedam);
+        trs_disk_truedam = trs_gui_display_popup("True DAM", yes_no, 2, trs_disk_truedam);
         break;
 #ifdef __linux
       case 12:
@@ -1470,7 +1470,7 @@ void trs_gui_hard_management(void)
   static int sector_count = 256;
   static int granularity = 8;
   static int dir_sector = 1;
-  static int drive_insert;
+  static int insert;
   char input[4];
   int selection = 0;
   int i, value;
@@ -1484,7 +1484,7 @@ void trs_gui_hard_management(void)
     snprintf(&menu[8].text[57], 4, "%3d", sector_count);
     snprintf(&menu[9].text[57], 4, "%3d", granularity);
     snprintf(&menu[10].text[57], 4, "%3d", dir_sector);
-    snprintf(&menu[11].text[54], 7, "%6s", drive_choices[drive_insert]);
+    snprintf(&menu[11].text[54], 7, "%6s", drives[insert]);
     trs_gui_clear_screen();
 
     selection = trs_gui_display_menu("Hard Disk Management", menu, selection);
@@ -1549,7 +1549,7 @@ void trs_gui_hard_management(void)
         }
         break;
       case 11:
-        drive_insert = trs_gui_display_popup("Hard", drive_choices, 5, drive_insert);
+        insert = trs_gui_display_popup("Hard", drives, 5, insert);
         break;
       case 12:
         if (sector_count < granularity) {
@@ -1571,8 +1571,8 @@ void trs_gui_hard_management(void)
             if (trs_create_blank_hard(filename, cylinder_count, sector_count,
                 granularity, dir_sector) != 0)
               trs_gui_display_error(filename);
-            else if (drive_insert)
-              trs_hard_attach(drive_insert - 1, filename);
+            else if (insert)
+              trs_hard_attach(insert - 1, filename);
             return;
           }
         }
@@ -1600,7 +1600,7 @@ void trs_gui_stringy_management(void)
    {"Insert Created Image Into This Wafer                  ", MENU_NORMAL},
    {"Create Blank Floppy Wafer", MENU_NORMAL},
    {"", 0}};
-  static int wafer_insert;
+  static int insert;
   int selection = 0;
   int i;
 
@@ -1609,7 +1609,7 @@ void trs_gui_stringy_management(void)
       trs_gui_limit_string(stringy_get_name(i), &menu[i].text[4], 56);
       menu[i].text[0] = stringy_get_writeprotect(i) ? '*' : ' ';
     }
-    snprintf(&menu[11].text[54], 7, "%6s", drive_choices[wafer_insert]);
+    snprintf(&menu[11].text[54], 7, "%6s", drives[insert]);
     trs_gui_clear_screen();
 
     selection = trs_gui_display_menu("Stringy Wafer Management", menu, selection);
@@ -1621,7 +1621,7 @@ void trs_gui_stringy_management(void)
         trs_gui_diskset_load();
         break;
       case 11:
-        wafer_insert = trs_gui_display_popup("Wafer", drive_choices, 9, wafer_insert);
+        insert = trs_gui_display_popup("Wafer", drives, 9, insert);
         break;
       case 12:
         filename[0] = 0;
@@ -1631,8 +1631,8 @@ void trs_gui_stringy_management(void)
             if (stringy_create(filename) != 0)
               trs_gui_display_error(filename);
             else
-              if (wafer_insert)
-                stringy_insert(wafer_insert - 1, filename);
+              if (insert)
+                stringy_insert(insert - 1, filename);
             return;
           }
         }
@@ -1655,9 +1655,9 @@ void trs_gui_cassette_management(void)
    {"Insert Created Cassette Into Drive                    ", MENU_NORMAL},
    {"Create Blank Cassette Image with Above Parameters", MENU_NORMAL},
    {"", 0}};
-  const char *image_type_choices[] = {"   CAS", "   CPT", "   WAV"};
-  static int image_type;
-  static int drive_insert = 1;
+  const char *cass_type[] = {"   CAS", "   CPT", "   WAV"};
+  static int type;
+  static int insert = 1;
   char input[12];
   int selection = 0;
   int value;
@@ -1668,8 +1668,8 @@ void trs_gui_cassette_management(void)
 
     snprintf(&menu[2].text[36], 25, "%10d of %10d", trs_get_cassette_position(), trs_get_cassette_length());
     snprintf(&menu[3].text[50], 11, "%10d", cassette_default_sample_rate);
-    snprintf(&menu[5].text[54], 7, "%s", image_type_choices[image_type]);
-    snprintf(&menu[6].text[50], 11, "%s", yes_no_choices[drive_insert]);
+    snprintf(&menu[5].text[54], 7, "%s", cass_type[type]);
+    snprintf(&menu[6].text[50], 11, "%s", yes_no[insert]);
     trs_gui_clear_screen();
 
     selection = trs_gui_display_menu("Cassette Management", menu, selection);
@@ -1691,16 +1691,16 @@ void trs_gui_cassette_management(void)
         }
         break;
       case 5:
-        image_type = trs_gui_display_popup("Type", image_type_choices, 3, image_type);
+        type = trs_gui_display_popup("Type", cass_type, 3, type);
         break;
       case 6:
-        drive_insert = trs_gui_display_popup("Insert", yes_no_choices, 2, drive_insert);
+        insert = trs_gui_display_popup("Insert", yes_no, 2, insert);
         break;
       case 7:
         filename[0] = 0;
         if (trs_gui_input_string("Enter Filename for Cassette Image",
             trs_cass_dir, filename, FILENAME_MAX, 1) == 0) {
-          switch (image_type) {
+          switch (type) {
             case 0:
               trs_add_extension(filename, ".cas");
               break;
@@ -1715,12 +1715,12 @@ void trs_gui_cassette_management(void)
             FILE *cassette_file = fopen(filename, "wb");
 
             if (cassette_file) {
-              if (image_type == 2) {
+              if (type == 2) {
                  if (create_wav_header(cassette_file) < 0)
                    trs_gui_display_message("ERROR", "Failed to create WAVE header");
               }
               fclose(cassette_file);
-              if (drive_insert)
+              if (insert)
                 trs_cassette_insert(filename);
             } else
               trs_gui_display_error(filename);
@@ -1750,17 +1750,17 @@ void trs_gui_emulator_settings(void)
    {"Dave Huffman (and other) 4/4P Memory Expansion    ", MENU_NORMAL},
    {"HyperMem (Anitek Software) 4/4P Memory Expansion  ", MENU_NORMAL},
    {"", 0}};
-  const char *model_choices[] = {"  TRS-80 Model I",
-                                 "TRS-80 Model III",
-                                 "  TRS-80 Model 4",
-                                 " TRS-80 Model 4P"};
-  const char *speed_choices[] = {"           None",
-                                 "       Archbold",
-                                 "         Holmes",
-                                 "     Seatronics",
-                                 "        Banking",
-                                 "          LNW80",
-                                 "TCS SpeedMaster"};
+  const char *model[] = {"  TRS-80 Model I",
+                         "TRS-80 Model III",
+                         "  TRS-80 Model 4",
+                         " TRS-80 Model 4P"};
+  const char *speed[] = {"           None",
+                         "       Archbold",
+                         "         Holmes",
+                         "     Seatronics",
+                         "        Banking",
+                         "          LNW80",
+                         "TCS SpeedMaster"};
   float clock_mhz[4];
   char input[8];
   int selection = 0;
@@ -1772,25 +1772,25 @@ void trs_gui_emulator_settings(void)
   clock_mhz[3] = clock_mhz_4;
 
   while (1) {
-    snprintf(&menu[0].text[44], 17, "%s", model_choices[model_selection]);
+    snprintf(&menu[0].text[44], 17, "%s", model[model_selection]);
     snprintf(&menu[1].text[50], 11, "%6.2f MHz", clock_mhz[model_selection]);
-    snprintf(&menu[2].text[45], 16, "%s", speed_choices[speedup]);
-    snprintf(&menu[3].text[50], 11, "%s", yes_no_choices[stringy]);
-    snprintf(&menu[4].text[50], 11, "%s", yes_no_choices[lowe_le18]);
-    snprintf(&menu[5].text[50], 11, "%s", yes_no_choices[lowercase]);
-    snprintf(&menu[6].text[50], 11, "%s", yes_no_choices[lubomir]);
-    snprintf(&menu[7].text[50], 11, "%s", yes_no_choices[selector]);
-    snprintf(&menu[8].text[50], 11, "%s", yes_no_choices[supermem]);
-    snprintf(&menu[9].text[50], 11, "%s", yes_no_choices[grafyx_get_microlabs()]);
-    snprintf(&menu[10].text[50], 11, "%s", yes_no_choices[megamem]);
-    snprintf(&menu[11].text[50], 11, "%s", yes_no_choices[huffman]);
-    snprintf(&menu[12].text[50], 11, "%s", yes_no_choices[hypermem]);
+    snprintf(&menu[2].text[45], 16, "%s", speed[speedup]);
+    snprintf(&menu[3].text[50], 11, "%s", yes_no[stringy]);
+    snprintf(&menu[4].text[50], 11, "%s", yes_no[lowe_le18]);
+    snprintf(&menu[5].text[50], 11, "%s", yes_no[lowercase]);
+    snprintf(&menu[6].text[50], 11, "%s", yes_no[lubomir]);
+    snprintf(&menu[7].text[50], 11, "%s", yes_no[selector]);
+    snprintf(&menu[8].text[50], 11, "%s", yes_no[supermem]);
+    snprintf(&menu[9].text[50], 11, "%s", yes_no[grafyx_get_microlabs()]);
+    snprintf(&menu[10].text[50], 11, "%s", yes_no[megamem]);
+    snprintf(&menu[11].text[50], 11, "%s", yes_no[huffman]);
+    snprintf(&menu[12].text[50], 11, "%s", yes_no[hypermem]);
     trs_gui_clear_screen();
 
     selection = trs_gui_display_menu("Emulator Settings", menu, selection);
     switch (selection) {
       case 0:
-        model_selection = trs_gui_display_popup("Model", model_choices, 4, model_selection);
+        model_selection = trs_gui_display_popup("Model", model, 4, model_selection);
         break;
       case 1:
         snprintf(input, 6, "%.2f", clock_mhz[model_selection]);
@@ -1818,44 +1818,44 @@ void trs_gui_emulator_settings(void)
         }
         break;
       case 2:
-        speedup = trs_gui_display_popup("Speedup", speed_choices, 7, speedup);
+        speedup = trs_gui_display_popup("Speedup", speed, 7, speedup);
         break;
       case 3:
-        stringy = trs_gui_display_popup("Stringy", yes_no_choices, 2, stringy);
+        stringy = trs_gui_display_popup("Stringy", yes_no, 2, stringy);
         break;
       case 4:
-        lowe_le18 = trs_gui_display_popup("LE18", yes_no_choices, 2, lowe_le18);
+        lowe_le18 = trs_gui_display_popup("LE18", yes_no, 2, lowe_le18);
         break;
       case 5:
-        lowercase = trs_gui_display_popup("Lowercase", yes_no_choices, 2, lowercase);
+        lowercase = trs_gui_display_popup("Lowercase", yes_no, 2, lowercase);
         break;
       case 6:
-        lubomir = trs_gui_display_popup("Lubomir", yes_no_choices, 2, lubomir);
+        lubomir = trs_gui_display_popup("Lubomir", yes_no, 2, lubomir);
         break;
       case 7:
-        selector = trs_gui_display_popup("Selector", yes_no_choices, 2, selector);
+        selector = trs_gui_display_popup("Selector", yes_no, 2, selector);
         if (selector)
           supermem = 0;
         break;
       case 8:
-        supermem = trs_gui_display_popup("SuperMem", yes_no_choices, 2, supermem);
+        supermem = trs_gui_display_popup("SuperMem", yes_no, 2, supermem);
         if (supermem)
           selector = 0;
         break;
       case 9:
-        grafyx_set_microlabs(trs_gui_display_popup("Grafyx", yes_no_choices, 2,
+        grafyx_set_microlabs(trs_gui_display_popup("Grafyx", yes_no, 2,
             grafyx_get_microlabs()));
         break;
       case 10:
-        megamem = trs_gui_display_popup("MegaMem", yes_no_choices, 2, megamem);
+        megamem = trs_gui_display_popup("MegaMem", yes_no, 2, megamem);
         break;
       case 11:
-        huffman = trs_gui_display_popup("Huffman", yes_no_choices, 2, huffman);
+        huffman = trs_gui_display_popup("Huffman", yes_no, 2, huffman);
         if (huffman)
           hypermem = 0;
         break;
       case 12:
-        hypermem = trs_gui_display_popup("HyperMem", yes_no_choices, 2, hypermem);
+        hypermem = trs_gui_display_popup("HyperMem", yes_no, 2, hypermem);
         if (hypermem)
           huffman = 0;
         break;
@@ -1891,17 +1891,17 @@ void trs_gui_display_settings(void)
    {"Display Scanlines with brightness                      ", MENU_NORMAL},
 #endif
    {"", 0}};
-  const char *font1_choices[]  = {"      Early",
-                                  "      Stock",
-                                  "      LCmod",
-                                  "      Wider",
-                                  "      Genie",
-                                  "   HT-1080Z",
-                                  "Video Genie"};
-  const char *font34_choices[] = {"     Katakana",
-                                  "International",
-                                  "         Bold"};
-  const char *scale_choices[]  = {" None", "  2 x", "  3 x", "  4 x"};
+  const char *font1[]  = {"      Early",
+                          "      Stock",
+                          "      LCmod",
+                          "      Wider",
+                          "      Genie",
+                          "   HT-1080Z",
+                          "Video Genie"};
+  const char *font34[] = {"     Katakana",
+                          "International",
+                          "         Bold"};
+  const char *scales[] = {" None", "  2 x", "  3 x", "  4 x"};
   char input[8];
   int redraw = 0;
   int selection = 0;
@@ -1914,18 +1914,18 @@ void trs_gui_display_settings(void)
     snprintf(&menu[1].text[52], 9, "0x%06X", foreground);
     snprintf(&menu[2].text[52], 9, "0x%06X", gui_background);
     snprintf(&menu[3].text[52], 9, "0x%06X", gui_foreground);
-    snprintf(&menu[4].text[49], 12, "%s", font1_choices[gui_charset1]);
-    snprintf(&menu[5].text[47], 14, "%s", font34_choices[trs_charset3 - 4]);
-    snprintf(&menu[6].text[47], 14, "%s", font34_choices[trs_charset4 - 7]);
+    snprintf(&menu[4].text[49], 12, "%s", font1[gui_charset1]);
+    snprintf(&menu[5].text[47], 14, "%s", font34[trs_charset3 - 4]);
+    snprintf(&menu[6].text[47], 14, "%s", font34[trs_charset4 - 7]);
     snprintf(&menu[7].text[52], 9, "%8d", window_border_width);
-    snprintf(&menu[8].text[50], 11, "%s", yes_no_choices[resize3]);
-    snprintf(&menu[9].text[50], 11, "%s", yes_no_choices[resize4]);
-    snprintf(&menu[10].text[55], 6, "%s", scale_choices[scale - 1]);
-    snprintf(&menu[11].text[50], 11, "%s", yes_no_choices[trs_show_led]);
+    snprintf(&menu[8].text[50], 11, "%s", yes_no[resize3]);
+    snprintf(&menu[9].text[50], 11, "%s", yes_no[resize4]);
+    snprintf(&menu[10].text[55], 6, "%s", scales[scale - 1]);
+    snprintf(&menu[11].text[50], 11, "%s", yes_no[trs_show_led]);
 #ifdef OLD_SCANLINES
-    snprintf(&menu[12].text[50], 11, "%s", yes_no_choices[scanlines]);
+    snprintf(&menu[12].text[50], 11, "%s", yes_no[scanlines]);
 #else
-    snprintf(&menu[12].text[34], 27, "%-3d%23s", scanshade, yes_no_choices[scanlines]);
+    snprintf(&menu[12].text[34], 27, "%-3d%23s", scanshade, yes_no[scanlines]);
 #endif
     trs_gui_clear_screen();
 
@@ -1976,7 +1976,7 @@ void trs_gui_display_settings(void)
         }
         break;
       case 4:
-        value = trs_gui_display_popup("Charset I", font1_choices, 7, gui_charset1);
+        value = trs_gui_display_popup("Charset I", font1, 7, gui_charset1);
         if (value != gui_charset1) {
           gui_charset1 = value;
           trs_charset1 = value >= 4 ? value += 6 : value;
@@ -1984,14 +1984,14 @@ void trs_gui_display_settings(void)
         }
         break;
       case 5:
-        value = trs_gui_display_popup("Charset III", font34_choices, 3, trs_charset3 - 4) + 4;
+        value = trs_gui_display_popup("Charset III", font34, 3, trs_charset3 - 4) + 4;
         if (value != trs_charset3) {
           trs_charset3 = value;
           redraw = 1;
         }
         break;
       case 6:
-        value = trs_gui_display_popup("Charset 4/4P", font34_choices, 3, trs_charset4 - 7) + 7;
+        value = trs_gui_display_popup("Charset 4/4P", font34, 3, trs_charset4 - 7) + 7;
         if (value != trs_charset4) {
           trs_charset4 = value;
           redraw = 1;
@@ -2011,21 +2011,21 @@ void trs_gui_display_settings(void)
         }
         break;
       case 8:
-        value = trs_gui_display_popup("Resize III", yes_no_choices, 2, resize3);
+        value = trs_gui_display_popup("Resize III", yes_no, 2, resize3);
         if (value != resize3) {
           resize3 = value;
           redraw = 1;
         }
         break;
       case 9:
-        value = trs_gui_display_popup("Resize 4", yes_no_choices, 2, resize4);
+        value = trs_gui_display_popup("Resize 4", yes_no, 2, resize4);
         if (value != resize4) {
           resize4 = value;
           redraw = 1;
         }
         break;
       case 10:
-        value = trs_gui_display_popup("Scale", scale_choices, 4, scale - 1) + 1;
+        value = trs_gui_display_popup("Scale", scales, 4, scale - 1) + 1;
         if (value != scale) {
           scale = value;
           fullscreen = 0;
@@ -2033,14 +2033,14 @@ void trs_gui_display_settings(void)
         }
         break;
       case 11:
-        value = trs_gui_display_popup("LEDs", yes_no_choices, 2, trs_show_led);
+        value = trs_gui_display_popup("LEDs", yes_no, 2, trs_show_led);
         if (value != trs_show_led) {
           trs_show_led = value;
           redraw = 1;
         }
         break;
       case 12:
-        value = trs_gui_display_popup("Scanlines", yes_no_choices, 2, scanlines);
+        value = trs_gui_display_popup("Scanlines", yes_no, 2, scanlines);
 #ifdef OLD_SCANLINES
         if (value != scanlines)
 #else
@@ -2084,22 +2084,22 @@ void trs_gui_misc_settings(void)
    {"Turbo Paste                                             ", MENU_NORMAL},
 #endif
    {"", 0}};
-  const char *printer_choices[] = {"     None", "     Text"};
+  const char *printer[] = {"     None", "     Text"};
   char input[12];
   int selection = 0;
 
   while (1) {
-    snprintf(&menu[2].text[50], 11, "%s", yes_no_choices[trs_emtsafe]);
+    snprintf(&menu[2].text[50], 11, "%s", yes_no[trs_emtsafe]);
     snprintf(&menu[3].text[50], 11, "%10d", stretch_amount);
-    snprintf(&menu[4].text[51], 10, "%s", printer_choices[trs_printer]);
+    snprintf(&menu[4].text[51], 10, "%s", printer[trs_printer]);
     trs_gui_limit_string(trs_uart_name, &menu[6].text[2], 58);
     snprintf(&menu[7].text[56], 5, "0x%02X", trs_uart_switches);
-    snprintf(&menu[8].text[50], 11, "%s", yes_no_choices[trs_kb_bracket_state]);
-    snprintf(&menu[9].text[50], 11, "%s", yes_no_choices[trs_sound]);
-    snprintf(&menu[10].text[50], 11, "%s", yes_no_choices[timer_overclock]);
+    snprintf(&menu[8].text[50], 11, "%s", yes_no[trs_kb_bracket_state]);
+    snprintf(&menu[9].text[50], 11, "%s", yes_no[trs_sound]);
+    snprintf(&menu[10].text[50], 11, "%s", yes_no[timer_overclock]);
     snprintf(&menu[11].text[50], 11, "%10d", timer_overclock_rate);
 #if defined(SDL2) || !defined(NOX)
-    snprintf(&menu[12].text[50], 11, "%s", yes_no_choices[turbo_paste]);
+    snprintf(&menu[12].text[50], 11, "%s", yes_no[turbo_paste]);
 #endif
     trs_gui_clear_screen();
 
@@ -2112,7 +2112,7 @@ void trs_gui_misc_settings(void)
           trs_gui_display_message("Warning", "No Printer Output in File");
         break;
       case 2:
-        trs_emtsafe = trs_gui_display_popup("Emtsafe", yes_no_choices, 2, trs_emtsafe);
+        trs_emtsafe = trs_gui_display_popup("Emtsafe", yes_no, 2, trs_emtsafe);
         break;
       case 3:
         snprintf(input, 11, "%d", stretch_amount);
@@ -2123,7 +2123,7 @@ void trs_gui_misc_settings(void)
         }
         break;
       case 4:
-        trs_printer = trs_gui_display_popup("Printer", printer_choices, 2, trs_printer);
+        trs_printer = trs_gui_display_popup("Printer", printer, 2, trs_printer);
         break;
       case 6:
         filename[0] = 0;
@@ -2141,13 +2141,13 @@ void trs_gui_misc_settings(void)
         }
         break;
       case 8:
-        trs_kb_bracket_state = trs_gui_display_popup("Bracket", yes_no_choices, 2, trs_kb_bracket_state);
+        trs_kb_bracket_state = trs_gui_display_popup("Bracket", yes_no, 2, trs_kb_bracket_state);
         break;
       case 9:
-        trs_sound = trs_gui_display_popup("Sound", yes_no_choices, 2, trs_sound);
+        trs_sound = trs_gui_display_popup("Sound", yes_no, 2, trs_sound);
         break;
       case 10:
-        timer_overclock = trs_gui_display_popup("Turbo", yes_no_choices, 2, timer_overclock);
+        timer_overclock = trs_gui_display_popup("Turbo", yes_no, 2, timer_overclock);
         break;
       case 11:
         snprintf(input, 11, "%d", timer_overclock_rate);
@@ -2159,7 +2159,7 @@ void trs_gui_misc_settings(void)
         break;
 #if defined(SDL2) || !defined(NOX)
       case 12:
-        turbo_paste = trs_gui_display_popup("Paste", yes_no_choices, 2, turbo_paste);
+        turbo_paste = trs_gui_display_popup("Paste", yes_no, 2, turbo_paste);
         break;
 #endif
       case -1:
@@ -2317,7 +2317,7 @@ void trs_gui_get_virtual_key(void)
 
 void trs_gui_joy_gui(void)
 {
-  int const selection = trs_gui_display_popup_matrix("Joystick GUI", function_choices, 3, 2, 0);
+  int const selection = trs_gui_display_popup_matrix("Joystick GUI", function_menu, 3, 2, 0);
 
   if (selection == -1)
     return;
@@ -2431,8 +2431,8 @@ void trs_gui_joystick_settings(void)
    {"Unmap All Buttons", MENU_NORMAL},
    {"Check Button Mapping", MENU_NORMAL},
    {"", 0}};
-  char *joystick_choices[MAX_JOYSTICKS + 1];
-  char joystick_strings[MAX_JOYSTICKS + 1][64];
+  char *joystick[MAX_JOYSTICKS + 1];
+  char joysticks[MAX_JOYSTICKS + 1][64];
   int selection = 0;
   int button, key;
   int i, num_joysticks, joy_index;
@@ -2440,30 +2440,30 @@ void trs_gui_joystick_settings(void)
   int gui_joystick_num = trs_joystick_num;
 
   for (i = 0; i < MAX_JOYSTICKS + 1; i++)
-    joystick_choices[i] = joystick_strings[i];
+    joystick[i] = joysticks[i];
 
   while (1) {
-    snprintf(&menu[0].text[50], 11, "%s", yes_no_choices[gui_keypad_joystick]);
+    snprintf(&menu[0].text[50], 11, "%s", yes_no[gui_keypad_joystick]);
     if (gui_joystick_num == -1)
       snprintf(&menu[1].text[50], 11, "      None");
     else
       snprintf(&menu[1].text[50], 11, "Joystick %1d", gui_joystick_num);
-    snprintf(&menu[2].text[50], 11, "%s", yes_no_choices[jaxis_mapped]);
+    snprintf(&menu[2].text[50], 11, "%s", yes_no[jaxis_mapped]);
     trs_gui_clear_screen();
     trs_gui_joystick_display_map(-1);
 
     selection = trs_gui_display_menu("Joystick Settings", menu, selection);
     switch (selection) {
       case 0:
-        gui_keypad_joystick = trs_gui_display_popup("Keypad", yes_no_choices, 2, gui_keypad_joystick);
+        gui_keypad_joystick = trs_gui_display_popup("Keypad", yes_no, 2, gui_keypad_joystick);
         break;
       case 1:
         num_joysticks = SDL_NumJoysticks();
         if (num_joysticks > MAX_JOYSTICKS)
           num_joysticks = MAX_JOYSTICKS;
-        snprintf(joystick_choices[0], 61, "%60s", "None");
+        snprintf(joystick[0], 61, "%60s", "None");
         for (i = 0; i < num_joysticks; i++) {
-          snprintf(joystick_choices[i + 1], 61, "Joystick %1d - %47s", i,
+          snprintf(joystick[i + 1], 61, "Joystick %1d - %47s", i,
 #ifdef SDL2
               SDL_JoystickName(SDL_JoystickOpen(i)));
 #else
@@ -2474,12 +2474,12 @@ void trs_gui_joystick_settings(void)
           joy_index = 0;
         else
           joy_index = gui_joystick_num + 1;
-        joy_index = trs_gui_display_popup("Joystick", (const char**)joystick_choices,
+        joy_index = trs_gui_display_popup("Joystick", (const char**)joystick,
             num_joysticks + 1, joy_index);
         gui_joystick_num = joy_index - 1;
         break;
       case 2:
-        jaxis_mapped = trs_gui_display_popup("Arrow", yes_no_choices, 2, jaxis_mapped);
+        jaxis_mapped = trs_gui_display_popup("Arrow", yes_no, 2, jaxis_mapped);
         break;
       case 3:
         if ((key = trs_gui_virtual_keyboard()) != -1) {
@@ -2488,7 +2488,7 @@ void trs_gui_joystick_settings(void)
         }
         break;
       case 4:
-        if ((key = trs_gui_display_popup_matrix("Select Function", function_choices,
+        if ((key = trs_gui_display_popup_matrix("Select Function", function_menu,
             4, 2, 0)) != -1) {
           if ((button = trs_gui_joystick_get_button()) != -1)
             jbutton_map[button] = function_codes[key];
@@ -2598,7 +2598,7 @@ void trs_gui_rom_files(void)
     trs_gui_limit_string(romfile, &menu[1].text[2], 58);
     trs_gui_limit_string(romfile3, &menu[4].text[2], 58);
     trs_gui_limit_string(romfile4p, &menu[7].text[2], 58);
-    snprintf(&menu[9].text[50], 11, "%s", yes_no_choices[trs_hd_boot]);
+    snprintf(&menu[9].text[50], 11, "%s", yes_no[trs_hd_boot]);
     trs_gui_clear_screen();
 
     selection = trs_gui_display_menu("ROM File Selection", menu, selection);
@@ -2613,7 +2613,7 @@ void trs_gui_rom_files(void)
         trs_gui_file_browse(romfile4p, romfile4p, NULL, 0, "Model 4P ROM");
         break;
       case 9:
-        trs_hd_boot = trs_gui_display_popup("Patch", yes_no_choices, 2, trs_hd_boot);
+        trs_hd_boot = trs_gui_display_popup("Patch", yes_no, 2, trs_hd_boot);
         break;
       case -1:
         return;
