@@ -369,11 +369,10 @@ void sys_byte_out(int value)
 
 	switch (speedup) {
 		case 6: /* TCS Genie IIs/SpeedMaster */
-			if ((value & (1 << 7)) == 0) {
-				if (value & 1)
-					memory_map = 0x14;
-			}
-			/* Fall through */
+			memory_map = 0x26;
+			if ((value & (1 << 1)) != (system_byte & (1 << 1)))
+				hrg_onoff((value & (1 << 1)) ? 2 : 0);
+			break;
 		case 5: /* LNW80: HRG in low 16 kB */
 			if ((value & (1 << 3)))
 				memory_map = 0x20;
@@ -626,7 +625,7 @@ int mem_read(int address)
 	  return trs80_model1_ram(address);
       case 0x17: /* Model 1: Described in the selector doc as 'not useful' */
         return 0xFF;	/* Not clear what really happens */
-      case 0x20: /* LNW80 and TCS Genie IIs/SpeedMaster: HRG in low 16K */
+      case 0x20: /* LNW80: HRG in low 16K */
 	if (address < RAM_START) {
 	  hrg_write_addr(address, 0x3FFF);
 	  return hrg_read_data();
@@ -717,6 +716,23 @@ int mem_read(int address)
 	  return memory[address];
 	else
 	  return trs80_model1_mmio(address);
+      case 0x26: /* TCS Genie IIs/SpeedMaster */
+	if ((system_byte & (1 << 2)) == 0) {
+	  if (address <= 0x2FFF)
+	    return rom[address];
+	}
+	/* HRG in low 16K */
+	if (system_byte & (1 << 3)) {
+	  if (address <= 0x3FFF) {
+	    hrg_write_addr(address, 0x3FFF);
+	    return hrg_read_data();
+	  }
+	}
+	if ((system_byte & (1 << 0)) == 0) {
+	  if (address >= 0x3400 && address <= 0x3FFF)
+	    return trs80_model1_mmio(address);
+	}
+	return memory[address];
 
       case 0x30: /* Model III */
 	if (address >= RAM_START) return memory[address];
@@ -907,7 +923,7 @@ void mem_write(int address, int value)
 	break;
       case 0x17: /* Model 1: Described in the selector doc as 'not useful' */
         break;	/* Not clear what really happens */
-      case 0x20: /* LNW80 and TCS Genie IIs/SpeedMaster: HRG in low 16K */
+      case 0x20: /* LNW80: HRG in low 16K */
 	if (address < RAM_START) {
 	  hrg_write_addr(address, 0x3FFF);
 	  hrg_write_data(value);
@@ -1028,6 +1044,28 @@ void mem_write(int address, int value)
 	else
 	  trs80_model1_write_mmio(address, value);
 	return;
+      case 0x26: /* TCS Genie IIs/SpeedMaster */
+	/* HRG in low 16K */
+	if (system_byte & (1 << 3)) {
+	  if (address <= 0x3FFF) {
+	    hrg_write_addr(address, 0x3FFF);
+	    hrg_write_data(value);
+	    return;
+	  }
+	}
+	/* Write protect "Pseudo-ROM" */
+	if (system_byte & (1 << 5)) {
+	  if (address <= 0x2FFF)
+	    return;
+	}
+	if ((system_byte & (1 << 0)) == 0) {
+	  if (address >= 0x3400 && address <= 0x3FFF) {
+	    trs80_model1_write_mmio(address, value);
+	    return;
+	  }
+	}
+	memory[address] = value;
+	break;
 
       case 0x30: /* Model III */
 	if (address >= RAM_START) {
@@ -1267,6 +1305,18 @@ Uint8 *mem_pointer(int address, int writing)
 	if ((system_byte & (1 << 3)) || address >= RAM_START)
 	  return &memory[address];
 	return NULL;
+      case 0x26: /* TCS Genie IIs/SpeedMaster */
+      case 0x2E:
+	if ((system_byte & (1 << 2)) == 0) {
+	  if (address <= 0x2FFF)
+	    return &rom[address];
+	}
+	if ((system_byte & (1 << 0)) == 0) {
+	  if (address >= 0x3400 && address <= 0x3FFF)
+	    return trs80_model1_mmio_addr(address, writing);
+	}
+	return &memory[address];
+
       case 0x30: /* Model III reading */
         if (trs_model < 4 && address >= 32768)
 	    return &memory[address + bank_base];
