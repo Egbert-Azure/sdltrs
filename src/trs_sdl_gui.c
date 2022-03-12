@@ -1055,10 +1055,11 @@ int trs_gui_display_popup(const char *title, const char **entry,
 
   for (i = 0; i < num; i++)
     trs_gui_write_text(entry[i], x, y + i, 0);
+  num--;
 
   while (1) {
     key = trs_gui_select(entry[selection], x, selection + y);
-    if (num == 2) {
+    if (num == 1) {
       switch (key) {
         case 'n':
         case 'N':
@@ -1070,7 +1071,7 @@ int trs_gui_display_popup(const char *title, const char **entry,
     }
     if (key >= '0' && key <= 'z') {
       key = toupper(key);
-      for (i = 0; i < num; i++) {
+      for (i = 0; i <= num; i++) {
         if (strchr(entry[i], key)) {
           selection = i;
           break;
@@ -1081,14 +1082,14 @@ int trs_gui_display_popup(const char *title, const char **entry,
         case SDLK_DOWN:
         case SDLK_RIGHT:
           selection++;
-          if (selection > num - 1)
+          if (selection > num)
             selection = 0;
           break;
         case SDLK_UP:
         case SDLK_LEFT:
           selection--;
           if (selection < 0)
-            selection = num - 1;
+            selection = num;
           break;
         case SDLK_HOME:
         case SDLK_PAGEUP:
@@ -1096,7 +1097,7 @@ int trs_gui_display_popup(const char *title, const char **entry,
           break;
         case SDLK_END:
         case SDLK_PAGEDOWN:
-          selection = num - 1;
+          selection = num;
           break;
         case SDLK_INSERT:
         case SDLK_RETURN:
@@ -1150,7 +1151,7 @@ int trs_gui_display_popup_matrix(const char* title, const char **entry,
     switch (trs_gui_select(entry[selection], x + col * len, y + row)) {
       case SDLK_DOWN:
         row++;
-        if (row > rows - 1)
+        if (row == rows)
           col++;
         break;
       case SDLK_UP:
@@ -1160,7 +1161,7 @@ int trs_gui_display_popup_matrix(const char* title, const char **entry,
         break;
       case SDLK_RIGHT:
         col++;
-        if (col > cols - 1)
+        if (col == cols)
           row++;
         break;
       case SDLK_LEFT:
