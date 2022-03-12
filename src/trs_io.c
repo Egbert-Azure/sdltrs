@@ -283,14 +283,17 @@ void z80_out(int port, int value)
       break;
     case 0xD0:
     case 0x10: /* Homebrew 80*22 SYS80.SYS */
-      ctrlimage = value;
+      if (speedup <= 4)
+        ctrlimage = value;
       break;
     case 0xD1:
     case 0x11: /* Homebrew 80*22 SYS80.SYS */
-      m6845_crt(value);
+      if (speedup <= 4)
+        m6845_crt(value);
       break;
     case 0xD2:
-      s80z_out(value);
+      if (speedup <= 4)
+        s80z_out(value);
       break;
     case 0xDF:
       if (lubomir == 0)
