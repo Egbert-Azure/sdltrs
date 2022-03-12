@@ -364,9 +364,6 @@ void sys_byte_out(int value)
 	if (value == system_byte)
 		return;
 
-	/* TRS-80 default memory map */
-	memory_map = 0x10;
-
 	switch (speedup) {
 		case 6: /* TCS Genie IIs/SpeedMaster */
 			memory_map = 0x26;
@@ -374,14 +371,12 @@ void sys_byte_out(int value)
 				hrg_onoff((value & (1 << 1)) ? 2 : 0);
 			break;
 		case 5: /* LNW80: HRG in low 16 kB */
-			if ((value & (1 << 3)))
-				memory_map = 0x20;
+			memory_map = (value & (1 << 3)) ? 0x20 : 0x10;
 			if ((value & (1 << 1)) != (system_byte & (1 << 1)))
 				hrg_onoff((value & (1 << 1)) ? 2 : 0);
 			break;
 		case 4: /* Banking-Modification from Martin Doppelbauer */
-			if (value & (1 << 4))
-				memory_map = 0x14;
+			memory_map = (value & (1 << 4)) ? 0x14 : 0x10;
 			break;
 	}
 
