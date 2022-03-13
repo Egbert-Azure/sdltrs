@@ -713,7 +713,7 @@ int mem_read(int address)
 	  return trs80_model1_mmio(address);
       case 0x26: /* TCS Genie IIs/SpeedMaster */
 	if ((system_byte & (1 << 2)) == 0) {
-	  if (address <= 0x2FFF)
+	  if ((system_byte & (1 << 0)) == 0 && address <= 0x2FFF)
 	    return rom[address];
 	}
 	/* HRG in low 16K */
@@ -1303,7 +1303,7 @@ Uint8 *mem_pointer(int address, int writing)
       case 0x26: /* TCS Genie IIs/SpeedMaster */
       case 0x2E:
 	if ((system_byte & (1 << 2)) == 0) {
-	  if (address <= 0x2FFF)
+	  if ((system_byte & (1 << 0)) == 0 && address <= 0x2FFF)
 	    return &rom[address];
 	}
 	if ((system_byte & (1 << 0)) == 0) {
