@@ -296,7 +296,7 @@ void z80_out(int port, int value)
         s80z_out(value);
       break;
     case 0xDF:
-      if (lubomir == 0)
+      if (speedup <= 3 && lubomir == 0)
         eg64_mba_out(value);
       break;
     case 0xEC:
