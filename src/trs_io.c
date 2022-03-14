@@ -183,7 +183,8 @@ void z80_out(int port, int value)
         modeimage = value;
         break;
       case 0xF5:
-        trs_screen_inverse(value & 1);
+        if (eg3200)
+          trs_screen_inverse(value & 1);
         break;
       case 0xF6:
         ctrlimage = value;
