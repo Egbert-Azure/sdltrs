@@ -270,9 +270,6 @@ void z80_out(int port, int value)
     case 0x05: /* HRG write data byte */
       hrg_write_data(value);
       break;
-    case 0xB9: /* Orchestra-85 left channel */
-      trs_orch90_out(1, value);
-      break;
       /* Selector doesn't decode A5 */
     case 0x1F:
     case 0x3F:
@@ -281,6 +278,9 @@ void z80_out(int port, int value)
       break;
     case 0xB5: /* Orchestra-85 right channel */
       trs_orch90_out(2, value);
+      break;
+    case 0xB9: /* Orchestra-85 left channel */
+      trs_orch90_out(1, value);
       break;
     case 0xD0:
     case 0x10: /* Homebrew 80*22 SYS80.SYS */
@@ -381,11 +381,11 @@ void z80_out(int port, int value)
       if (trs_model == 3)
           trs_timer_speed(value);
       break;
-    case 0x79: /* Orchestra-90 left channel */
-      trs_orch90_out(1, value);
-      break;
     case 0x75: /* Orchestra-90 right channel */
       trs_orch90_out(2, value);
+      break;
+    case 0x79: /* Orchestra-90 left channel */
+      trs_orch90_out(1, value);
       break;
     case 0x80:
       if (trs_model >= 3) grafyx_write_x(value);
