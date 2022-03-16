@@ -10,7 +10,6 @@ sdltrs_SOURCES=	src/blit.c \
 		src/dis.c \
 		src/error.c \
 		src/load_cmd.c \
-		src/load_hex.c \
 		src/main.c \
 		src/trs_cassette.c \
 		src/trs_disk.c \

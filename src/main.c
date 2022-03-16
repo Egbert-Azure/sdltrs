@@ -57,8 +57,76 @@
 /* Include Model I HDD auto-boot patch */
 #include "trs_hd_boot.c"
 
+#define BUFFER_SIZE 256
+
 int trs_model = 1;
 char *program_name;
+
+static int hex_byte(char *string)
+{
+    char buf[3];
+
+    buf[0] = string[0];
+    buf[1] = string[1];
+    buf[2] = '\0';
+
+    return(strtol(buf, (char **)NULL, 16));
+}
+
+static int load_hex(FILE *file)
+{
+    char buffer[BUFFER_SIZE];
+    char *b;
+    int num_bytes;
+    int address;
+    int check;
+    int value;
+    int high = 0;
+
+    while(fgets(buffer, BUFFER_SIZE, file))
+    {
+	if(buffer[0] == ':')
+	{
+	    /* colon */
+	    b = buffer + 1;
+
+	    /* number of bytes on the line */
+	    num_bytes = hex_byte(b);  b += 2;
+	    check = num_bytes;
+
+	    /* the starting address */
+	    address = hex_byte(b) << 8;  b += 2;
+	    address |= hex_byte(b);  b+= 2;
+	    check += (address >> 8) + (address & 0xff);
+
+	    /* a zero? */
+	    b += 2;
+
+	    /* the data */
+	    if(num_bytes == 0)
+	    {
+		/* Transfer address UNUSED:
+		hex_transfer_address(address); */
+	    } else {
+		while(num_bytes--)
+		{
+		    value = hex_byte(b);  b += 2;
+		    rom_write(address++, value);
+		    check += value;
+		}
+		if (address > high) high = address;
+
+		/* the checksum */
+		value = hex_byte(b);
+		if(((0x100 - check) & 0xff) != value)
+		{
+		    return(-1);
+		}
+	    }
+	}
+    }
+    return high; /* returns highest address loaded + 1 */
+}
 
 static void trs_load_compiled_rom(int address, int size, const Uint8 rom[])
 {

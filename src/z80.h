@@ -255,7 +255,6 @@ extern void rom_write(int address, int value);
 extern int mem_read_word(int address);
 extern void mem_write_word(int address, int value);
 extern Uint8 *mem_pointer(int address, int writing);
-extern int load_hex(FILE *file); /* returns highest address loaded + 1 */
 extern void z80_out(int port, int value);
 extern int z80_in(int port);
 

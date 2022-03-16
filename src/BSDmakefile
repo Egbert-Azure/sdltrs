@@ -5,7 +5,6 @@ SRCS	+= debug.c
 SRCS	+= dis.c
 SRCS	+= error.c
 SRCS	+= load_cmd.c
-SRCS	+= load_hex.c
 SRCS	+= main.c
 SRCS	+= trs_cassette.c
 SRCS	+= trs_disk.c
