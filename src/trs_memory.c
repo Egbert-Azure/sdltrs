@@ -714,10 +714,6 @@ int mem_read(int address)
 	else
 	  return trs80_model1_mmio(address);
       case 0x26: /* TCS Genie IIs/SpeedMaster */
-	if ((system_byte & (1 << 2)) == 0) {
-	  if ((system_byte & (1 << 0)) == 0 && address <= 0x2FFF)
-	    return rom[address];
-	}
 	/* HRG in low 16K */
 	if (system_byte & (1 << 3)) {
 	  if (address <= 0x3FFF) {
@@ -726,6 +722,8 @@ int mem_read(int address)
 	  }
 	}
 	if ((system_byte & (1 << 0)) == 0) {
+	  if (address <= 0x2FFF && (system_byte & (1 << 2)) == 0)
+	    return rom[address];
 	  if (address >= 0x3400 && address <= 0x3FFF)
 	    return trs80_model1_mmio(address);
 	}
@@ -1314,11 +1312,9 @@ Uint8 *mem_pointer(int address, int writing)
 	return NULL;
       case 0x26: /* TCS Genie IIs/SpeedMaster */
       case 0x2E:
-	if ((system_byte & (1 << 2)) == 0) {
-	  if ((system_byte & (1 << 0)) == 0 && address <= 0x2FFF)
-	    return &rom[address];
-	}
 	if ((system_byte & (1 << 0)) == 0) {
+	  if (address <= 0x2FFF && (system_byte & (1 << 2)) == 0)
+	    return &rom[address];
 	  if (address >= 0x3400 && address <= 0x3FFF)
 	    return trs80_model1_mmio_addr(address, writing);
 	}
