@@ -206,6 +206,14 @@ void mem_bank_base(int bits)
 		    supermem_hi = 0x0000;
 		else
 		    supermem_hi = 0x8000;
+		return;
+	}
+	if (speedup == 6) {
+		/* TCS Genie IIs/SpeedMaster RAM 192 B */
+		bank_base = ((bits & 0x0C) * 192) /* card */
+			  + ((bits & 0x30) *  48) /* block */
+			  * 1024 + 65536;
+		mem_command = bits;
 	}
 }
 
@@ -216,6 +224,8 @@ int mem_read_bank_base(void)
 	if (supermem)
 		return (supermem_base >> 15) |
 			((supermem_hi == 0) ? 0x20 : 0);
+	if (speedup == 6)
+		return (mem_command);
 	/* And the HyperMem appears to be write-only */
 	return 0xFF;
 }
@@ -714,6 +724,11 @@ int mem_read(int address)
 	else
 	  return trs80_model1_mmio(address);
       case 0x26: /* TCS Genie IIs/SpeedMaster */
+	/* Expansions bit */
+	if (system_byte & (1 << 7)) {
+	  if (address <= 0xBFFF)
+	    return memory[address + bank_base];
+	}
 	/* HRG in low 16K */
 	if (system_byte & (1 << 3)) {
 	  if (address <= 0x3FFF) {
@@ -1046,6 +1061,13 @@ void mem_write(int address, int value)
 	  trs80_model1_write_mmio(address, value);
 	return;
       case 0x26: /* TCS Genie IIs/SpeedMaster */
+	/* Expansions bit */
+	if (system_byte & (1 << 7)) {
+	  if (address <= 0xBFFF) {
+	    memory[address + bank_base] = value;
+	    return;
+	  }
+	}
 	/* HRG in low 16K */
 	if (system_byte & (1 << 3)) {
 	  if (address <= 0x3FFF) {
@@ -1312,6 +1334,11 @@ Uint8 *mem_pointer(int address, int writing)
 	return NULL;
       case 0x26: /* TCS Genie IIs/SpeedMaster */
       case 0x2E:
+	/* Expansions bit */
+	if (system_byte & (1 < 7)) {
+	  if (address <= 0xBFFF)
+	    return &memory[address + bank_base];
+	}
 	if ((system_byte & (1 << 0)) == 0) {
 	  if (address <= 0x2FFF && (system_byte & (1 << 2)) == 0)
 	    return &rom[address];
