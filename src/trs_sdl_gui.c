@@ -2360,22 +2360,22 @@ int trs_gui_joystick_get_button(void)
         trs_exit(0);
         break;
       case SDL_KEYDOWN:
-        if (event.key.keysym.mod & KMOD_ALT) {
-          switch (event.key.keysym.sym) {
+        switch (event.key.keysym.sym) {
 #if defined(__OS2__) || defined(_WIN32)
-            case SDLK_F4:
+          case SDLK_F4:
 #endif
-            case SDLK_q:
+          case SDLK_q:
+            if (event.key.keysym.mod & KMOD_ALT)
               trs_exit(1);
-              break;
-            default:
-              break;
-          }
+            break;
+          case SDLK_F8:
+            trs_exit(!(event.key.keysym.mod & KMOD_SHIFT));
+            break;
+          case SDLK_ESCAPE:
+            return -1;
+          default:
+            break;
         }
-        else if (event.key.keysym.sym == SDLK_F8)
-          trs_exit(!(event.key.keysym.mod & KMOD_SHIFT));
-        else if (event.key.keysym.sym == SDLK_ESCAPE)
-          return -1;
         break;
       case SDL_JOYBUTTONDOWN:
       case SDL_MOUSEBUTTONDOWN:
