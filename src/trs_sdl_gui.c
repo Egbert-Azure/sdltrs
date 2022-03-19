@@ -2393,29 +2393,25 @@ int trs_gui_joystick_get_button(void)
 
 void trs_gui_joystick_display_map(int button)
 {
-  int row, col, i;
-  char text[10];
+  int row, col;
+  char text[12];
 
   for (col = 0; col < 5; col++) {
     for (row = 0; row < 4; row++) {
-      i = col * 4 + row;
-      snprintf(text, 4, "%2d:", i);
-      trs_gui_write_text(text, 2 + col * 12, 11 + row, 0);
-      switch (jbutton_map[i]) {
-        case -1:     snprintf(text, 9, "---     "); break;
-        case GUI:    snprintf(text, 9, "<GUI>   "); break;
-        case KEYBRD: snprintf(text, 9, "<KEYBRD>"); break;
-        case SAVE:   snprintf(text, 9, "<SAVE>  "); break;
-        case LOAD:   snprintf(text, 9, "<LOAD>  "); break;
-        case RESET:  snprintf(text, 9, "<RESET> "); break;
-        case EXIT:   snprintf(text, 9, "<EXIT>  "); break;
-        case PAUSE:  snprintf(text, 9, "<PAUSE> "); break;
-        case JOYGUI: snprintf(text, 9, "<JOYGUI>"); break;
-        default:
-          snprintf(text, 9, "%s", trs_gui_get_key_name(jbutton_map[i]));
-          break;
-      }
-      trs_gui_write_text(text, 5 + col * 12, 11 + row, button == i);
+      int const pos = col * 4 + row;
+      int const map = jbutton_map[pos];
+
+      snprintf(text, 12, "%2d:%s", pos,
+          (map == -1)     ? "---     " :
+          (map == GUI)    ? "<GUI>   " :
+          (map == KEYBRD) ? "<KEYBRD>" :
+          (map == SAVE)   ? "<SAVE>  " :
+          (map == LOAD)   ? "<LOAD>  " :
+          (map == RESET)  ? "<RESET> " :
+          (map == EXIT)   ? "<EXIT>  " :
+          (map == PAUSE)  ? "<PAUSE> " :
+          (map == JOYGUI) ? "<JOYGUI>" : trs_gui_get_key_name(map));
+      trs_gui_write_text(text, 2 + col * 12, 11 + row, button == pos);
     }
   }
 }
