@@ -246,6 +246,9 @@ void TrsBlitMap(SDL_Palette *src, SDL_PixelFormat *dst)
   if (blitMap != NULL)
     free(blitMap);
 
+  if (src == NULL || dst == NULL)
+    return;
+
   map = (Uint8 *)malloc(src->ncolors * dst->BytesPerPixel);
   if (map == NULL) {
     return;
