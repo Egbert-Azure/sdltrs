@@ -1605,6 +1605,9 @@ void trs_sdl_cleanup(void)
 {
   int i, ch;
 
+  /* Free color map */
+  TrsBlitMap(NULL, NULL);
+
   /* SDL cleanup */
   for (i = 0; i < 6; i++) {
     for (ch = 0; ch < MAXCHARS; ch++) {
