@@ -2274,21 +2274,16 @@ static int trs_gui_config_management(void)
 
 const char *trs_gui_get_key_name(int key)
 {
-  int i, found = 0, shifted = 0;
+  int i;
 
-  for (i = 0; i < N_KEYS && !found; i++)
-    if (key_syms[i] == key)
-      found = 1;
-  if (!found) {
-    shifted = 1;
-    for (i = 0; i < N_KEYS && !found; i++)
-      if (key_syms_shifted[i] == key)
-        found = 1;
+  for (i = 0; i < N_KEYS; i++) {
+    if (key == key_syms[i])
+      return key_names[i];
+
+    if (key == key_syms_shifted[i])
+      return key_names_shifted[i];
   }
-  if (found)
-    return !shifted ? key_names[i - 1] : key_names_shifted[i - 1];
-  else
-    return "???";
+  return "???";
 }
 
 int trs_gui_virtual_keyboard(void)
