@@ -333,11 +333,11 @@ void z80_out(int port, int value)
       trs_uart_data_out(value);
       break;
     case 0xF9:
-      if (speedup < 4)
+      if (speedup < 4 && trs_rom_size <= 0x2000)
         genie3s_init_out(value);
       break;
     case 0xFA:
-      if (speedup < 4)
+      if (speedup < 4 && trs_rom_size <= 0x2000)
         eg3200_init_out(value);
       break;
     case 0xFD:
