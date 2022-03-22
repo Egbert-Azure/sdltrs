@@ -56,7 +56,7 @@
 int trs_io_debug_flags;
 
 static int modesel;         /* Model I */
-static int modeimage = 0x8; /* Model III/4/4p */
+static int modeimage = 0x8; /* Model III/4/4p & SIO */
 static int ctrlimage;       /* Model 4/4p & M6845 */
 static int rominimage;      /* Model 4p */
 
@@ -145,6 +145,14 @@ void z80_out(int port, int value)
         if (genie3s)
           rtc_reg = value;
         break;
+      case 0xD0:
+        if (genie3s)
+          trs_uart_data_out(value);
+        break;
+      case 0xD2:
+        if (genie3s)
+          trs_uart_control_out(value);
+        break;
       case 0xE0:
         if (eg3200)
           rtc_reg = value;
@@ -180,7 +188,10 @@ void z80_out(int port, int value)
           trs_disk_data_write(value);
         break;
       case 0xF1:
-        modeimage = value;
+        if (genie3s) {
+          trs_uart_baud_out((value & 0x0F) || ((value & 0x0F) << 4));
+          modeimage = value;
+        }
         break;
       case 0xF5:
         if (eg3200)
@@ -668,6 +679,14 @@ int z80_in(int port)
       case 0x57:
         value = trs_hard_in(TRS_HARD_STATUS);
         break;
+      case 0xD0:
+        if (genie3s)
+          value = trs_uart_data_in();
+        break;
+      case 0xD2:
+        if (genie3s)
+          value = trs_uart_status_in();
+        break;
       case 0xE0:
       case 0xE1:
       case 0xE2:
@@ -698,7 +717,8 @@ int z80_in(int port)
           value = trs_disk_data_read();
         break;
       case 0xF1:
-        value = modeimage;
+        if (genie3s)
+          value = modeimage;
         break;
       case 0xF7:
         switch (ctrlimage) {
