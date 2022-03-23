@@ -240,7 +240,6 @@ void z80_out(int port, int value)
       case 0xFF:
         modesel = (value >> 3) & 1;
         trs_screen_expanded(modesel);
-        trs_cassette_motor((value >> 2) & 1);
         trs_cassette_out(value & 0x3);
         break;
       default:
@@ -792,7 +791,7 @@ int z80_in(int port)
         break;
       case 0xFE:
       case 0xFF:
-        value = (!modesel ? 0x7f : 0x3f) | trs_cassette_in();
+        value = modesel ? 0xBF : 0xFF;
         break;
       default:
         break;
