@@ -218,7 +218,7 @@ void z80_out(int port, int value)
         trs_disk_data_write(value);
         break;
       case 0xF1:
-        trs_uart_baud_out((value & 0x0F) || ((value & 0x0F) << 4));
+        trs_uart_baud_out((value & 0x0F) | ((value & 0x0F) << 4));
         modeimage = value;
         break;
       case 0xF6:
