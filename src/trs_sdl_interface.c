@@ -1176,6 +1176,7 @@ int trs_write_config_file(const char *filename)
 void trs_screen_reset(void)
 {
   currentmode = NORMAL;
+  hrg_enable = 0;
   genie3s = 0;
   grafyx_enable = 0;
   grafyx_mode = 0;
