@@ -106,59 +106,101 @@ void z80_out(int port, int value)
     debug("out (0x%02x), 0x%02x; pc 0x%04x\n", port, value, z80_state.pc.word);
   }
 
-  /* EG 3200 Genie III & TCS Genie IIIs */
-  if (eg3200 || genie3s) {
+  /* EG 3200 Genie III */
+  if (eg3200) {
     switch (port) {
       case 0x48:
-      case 0x50:
         trs_hard_out(TRS_HARD_DATA, value);
         break;
       case 0x49:
-      case 0x51:
         trs_hard_out(TRS_HARD_PRECOMP, value);
         break;
       case 0x4A:
-      case 0x52:
         trs_hard_out(TRS_HARD_SECCNT, value);
         break;
       case 0x4B:
-      case 0x53:
         trs_hard_out(TRS_HARD_SECNUM, value);
         break;
       case 0x4C:
-      case 0x54:
         trs_hard_out(TRS_HARD_CYLLO, value);
         break;
       case 0x4D:
-      case 0x55:
         trs_hard_out(TRS_HARD_CYLHI, value);
         break;
       case 0x4E:
-      case 0x56:
         trs_hard_out(TRS_HARD_SDH, value);
         break;
       case 0x4F:
+        trs_hard_out(TRS_HARD_COMMAND, value);
+        break;
+      case 0xE0:
+        rtc_reg = value;
+        break;
+      case 0xF5:
+        trs_screen_inverse(value & 1);
+        break;
+      case 0xF6:
+        ctrlimage = value;
+        break;
+      case 0xF7:
+        m6845_crt(value);
+        break;
+      case 0xFA:
+        eg3200 = value;
+        break;
+      case 0xFD:
+        trs_printer_write(value);
+        break;
+      case 0xFE:
+      case 0xFF:
+        modesel = (value >> 3) & 1;
+        trs_screen_expanded(modesel);
+        trs_cassette_motor((value >> 2) & 1);
+        trs_cassette_out(value & 0x3);
+        break;
+      default:
+        break;
+    }
+    return;
+  }
+
+  /* TCS Genie IIIs */
+  if (genie3s) {
+    switch (port) {
+      case 0x50:
+        trs_hard_out(TRS_HARD_DATA, value);
+        break;
+      case 0x51:
+        trs_hard_out(TRS_HARD_PRECOMP, value);
+        break;
+      case 0x52:
+        trs_hard_out(TRS_HARD_SECCNT, value);
+        break;
+      case 0x53:
+        trs_hard_out(TRS_HARD_SECNUM, value);
+        break;
+      case 0x54:
+        trs_hard_out(TRS_HARD_CYLLO, value);
+        break;
+      case 0x55:
+        trs_hard_out(TRS_HARD_CYLHI, value);
+        break;
+      case 0x56:
+        trs_hard_out(TRS_HARD_SDH, value);
+        break;
       case 0x57:
         trs_hard_out(TRS_HARD_COMMAND, value);
         break;
       case 0x5B:
-        if (genie3s)
-          rtc_reg = value;
+        rtc_reg = value;
         break;
       case 0xD0:
-        if (genie3s)
-          trs_uart_data_out(value);
+        trs_uart_data_out(value);
         break;
       case 0xD2:
-        if (genie3s)
-          trs_uart_control_out(value);
+        trs_uart_control_out(value);
         break;
       case 0xE0:
-        if (eg3200)
-          rtc_reg = value;
-        else
-          trs_disk_select_write(value);
-        break;
       case 0xE1:
       case 0xE2:
       case 0xE3:
@@ -168,34 +210,23 @@ void z80_out(int port, int value)
       case 0xE9:
       case 0xEA:
       case 0xEB:
-        if (genie3s)
-          trs_printer_write(value);
+        trs_printer_write(value);
         break;
       case 0xEC:
-        if (genie3s)
-          trs_disk_command_write(value);
+        trs_disk_command_write(value);
         break;
       case 0xED:
-        if (genie3s)
-          trs_disk_track_write(value);
+        trs_disk_track_write(value);
         break;
       case 0xEE:
-        if (genie3s)
-          trs_disk_sector_write(value);
+        trs_disk_sector_write(value);
         break;
       case 0xEF:
-        if (genie3s)
-          trs_disk_data_write(value);
+        trs_disk_data_write(value);
         break;
       case 0xF1:
-        if (genie3s) {
-          trs_uart_baud_out((value & 0x0F) || ((value & 0x0F) << 4));
-          modeimage = value;
-        }
-        break;
-      case 0xF5:
-        if (eg3200)
-          trs_screen_inverse(value & 1);
+        trs_uart_baud_out((value & 0x0F) || ((value & 0x0F) << 4));
+        modeimage = value;
         break;
       case 0xF6:
         ctrlimage = value;
@@ -207,10 +238,7 @@ void z80_out(int port, int value)
         genie3s_bank_out(0x100 | value);
         break;
       case 0xFA:
-        if (genie3s)
-          genie3s_sys_out(value);
-        else
-          eg3200 = value;
+        genie3s_sys_out(value);
         break;
       case 0xFD:
         trs_printer_write(value);
@@ -644,48 +672,88 @@ int z80_in(int port)
     }
   }
 
-  /* EG 3200 Genie III & TCS Genie IIIs */
-  if (eg3200 || genie3s) {
+  /* EG 3200 Genie III */
+  if (eg3200) {
     switch (port) {
       case 0x48:
-      case 0x50:
         value = trs_hard_in(TRS_HARD_DATA);
         break;
       case 0x49:
-      case 0x51:
         value = trs_hard_in(TRS_HARD_ERROR);
         break;
       case 0x4A:
-      case 0x52:
         value = trs_hard_in(TRS_HARD_SECCNT);
         break;
       case 0x4B:
-      case 0x53:
         value = trs_hard_in(TRS_HARD_SECNUM);
         break;
       case 0x4C:
-      case 0x54:
         value = trs_hard_in(TRS_HARD_CYLLO);
         break;
       case 0x4D:
-      case 0x55:
         value = trs_hard_in(TRS_HARD_CYLHI);
         break;
       case 0x4E:
-      case 0x56:
         value = trs_hard_in(TRS_HARD_SDH);
         break;
       case 0x4F:
+        value = trs_hard_in(TRS_HARD_STATUS);
+        break;
+      case 0xF7:
+        switch (ctrlimage) {
+          case 0x0E: /* Cursor LSB */
+            value = (cursor_pos >> 8) & 0xFF;
+            break;
+          case 0x0F: /* Cursor MSB */
+            value = (cursor_pos >> 0) & 0xFF;
+            break;
+        }
+        break;
+      case 0xFD:
+        value = trs_printer_read();
+        break;
+      case 0xFE:
+      case 0xFF:
+        value = (!modesel ? 0x7f : 0x3f) | trs_cassette_in();
+        break;
+      default:
+        break;
+    }
+    goto done;
+  }
+
+  /* TCS Genie IIIs */
+  if (genie3s) {
+    switch (port) {
+      case 0x50:
+        value = trs_hard_in(TRS_HARD_DATA);
+        break;
+      case 0x51:
+        value = trs_hard_in(TRS_HARD_ERROR);
+        break;
+      case 0x52:
+        value = trs_hard_in(TRS_HARD_SECCNT);
+        break;
+      case 0x53:
+        value = trs_hard_in(TRS_HARD_SECNUM);
+        break;
+      case 0x54:
+        value = trs_hard_in(TRS_HARD_CYLLO);
+        break;
+      case 0x55:
+        value = trs_hard_in(TRS_HARD_CYLHI);
+        break;
+      case 0x56:
+        value = trs_hard_in(TRS_HARD_SDH);
+        break;
       case 0x57:
         value = trs_hard_in(TRS_HARD_STATUS);
         break;
       case 0xD0:
-        if (genie3s)
-          value = trs_uart_data_in();
+        value = trs_uart_data_in();
         break;
       case 0xD2:
-        if (genie3s)
-          value = trs_uart_status_in();
+        value = trs_uart_status_in();
         break;
       case 0xE0:
       case 0xE1:
@@ -697,28 +765,22 @@ int z80_in(int port)
       case 0xE9:
       case 0xEA:
       case 0xEB:
-        if (genie3s)
-          value = trs_printer_read();
+        value = trs_printer_read();
         break;
       case 0xEC:
-        if (genie3s)
-          value = trs_disk_status_read();
+        value = trs_disk_status_read();
         break;
       case 0xED:
-        if (genie3s)
-          value = trs_disk_track_read();
+        value = trs_disk_track_read();
         break;
       case 0xEE:
-        if (genie3s)
-          value = trs_disk_sector_read();
+        value = trs_disk_sector_read();
         break;
       case 0xEF:
-        if (genie3s)
-          value = trs_disk_data_read();
+        value = trs_disk_data_read();
         break;
       case 0xF1:
-        if (genie3s)
-          value = modeimage;
+        value = modeimage;
         break;
       case 0xF7:
         switch (ctrlimage) {
