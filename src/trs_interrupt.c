@@ -510,7 +510,7 @@ trs_timer_speed(int fast)
         break;
       default:
         /* Model 4/4P */
-        z80_state.clockMHz = ((fast & 0x40) >> 6) ? clock_mhz_4 : clock_mhz_3;
+        z80_state.clockMHz = fast ? clock_mhz_4 : clock_mhz_3;
       break;
     }
   }
