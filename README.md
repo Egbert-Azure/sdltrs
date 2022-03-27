@@ -55,10 +55,10 @@ has very low system requirements: it works on all platforms supported by the
 
 ## Packages
 
-  * [sdltrs_1.2.22-1_i386.deb]    (32-bit, SDL)
-  * [sdl2trs_1.2.22-1_i386.deb]   (32-bit, SDL2)
-  * [sdltrs_1.2.22-1_amd64.deb]   (64-bit, SDL)
-  * [sdl2trs_1.2.22-1_amd64.deb]  (64-bit, SDL2)
+  * [sdltrs_1.2.23-1_i386.deb]    (32-bit, SDL)
+  * [sdl2trs_1.2.23-1_i386.deb]   (32-bit, SDL2)
+  * [sdltrs_1.2.23-1_amd64.deb]   (64-bit, SDL)
+  * [sdl2trs_1.2.23-1_amd64.deb]  (64-bit, SDL2)
 
 (Build on Debian 9/i386 & Linux Mint 20.2/amd64)
 
@@ -102,8 +102,8 @@ Lupi's fork of [RetroPie-Setup] ...
 [sdltrs.exe]: bin/sdltrs.exe
 [sdl2trs.exe]: bin/sdl2trs.exe
 [sdl2trs64.exe]: bin/sdl2trs64.exe
-[sdltrs_1.2.22-1_i386.deb]: bin/sdltrs_1.2.22-1_i386.deb
-[sdl2trs_1.2.22-1_i386.deb]: bin/sdl2trs_1.2.22-1_i386.deb
-[sdltrs_1.2.22-1_amd64.deb]: bin/sdltrs_1.2.22-1_amd64.deb
-[sdl2trs_1.2.22-1_amd64.deb]: bin/sdl2trs_1.2.22-1_amd64.deb
+[sdltrs_1.2.23-1_i386.deb]: bin/sdltrs_1.2.23-1_i386.deb
+[sdl2trs_1.2.23-1_i386.deb]: bin/sdl2trs_1.2.23-1_i386.deb
+[sdltrs_1.2.23-1_amd64.deb]: bin/sdltrs_1.2.23-1_amd64.deb
+[sdl2trs_1.2.23-1_amd64.deb]: bin/sdl2trs_1.2.23-1_amd64.deb
 [xtrs]: https://www.tim-mann.org/xtrs.html
