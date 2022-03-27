@@ -33,6 +33,9 @@ Updated version of Mark Grebe's [SDLTRS]:
   * Support Schmidtke 80-Z Video Card for TRS-80 Model I
   * Emulate EG 3210 Programmable Graphics Adaptor for Genie III
   * Support some David Keil's TRS-80 Emulator extensions
+  * Support Anitek MegaMem memory card for TRS-80 Model III and 4/4P
+  * Emulate 4 MHz speedup hardware for TRS-80 Model III
+  * Support TCS Genie IIs/SpeedMaster RAM 192 B memory expansion
 
 SDL(2)TRS is based on Tim Mann's excellent TRS-80 emulator [xtrs] and also
 has very low system requirements: it works on all platforms supported by the
