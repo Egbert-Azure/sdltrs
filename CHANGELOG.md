@@ -1,3 +1,12 @@
+## Version 1.2.23 Release 03-27-2022:
+
+ * Added Anitek MegaMem card for TRS-80 Model III and 4/4P.
+ * Added support for TRS-Model III 4 MHz speedup hardware.
+ * Added SIO (serial port) for TCS Genie IIIs.
+ * Added TCS Genie IIs/SpeedMaster RAM 192 B memory expansion.
+ * Fixed TCS Genie IIs/SpeedMaster emulation.
+ * Fixed boot of G-DOS 2.4 for Genie I/II.
+
 ## Version 1.2.22 Release 02-06-2022:
 
  * Added EG 64.1 memory expansion for TRS-80 Model I.
