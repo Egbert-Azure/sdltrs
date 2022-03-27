@@ -641,11 +641,8 @@ stringy_out(int unit, int value)
       new_state == STRINGY_WRITING) {
     if (s->format == STRINGY_FMT_DEBUG) {
       /* Debug format can't handle overwriting */
-      int res;
-
       fflush(s->file);
-      res = ftruncate(fileno(s->file), ftell(s->file));
-      assert(res == 0);
+      assert(ftruncate(fileno(s->file), ftell(s->file)) == 0);
     }
     fseek(s->file, 0, SEEK_CUR);
     stringy_flux_write(s, 1, 0); /* XXX needed?  bad? */
