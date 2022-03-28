@@ -72,15 +72,23 @@ typedef struct {
 static OpenDisk od[MAX_OPENDISK];
 static int xtrshard_fd[4] = {-1,-1,-1,-1};
 
+static int emt_block(const char *emt_func)
+{
+  if (trs_emtsafe) {
+    error("%s: potentially dangerous emulator trap blocked", emt_func);
+    Z80_A = EACCES;
+    Z80_F &= ~ZERO_MASK;
+  }
+  return trs_emtsafe;
+}
+
 void do_emt_system(void)
 {
   int res;
-  if (trs_emtsafe) {
-    error("emt_system: potentially dangerous emulator trap blocked");
-    Z80_A = EACCES;
-    Z80_F &= ~ZERO_MASK;
+
+  if (emt_block("emt_system"))
     return;
-  }
+
   res = system((char *)mem_pointer(Z80_HL, 0));
   if (res == -1) {
     Z80_A = errno;
@@ -163,12 +171,9 @@ void do_emt_getddir(void)
 
 void do_emt_setddir(void)
 {
-  if (trs_emtsafe) {
-    error("emt_setddir: potentially dangerous emulator trap blocked");
-    Z80_A = EACCES;
-    Z80_F &= ~ZERO_MASK;
+  if (emt_block("emt_setddir"))
     return;
-  }
+
   snprintf(trs_disk_dir, FILENAME_MAX, "%s", (char *)mem_pointer(Z80_HL, 0));
   if (trs_disk_dir[0] == '~' &&
       (trs_disk_dir[1] == DIR_SLASH || trs_disk_dir[1] == '\0')) {
@@ -206,12 +211,9 @@ void do_emt_open(void)
   if (eoflag & EO_TRUNC)  oflag |= O_TRUNC;
   if (eoflag & EO_APPEND) oflag |= O_APPEND;
 
-  if (trs_emtsafe && oflag != O_RDONLY) {
-    error("emt_open: potentially dangerous emulator trap blocked");
-    Z80_A = EACCES;
-    Z80_F &= ~ZERO_MASK;
+  if (emt_block("emt_open") && oflag != O_RDONLY)
     return;
-  }
+
   fd = open((char *)mem_pointer(Z80_HL, 0), oflag, Z80_DE);
   if (fd >= 0) {
     Z80_A = 0;
@@ -484,12 +486,10 @@ void do_emt_readdir(void)
 void do_emt_chdir(void)
 {
   int const ok = chdir((char *)mem_pointer(Z80_HL, 0));
-  if (trs_emtsafe) {
-    error("emt_chdir: potentially dangerous emulator trap blocked");
-    Z80_A = EACCES;
-    Z80_F &= ~ZERO_MASK;
+
+  if (emt_block("emt_chdir"))
     return;
-  }
+
   if (ok < 0) {
     Z80_A = errno;
     Z80_F &= ~ZERO_MASK;
