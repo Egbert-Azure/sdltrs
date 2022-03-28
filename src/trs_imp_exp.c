@@ -530,11 +530,13 @@ void do_emt_misc(void)
   case 1:
     trs_exit(0);
     break;
-#ifdef ZBX
   case 2:
+#ifdef ZBX
     trs_debug();
-    break;
+#else
+    error("ZBX debugger disabled");
 #endif
+    break;
   case 3:
     trs_reset(0);
     break;
