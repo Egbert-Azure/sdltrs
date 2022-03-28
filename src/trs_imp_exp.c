@@ -75,7 +75,7 @@ static int xtrshard_fd[4] = {-1,-1,-1,-1};
 static int emt_block(const char *emt_func)
 {
   if (trs_emtsafe) {
-    error("%s: potentially dangerous emulator trap blocked", emt_func);
+    error("emt_%s: potentially dangerous emulator trap blocked", emt_func);
     Z80_A = EACCES;
     Z80_F &= ~ZERO_MASK;
   }
@@ -86,7 +86,7 @@ void do_emt_system(void)
 {
   int res;
 
-  if (emt_block("emt_system"))
+  if (emt_block("system"))
     return;
 
   res = system((char *)mem_pointer(Z80_HL, 0));
@@ -171,7 +171,7 @@ void do_emt_getddir(void)
 
 void do_emt_setddir(void)
 {
-  if (emt_block("emt_setddir"))
+  if (emt_block("setddir"))
     return;
 
   snprintf(trs_disk_dir, FILENAME_MAX, "%s", (char *)mem_pointer(Z80_HL, 0));
@@ -211,7 +211,7 @@ void do_emt_open(void)
   if (eoflag & EO_TRUNC)  oflag |= O_TRUNC;
   if (eoflag & EO_APPEND) oflag |= O_APPEND;
 
-  if (emt_block("emt_open") && oflag != O_RDONLY)
+  if (emt_block("open") && oflag != O_RDONLY)
     return;
 
   fd = open((char *)mem_pointer(Z80_HL, 0), oflag, Z80_DE);
@@ -487,7 +487,7 @@ void do_emt_chdir(void)
 {
   int const ok = chdir((char *)mem_pointer(Z80_HL, 0));
 
-  if (emt_block("emt_chdir"))
+  if (emt_block("chdir"))
     return;
 
   if (ok < 0) {
