@@ -1878,7 +1878,6 @@ void trs_get_event(int wait)
               copyStatus = COPY_IDLE;
               break;
             case SDLK_v:
-            case SDLK_INSERT:
               if (turbo_paste) {
                 timer_saved = timer_overclock;
                 trs_timer_mode(1);
@@ -1899,6 +1898,9 @@ void trs_get_event(int wait)
 #endif
             case SDLK_DELETE:
               trs_reset(0);
+              break;
+            case SDLK_INSERT:
+              call_function(KEYBRD);
               break;
             case SDLK_RETURN:
               trs_flip_fullscreen();
