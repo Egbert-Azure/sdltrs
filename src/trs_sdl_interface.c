@@ -2824,9 +2824,9 @@ void trs_screen_write_char(unsigned int position, Uint8 char_index)
       SDL_BlitSurface(trs_box[expanded][char_index - 0x80], &srcRect, screen, &dstRect);
     } else {
       /* Use regular character bitmap */
-      if (trs_model > 1 && char_index >= 0xc0 &&
-          (currentmode & (ALTERNATE + INVERSE)) == 0) {
-        char_index -= 0x40;
+      if (trs_model > 1) {
+        if (char_index >= 0xc0 && (currentmode & (ALTERNATE + INVERSE)) == 0)
+          char_index -= 0x40;
       }
       if ((currentmode & INVERSE) && (char_index & 0x80)) {
         expanded += 2;
