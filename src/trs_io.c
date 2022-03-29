@@ -513,9 +513,10 @@ void z80_out(int port, int value)
       trs_screen_expanded((modeimage & 0x04) >> 2);
       /* alternate char set is on D3 */
       trs_screen_alternate(!((modeimage & 0x08) >> 3));
+      /* Skip Holmes Sprinter III */
+      if (trs_model == 3 && speedup == 2) break;
       /* clock speed is on D6; it affects timer HZ too */
-      if (speedup != 2)
-        trs_timer_speed(modeimage & 0xC0);
+      trs_timer_speed(modeimage & 0xC0);
       break;
     case TRSDISK3_COMMAND: /* 0xF0 */
       trs_disk_command_write(value);
