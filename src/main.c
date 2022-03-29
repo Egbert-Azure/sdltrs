@@ -103,11 +103,8 @@ static int load_hex(FILE *file)
 	    b += 2;
 
 	    /* the data */
-	    if(num_bytes == 0)
+	    if(num_bytes)
 	    {
-		/* Transfer address UNUSED:
-		hex_transfer_address(address); */
-	    } else {
 		while(num_bytes--)
 		{
 		    value = hex_byte(b);  b += 2;
