@@ -2360,6 +2360,7 @@ int trs_gui_joystick_get_button(void)
           case SDLK_F4:
 #endif
           case SDLK_q:
+          case SDLK_END:
             if (event.key.keysym.mod & KMOD_ALT)
               trs_exit(1);
             break;
