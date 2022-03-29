@@ -2465,10 +2465,9 @@ void trs_gui_joystick_settings(void)
          }
         break;
       case 7:
-        if ((button = trs_gui_joystick_get_button()) != -1) {
+        while ((button = trs_gui_joystick_get_button()) != -1) {
           trs_gui_joystick_display_map(button);
           trs_screen_update();
-          SDL_Delay(1000);
         }
         break;
       case -1:
