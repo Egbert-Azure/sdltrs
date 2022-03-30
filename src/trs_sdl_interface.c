@@ -2070,28 +2070,34 @@ void trs_get_event(int wait)
 
         if (eg3200 || genie3s) {
           /* 1-5 on numeric keypad for P1-P5 / 6 for ESC */
-          if (keysym.sym >= SDLK_KP_1 && keysym.sym <= SDLK_KP_6)
+          if (keysym.sym >= SDLK_KP_1 && keysym.sym <= SDLK_KP_6) {
             keysym.sym = (keysym.sym - SDLK_KP_1) + 0x88;
+            goto done;
+          }
           /* End for Escape */
-          else if (keysym.sym == SDLK_END)
+          else if (keysym.sym == SDLK_END) {
             keysym.sym = 0x131;
-          else if (keysym.sym == SDLK_LCTRL)
+            goto done;
+          } else if (keysym.sym == SDLK_LCTRL) {
             keysym.sym = 0x12f;
-          else if (keysym.sym >= SDLK_F1 && keysym.sym <= SDLK_F8)
+            goto done;
+          } else if (keysym.sym >= SDLK_F1 && keysym.sym <= SDLK_F8) {
             keysym.sym = (keysym.sym - SDLK_F1) + 0x080;
+            goto done;
+          }
         } else {
           if (trs_model == 1) {
             switch (keysym.sym) {
-              case SDLK_F1:    keysym.sym = 0x115; break; /* _ */
-              case SDLK_F2:    keysym.sym = 0x120; break; /* \ */
-              case SDLK_F3:    keysym.sym = 0x121; break; /* ] */
-              case SDLK_F4:    keysym.sym = 0x122; break; /* ^ */
+              case SDLK_F1:    keysym.sym = 0x115; goto done; /* _ */
+              case SDLK_F2:    keysym.sym = 0x120; goto done; /* \ */
+              case SDLK_F3:    keysym.sym = 0x121; goto done; /* ] */
+              case SDLK_F4:    keysym.sym = 0x122; goto done; /* ^ */
               case SDLK_LCTRL: /* P1 on SpeedMaster or Control */
                 keysym.sym = (speedup == 6) ? 0x11c : 0x11a;
-                break;
+                goto done;
               case SDLK_END:   /* P2 on SpeedMaster or Shifted Down Arrow */
                 keysym.sym = (speedup == 6) ? 0x088 : 0x117;
-                break;
+                goto done;
               default:
                 break;
             }
@@ -2099,32 +2105,34 @@ void trs_get_event(int wait)
         }
 
         /* Convert numeric keypad */
-        if (keysym.sym >= SDLK_KP_1 && keysym.sym <= SDLK_KP_9)
+        if (keysym.sym >= SDLK_KP_1 && keysym.sym <= SDLK_KP_9) {
           keysym.sym = (keysym.sym - SDLK_KP_1) + 0x101;
+          goto done;
+        }
         else
         /* Convert arrow/control/function/shift keys */
         switch (keysym.sym) {
-          case SDLK_KP_0:       keysym.sym = 0x100; break;
-          case SDLK_UP:         keysym.sym = 0x111; break;
-          case SDLK_DOWN:       keysym.sym = 0x112; break;
-          case SDLK_RIGHT:      keysym.sym = 0x113; break;
-          case SDLK_LEFT:       keysym.sym = 0x114; break;
-          case SDLK_INSERT:     keysym.sym = 0x115; break;
-          case SDLK_HOME:       keysym.sym = 0x116; break;
-          case SDLK_END:        keysym.sym = 0x117; break;
-          case SDLK_PAGEUP:     keysym.sym = 0x118; break;
-          case SDLK_PAGEDOWN:   keysym.sym = 0x119; break;
-          case SDLK_CAPSLOCK:   keysym.sym = 0x11d; break;
-          case SDLK_SCROLLLOCK: keysym.sym = 0x11e; break;
-          case SDLK_F1:         keysym.sym = 0x11a; break;
-          case SDLK_F2:         keysym.sym = 0x11b; break;
-          case SDLK_F3:         keysym.sym = 0x11c; break;
-          case SDLK_F4:         keysym.sym = 0x11d; break;
-          case SDLK_F5:         keysym.sym = 0x11e; break;
-          case SDLK_F6:         keysym.sym = 0x11f; break;
-          case SDLK_RSHIFT:     keysym.sym = 0x12f; break;
-          case SDLK_LSHIFT:     keysym.sym = 0x130; break;
-          case SDLK_LCTRL:      keysym.sym = 0x132; break;
+          case SDLK_KP_0:       keysym.sym = 0x100; goto done;
+          case SDLK_UP:         keysym.sym = 0x111; goto done;
+          case SDLK_DOWN:       keysym.sym = 0x112; goto done;
+          case SDLK_RIGHT:      keysym.sym = 0x113; goto done;
+          case SDLK_LEFT:       keysym.sym = 0x114; goto done;
+          case SDLK_INSERT:     keysym.sym = 0x115; goto done;
+          case SDLK_HOME:       keysym.sym = 0x116; goto done;
+          case SDLK_END:        keysym.sym = 0x117; goto done;
+          case SDLK_PAGEUP:     keysym.sym = 0x118; goto done;
+          case SDLK_PAGEDOWN:   keysym.sym = 0x119; goto done;
+          case SDLK_CAPSLOCK:   keysym.sym = 0x11d; goto done;
+          case SDLK_SCROLLLOCK: keysym.sym = 0x11e; goto done;
+          case SDLK_F1:         keysym.sym = 0x11a; goto done;
+          case SDLK_F2:         keysym.sym = 0x11b; goto done;
+          case SDLK_F3:         keysym.sym = 0x11c; goto done;
+          case SDLK_F4:         keysym.sym = 0x11d; goto done;
+          case SDLK_F5:         keysym.sym = 0x11e; goto done;
+          case SDLK_F6:         keysym.sym = 0x11f; goto done;
+          case SDLK_RSHIFT:     keysym.sym = 0x12f; goto done;
+          case SDLK_LSHIFT:     keysym.sym = 0x130; goto done;
+          case SDLK_LCTRL:      keysym.sym = 0x132; goto done;
           default:
             break;
         }
@@ -2135,6 +2143,8 @@ void trs_get_event(int wait)
             break;
           }
         }
+
+done:
         if (keysym.sym) {
           last_key[keysym.scancode] = keysym.sym;
           trs_xlate_keysym(keysym.sym);
