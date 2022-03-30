@@ -212,15 +212,6 @@ static int hrg_addr;
 
 static Uint8 le18_x, le18_y, le18_on;  /* Lowe LE18 */
 
-/* Option handling */
-typedef struct trs_opt_struct {
-  const char *name;
-  void (*handler)(char *, int, int *);
-  int hasArg;
-  int intArg;
-  void *strArg;
-} trs_opt;
-
 static void trs_opt_borderwidth(char *arg, int intarg, int *stringarg);
 static void trs_opt_cass(char *arg, int intarg, int *stringarg);
 static void trs_opt_charset(char *arg, int intarg, int *stringarg);
@@ -261,7 +252,14 @@ static void trs_opt_turborate(char *arg, int intarg, int *stringarg);
 static void trs_opt_value(char *arg, int intarg, int *variable);
 static void trs_opt_wafer(char *arg, int intarg, int *stringarg);
 
-static const trs_opt options[] = {
+/* Option handling */
+static const struct {
+  const char *name;
+  void (*handler)(char *, int, int *);
+  int hasArg;
+  int intArg;
+  void *strArg;
+} options[] = {
   { "background",      trs_opt_color,         1, 0, &background          },
   { "bg",              trs_opt_color,         1, 0, &background          },
   { "borderwidth",     trs_opt_borderwidth,   1, 0, NULL                 },
@@ -402,7 +400,7 @@ static const trs_opt options[] = {
   { "wafer7",          trs_opt_wafer,         1, 7, NULL                 },
 };
 
-static const int num_options = sizeof(options) / sizeof(trs_opt);
+static const int num_options = sizeof(options) / sizeof(options[0]);
 
 /* Private routines */
 static void bitmap_init(int ram);
