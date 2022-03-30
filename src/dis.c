@@ -985,7 +985,7 @@ static const struct opcode minor[6][256] = {
 	{ "emt_setdir",		A_0 },		/* ed2b */
 	{ undefined,		A_0 },		/* ed2c */
 	{ undefined,		A_0 },		/* ed2d */
-	{ undefined,		A_0 },		/* ed2e */
+	{ "dmk_sspd",		A_0 },		/* ed2e */
 	{ "emt_debug",		A_0 },		/* ed2f */
 
 	{ "emt_open",		A_0 },		/* ed30 */
@@ -1213,7 +1213,7 @@ static const struct opcode minor[6][256] = {
 	{ undefined,		A_0 },		/* edf3 */
 	{ undefined,		A_0 },		/* edf4 */
 	{ undefined,		A_0 },		/* edf5 */
-	{ undefined,		A_0 },		/* edf6 */
+	{ "dmk_exit",		A_0 },		/* edf6 */
 	{ undefined,		A_0 },		/* edf7 */
 
 	{ undefined,		A_0 },		/* edf8 */
