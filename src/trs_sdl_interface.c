@@ -2311,8 +2311,7 @@ done:
 
       case SDL_TEXTINPUT:
         if (scancode) {
-          last_key[scancode] = event.text.text[0];
-          trs_xlate_keysym(event.text.text[0]);
+          trs_xlate_keysym((last_key[scancode] = event.text.text[0]));
           scancode = 0;
         }
         break;
