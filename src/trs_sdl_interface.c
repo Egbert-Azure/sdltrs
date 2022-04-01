@@ -1917,11 +1917,6 @@ void trs_get_event(int wait)
               SDL_ShowCursor(SDL_ENABLE);
               break;
 #endif
-#if defined(__OS2__) || defined(_WIN32)
-            case SDLK_F4:
-              trs_exit(1);
-              break;
-#endif
             case SDLK_DELETE:
               trs_reset(0);
               break;
@@ -2016,6 +2011,9 @@ void trs_get_event(int wait)
             case SDLK_p:
               call_function(PAUSE);
               break;
+#if defined(__OS2__) || defined(_WIN32)
+            case SDLK_F4:
+#endif
             case SDLK_q:
             case SDLK_END:
               trs_exit(1);
