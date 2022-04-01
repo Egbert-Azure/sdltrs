@@ -1917,7 +1917,7 @@ void trs_get_event(int wait)
               SDL_ShowCursor(SDL_ENABLE);
               break;
 #endif
-#ifdef _WIN32
+#if defined(__OS2__) || defined(_WIN32)
             case SDLK_F4:
               trs_exit(1);
               break;
