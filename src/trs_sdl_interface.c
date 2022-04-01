@@ -2112,13 +2112,15 @@ void trs_get_event(int wait)
           }
 #endif
           /* End for Escape */
-          else if (keysym.sym == SDLK_END) {
+          if (keysym.sym == SDLK_END) {
             keysym.sym = 0x131;
             goto done;
-          } else if (keysym.sym == SDLK_LCTRL) {
+          }
+          if (keysym.sym == SDLK_LCTRL) {
             keysym.sym = 0x12f;
             goto done;
-          } else if (keysym.sym >= SDLK_F1 && keysym.sym <= SDLK_F8) {
+          }
+          if (keysym.sym >= SDLK_F1 && keysym.sym <= SDLK_F8) {
             keysym.sym = (keysym.sym - SDLK_F1) + 0x080;
             goto done;
           }
@@ -2147,7 +2149,6 @@ void trs_get_event(int wait)
           keysym.sym = (keysym.sym - SDLK_KP_1) + 0x101;
           goto done;
         }
-        else
         /* Convert arrow/control/function/shift keys */
         switch (keysym.sym) {
           case SDLK_KP_0:       keysym.sym = 0x100; goto done;
