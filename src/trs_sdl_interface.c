@@ -2667,15 +2667,17 @@ void trs_screen_refresh(void)
     for (i = 0; i < screen_chars; i++)
       trs_screen_write_char(i, trs_screen[i]);
 
-    /* Redraw HRG */
+    /* Redraw HRG extension region */
     if (hrg_enable == 2) {
-      for (i = 0; i <= 0x3FFF; i++) {
+      grafyx_overlay = 0;
+      for (i = 0x3000; i <= 0x3FFF; i++) {
         int const old_data = hrg_screen[i];
 
         hrg_write_addr(i, 0x3FFF);
         hrg_write_data(0);
         hrg_write_data(old_data);
       }
+      grafyx_overlay = 1;
     }
   }
 
@@ -2944,9 +2946,8 @@ static void grafyx_write_byte(int x, int y, Uint8 byte)
   if (grafyx_enable) {
     int const screen_x = ((x - grafyx_xoffset + G_XSIZE) % G_XSIZE);
     int const screen_y = ((y - grafyx_yoffset + G_YSIZE) % G_YSIZE);
-    int const on_screen = screen_x < row_chars &&
-      screen_y < col_chars * cur_char_height / (scale * 2);
-    int const hrg_ext = (hrg_enable == 2 && y < 192);
+    int const on_screen = (screen_x < row_chars && screen_y < col_chars
+      * cur_char_height / (scale * 2)) || (hrg_enable == 2 && y < 192);
     SDL_Rect srcRect, dstRect;
 
     srcRect.x = x * cur_char_width;
@@ -2960,10 +2961,10 @@ static void grafyx_write_byte(int x, int y, Uint8 byte)
       /* Erase old byte, preserving text */
       TrsSoftBlit(image, &srcRect, screen, &dstRect, 1);
 
-    if (on_screen || hrg_ext) {
+    if (on_screen) {
       /* Draw new byte */
       grafyx_rescale(y, x, byte);
-      TrsSoftBlit(image, &srcRect, screen, &dstRect, hrg_ext ? 0 : grafyx_overlay);
+      TrsSoftBlit(image, &srcRect, screen, &dstRect, grafyx_overlay);
       addToDrawList(&dstRect);
     }
   }
@@ -3282,9 +3283,10 @@ hrg_onoff(int enable)
   grafyx_enable = enable;
   grafyx_overlay = enable;
 
-  if (speedup > 4)
+  if (speedup > 4) {
+    memset(grafyx_unscaled, 0, G_YSIZE * G_XSIZE);
     trs_screen_init();
-  else
+  } else
     trs_screen_refresh();
 }
 
