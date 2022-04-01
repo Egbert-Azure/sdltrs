@@ -1889,7 +1889,7 @@ void trs_get_event(int wait)
               requestSelectAll = mousepointer = TRUE;
               SDL_ShowCursor(SDL_ENABLE);
               break;
-#ifdef _WIN32
+#if defined(__OS2__) || defined(_WIN32)
             case SDLK_F4:
               trs_exit(1);
               break;
