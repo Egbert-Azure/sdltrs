@@ -205,12 +205,12 @@ static Uint8 grafyx_xoffset, grafyx_yoffset;
 #define G3_COMMAND  0x20
 #define G3_YLOW(v)  (((v) & 0x1e) >> 1)
 
+/* HRG1B and Lowe LE18 */
 #define HRG_MEMSIZE (1024 * 16)        /* 16k * 8 bit graphics memory */
 static Uint8 hrg_screen[HRG_MEMSIZE];
 static int hrg_enable;
 static int hrg_addr;
-
-static Uint8 le18_x, le18_y, le18_on;  /* Lowe LE18 */
+static Uint8 le18_x, le18_y, le18_on;
 
 static void trs_opt_borderwidth(char *arg, int intarg, int *stringarg);
 static void trs_opt_cass(char *arg, int intarg, int *stringarg);
@@ -2827,7 +2827,7 @@ void trs_gui_clear_rect(int x, int y, int w, int h)
 {
   SDL_Rect rect;
 
-  /* Add offsets if we are in 80x24 mode */
+  /* Add offsets in 80x24 mode */
   if (row_chars == 80) {
     x += 8;
     y += 4;
@@ -2856,7 +2856,7 @@ void trs_gui_write_char(int col, int row, Uint8 char_index, int invert)
 {
   SDL_Rect srcRect, dstRect;
 
-  /* Add offsets if we are in 80x24 mode */
+  /* Add offsets in 80x24 mode */
   if (row_chars == 80) {
     row += 4;
     col += 8;
@@ -3164,8 +3164,8 @@ void lowe_le18_write_control(int value)
  * only 192*192 pixels. Pixels with an odd column address (i.e.
  * every second group of 6 pixels) are suppressed.
  *
- * The LNW80 and later TCS models (Genie IIs/SpeedMaster) uses the
- * 480*192 screen resolution with 96*192 "extension region":
+ * The LNW80 and later TCS models (Genie IIs/SpeedMaster) uses
+ * the 480*192 screen resolution with 96*192 "extension region":
  *    Bits 0-3:   additional character column address (0-15)
  *    Bits 4-5:   MSB of line within character cell (0-11)
  *    Bits 6-9:   character row address (0-15)
