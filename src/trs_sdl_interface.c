@@ -3187,7 +3187,7 @@ hrg_onoff(int enable)
   grafyx_overlay = enable;
 
   if (speedup > 4) {
-    memset(grafyx_unscaled, 0, G_YSIZE * G_XSIZE);
+    memset(grafyx, 0, G_YSIZE * G_XSIZE);
     trs_screen_init();
   } else
     trs_screen_refresh();
