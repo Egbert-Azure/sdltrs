@@ -149,7 +149,7 @@ struct z80_state_struct
     tstate_t sched;
 };
 
-#define Z80_ADDRESS_LIMIT	(1 << 16)
+#define Z80_ADDRESS_LIMIT	(65536)
 
 /*
  * Register accessors:
