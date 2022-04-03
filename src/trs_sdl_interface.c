@@ -1722,7 +1722,6 @@ void trs_get_event(int wait)
   SDL_Event event;
 #ifdef SDL2
   SDL_Keysym keysym;
-  Uint32 scancode = 0;
 
   SDL_StartTextInput();
 #else
@@ -2173,11 +2172,12 @@ void trs_get_event(int wait)
           default:
             break;
         }
-
+        /* Convert uppercase and special chars */
         if (SDL_GetModState() & (KMOD_SHIFT | KMOD_RALT)) {
           if ((keysym.sym >= 0x21 && keysym.sym <= 0x7F) || keysym.sym == 0xDF) {
-            scancode = keysym.scancode;
-            break;
+            if (SDL_PeepEvents(&event, 1, SDL_PEEKEVENT,
+                SDL_FIRSTEVENT, SDL_LASTEVENT) == 1 && event.type == SDL_TEXTINPUT)
+              keysym.sym = (event.text.text[0] & 0xFF);
           }
         }
 #else
@@ -2352,15 +2352,6 @@ done:
               trs_xlate_keysym(0x10000);
         }
         break;
-
-#ifdef SDL2
-      case SDL_TEXTINPUT:
-        if (scancode) {
-          trs_xlate_keysym((last_key[scancode] = event.text.text[0]));
-          scancode = 0;
-        }
-        break;
-#endif
 
       default:
 #if XDEBUG
