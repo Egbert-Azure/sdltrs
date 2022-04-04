@@ -3294,11 +3294,9 @@ void m6845_screen(int chars, int lines, int raster)
     m6845_raster = raster;
 
   if (changed) {
-    if (genie3s) {
+    if (genie3s)
       mem_video_page(row_chars != 64 && col_chars != 16);
-      if (row_chars == 64 && col_chars == 16)
-        m6845_raster = 12;
-    }
+
     screen_chars = row_chars * col_chars;
     trs_screen_init();
   }
