@@ -3424,7 +3424,7 @@ void genie3s_hrg_write(int position, int byte)
   if (row_chars == 64) {
     int const region = position & 0x3FF;
 
-    grafyx_write_byte(region % 64, (region / 64) * 12 +
+    grafyx_write_byte(region % 64, (region / 64) * m6845_raster +
       (position >> 11), mirror_bits(byte));
   } else {
     int const region = position & 0x7FF;
@@ -3439,7 +3439,7 @@ Uint8 genie3s_hrg_read(int position)
   if (row_chars == 64) {
     int const region = position & 0x3FF;
 
-    return mirror_bits(grafyx_unscaled[(region / 64) * 12 +
+    return mirror_bits(grafyx_unscaled[(region / 64) * m6845_raster +
       (position >> 11)][region % 64]);
   } else {
     int const region = position & 0x7FF;
