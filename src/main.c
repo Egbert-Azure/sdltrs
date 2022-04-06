@@ -210,7 +210,7 @@ int trs_load_cmd(const char *filename)
     if (entry >= 0)
       Z80_PC = entry;
   } else {
-    error("unknown CMD format");
+    error("unknown CMD format: '%s'", filename);
     fclose(program);
     return -1;
   }
