@@ -121,7 +121,7 @@ static int drawnRectCount;
 static int top_margin;
 static int left_margin;
 static int screen_height;
-static int currentmode = NORMAL;
+static int currentmode;
 static int OrigHeight, OrigWidth;
 static int cur_char_width = TRS_CHAR_WIDTH;
 static int cur_char_height = TRS_CHAR_HEIGHT * 2;
@@ -154,8 +154,8 @@ static Uint32 last_key[256];
 #define PASTE_GETNEXT 1
 #define PASTE_KEYDOWN 2
 #define PASTE_KEYUP   3
-static int  paste_state = PASTE_IDLE;
-static int  paste_lastkey = FALSE;
+static int  paste_state;
+static int  paste_lastkey;
 extern int  PasteManagerStartPaste(void);
 extern void PasteManagerStartCopy(const char *string);
 extern int  PasteManagerGetChar(Uint8 *character);
@@ -164,12 +164,12 @@ extern int  PasteManagerGetChar(Uint8 *character);
 #define COPY_STARTED  1
 #define COPY_DEFINED  2
 #define COPY_CLEAR    3
-static int copyStatus = COPY_IDLE;
+static int copyStatus;
 static int selectionStartX;
 static int selectionStartY;
 static int selectionEndX;
 static int selectionEndY;
-static int requestSelectAll = FALSE;
+static int requestSelectAll;
 static int timer_saved;
 static unsigned int cycles_saved;
 
