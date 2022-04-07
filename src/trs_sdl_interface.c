@@ -1282,6 +1282,12 @@ void trs_screen_init(void)
     top_margin = border_width;
   }
   screen_height = OrigHeight - led_height;
+#if defined(SDL2) || !defined(NOX)
+  paste_state = 0;
+  paste_lastkey = 0;
+  copyStatus = 0;
+  requestSelectAll = 0;
+#endif
 
 #ifdef SDL2
   if (window == NULL) {
