@@ -1248,7 +1248,7 @@ void trs_screen_init(void)
   }
 
   if (trs_model == 1) {
-    if (trs_charset < 3)
+    if (trs_charset < 3 && genie3s == 0)
       cur_char_width = 6 * scale;
     else
       cur_char_width = 8 * scale;
