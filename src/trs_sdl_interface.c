@@ -2332,9 +2332,7 @@ done:
 
 void trs_screen_expanded(int flag)
 {
-  int const bit = flag ? EXPANDED : 0;
-
-  if ((currentmode ^ bit) & EXPANDED) {
+  if ((currentmode ^ (flag ? EXPANDED : 0)) & EXPANDED) {
     currentmode ^= EXPANDED;
     trs_screen_refresh();
   }
@@ -2342,10 +2340,9 @@ void trs_screen_expanded(int flag)
 
 void trs_screen_inverse(int flag)
 {
-  int const bit = flag ? INVERSE : 0;
   int i;
 
-  if ((currentmode ^ bit) & INVERSE) {
+  if ((currentmode ^ (flag ? INVERSE : 0)) & INVERSE) {
     currentmode ^= INVERSE;
     for (i = 0; i < screen_chars; i++) {
       if (trs_screen[i] & 0x80)
@@ -2356,10 +2353,9 @@ void trs_screen_inverse(int flag)
 
 void trs_screen_alternate(int flag)
 {
-  int const bit = flag ? ALTERNATE : 0;
   int i;
 
-  if ((currentmode ^ bit) & ALTERNATE) {
+  if ((currentmode ^ (flag ? ALTERNATE : 0)) & ALTERNATE) {
     currentmode ^= ALTERNATE;
     for (i = 0; i < screen_chars; i++) {
       if (trs_screen[i] >= 0xc0)
