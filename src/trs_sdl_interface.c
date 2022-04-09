@@ -3425,7 +3425,7 @@ void genie3s_hrg_write(int position, int byte)
   if ((currentmode & EXPANDED) && (position & 1)) return;
 
   if (row_chars == 64) {
-    int const region = position & 0x3FF;
+    int const region = position & (screen_chars - 1);
 
     grafyx_write_byte(region % 64, (region / 64) * m6845_raster +
       (position >> 11), mirror_bits(byte));
@@ -3440,7 +3440,7 @@ void genie3s_hrg_write(int position, int byte)
 Uint8 genie3s_hrg_read(int position)
 {
   if (row_chars == 64) {
-    int const region = position & 0x3FF;
+    int const region = position & (screen_chars - 1);
 
     return mirror_bits(grafyx_unscaled[(region / 64) * m6845_raster +
       (position >> 11)][region % 64]);
