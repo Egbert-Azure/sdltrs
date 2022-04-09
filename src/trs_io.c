@@ -67,6 +67,7 @@ static int rtc_reg;
 static int cursor_csr;
 static int cursor_pos;
 static int cursor_vis;
+static int interlaced;
 
 static void m6845_crt(int value)
 {
@@ -76,8 +77,13 @@ static void m6845_crt(int value)
         m6845_screen(value, 0, 0);
       break;
     case 0x06: /* Lines displayed */
+      if (interlaced)
+        value *= 2;
       if (value <= 32)
         m6845_screen(0, value, 0);
+      break;
+    case 0x08: /* Interlace Mode */
+      interlaced = ((value & 0x03) == 3);
       break;
     case 0x09: /* Maximum Raster address */
       if (value < 16)
