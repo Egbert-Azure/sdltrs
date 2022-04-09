@@ -3244,11 +3244,8 @@ void m6845_cursor(int position, int line, int visible)
   if (screen_chars == 1760)
     position -= 256;
 
-  if (screen_chars == 1024)
-    position &= 0x3FF;
-
   if (position >= screen_chars)
-    return;
+    position &= (screen_chars - 1);
 
   cur_char = trs_screen[position];
 
