@@ -102,7 +102,6 @@ static void m6845_crt(int value)
   }
 }
 
-/*ARGSUSED*/
 void z80_out(int port, int value)
 {
   if (trs_io_debug_flags & IODEBUG_OUT) {
@@ -564,7 +563,6 @@ void z80_out(int port, int value)
   }
 }
 
-/*ARGSUSED*/
 int z80_in(int port)
 {
   int value = 0xff; /* value returned for nonexistent ports */
