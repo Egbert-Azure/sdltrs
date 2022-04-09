@@ -743,8 +743,8 @@ static void trs_opt_samplerate(char *arg, int intarg, int *stringarg)
 {
   cassette_default_sample_rate = atol(arg);
   if (cassette_default_sample_rate < 0 ||
-      cassette_default_sample_rate > DEFAULT_SAMPLE_RATE)
-    cassette_default_sample_rate = DEFAULT_SAMPLE_RATE;
+      cassette_default_sample_rate > MAX_SAMPLE_RATE)
+    cassette_default_sample_rate = MAX_SAMPLE_RATE;
 }
 
 static void trs_opt_scale(char *arg, int intarg, int *stringarg)
@@ -897,7 +897,7 @@ int trs_load_config_file(void)
   trs_cassette_remove();
 
   background = BLACK;
-  cassette_default_sample_rate = DEFAULT_SAMPLE_RATE;
+  cassette_default_sample_rate = MAX_SAMPLE_RATE;
   /* Disk Sizes are 5" or 8" for all Eight Default Drives */
   /* Corrected by Larry Kraemer 08-01-2011 */
   disksizes[0] = 5;

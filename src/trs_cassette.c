@@ -96,7 +96,7 @@ static float cassette_avg;
 static float cassette_env;
 static int cassette_noisefloor;
 static int cassette_sample_rate;
-int cassette_default_sample_rate = DEFAULT_SAMPLE_RATE;
+int cassette_default_sample_rate = MAX_SAMPLE_RATE;
 static int cassette_stereo;
 static Uint32 cassette_silence;
 static int soundDeviceOpen = FALSE;
