@@ -77,9 +77,9 @@ static void m6845_crt(int value)
         m6845_screen(value, 0, 0);
       break;
     case 0x06: /* Lines displayed */
-      if (interlaced)
-        value *= 2;
-      if (value <= 32)
+      if (value == 16 && interlaced)
+        m6845_screen(0, 32, 0);
+      else if (value <= 32)
         m6845_screen(0, value, 0);
       break;
     case 0x08: /* Interlace Mode */
