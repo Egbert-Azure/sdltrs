@@ -2878,37 +2878,40 @@ void trs_gui_write_char(int col, int row, Uint8 char_index, int invert)
 
 static void grafyx_write_byte(int x, int y, Uint8 byte)
 {
-  if (grafyx_unscaled[y][x] == byte)
+  if (grafyx_unscaled[y][x] == byte) {
     return;
-
-  /* Save new byte in local memory */
-  grafyx_unscaled[y][x] = byte;
-
-  if (grafyx_enable) {
+  } else {
     int const screen_x = ((x - grafyx_xoffset + G_XSIZE) % G_XSIZE);
     int const screen_y = ((y - grafyx_yoffset + G_YSIZE) % G_YSIZE);
     int const on_screen = (screen_x < row_chars && screen_y < col_chars
       * cur_char_height / 2) || (hrg_enable == 2 && y < 192);
+    int const position = (y * 2) * G_XSIZE + x;
     SDL_Rect srcRect, dstRect;
 
-    srcRect.x = x * cur_char_width;
-    srcRect.y = y * 2;
-    srcRect.w = cur_char_width;
-    srcRect.h = 2;
-    dstRect.x = left_margin + screen_x * cur_char_width;
-    dstRect.y = top_margin + screen_y * 2;
-
-    if (grafyx_overlay && on_screen)
+    if (grafyx_enable && grafyx_overlay && on_screen) {
       /* Erase old byte, preserving text */
+      srcRect.x = x * cur_char_width;
+      srcRect.y = y * 2;
+      srcRect.w = cur_char_width;
+      srcRect.h = 2;
+      dstRect.x = left_margin + screen_x * cur_char_width;
+      dstRect.y = top_margin + screen_y * 2;
       TrsSoftBlit(image, &srcRect, screen, &dstRect, 1);
+    }
 
-    if (on_screen) {
+    /* Save new byte in local memory */
+    grafyx_unscaled[y][x] = byte;
+    grafyx[position] = byte;
+    grafyx[position + G_XSIZE] = byte;
+
+    if (grafyx_enable && on_screen) {
       /* Draw new byte */
-      int const position = (y * 2) * G_XSIZE + x;
-
-      grafyx[position] = byte;
-      grafyx[position + G_XSIZE] = byte;
-
+      srcRect.x = x * cur_char_width;
+      srcRect.y = y * 2;
+      srcRect.w = cur_char_width;
+      srcRect.h = 2;
+      dstRect.x = left_margin + screen_x * cur_char_width;
+      dstRect.y = top_margin + screen_y * 2;
       TrsSoftBlit(image, &srcRect, screen, &dstRect, grafyx_overlay);
       drawnRectCount = MAX_RECTS;
     }
