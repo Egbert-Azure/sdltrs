@@ -115,8 +115,10 @@ static int screen_chars = 1024;
 static int row_chars = 64;
 static int col_chars = 16;
 static int border_width = 2;
+static int scale_factor = 2;
 static int m6845_raster = 12;
 static int window_scale;
+static int y_scale = 2;
 static int resize;
 static int text80x24, screen640x240;
 static int drawnRectCount;
@@ -1185,6 +1187,8 @@ void trs_screen_reset(void)
   screen_chars = 1024;
   row_chars = 64;
   col_chars = 16;
+  scale_factor = 2;
+  y_scale = scale * 2;
 
   /* initially, screen is blank (i.e. full of spaces) */
   memset(trs_screen, ' ', 2048);
@@ -1251,6 +1255,8 @@ void trs_screen_init(void)
            resize = resize4;
   }
 
+  y_scale = scale * scale_factor;
+
   if (trs_model == 1) {
     if (trs_charset < 3 && genie3s == 0)
       cur_char_width = 6 * scale;
@@ -1258,16 +1264,16 @@ void trs_screen_init(void)
       cur_char_width = 8 * scale;
 
     if (genie3s)
-      cur_char_height = m6845_raster * (scale * 2);
+      cur_char_height = m6845_raster * y_scale;
     else
-      cur_char_height = TRS_CHAR_HEIGHT * (scale * 2);
+      cur_char_height = TRS_CHAR_HEIGHT * y_scale;
   } else {
     cur_char_width = TRS_CHAR_WIDTH * scale;
 
     if (screen640x240 || text80x24)
-      cur_char_height = TRS_CHAR_HEIGHT4 * (scale * 2);
+      cur_char_height = TRS_CHAR_HEIGHT4 * y_scale;
     else
-      cur_char_height = TRS_CHAR_HEIGHT * (scale * 2);
+      cur_char_height = TRS_CHAR_HEIGHT * y_scale;
   }
 
   border_width = fullscreen ? 0 : window_border_width;
@@ -1276,8 +1282,8 @@ void trs_screen_init(void)
   if (trs_model >= 3 && !resize) {
     OrigWidth = cur_char_width * 80 + 2 * border_width;
     left_margin = cur_char_width * (80 - row_chars) / 2 + border_width;
-    OrigHeight = TRS_CHAR_HEIGHT4 * (scale * 2) * 24 + 2 * border_width + led_height;
-    top_margin = (TRS_CHAR_HEIGHT4 * (scale * 2) * 24 -
+    OrigHeight = TRS_CHAR_HEIGHT4 * y_scale * 24 + 2 * border_width + led_height;
+    top_margin = (TRS_CHAR_HEIGHT4 * y_scale * 24 -
                  cur_char_height * col_chars) / 2 + border_width;
   } else {
     OrigWidth = cur_char_width * (hrg_enable == 2 ? 80 : row_chars) + 2 * border_width;
@@ -2420,18 +2426,18 @@ static void trs_screen_640x240(int flag)
   if (flag) {
     row_chars = 80;
     col_chars = 24;
-    cur_char_height = TRS_CHAR_HEIGHT4 * (scale * 2);
+    cur_char_height = TRS_CHAR_HEIGHT4 * y_scale;
   } else {
     row_chars = 64;
     col_chars = 16;
-    cur_char_height = TRS_CHAR_HEIGHT * (scale * 2);
+    cur_char_height = TRS_CHAR_HEIGHT * y_scale;
   }
   screen_chars = row_chars * col_chars;
   if (resize)
     trs_screen_init();
   else {
     left_margin = cur_char_width * (80 - row_chars) / 2 + border_width;
-    top_margin = (TRS_CHAR_HEIGHT4 * (scale * 2) * 24 -
+    top_margin = (TRS_CHAR_HEIGHT4 * y_scale * 24 -
         cur_char_height * col_chars) / 2 + border_width;
     trs_screen_refresh();
   }
@@ -2549,7 +2555,7 @@ static SDL_Surface *CreateSurfaceFromDataScale(const Uint8 *data,
 static void
 bitmap_init(int ram)
 {
-  int const height = (genie3s ? m6845_raster : TRS_CHAR_HEIGHT) * (scale * 2);
+  int const height = (genie3s ? m6845_raster : TRS_CHAR_HEIGHT) * y_scale;
   int i;
 
   for (i = 0; i < MAXCHARS; i++)
@@ -2576,29 +2582,29 @@ trs_bitmap_init(int char_index, int ram)
   }
   /* Normal */
   trs_char[0][char_index] = CreateSurfaceFromDataScale(char_data,
-      foreground, background, scale, scale * 2);
+      foreground, background, scale, y_scale);
   /* Expanded */
   trs_char[1][char_index] = CreateSurfaceFromDataScale(char_data,
-      foreground, background, scale * 2, scale * 2);
+      foreground, background, scale * 2, y_scale);
   /* Inverse */
   trs_char[2][char_index] = CreateSurfaceFromDataScale(char_data,
-      background, foreground, scale, scale * 2);
+      background, foreground, scale, y_scale);
   /* Expanded + Inverse */
   trs_char[3][char_index] = CreateSurfaceFromDataScale(char_data,
-      background, foreground, scale * 2, scale * 2);
+      background, foreground, scale * 2, y_scale);
   /* GUI Normal + Inverse */
   if (char_index >= '[' && char_index <= ']') {
     trs_char[4][char_index] = CreateSurfaceFromDataScale(
         trs_char_data[0][char_index],
-        gui_foreground, gui_background, scale, scale * 2);
+        gui_foreground, gui_background, scale, y_scale);
     trs_char[5][char_index] = CreateSurfaceFromDataScale(
         trs_char_data[0][char_index],
-        gui_background, gui_foreground, scale, scale * 2);
+        gui_background, gui_foreground, scale, y_scale);
   } else {
     trs_char[4][char_index] = CreateSurfaceFromDataScale(char_data,
-        gui_foreground, gui_background, scale, scale * 2);
+        gui_foreground, gui_background, scale, y_scale);
     trs_char[5][char_index] = CreateSurfaceFromDataScale(char_data,
-        gui_background, gui_foreground, scale, scale * 2);
+        gui_background, gui_foreground, scale, y_scale);
   }
 }
 
@@ -2847,9 +2853,9 @@ void trs_screen_write_char(unsigned int position, Uint8 char_index)
   if (grafyx_enable) {
     /* assert(grafyx_overlay); */
     int const srcx = ((col + grafyx_xoffset) % G_XSIZE) * cur_char_width;
-    int const srcy = (row * cur_char_height + grafyx_yoffset * (scale * 2))
-      % (G_YSIZE * (scale * 2));
-    int const duny = (G_YSIZE * scale * 2) - srcy;
+    int const srcy = (row * cur_char_height + grafyx_yoffset * y_scale)
+      % (G_YSIZE * y_scale);
+    int const duny = (G_YSIZE * y_scale) - srcy;
 
     srcRect.x = srcx;
     srcRect.y = srcy;
@@ -2939,17 +2945,17 @@ static void grafyx_write_byte(int x, int y, Uint8 byte)
     int const screen_x = ((x - grafyx_xoffset + G_XSIZE) % G_XSIZE);
     int const screen_y = ((y - grafyx_yoffset + G_YSIZE) % G_YSIZE);
     int const on_screen = (screen_x < row_chars && screen_y < col_chars
-      * cur_char_height / (scale * 2)) || (hrg_enable == 2 && y < 192);
+      * cur_char_height / y_scale) || (hrg_enable == 2 && y < 192);
     SDL_Rect srcRect, dstRect;
 
     if (grafyx_enable && grafyx_overlay && on_screen) {
       /* Erase old byte, preserving text */
       srcRect.x = x * cur_char_width;
-      srcRect.y = y * (scale * 2);
+      srcRect.y = y * y_scale;
       srcRect.w = cur_char_width;
-      srcRect.h = scale * 2;
+      srcRect.h = y_scale;
       dstRect.x = left_margin + screen_x * cur_char_width;
-      dstRect.y = top_margin + screen_y * (scale * 2);
+      dstRect.y = top_margin + screen_y * y_scale;
       TrsSoftBlit(image, &srcRect, screen, &dstRect, 1);
     }
 
@@ -2960,11 +2966,11 @@ static void grafyx_write_byte(int x, int y, Uint8 byte)
     if (grafyx_enable && on_screen) {
       /* Draw new byte */
       srcRect.x = x * cur_char_width;
-      srcRect.y = y * (scale * 2);
+      srcRect.y = y * y_scale;
       srcRect.w = cur_char_width;
-      srcRect.h = scale * 2;
+      srcRect.h = y_scale;
       dstRect.x = left_margin + screen_x * cur_char_width;
-      dstRect.y = top_margin + screen_y * (scale * 2);
+      dstRect.y = top_margin + screen_y * y_scale;
       TrsSoftBlit(image, &srcRect, screen, &dstRect, grafyx_overlay);
       addToDrawList(&dstRect);
     }
@@ -2974,14 +2980,15 @@ static void grafyx_write_byte(int x, int y, Uint8 byte)
 static void grafyx_rescale(int y, int x, Uint8 byte)
 {
   if (scale == 1) {
-    int const p = y * 2 * G_XSIZE + x;
+    int const p = y * y_scale * G_XSIZE + x;
 
     grafyx[p] = byte;
-    grafyx[p + G_XSIZE] = byte;
+    if (scale_factor == 2)
+      grafyx[p + G_XSIZE] = byte;
   } else {
     Uint8 exp[MAX_SCALE];
     int i, j;
-    int p = y * (scale * 2) * (G_XSIZE * scale) + x * scale;
+    int p = y * y_scale * (G_XSIZE * scale) + x * scale;
     int const s = (G_XSIZE * scale) - scale;
 
     switch (scale) {
@@ -3007,7 +3014,7 @@ static void grafyx_rescale(int y, int x, Uint8 byte)
         break;
     }
 
-    for (j = 0; j < scale * 2; j++) {
+    for (j = 0; j < y_scale; j++) {
       for (i = 0; i < scale; i++)
         grafyx[p++] = exp[i];
       p += s;
@@ -3375,15 +3382,15 @@ void m6845_cursor(int position, int line, int visible)
     srcRect.h = cur_char_height;
     SDL_BlitSurface(trs_char[2 + expanded][cur_char], &srcRect, screen, &dstRect);
   } else {
-    dstRect.h = 2 * scale;
+    dstRect.h = y_scale;
     dstRect.w = cur_char_width * (expanded + 1);
-    dstRect.y = dstRect.y + (line & (m6845_raster - 1)) * (scale * 2);
+    dstRect.y = dstRect.y + (line & (m6845_raster - 1)) * y_scale;
     SDL_FillRect(screen, &dstRect, fore_color);
   }
   addToDrawList(&dstRect);
 }
 
-void m6845_screen(int chars, int lines, int raster)
+void m6845_screen(int chars, int lines, int raster, int factor)
 {
   int changed = 0;
 
@@ -3395,6 +3402,9 @@ void m6845_screen(int chars, int lines, int raster)
 
   if (raster && (changed = (raster != m6845_raster)))
     m6845_raster = raster;
+
+  if (factor && (changed = (factor != scale_factor)))
+    scale_factor = factor;
 
   if (changed) {
     if (genie3s)
@@ -3553,6 +3563,7 @@ void trs_main_save(FILE *file)
   trs_save_int(file, &row_chars, 1);
   trs_save_int(file, &currentmode, 1);
   trs_save_int(file, &m6845_raster, 1);
+  trs_save_int(file, &scale_factor, 1);
   trs_save_int(file, &text80x24, 1);
   trs_save_int(file, &screen640x240, 1);
   trs_save_int(file, &trs_charset, 1);
@@ -3592,6 +3603,7 @@ void trs_main_load(FILE *file)
   trs_load_int(file, &row_chars, 1);
   trs_load_int(file, &currentmode, 1);
   trs_load_int(file, &m6845_raster, 1);
+  trs_load_int(file, &scale_factor, 1);
   trs_load_int(file, &text80x24, 1);
   trs_load_int(file, &screen640x240, 1);
   trs_load_int(file, &trs_charset, 1);
