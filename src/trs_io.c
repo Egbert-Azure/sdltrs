@@ -74,20 +74,21 @@ static void m6845_crt(int value)
   switch (ctrlimage) {
     case 0x01: /* Chars displayed */
       if (value == 64 || value == 80)
-        m6845_screen(value, 0, 0);
+        m6845_screen(value, 0, 0, 0);
       break;
     case 0x06: /* Lines displayed */
       if (value == 16 && interlaced)
-        m6845_screen(0, 32, 0);
+        m6845_screen(0, 32, 0, 0);
       else if (value <= 32)
-        m6845_screen(0, value, 0);
+        m6845_screen(0, value, 0, 0);
       break;
     case 0x08: /* Interlace Mode */
       interlaced = ((value & 0x03) == 3);
+      m6845_screen(0, 0, 0, interlaced ? 1 : 2);
       break;
     case 0x09: /* Maximum Raster address */
       if (value < 16)
-        m6845_screen(0, 0, value + 1);
+        m6845_screen(0, 0, value + 1, 0);
       m6845_cursor(cursor_pos, cursor_csr, cursor_vis);
       break;
     case 0x0A: /* Cursor visible / Cursor Start Line */
