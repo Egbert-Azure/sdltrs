@@ -756,6 +756,7 @@ static void trs_opt_scale(char *arg, int intarg, int *stringarg)
     scale = 1;
   else if (scale > MAX_SCALE)
     scale = MAX_SCALE;
+
   window_scale = scale;
 }
 
@@ -1106,8 +1107,9 @@ int trs_write_config_file(const char *filename)
   fprintf(config_file, "%shypermem\n", hypermem ? "" : "no");
   fprintf(config_file, "%sjoyaxismapped\n", jaxis_mapped ? "" : "no");
   fprintf(config_file, "joybuttonmap=");
-  for (i = 0; i < N_JOYBUTTONS; i++)
+  for (i = 0; i < N_JOYBUTTONS; i++) {
     fprintf(config_file, i < N_JOYBUTTONS - 1 ? "%d," : "%d\n", jbutton_map[i]);
+  }
   fprintf(config_file, "joysticknum=");
   if (trs_joystick_num == -1)
     fprintf(config_file, "none\n");
@@ -1283,8 +1285,8 @@ void trs_screen_init(void)
     OrigWidth = cur_char_width * 80 + 2 * border_width;
     left_margin = cur_char_width * (80 - row_chars) / 2 + border_width;
     OrigHeight = TRS_CHAR_HEIGHT4 * y_scale * 24 + 2 * border_width + led_height;
-    top_margin = (TRS_CHAR_HEIGHT4 * y_scale * 24 -
-                 cur_char_height * col_chars) / 2 + border_width;
+    top_margin = (TRS_CHAR_HEIGHT4 * y_scale * 24 - cur_char_height * col_chars)
+                 / 2 + border_width;
   } else {
     OrigWidth = cur_char_width * (hrg_enable == 2 ? 80 : row_chars) + 2 * border_width;
     left_margin = border_width;
@@ -1362,14 +1364,13 @@ void trs_screen_init(void)
                              colors[0].r, colors[0].g, colors[0].b);
   fore_color    = SDL_MapRGB(screen->format,
                              colors[1].r, colors[1].g, colors[1].b);
-
 #ifdef SDL2
   SDL_SetPaletteColors(image->format->palette, colors, 0, 2);
 #else
   SDL_SetPalette(image, SDL_LOGPAL, colors, 0, 2);
 #endif
-
   TrsBlitMap(image->format->palette, screen->format);
+
   bitmap_init(genie3s);
   trs_screen_caption();
   trs_screen_refresh();
@@ -2462,12 +2463,11 @@ boxes_init(int fg_color, int bg_color, int width, int height, int expanded)
    */
   bits[0].x = bits[2].x = bits[4].x = 0;
   bits[0].w = bits[2].w = bits[4].w =
-    bits[1].x = bits[3].x = bits[5].x = width / 2;
+      bits[1].x = bits[3].x = bits[5].x = width / 2;
   bits[1].w = bits[3].w = bits[5].w = width - bits[1].x;
 
   bits[0].y = bits[1].y = 0;
-  bits[0].h = bits[1].h =
-    bits[2].y = bits[3].y = height / 3;
+  bits[0].h = bits[1].h = bits[2].y = bits[3].y = height / 3;
   bits[4].y = bits[5].y = (height * 2) / 3;
   bits[2].h = bits[3].h = bits[4].y - bits[2].y;
   bits[4].h = bits[5].h = height - bits[4].y;
@@ -2483,9 +2483,9 @@ boxes_init(int fg_color, int bg_color, int width, int height, int expanded)
     trs_box[expanded][graphics_char] =
       SDL_CreateRGBSurface(SDL_SWSURFACE, width, height, 32,
 #if defined(big_endian) && !defined(__linux)
-                           0x000000ff, 0x0000ff00, 0x00ff0000, 0);
+          0x000000ff, 0x0000ff00, 0x00ff0000, 0);
 #else
-                           0x00ff0000, 0x0000ff00, 0x000000ff, 0);
+          0x00ff0000, 0x0000ff00, 0x000000ff, 0);
 #endif
 
     /* Clear everything */
@@ -2499,10 +2499,8 @@ boxes_init(int fg_color, int bg_color, int width, int height, int expanded)
 }
 
 static SDL_Surface *CreateSurfaceFromDataScale(const Uint8 *data,
-    unsigned int fg_color,
-    unsigned int bg_color,
-    unsigned int scale_x,
-    unsigned int scale_y)
+    unsigned int fg_color, unsigned int bg_color,
+    unsigned int scale_x,  unsigned int scale_y)
 {
   unsigned int *mydata, *currdata;
   Uint8 *mypixels, *currpixel;
@@ -2581,17 +2579,17 @@ trs_bitmap_init(int char_index, int ram)
     }
   }
   /* Normal */
-  trs_char[0][char_index] = CreateSurfaceFromDataScale(char_data,
-      foreground, background, scale, y_scale);
+  trs_char[0][char_index] = CreateSurfaceFromDataScale(
+      char_data, foreground, background, scale, y_scale);
   /* Expanded */
-  trs_char[1][char_index] = CreateSurfaceFromDataScale(char_data,
-      foreground, background, scale * 2, y_scale);
+  trs_char[1][char_index] = CreateSurfaceFromDataScale(
+      char_data, foreground, background, scale * 2, y_scale);
   /* Inverse */
-  trs_char[2][char_index] = CreateSurfaceFromDataScale(char_data,
-      background, foreground, scale, y_scale);
+  trs_char[2][char_index] = CreateSurfaceFromDataScale(
+      char_data, background, foreground, scale, y_scale);
   /* Expanded + Inverse */
-  trs_char[3][char_index] = CreateSurfaceFromDataScale(char_data,
-      background, foreground, scale * 2, y_scale);
+  trs_char[3][char_index] = CreateSurfaceFromDataScale(
+      char_data, background, foreground, scale * 2, y_scale);
   /* GUI Normal + Inverse */
   if (char_index >= '[' && char_index <= ']') {
     trs_char[4][char_index] = CreateSurfaceFromDataScale(
@@ -2601,10 +2599,10 @@ trs_bitmap_init(int char_index, int ram)
         trs_char_data[0][char_index],
         gui_background, gui_foreground, scale, y_scale);
   } else {
-    trs_char[4][char_index] = CreateSurfaceFromDataScale(char_data,
-        gui_foreground, gui_background, scale, y_scale);
-    trs_char[5][char_index] = CreateSurfaceFromDataScale(char_data,
-        gui_background, gui_foreground, scale, y_scale);
+    trs_char[4][char_index] = CreateSurfaceFromDataScale(
+        char_data, gui_foreground, gui_background, scale, y_scale);
+    trs_char[5][char_index] = CreateSurfaceFromDataScale(
+        char_data, gui_background, gui_foreground, scale, y_scale);
   }
 }
 
@@ -2854,7 +2852,7 @@ void trs_screen_write_char(unsigned int position, Uint8 char_index)
     /* assert(grafyx_overlay); */
     int const srcx = ((col + grafyx_xoffset) % G_XSIZE) * cur_char_width;
     int const srcy = (row * cur_char_height + grafyx_yoffset * y_scale)
-      % (G_YSIZE * y_scale);
+        % (G_YSIZE * y_scale);
     int const duny = (G_YSIZE * y_scale) - srcy;
 
     srcRect.x = srcx;
@@ -2945,7 +2943,7 @@ static void grafyx_write_byte(int x, int y, Uint8 byte)
     int const screen_x = ((x - grafyx_xoffset + G_XSIZE) % G_XSIZE);
     int const screen_y = ((y - grafyx_yoffset + G_YSIZE) % G_YSIZE);
     int const on_screen = (screen_x < row_chars && screen_y < col_chars
-      * cur_char_height / y_scale) || (hrg_enable == 2 && y < 192);
+        * cur_char_height / y_scale) || (hrg_enable == 2 && y < 192);
     SDL_Rect srcRect, dstRect;
 
     if (grafyx_enable && grafyx_overlay && on_screen) {
@@ -3151,9 +3149,9 @@ int grafyx_m3_write_byte(int position, int byte)
 
 Uint8 grafyx_m3_read_byte(int position)
 {
-  if (grafyx_microlabs && (grafyx_mode & G3_COORD)) {
+  if (grafyx_microlabs && (grafyx_mode & G3_COORD))
     return grafyx_unscaled[(position / 64) * 12 + grafyx_y][position % 64];
-  } else
+  else
     return trs_screen[position];
 }
 
@@ -3213,7 +3211,7 @@ int lowe_le18_read(void)
   if (!lowe_le18)
     return 0xFF;
   return pack8to6(grafyx_unscaled[le18_y][le18_x]) | 0x80
-          | ((le18_on) ? 0x40 : 0x00);
+      | ((le18_on) ? 0x40 : 0x00);
 }
 
 void lowe_le18_write_data(int value)
@@ -3322,13 +3320,13 @@ hrg_write_data(int data)
     data = mirror_bits(expand6to8(data));
   /* Check for 96*192 extension region */
   if (hrg_enable == 2 && hrg_addr >= 0x3000) {
-    grafyx_write_byte(64 + (hrg_addr & 0x0F), ((hrg_addr >> 6) & 0x0F) * 12 +
-        (4 * ((hrg_addr >> 4) & 0x03) + ((hrg_addr >> 10) & 0x03)), data);
+    grafyx_write_byte(64 + (hrg_addr & 0x0F), ((hrg_addr >> 6) & 0x0F) * 12
+        + (4 * ((hrg_addr >> 4) & 0x03) + ((hrg_addr >> 10) & 0x03)), data);
   } else { /* 384*192 inner region */
     int const position = hrg_addr & 0x3ff; /* bits 0-9: "PRINT @" position */
 
-    grafyx_write_byte(position % 64, (position / 64) * 12 +
-        (hrg_addr >> 10), data);
+    grafyx_write_byte(position % 64, (position / 64) * 12
+        + (hrg_addr >> 10), data);
   }
 }
 
@@ -3442,13 +3440,13 @@ void genie3s_hrg_write(int position, int byte)
   if (row_chars == 64) {
     int const region = position & (screen_chars - 1);
 
-    grafyx_write_byte(region % 64, (region / 64) * m6845_raster +
-      (position >> 11), mirror_bits(byte));
+    grafyx_write_byte(region % 64, (region / 64) * m6845_raster
+        + (position >> 11), mirror_bits(byte));
   } else {
     int const region = position & 0x7FF;
 
-    grafyx_write_byte(region % 80, (region / 80) * m6845_raster +
-      (position >> 11), mirror_bits(byte));
+    grafyx_write_byte(region % 80, (region / 80) * m6845_raster
+        + (position >> 11), mirror_bits(byte));
   }
 }
 
@@ -3457,13 +3455,13 @@ Uint8 genie3s_hrg_read(int position)
   if (row_chars == 64) {
     int const region = position & (screen_chars - 1);
 
-    return mirror_bits(grafyx_unscaled[(region / 64) * m6845_raster +
-      (position >> 11)][region % 64]);
+    return mirror_bits(grafyx_unscaled[(region / 64) * m6845_raster
+        + (position >> 11)][region % 64]);
   } else {
     int const region = position & 0x7FF;
 
-    return mirror_bits(grafyx_unscaled[(region / 80) * m6845_raster +
-      (position >> 11)][region % 80]);
+    return mirror_bits(grafyx_unscaled[(region / 80) * m6845_raster
+        + (position >> 11)][region % 80]);
   }
 }
 
@@ -3634,8 +3632,8 @@ void trs_main_load(FILE *file)
 
 int trs_sdl_savebmp(const char *filename)
 {
-  SDL_Surface *buffer = SDL_CreateRGBSurface(SDL_SWSURFACE,
-      OrigWidth, screen_height, 32,
+  SDL_Surface *buffer = SDL_CreateRGBSurface(
+      SDL_SWSURFACE, OrigWidth, screen_height, 32,
 #if defined(big_endian) && !defined(__linux)
       0x000000ff, 0x0000ff00, 0x00ff0000, 0);
 #else
