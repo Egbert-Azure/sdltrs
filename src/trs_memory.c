@@ -487,6 +487,11 @@ void trs_reset(int poweron)
     trs_cancel_event();
     trs_timer_interrupt(0);
     if (poweron || genie3s || trs_model >= 4) {
+	if (genie3s) {
+		/* Reset Interlace Mode */
+		z80_out(0xF6, 0x08);
+		z80_out(0xF7, 0x00);
+	}
         /* Reset processor */
 	z80_reset();
 	if (poweron || trs_model >= 4)
