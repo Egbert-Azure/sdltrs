@@ -310,7 +310,7 @@ static void real_readtrk(void);
 static void real_writetrk(void);
 #ifdef __linux
 static int  real_rate(DiskState *d);
-static void real_error(DiskState *d, unsigned int flags, char *msg);
+static void real_error(DiskState *d, unsigned int flags, const char *msg);
 static void real_ok(DiskState *d);
 #endif
 static int  real_check_empty(DiskState *d);
@@ -506,7 +506,7 @@ trs_disk_firstdrq(int bits)
 }
 
 static void
-trs_disk_unimpl(Uint8 cmd, char* more)
+trs_disk_unimpl(Uint8 cmd, const char* more)
 {
   state.status = TRSDISK_NOTRDY|TRSDISK_WRITEFLT|TRSDISK_NOTFOUND;
   state.bytecount = state.format_bytecount = 0;
@@ -3099,7 +3099,7 @@ real_rate(DiskState *d)
 }
 
 void
-real_error(DiskState *d, unsigned int flags, char *msg)
+real_error(DiskState *d, unsigned int flags, const char *msg)
 {
   time_t now = time(NULL);
   if (now > d->u.real.empty_timeout) {

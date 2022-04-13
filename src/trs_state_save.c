@@ -104,7 +104,7 @@ int trs_state_load(const char *filename)
   return -1;
 }
 
-void trs_save_uint8(FILE *file, Uint8 *buffer, int count)
+void trs_save_uint8(FILE *file, const Uint8 *buffer, int count)
 {
   fwrite(buffer, count, 1, file);
 }
@@ -114,7 +114,7 @@ void trs_load_uint8(FILE *file, Uint8 *buffer, int count)
   fread(buffer, count, 1, file);
 }
 
-void trs_save_uint16(FILE *file, Uint16 *buffer, int count)
+void trs_save_uint16(FILE *file, const Uint16 *buffer, int count)
 {
   int i;
   Uint16 temp;
@@ -141,7 +141,7 @@ void trs_load_uint16(FILE *file, Uint16 *buffer, int count)
   }
 }
 
-void trs_save_uint32(FILE *file, Uint32 *buffer, int count)
+void trs_save_uint32(FILE *file, const Uint32 *buffer, int count)
 {
   int i;
   unsigned temp;
@@ -177,7 +177,7 @@ void trs_load_uint32(FILE *file, Uint32 *buffer, int count)
   }
 }
 
-void trs_save_uint64(FILE *file, Uint64 *buffer, int count)
+void trs_save_uint64(FILE *file, const Uint64 *buffer, int count)
 {
   int i, j;
   Uint64 temp;
@@ -212,7 +212,7 @@ void trs_load_uint64(FILE *file, Uint64 *buffer, int count)
   }
 }
 
-void trs_save_short(FILE *file, short *buffer, int count)
+void trs_save_short(FILE *file, const short *buffer, int count)
 {
   int i;
   short num;
@@ -258,7 +258,7 @@ void trs_load_short(FILE *file, short *buffer, int count)
   }
 }
 
-void trs_save_int(FILE *file, int *buffer, int count)
+void trs_save_int(FILE *file, const int *buffer, int count)
 {
   int i;
   int num;
@@ -312,7 +312,7 @@ void trs_load_int(FILE *file, int *buffer, int count)
   }
 }
 
-void trs_save_float(FILE *file, float *buffer, int count)
+void trs_save_float(FILE *file, const float *buffer, int count)
 {
   int i;
   char float_buff[21];

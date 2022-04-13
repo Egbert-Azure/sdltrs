@@ -62,7 +62,7 @@
 int trs_model = 1;
 char *program_name;
 
-static int hex_byte(char *string)
+static int hex_byte(const char *string)
 {
     char buf[3];
 

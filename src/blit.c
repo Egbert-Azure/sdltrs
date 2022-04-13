@@ -32,8 +32,8 @@
 
 static Uint8 *blitMap;
 
-static void CopyBlitImageTo1Byte(int width, int height, Uint8 *src,
-    int srcskip, Uint8 *dst, int dstskip, Uint8 *map)
+static void CopyBlitImageTo1Byte(int width, int height, const Uint8 *src,
+    int srcskip, Uint8 *dst, int dstskip, const Uint8 *map)
 {
   while (height--) {
     Uint8 byte = 0;
@@ -55,8 +55,8 @@ static void CopyBlitImageTo1Byte(int width, int height, Uint8 *src,
   }
 }
 
-static void CopyBlitImageTo2Byte(int width, int height, Uint8 *src,
-    int srcskip, Uint16 *dst, int dstskip, Uint16 *map)
+static void CopyBlitImageTo2Byte(int width, int height, const Uint8 *src,
+    int srcskip, Uint16 *dst, int dstskip, const Uint16 *map)
 {
   while (height--) {
     Uint8 byte = 0;
@@ -78,8 +78,8 @@ static void CopyBlitImageTo2Byte(int width, int height, Uint8 *src,
   }
 }
 
-static void CopyBlitImageTo3Byte(int width, int height, Uint8 *src,
-    int srcskip, Uint8 *dst, int dstskip, Uint8 *map)
+static void CopyBlitImageTo3Byte(int width, int height, const Uint8 *src,
+    int srcskip, Uint8 *dst, int dstskip, const Uint8 *map)
 {
   while (height--) {
     Uint8 byte = 0;
@@ -107,8 +107,8 @@ static void CopyBlitImageTo3Byte(int width, int height, Uint8 *src,
   }
 }
 
-static void CopyBlitImageTo4Byte(int width, int height, Uint8 *src,
-    int srcskip, Uint32 *dst, int dstskip, Uint32 *map)
+static void CopyBlitImageTo4Byte(int width, int height, const Uint8 *src,
+    int srcskip, Uint32 *dst, int dstskip, const Uint32 *map)
 {
   while (height--) {
     Uint8 byte = 0;
@@ -130,8 +130,8 @@ static void CopyBlitImageTo4Byte(int width, int height, Uint8 *src,
   }
 }
 
-static void XorBlitImageTo1Byte(int width, int height, Uint8 *src,
-    int srcskip, Uint8 *dst, int dstskip, Uint8 *map)
+static void XorBlitImageTo1Byte(int width, int height, const Uint8 *src,
+    int srcskip, Uint8 *dst, int dstskip, const Uint8 *map)
 {
   while (height--) {
     Uint8 byte = 0;
@@ -155,8 +155,8 @@ static void XorBlitImageTo1Byte(int width, int height, Uint8 *src,
   }
 }
 
-static void XorBlitImageTo2Byte(int width, int height, Uint8 *src,
-    int srcskip, Uint16 *dst, int dstskip, Uint16 *map)
+static void XorBlitImageTo2Byte(int width, int height, const Uint8 *src,
+    int srcskip, Uint16 *dst, int dstskip, const Uint16 *map)
 {
   while (height--) {
     Uint8 byte = 0;
@@ -180,8 +180,8 @@ static void XorBlitImageTo2Byte(int width, int height, Uint8 *src,
   }
 }
 
-static void XorBlitImageTo3Byte(int width, int height, Uint8 *src,
-    int srcskip, Uint8 *dst, int dstskip, Uint8 *map)
+static void XorBlitImageTo3Byte(int width, int height, const Uint8 *src,
+    int srcskip, Uint8 *dst, int dstskip, const Uint8 *map)
 {
   while (height--) {
     Uint8 byte = 0;
@@ -211,8 +211,8 @@ static void XorBlitImageTo3Byte(int width, int height, Uint8 *src,
   }
 }
 
-static void XorBlitImageTo4Byte(int width, int height, Uint8 *src,
-    int srcskip, Uint32 *dst, int dstskip, Uint32 *map)
+static void XorBlitImageTo4Byte(int width, int height, const Uint8 *src,
+    int srcskip, Uint32 *dst, int dstskip, const Uint32 *map)
 {
   while (height--) {
     Uint8 byte = 0;
