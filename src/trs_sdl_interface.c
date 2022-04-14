@@ -2612,13 +2612,13 @@ void trs_screen_refresh(void)
 
     /* Redraw HRG extension region */
     if (hrg_enable == 2) {
+      for (i = 0; i < 192; i++)
+        memset(&grafyx_unscaled[i][64], 0, 16);
+
       grafyx_overlay = 0;
       for (i = 0x3000; i <= 0x3FFF; i++) {
-        int const old_data = hrg_screen[i];
-
         hrg_write_addr(i, 0x3FFF);
-        hrg_write_data(0);
-        hrg_write_data(old_data);
+        hrg_write_data(hrg_screen[i]);
       }
       grafyx_overlay = 1;
     }
