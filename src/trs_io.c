@@ -65,6 +65,7 @@ static int rtc_reg;
 
 /* M6845 CRT */
 static int cursor_csr;
+static int cursor_cer;
 static int cursor_pos;
 static int cursor_vis;
 static int interlaced;
@@ -89,22 +90,26 @@ static void m6845_crt(int value)
     case 0x09: /* Maximum Raster address */
       if (value < 16)
         m6845_screen(0, 0, value + 1, 0);
-      m6845_cursor(cursor_pos, cursor_csr, cursor_vis);
+      m6845_cursor(cursor_pos, cursor_csr, cursor_cer, cursor_vis);
       break;
-    case 0x0A: /* Cursor visible / Cursor Start Line */
+    case 0x0A: /* Cursor visible / Cursor Start Raster */
       cursor_vis = !(value & (1 << 5)) || (value & (1 << 6));
       cursor_csr = value & 0x0F;
-      m6845_cursor(cursor_pos, cursor_csr, cursor_vis);
+      m6845_cursor(cursor_pos, cursor_csr, cursor_cer, cursor_vis);
+      break;
+    case 0x0B: /* Cursor End Raster */
+      cursor_cer = value & 0x0F;
+      m6845_cursor(cursor_pos, cursor_csr, cursor_cer, cursor_vis);
       break;
     case 0x0E: /* Cursor LSB */
       if (cursor_vis)
-        m6845_cursor(cursor_pos, 0, 0);
+        m6845_cursor(cursor_pos, 0, 0, 0);
       cursor_pos = ((value & 0x3F) << 8) | (cursor_pos & 0x00FF);
       break;
     case 0x0F: /* Cursor MSB */
       cursor_pos = ((value & 0xFF) << 0) | (cursor_pos & 0xFF00);
       if (cursor_vis)
-        m6845_cursor(cursor_pos, cursor_csr, 1);
+        m6845_cursor(cursor_pos, cursor_csr, cursor_cer, 1);
       break;
   }
 }
