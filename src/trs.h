@@ -219,7 +219,7 @@ extern void genie3s_char(int index, int scanline, int byte);
 extern void genie3s_hrg(int value);
 extern void genie3s_hrg_write(int position, int byte);
 extern Uint8 genie3s_hrg_read(int position);
-extern void m6845_cursor(int position, int line, int visible);
+extern void m6845_cursor(int position, int start, int end, int visible);
 extern void m6845_screen(int chars, int lines, int raster, int factor);
 
 extern void eg64_mba_out(int value);

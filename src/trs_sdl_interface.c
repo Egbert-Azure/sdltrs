@@ -3338,7 +3338,7 @@ hrg_read_data(void)
   return hrg_screen[hrg_addr];
 }
 
-void m6845_cursor(int position, int line, int visible)
+void m6845_cursor(int position, int start, int end, int visible)
 {
   int row, col;
   int cur_char;
@@ -3369,22 +3369,14 @@ void m6845_cursor(int position, int line, int visible)
     col = position - (row * 80);
   }
 
+  srcRect.x = 0;
+  srcRect.y = start * y_scale;
+  srcRect.w = cur_char_width * (expanded + 1);
+  srcRect.h = (end - start) * y_scale + y_scale;
   dstRect.x = col * cur_char_width + left_margin;
-  dstRect.y = row * cur_char_height + top_margin;
+  dstRect.y = row * cur_char_height + top_margin + srcRect.y;
 
-  if (line == 0) {
-    /* Draw block cursor with inverse char */
-    srcRect.x = 0;
-    srcRect.y = 0;
-    srcRect.w = cur_char_width;
-    srcRect.h = cur_char_height;
-    SDL_BlitSurface(trs_char[2 + expanded][cur_char], &srcRect, screen, &dstRect);
-  } else {
-    dstRect.h = y_scale;
-    dstRect.w = cur_char_width * (expanded + 1);
-    dstRect.y = dstRect.y + (line & (m6845_raster - 1)) * y_scale;
-    SDL_FillRect(screen, &dstRect, fore_color);
-  }
+  SDL_BlitSurface(trs_char[2 + expanded][cur_char], &srcRect, screen, &dstRect);
   addToDrawList(&dstRect);
 }
 
