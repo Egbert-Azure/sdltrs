@@ -152,7 +152,6 @@ static Uint32 bright_red;
 static Uint32 light_orange;
 static Uint32 bright_orange;
 static Uint32 back_color;
-static Uint32 fore_color;
 static Uint32 last_key[256];
 
 #if defined(SDL2) || !defined(NOX)
@@ -1362,8 +1361,6 @@ void trs_screen_init(void)
 #endif
   back_color    = SDL_MapRGB(screen->format,
                              colors[0].r, colors[0].g, colors[0].b);
-  fore_color    = SDL_MapRGB(screen->format,
-                             colors[1].r, colors[1].g, colors[1].b);
 #ifdef SDL2
   SDL_SetPaletteColors(image->format->palette, colors, 0, 2);
 #else
