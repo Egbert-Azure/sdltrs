@@ -26,7 +26,7 @@ SRCS	+= PasteManager.c
 
 OBJS	 = ${SRCS:.c=.o}
 
-.PHONY: all bsd clean nox os2 sdl sdl2 win32 win64 wsdl2
+.PHONY: all bsd clean depend nox os2 sdl sdl2 win32 win64 wsdl2
 
 all:
 	@echo "make (bsd | clean | depend | nox | os2 | sdl | sdl2 | win32 | win64 | wsdl2)"
