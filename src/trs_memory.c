@@ -1036,8 +1036,8 @@ void mem_write(int address, int value)
 	/* Write to Font-SRAM */
 	if (genie3s & (1 << 1)) {
 	  if (address >= 0x8000) {
-	    genie3s_char(video[(video_ram == KEYBOARD_START) ?
-	        VIDEO_PAGE_1 : VIDEO_PAGE_0], (address - 0x8000) >> 11, value);
+	    genie3s_char(video[(VIDEO_START - video_ram)],
+	        (address - 0x8000) >> 11, value);
 	  return;
 	  }
 	}
