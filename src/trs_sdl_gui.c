@@ -2677,8 +2677,8 @@ void trs_gui(void)
    {"Joystick Settings", MENU_NORMAL},
    {"Default Directories", MENU_NORMAL},
    {"ROM File Selection", MENU_NORMAL},
+   {"TRS-80 Power Reset", MENU_NORMAL},
    {"About SDLTRS", MENU_NORMAL},
-   {"Quit SDLTRS", MENU_NORMAL},
    {"", 0}};
   int selection = 0;
 
@@ -2722,10 +2722,13 @@ void trs_gui(void)
         trs_gui_rom_files();
         break;
       case 11:
-        trs_gui_about_sdltrs();
+        if (trs_gui_display_question("Reset?")) {
+          trs_reset(1);
+          return;
+        }
         break;
       case 12:
-        trs_exit(1);
+        trs_gui_about_sdltrs();
         break;
       case -1:
         return;
