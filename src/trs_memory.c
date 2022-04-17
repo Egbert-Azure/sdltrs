@@ -116,7 +116,7 @@ static int system_byte;
 void mem_video_page(int which)
 {
     if (genie3s)
-      video_ram = KEYBOARD_START + which;
+      video_ram = which ? KEYBOARD_START : VIDEO_START;
     else
       video_ram = VIDEO_START + (which ? VIDEO_PAGE_1 : VIDEO_PAGE_0);
 }
@@ -305,7 +305,7 @@ void genie3s_init_out(int value)
 {
 	genie3s_bank_out(value);
 	trs_timer_init();
-	mem_video_page(1024);
+	mem_video_page(0);
 	memory_map = 0x24;
 }
 
@@ -1036,8 +1036,8 @@ void mem_write(int address, int value)
 	/* Write to Font-SRAM */
 	if (genie3s & (1 << 1)) {
 	  if (address >= 0x8000) {
-	    genie3s_char(video[(VIDEO_START - video_ram)],
-	                       (address - 0x8000) >> 11, value);
+	    genie3s_char(video[(video_ram == KEYBOARD_START) ?
+	        VIDEO_PAGE_1 : VIDEO_PAGE_0], (address - 0x8000) >> 11, value);
 	  return;
 	  }
 	}
