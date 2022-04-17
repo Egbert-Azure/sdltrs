@@ -3394,6 +3394,9 @@ void m6845_screen(int chars, int lines, int raster, int factor)
     scale_factor = factor;
 
   if (changed) {
+    if (genie3s)
+      mem_video_page(row_chars != 64 || col_chars != 16);
+
     screen_chars = row_chars * col_chars;
     trs_screen_init();
   }
