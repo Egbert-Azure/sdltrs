@@ -69,6 +69,7 @@ static int cursor_cer;
 static int cursor_pos;
 static int cursor_vis;
 static int interlaced;
+static int max_raster;
 
 static void m6845_crt(int value)
 {
@@ -88,17 +89,19 @@ static void m6845_crt(int value)
       m6845_screen(0, 0, 0, interlaced ? 1 : 2);
       break;
     case 0x09: /* Maximum Raster address */
-      if (value < 16)
-        m6845_screen(0, 0, value + 1, 0);
+      if (value < 16) {
+        max_raster = value;
+        m6845_screen(0, 0, max_raster + 1, 0);
+      }
       m6845_cursor(cursor_pos, cursor_csr, cursor_cer, cursor_vis);
       break;
     case 0x0A: /* Cursor visible / Cursor Start Raster */
       cursor_vis = !(value & (1 << 5)) || (value & (1 << 6));
-      cursor_csr = value & 0x0F;
+      cursor_csr = value > max_raster ? max_raster : value;
       m6845_cursor(cursor_pos, cursor_csr, cursor_cer, cursor_vis);
       break;
     case 0x0B: /* Cursor End Raster */
-      cursor_cer = value & 0x0F;
+      cursor_cer = value > max_raster ? max_raster : value;
       m6845_cursor(cursor_pos, cursor_csr, cursor_cer, cursor_vis);
       break;
     case 0x0E: /* Cursor LSB */
@@ -989,6 +992,7 @@ void trs_io_save(FILE *file)
   trs_save_int(file, &cursor_pos, 1);
   trs_save_int(file, &cursor_vis, 1);
   trs_save_int(file, &interlaced, 1);
+  trs_save_int(file, &max_raster, 1);
   trs_save_int(file, &rtc_reg, 1);
 }
 
@@ -1003,6 +1007,7 @@ void trs_io_load(FILE *file)
   trs_load_int(file, &cursor_pos, 1);
   trs_load_int(file, &cursor_vis, 1);
   trs_load_int(file, &interlaced, 1);
+  trs_load_int(file, &max_raster, 1);
   trs_load_int(file, &rtc_reg, 1);
 }
 
