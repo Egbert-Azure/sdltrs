@@ -750,6 +750,7 @@ read_directory:
           break;
         case SDLK_BACKSPACE:
         case SDLK_ESCAPE:
+        case SDLK_F7:
           selection = -1;
           goto done;
           break;
