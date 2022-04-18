@@ -2880,10 +2880,10 @@ void trs_gui_clear_rect(int x, int y, int w, int h)
 {
   SDL_Rect rect;
 
-  /* Add offsets in 80x24 mode */
-  if (row_chars == 80) {
-    x += 8;
-    y += 4;
+  /* Add offsets to center */
+  if (col_chars != 16) {
+    x += (row_chars - 64) / 2;
+    y += (col_chars - 16) / 2;
   } else if (hrg_enable == 2) {
     x += 8;
   }
@@ -2909,10 +2909,10 @@ void trs_gui_write_char(int col, int row, Uint8 char_index, int invert)
 {
   SDL_Rect srcRect, dstRect;
 
-  /* Add offsets in 80x24 mode */
-  if (row_chars == 80) {
-    row += 4;
-    col += 8;
+  /* Add offsets to center */
+  if (col_chars != 16) {
+    col += (row_chars - 64) / 2;
+    row += (col_chars - 16) / 2;
   } else if (hrg_enable == 2) {
     col += 8;
   }
