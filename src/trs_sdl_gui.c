@@ -849,6 +849,7 @@ redraw:
         output[len] = 0;
         return 0;
       case SDLK_ESCAPE:
+      case SDLK_F7:
         return -1;
       case SDLK_DOWN:
       case SDLK_TAB:
@@ -1012,6 +1013,7 @@ int trs_gui_display_menu(const char *title, MENU_ENTRY *entry, int selection)
           return selection;
         case SDLK_BACKSPACE:
         case SDLK_ESCAPE:
+        case SDLK_F7:
           return -1;
       }
     }
@@ -1083,6 +1085,7 @@ int trs_gui_display_popup(const char *title, const char **entry,
           return selection;
         case SDLK_BACKSPACE:
         case SDLK_ESCAPE:
+        case SDLK_F7:
           return saved_selection;
       }
     }
@@ -1165,6 +1168,7 @@ int trs_gui_display_popup_matrix(const char* title, const char **entry,
         return selection;
       case SDLK_BACKSPACE:
       case SDLK_ESCAPE:
+      case SDLK_F7:
         return -1;
     }
   }
