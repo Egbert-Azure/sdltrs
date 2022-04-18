@@ -920,8 +920,11 @@ int trs_gui_display_menu(const char *title, MENU_ENTRY *entry, int selection)
 
   trs_gui_frame(0, 0, 63, 15);
   trs_gui_write_text(title, 2, 0, 0);
+  trs_gui_write_text(" Alt-Q/F8:Quit SDLTRS ", 40, 0, 1);
   if (strstr(title, "Man"))
     trs_gui_center_text(" ENTER/INS/TAB:Insert  DEL:Remove  SPACE:Write-Protect ", 15, 1);
+  else
+    trs_gui_center_text(" ENTER/SPACE/INS/TAB:Select  BACKSPACE/ESC/F7:Return ", 15, 1);
 
   while (entry[num].type != 0) {
     trs_gui_write_text(entry[num].text, 2, num + 2, 0);
