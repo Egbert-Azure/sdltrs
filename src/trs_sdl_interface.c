@@ -2498,15 +2498,14 @@ static SDL_Surface *CreateSurfaceFromDataScale(const Uint8 *data,
 static void
 bitmap_init(int ram)
 {
-  int const height = (genie3s ? m6845_raster : TRS_CHAR_HEIGHT) * scale_factor;
   int i;
 
   for (i = 0; i < MAXCHARS; i++)
     trs_bitmap_init(i, (i > 191 && eg3200) ? 1 : ram);
 
-  boxes_init(foreground, background, cur_char_width, height, 0);
-  boxes_init(foreground, background, cur_char_width * 2, height, 1);
-  boxes_init(gui_foreground, gui_background, cur_char_width, height, 2);
+  boxes_init(foreground, background, cur_char_width, cur_char_height, 0);
+  boxes_init(foreground, background, cur_char_width * 2, cur_char_height, 1);
+  boxes_init(gui_foreground, gui_background, cur_char_width, cur_char_height, 2);
 }
 
 static void
