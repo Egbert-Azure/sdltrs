@@ -901,7 +901,7 @@ int trs_gui_display_menu(const char *title, MENU_ENTRY *entry, int selection)
   if (strstr(title, "Man"))
     trs_gui_center_text(" ENTER/INS/TAB:Insert  DEL:Remove  SPACE:Write-Protect ", 15, 1);
   else
-    trs_gui_center_text(" ENTER/SPACE/INS/TAB:Select  BACKSPACE/ESC/F7:Return ", 15, 1);
+    trs_gui_center_text(" ENTER/INS/SPACE/TAB:Select  BACKSPACE/ESC/F7:Return ", 15, 1);
 
   while (entry[num].type != 0) {
     trs_gui_write_text(entry[num].text, 2, num + 2, 0);
