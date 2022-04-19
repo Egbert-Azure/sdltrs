@@ -1262,9 +1262,10 @@ void trs_screen_init(void)
     else
       cur_char_width = 8;
 
-    if (genie3s)
+    if (genie3s) {
       cur_char_height = m6845_raster * scale_factor;
-    else
+      mem_video_page(row_chars != 64 || col_chars != 16);
+    } else
       cur_char_height = TRS_CHAR_HEIGHT * 2;
   } else {
     cur_char_width = TRS_CHAR_WIDTH;
@@ -3293,9 +3294,6 @@ void m6845_screen(int chars, int lines, int raster, int factor)
     scale_factor = factor;
 
   if (changed) {
-    if (genie3s)
-      mem_video_page(row_chars != 64 || col_chars != 16);
-
     screen_chars = row_chars * col_chars;
     trs_screen_init();
   }
