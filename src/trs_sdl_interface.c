@@ -174,7 +174,7 @@ static int selectionStartX;
 static int selectionStartY;
 static int selectionEndX;
 static int selectionEndY;
-static int requestSelectAll;
+static int selectAll;
 static int timer_saved;
 static unsigned int cycles_saved;
 #endif
@@ -1297,7 +1297,7 @@ void trs_screen_init(void)
   paste_state = 0;
   paste_lastkey = 0;
   copyStatus = 0;
-  requestSelectAll = 0;
+  selectAll = 0;
 #endif
 
 #ifdef SDL2
@@ -1380,7 +1380,7 @@ static void addToDrawList(SDL_Rect *rect)
 }
 
 #if defined(SDL2) || !defined(NOX)
-static void DrawSelectionRectangle(int orig_x, int orig_y, int copy_x, int copy_y)
+static void DrawRectangle(int orig_x, int orig_y, int copy_x, int copy_y)
 {
   int const bpp   = screen->format->BytesPerPixel;
   int const pitch = screen->pitch;
@@ -1434,7 +1434,7 @@ static void DrawSelectionRectangle(int orig_x, int orig_y, int copy_x, int copy_
     SDL_UnlockSurface(screen);
 }
 
-static void ProcessCopySelection(int selectAll)
+static void MarkSelection(void)
 {
   static int orig_x;
   static int orig_y;
@@ -1448,12 +1448,12 @@ static void ProcessCopySelection(int selectAll)
     if (copyStatus == COPY_STARTED)
       return;
     if (copyStatus == COPY_DEFINED || copyStatus == COPY_CLEAR)
-      DrawSelectionRectangle(orig_x, orig_y, end_x, end_y);
+      DrawRectangle(orig_x, orig_y, end_x, end_y);
     orig_x = 0;
     orig_y = 0;
     copy_x = end_x = screen->w - scale;
     copy_y = end_y = screen_height - scale;
-    DrawSelectionRectangle(orig_x, orig_y, end_x, end_y);
+    DrawRectangle(orig_x, orig_y, end_x, end_y);
     selectionStartX = orig_x - left_margin;
     selectionStartY = orig_y - top_margin;
     selectionEndX = copy_x - left_margin;
@@ -1476,7 +1476,7 @@ static void ProcessCopySelection(int selectAll)
       if (selectAll) {
         orig_x = 0;
         orig_y = 0;
-        DrawSelectionRectangle(orig_x, orig_y, copy_x, copy_y);
+        DrawRectangle(orig_x, orig_y, copy_x, copy_y);
         selectionStartX = orig_x - left_margin;
         selectionStartY = orig_y - top_margin;
         selectionEndX = copy_x - left_margin;
@@ -1487,7 +1487,7 @@ static void ProcessCopySelection(int selectAll)
       else if (mouse & SDL_BUTTON(SDL_BUTTON_LEFT) ) {
         orig_x = copy_x;
         orig_y = copy_y;
-        DrawSelectionRectangle(orig_x, orig_y, copy_x, copy_y);
+        DrawRectangle(orig_x, orig_y, copy_x, copy_y);
         drawnRectCount = MAX_RECTS;
         copyStatus = COPY_STARTED;
       }
@@ -1495,9 +1495,9 @@ static void ProcessCopySelection(int selectAll)
       end_y = copy_y;
       break;
     case COPY_STARTED:
-      DrawSelectionRectangle(orig_x, orig_y, end_x, end_y);
+      DrawRectangle(orig_x, orig_y, end_x, end_y);
       if (mouse & SDL_BUTTON(SDL_BUTTON_LEFT))
-        DrawSelectionRectangle(orig_x, orig_y, copy_x, copy_y);
+        DrawRectangle(orig_x, orig_y, copy_x, copy_y);
       drawnRectCount = MAX_RECTS;
       end_x = copy_x;
       end_y = copy_y;
@@ -1505,7 +1505,7 @@ static void ProcessCopySelection(int selectAll)
         if (orig_x == copy_x && orig_y == copy_y) {
           copyStatus = COPY_IDLE;
         } else {
-          DrawSelectionRectangle(orig_x, orig_y, end_x, end_y);
+          DrawRectangle(orig_x, orig_y, end_x, end_y);
           selectionStartX = orig_x - left_margin;
           selectionStartY = orig_y - top_margin;
           selectionEndX = copy_x - left_margin;
@@ -1516,19 +1516,87 @@ static void ProcessCopySelection(int selectAll)
       break;
     case COPY_DEFINED:
       if (mouse & SDL_BUTTON(SDL_BUTTON_LEFT)) {
-        DrawSelectionRectangle(orig_x, orig_y, end_x, end_y);
+        DrawRectangle(orig_x, orig_y, end_x, end_y);
         orig_x = end_x = copy_x;
         orig_y = end_y = copy_y;
-        DrawSelectionRectangle(orig_x, orig_y, copy_x, copy_y);
+        DrawRectangle(orig_x, orig_y, copy_x, copy_y);
         drawnRectCount = MAX_RECTS;
         copyStatus = COPY_STARTED;
       }
       break;
     case COPY_CLEAR:
-      DrawSelectionRectangle(orig_x, orig_y, end_x, end_y);
+      DrawRectangle(orig_x, orig_y, end_x, end_y);
       drawnRectCount = MAX_RECTS;
       copyStatus = COPY_IDLE;
   }
+}
+
+static char *GetSelection(void)
+{
+  static char copy_data[2048];
+  char *curr_data = copy_data;
+  Uint8 data;
+  Uint8 *screen_ptr;
+  int col, row;
+  int start_col, end_col, start_row, end_row;
+
+  if (grafyx_enable && !grafyx_overlay) {
+    copy_data[0] = 0;
+    return copy_data;
+  }
+
+  if (selectionStartX < 0)
+    selectionStartX = 0;
+  if (selectionStartY < 0)
+    selectionStartY = 0;
+
+  if (selectionStartX % cur_char_width == 0)
+    start_col = selectionStartX / cur_char_width;
+  else
+    start_col = selectionStartX / cur_char_width + 1;
+
+  if (selectionEndX % cur_char_width == cur_char_width - 1)
+    end_col = selectionEndX / cur_char_width;
+  else
+    end_col = selectionEndX / cur_char_width - 1;
+
+  if (selectionStartY % cur_char_height == 0)
+    start_row = selectionStartY / cur_char_height;
+  else
+    start_row = selectionStartY / cur_char_height + 1;
+
+  if (selectionEndY % cur_char_height >= cur_char_height / 2)
+    end_row = selectionEndY / cur_char_height;
+  else
+    end_row = selectionEndY / cur_char_height - 1;
+
+  if (end_col >= row_chars)
+    end_col = row_chars - 1;
+  if (end_row >= col_chars)
+    end_row = col_chars - 1;
+
+  for (row = start_row; row <= end_row; row++) {
+    screen_ptr = &trs_screen[row * row_chars + start_col];
+    for (col = start_col; col <= end_col; col++, screen_ptr++) {
+      data = *screen_ptr;
+      if (data < 0x20)
+        data += 0x40;
+      if ((currentmode & INVERSE) && (data & 0x80))
+        data -= 0x80;
+      if (data >= 0x20 && data <= 0x7e)
+        *curr_data++ = data;
+      else
+        *curr_data++ = ' ';
+    }
+    if (row != end_row) {
+#ifdef _WIN32
+      *curr_data++ = 0xd;
+#endif
+      *curr_data++ = 0xa;
+    }
+  }
+  *curr_data = 0;
+  return copy_data;
 }
 #endif
 
@@ -1540,8 +1608,8 @@ void trs_sdl_flush(void)
 #if defined(SDL2) || !defined(NOX)
   if (mousepointer) {
     if (!trs_emu_mouse && paste_state == PASTE_IDLE) {
-      ProcessCopySelection(requestSelectAll);
-      requestSelectAll = FALSE;
+      MarkSelection();
+      selectAll = FALSE;
     }
   }
 #endif
@@ -1653,76 +1721,6 @@ static void trs_flip_fullscreen(void)
 
   trs_screen_init();
 }
-
-#if defined(SDL2) || !defined(NOX)
-static char *trs_get_copy_data(void)
-{
-  static char copy_data[2048];
-  char *curr_data = copy_data;
-  Uint8 data;
-  Uint8 *screen_ptr;
-  int col, row;
-  int start_col, end_col, start_row, end_row;
-
-  if (grafyx_enable && !grafyx_overlay) {
-    copy_data[0] = 0;
-    return copy_data;
-  }
-
-  if (selectionStartX < 0)
-    selectionStartX = 0;
-  if (selectionStartY < 0)
-    selectionStartY = 0;
-
-  if (selectionStartX % cur_char_width == 0)
-    start_col = selectionStartX / cur_char_width;
-  else
-    start_col = selectionStartX / cur_char_width + 1;
-
-  if (selectionEndX % cur_char_width == cur_char_width - 1)
-    end_col = selectionEndX / cur_char_width;
-  else
-    end_col = selectionEndX / cur_char_width - 1;
-
-  if (selectionStartY % cur_char_height == 0)
-    start_row = selectionStartY / cur_char_height;
-  else
-    start_row = selectionStartY / cur_char_height + 1;
-
-  if (selectionEndY % cur_char_height >= cur_char_height / 2)
-    end_row = selectionEndY / cur_char_height;
-  else
-    end_row = selectionEndY / cur_char_height - 1;
-
-  if (end_col >= row_chars)
-    end_col = row_chars - 1;
-  if (end_row >= col_chars)
-    end_row = col_chars - 1;
-
-  for (row = start_row; row <= end_row; row++) {
-    screen_ptr = &trs_screen[row * row_chars + start_col];
-    for (col = start_col; col <= end_col; col++, screen_ptr++) {
-      data = *screen_ptr;
-      if (data < 0x20)
-        data += 0x40;
-      if ((currentmode & INVERSE) && (data & 0x80))
-        data -= 0x80;
-      if (data >= 0x20 && data <= 0x7e)
-        *curr_data++ = data;
-      else
-        *curr_data++ = ' ';
-    }
-    if (row != end_row) {
-#ifdef _WIN32
-      *curr_data++ = 0xd;
-#endif
-      *curr_data++ = 0xa;
-    }
-  }
-  *curr_data = 0;
-  return copy_data;
-}
-#endif
 
 /*
  * Get and process SDL event(s).
@@ -1912,7 +1910,7 @@ void trs_get_event(int wait)
           switch (keysym.sym) {
 #if defined(SDL2) || !defined(NOX)
             case SDLK_c:
-              PasteManagerStartCopy(trs_get_copy_data());
+              PasteManagerStartCopy(GetSelection());
               copyStatus = COPY_IDLE;
               break;
             case SDLK_v:
@@ -1926,7 +1924,7 @@ void trs_get_event(int wait)
               paste_state = PASTE_GETNEXT;
               break;
             case SDLK_a:
-              requestSelectAll = mousepointer = TRUE;
+              selectAll = mousepointer = TRUE;
               SDL_ShowCursor(SDL_ENABLE);
               break;
 #endif
