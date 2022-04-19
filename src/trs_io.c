@@ -97,10 +97,12 @@ static void m6845_crt(int value)
       break;
     case 0x0A: /* Cursor visible / Cursor Start Raster */
       cursor_vis = !(value & (1 << 5)) || (value & (1 << 6));
+      value &= 0x1F;
       cursor_csr = value > max_raster ? max_raster : value;
       m6845_cursor(cursor_pos, cursor_csr, cursor_cer, cursor_vis);
       break;
     case 0x0B: /* Cursor End Raster */
+      value &= 0x1F;
       cursor_cer = value > max_raster ? max_raster : value;
       m6845_cursor(cursor_pos, cursor_csr, cursor_cer, cursor_vis);
       break;
