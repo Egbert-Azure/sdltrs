@@ -1266,7 +1266,7 @@ void trs_screen_init(void)
 
     if (genie3s) {
       cur_char_height = m6845_raster * y_scale;
-      mem_video_page(row_chars != 64 || col_chars != 16);
+      mem_video_page((row_chars != 64 || col_chars != 16) ? -1024 : 0);
     } else
       cur_char_height = TRS_CHAR_HEIGHT * y_scale;
   } else {

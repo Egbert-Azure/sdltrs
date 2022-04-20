@@ -99,9 +99,7 @@ static Uint8 cp500_rom[CP500_ROM_SIZE + 1];
 static Uint8 supermem_ram[MAX_SUPERMEM_SIZE + 1];
 static int memory_map;
 static int bank_offset[2];
-#define VIDEO_PAGE_0 0
-#define VIDEO_PAGE_1 1024
-static int video_ram = VIDEO_START + VIDEO_PAGE_0;
+static int video_ram = VIDEO_START;
 static unsigned int bank_base = 0x10000;
 static int megamem_addr;
 static unsigned int megamem_base;
@@ -113,12 +111,9 @@ static int selector_reg;
 static int m_a11_flipflop;
 static int system_byte;
 
-void mem_video_page(int which)
+void mem_video_page(int offset)
 {
-    if (genie3s)
-      video_ram = which ? KEYBOARD_START : VIDEO_START;
-    else
-      video_ram = VIDEO_START + (which ? VIDEO_PAGE_1 : VIDEO_PAGE_0);
+  video_ram = VIDEO_START + offset;
 }
 
 void mem_bank(int command)
