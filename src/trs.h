@@ -204,7 +204,7 @@ extern int lowercase;
 extern int lubomir;
 extern int stringy;
 
-extern void mem_video_page(int which);
+extern void mem_video_page(int offset);
 extern void mem_bank(int which);
 extern void mem_map(int which);
 extern void mem_bank_base(int bits);
