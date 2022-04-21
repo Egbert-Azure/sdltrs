@@ -689,12 +689,13 @@ int mem_read(int address)
 	  if ((system_byte & (1 << 4)) == 0) {
 	    if (address >= KEYBOARD_START && address <= 0x38FF)
 	      return trs_kb_mem_read(address);
-	    if (address >= 0x3900 && address <= 0x3BFF)
-	      return memory[address];
+	    if (address >= VIDEO_START && address <= 0x3FFF)
+	      return video[address - video_ram];
+	  } else {
+	    /* 1K or 2K Video RAM */
+	    if (address >= video_ram && address <= 0x3FFF)
+	      return video[address - video_ram];
 	  }
-	  /* 1K or 2K Video RAM */
-	  if (address >= video_ram && address <= 0x3FFF)
-	    return video[address - video_ram];
 	  /* Disk I/O */
 	  if (address >= 0x37E0 && address <= 0x37EF)
 	    return trs80_model1_mmio(address);
@@ -1001,15 +1002,16 @@ void mem_write(int address, int value)
       case 0x24: /* TCS Genie IIIs */
 	if ((system_byte & (1 << 0)) == 0) {
 	  if ((system_byte & (1 << 4)) == 0) {
-	    if (address >= 0x3900 && address <= 0x3BFF) {
-	      memory[address] = value;
+	    if (address >= VIDEO_START && address <= 0x3FFF) {
+	      trs80_screen_write_char(address - video_ram, value);
 	      return;
 	    }
-	  }
-	  /* 1K or 2K Video RAM */
-	  if (address >= video_ram && address <= 0x3FFF) {
-	    trs80_screen_write_char(address - video_ram, value);
-	    return;
+	  } else {
+	    /* 1K or 2K Video RAM */
+	    if (address >= video_ram && address <= 0x3FFF) {
+	      trs80_screen_write_char(address - video_ram, value);
+	      return;
+	    }
 	  }
 	  /* Disk I/O */
 	  if (address >= 0x37E0 && address <= 0x37EF) {
@@ -1033,7 +1035,7 @@ void mem_write(int address, int value)
 	  if (address >= 0x8000) {
 	    genie3s_char(video[(VIDEO_START - video_ram)],
 	        (address - 0x8000) >> 11, value);
-	  return;
+	    return;
 	  }
 	}
 	/* "Constant bit" points to Bank 0 */
@@ -1301,12 +1303,13 @@ Uint8 *mem_pointer(int address, int writing)
       case 0x2C:
 	if ((system_byte & (1 << 0)) == 0) {
 	  if ((system_byte & (1 << 4)) == 0) {
-	    if (address >= 0x3900 && address <= 0x3BFF)
-	      return &memory[address];
+	    if (address >= VIDEO_START && address <= 0x3FFF)
+	      return &video[address - video_ram];
+	  } else {
+	    /* 1 or 2K Video RAM */
+	    if (address >= video_ram && address <= 0x3FFF)
+	      return &video[address - video_ram];
 	  }
-	  /* 1K or 2K Video RAM */
-	  if (address >= video_ram && address <= 0x3FFF)
-	    return &video[address - video_ram];
 	}
 	if ((system_byte & (1 << 2)) == 0) {
 	  if (address <= 0x2FFF)

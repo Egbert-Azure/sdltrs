@@ -1264,10 +1264,9 @@ void trs_screen_init(void)
     else
       cur_char_width = 8 * scale;
 
-    if (genie3s) {
+    if (genie3s)
       cur_char_height = m6845_raster * y_scale;
-      mem_video_page((row_chars != 64 || col_chars != 16) ? -1024 : 0);
-    } else
+    else
       cur_char_height = TRS_CHAR_HEIGHT * y_scale;
   } else {
     cur_char_width = TRS_CHAR_WIDTH * scale;
@@ -2785,14 +2784,15 @@ void trs_turbo_led(void)
   addToDrawList(&rect);
 }
 
-void trs_screen_write_char(unsigned int position, Uint8 char_index)
+void trs_screen_write_char(int position, Uint8 char_index)
 {
   unsigned int row, col;
   int expanded;
   SDL_Rect srcRect, dstRect;
 
-  if (position >= (unsigned int)screen_chars)
-    return;
+  if (position >= screen_chars)
+    position &= (screen_chars - 1);
+
   trs_screen[position] = char_index;
   if ((currentmode & EXPANDED) && (position & 1))
     return;
