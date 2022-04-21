@@ -70,6 +70,7 @@ static int cursor_pos;
 static int cursor_vis;
 static int interlaced;
 static int max_raster;
+static int start_addr;
 
 static void m6845_crt(int value)
 {
@@ -93,28 +94,36 @@ static void m6845_crt(int value)
         max_raster = value;
         m6845_screen(0, 0, max_raster + 1, 0);
       }
-      m6845_cursor(cursor_pos, cursor_csr, cursor_cer, cursor_vis);
+      m6845_cursor(cursor_pos - start_addr, cursor_csr, cursor_cer, cursor_vis);
       break;
     case 0x0A: /* Cursor visible / Cursor Start Raster */
       cursor_vis = !(value & (1 << 5)) || (value & (1 << 6));
       value &= 0x1F;
       cursor_csr = value > max_raster ? max_raster : value;
-      m6845_cursor(cursor_pos, cursor_csr, cursor_cer, cursor_vis);
+      m6845_cursor(cursor_pos - start_addr, cursor_csr, cursor_cer, cursor_vis);
       break;
     case 0x0B: /* Cursor End Raster */
       value &= 0x1F;
       cursor_cer = value > max_raster ? max_raster : value;
-      m6845_cursor(cursor_pos, cursor_csr, cursor_cer, cursor_vis);
+      m6845_cursor(cursor_pos - start_addr, cursor_csr, cursor_cer, cursor_vis);
+      break;
+    case 0x0C: /* Start Address LSB */
+      start_addr = ((value & 0x3F) << 8) | (start_addr & 0x00FF);
+      break;
+    case 0x0D: /* Start Address MSB */
+      start_addr = ((value & 0xFF) << 0) | (start_addr & 0xFF00);
       break;
     case 0x0E: /* Cursor LSB */
+      if (genie3s)
+        mem_video_page(-(1024 - start_addr));
       if (cursor_vis)
-        m6845_cursor(cursor_pos, 0, 0, 0);
+        m6845_cursor(cursor_pos - start_addr, 0, 0, 0);
       cursor_pos = ((value & 0x3F) << 8) | (cursor_pos & 0x00FF);
       break;
     case 0x0F: /* Cursor MSB */
       cursor_pos = ((value & 0xFF) << 0) | (cursor_pos & 0xFF00);
       if (cursor_vis)
-        m6845_cursor(cursor_pos, cursor_csr, cursor_cer, 1);
+        m6845_cursor(cursor_pos - start_addr, cursor_csr, cursor_cer, 1);
       break;
   }
 }
@@ -995,6 +1004,7 @@ void trs_io_save(FILE *file)
   trs_save_int(file, &cursor_vis, 1);
   trs_save_int(file, &interlaced, 1);
   trs_save_int(file, &max_raster, 1);
+  trs_save_int(file, &start_addr, 1);
   trs_save_int(file, &rtc_reg, 1);
 }
 
@@ -1010,6 +1020,7 @@ void trs_io_load(FILE *file)
   trs_load_int(file, &cursor_vis, 1);
   trs_load_int(file, &interlaced, 1);
   trs_load_int(file, &max_raster, 1);
+  trs_load_int(file, &start_addr, 1);
   trs_load_int(file, &rtc_reg, 1);
 }
 
