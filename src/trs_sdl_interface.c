@@ -2737,7 +2737,7 @@ void trs_screen_write_char(int position, Uint8 char_index)
   SDL_Rect srcRect, dstRect;
 
   if (position >= screen_chars)
-    position &= (screen_chars - 1);
+    return;
 
   trs_screen[position] = char_index;
   if ((currentmode & EXPANDED) && (position & 1))
@@ -3247,7 +3247,7 @@ void m6845_cursor(int position, int start, int end, int visible)
     position -= 256;
 
   if (position >= screen_chars)
-    position &= (screen_chars - 1);
+    return;
 
   cur_char = trs_screen[position];
 
