@@ -112,10 +112,10 @@ static void m6845_crt(int value)
       break;
     case 0x0D: /* Start Address MSB */
       start_addr = ((value & 0xFF) << 0) | (start_addr & 0xFF00);
-      break;
-    case 0x0E: /* Cursor LSB */
       if (genie3s)
         mem_video_page(-(1024 - start_addr));
+      break;
+    case 0x0E: /* Cursor LSB */
       if (cursor_vis)
         m6845_cursor(cursor_pos - start_addr, 0, 0, 0);
       cursor_pos = ((value & 0x3F) << 8) | (cursor_pos & 0x00FF);
