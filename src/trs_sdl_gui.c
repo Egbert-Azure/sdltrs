@@ -634,9 +634,10 @@ read_directory:
   if (browse_dir) {
     snprintf(text, 63, "Choose %sDirectory", type);
     trs_gui_center_text(" INS/TAB:Select Directory ", 15, 1);
-  }
-  else
+  } else {
     snprintf(text, 63, "Select %s File To Load", type);
+    trs_gui_center_text(" ENTER/INS/SPACE/TAB:Select  BACKSPACE/ESC/F7:Return ", 15, 1);
+  }
   trs_gui_write_text(text, 2, 0, 0);
 
   drawcount = filenamecount < 13 ? filenamecount : 13;
