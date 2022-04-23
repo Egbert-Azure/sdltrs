@@ -2216,6 +2216,8 @@ static int trs_gui_config_management(void)
    {"Write Configuration (Alt-W)", MENU_NORMAL},
    {"Read Configuration  (Alt-R)", MENU_NORMAL},
    {"", MENU_TITLE},
+   {"", MENU_TITLE},
+   {"", MENU_TITLE},
    {"State File:", MENU_TITLE},
    {"   ", MENU_TITLE},
    {"", MENU_TITLE},
@@ -2225,8 +2227,8 @@ static int trs_gui_config_management(void)
   int selection = 0;
 
   while (1) {
-    trs_gui_limit_string(trs_state_file, &menu[6].text[2], 58);
-    trs_gui_limit_string(trs_config_file, &menu[9].text[2], 58);
+    trs_gui_limit_string(trs_state_file, &menu[8].text[2], 58);
+    trs_gui_limit_string(trs_config_file, &menu[11].text[2], 58);
     trs_gui_clear_screen();
 
     selection = trs_gui_display_menu("Configuration/State Files", menu, selection);
@@ -2557,6 +2559,8 @@ void trs_gui_rom_files(void)
    {"Model 4P ROM:", MENU_TITLE},
    {"   ", MENU_NORMAL},
    {"", MENU_TITLE},
+   {"", MENU_TITLE},
+   {"", MENU_TITLE},
    {"Patch Model I ROM for auto-boot from hard drive   ", MENU_NORMAL},
    {"", 0}};
   int selection = 1;
@@ -2565,7 +2569,7 @@ void trs_gui_rom_files(void)
     trs_gui_limit_string(romfile, &menu[1].text[2], 58);
     trs_gui_limit_string(romfile3, &menu[4].text[2], 58);
     trs_gui_limit_string(romfile4p, &menu[7].text[2], 58);
-    snprintf(&menu[9].text[50], 11, "%s", yes_no[trs_hd_boot]);
+    snprintf(&menu[11].text[50], 11, "%s", yes_no[trs_hd_boot]);
     trs_gui_clear_screen();
 
     selection = trs_gui_display_menu("ROM File Selection", menu, selection);
@@ -2579,7 +2583,7 @@ void trs_gui_rom_files(void)
       case 7:
         trs_gui_file_browse(romfile4p, romfile4p, NULL, 0, "Model 4P ROM");
         break;
-      case 9:
+      case 11:
         trs_hd_boot = trs_gui_display_popup("Patch", yes_no, 2, trs_hd_boot);
         break;
       case -1:
