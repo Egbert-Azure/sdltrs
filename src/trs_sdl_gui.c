@@ -2348,7 +2348,9 @@ int trs_gui_joystick_get_button(void)
           case SDLK_F8:
             trs_exit(!(event.key.keysym.mod & KMOD_SHIFT));
             break;
+          case SDLK_BACKSPACE:
           case SDLK_ESCAPE:
+          case SDLK_F7:
             return -1;
           default:
             break;
