@@ -880,7 +880,7 @@ int z80_in(int port)
       value = mem_read_bank_base();
       goto done;
     case 0xDF:
-      if (lubomir == 0) {
+      if (speedup <= 3 && lubomir == 0) {
         eg64_mba_out(7);
         value = 0;
       }
