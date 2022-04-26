@@ -286,11 +286,6 @@ int trs_gui_get_key(void)
       case SDL_QUIT:
         trs_exit(0);
         break;
-#ifdef SDL2
-      case SDL_WINDOWEVENT:
-        trs_screen_update();
-        break;
-#endif
       case SDL_MOUSEBUTTONDOWN:
         switch (event.button.button) {
           case SDL_BUTTON_LEFT:
@@ -320,6 +315,10 @@ int trs_gui_get_key(void)
       case SDL_TEXTINPUT:
         SDL_StopTextInput();
         return event.text.text[0];
+
+      case SDL_WINDOWEVENT:
+        trs_screen_update();
+        break;
 #endif
       case SDL_KEYDOWN:
         if (event.key.keysym.mod & KMOD_ALT) {
