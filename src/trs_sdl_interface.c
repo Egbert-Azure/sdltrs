@@ -2824,13 +2824,13 @@ void trs_screen_write_char(int position, Uint8 char_index)
       if (char_index >= 0xc0)
         char_index -= 0x40;
     }
-    if (char_index >= 0x80 && char_index <= 0xbf && !(currentmode & INVERSE)) {
+    if (!(currentmode & INVERSE) && char_index >= 0x80 && char_index <= 0xbf) {
       /* Use box graphics character bitmap */
       SDL_BlitSurface(trs_box[expanded][char_index - 0x80], &srcRect, screen, &dstRect);
     } else {
       /* Use regular character bitmap */
       if (trs_model > 1) {
-        if (char_index >= 0xc0 && (currentmode & (ALTERNATE + INVERSE)) == 0)
+        if ((currentmode & (ALTERNATE + INVERSE)) == 0 && char_index >= 0xc0)
           char_index -= 0x40;
       }
       if ((currentmode & INVERSE) && (char_index & 0x80)) {
