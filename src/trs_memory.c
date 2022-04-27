@@ -637,11 +637,11 @@ int mem_read(int address)
 	return trs80_model1_ram(address);
       case 0x21: /* EG-64 Memory-Banking-Adaptor */
 	if (address < RAM_START) {
-	  if ((address <= 0x2FFF && (system_byte & (1 << 0))) ||
-	      (address >= 0x3000 && address <= 0x35FF && (system_byte & (1 << 2))) ||
-	      (address >= 0x3600 && address <= 0x37FF && (system_byte & (1 << 4))) ||
-	      (address >= 0x3800 && address <= 0x3BFF && (system_byte & (1 << 5))) ||
-	      (address >= 0x3C00 && address <= 0x3FFF && (system_byte & (1 << 6))))
+	  if (((system_byte & (1 << 0)) && address <= 0x2FFF) ||
+	      ((system_byte & (1 << 2)) && address >= 0x3000 && address <= 0x35FF) ||
+	      ((system_byte & (1 << 4)) && address >= 0x3600 && address <= 0x37FF) ||
+	      ((system_byte & (1 << 5)) && address >= 0x3800 && address <= 0x3BFF) ||
+	      ((system_byte & (1 << 6)) && address >= 0x3C00 && address <= 0x3FFF))
 		return memory[address];
 	  if (address <= 0x35FF) return rom[address];
 	  return trs80_model1_mmio(address);
@@ -649,12 +649,12 @@ int mem_read(int address)
 	return memory[address];
       case 0x22: /* Lubomir Soft Banker */
 	if (address < RAM_START) {
-	  if ((address <= 0x37DF && (system_byte & (1 << 6))) ||
-	      (address >= 0x37E0 && address <= 0x3FFF && (system_byte & (1 << 5))))
+	  if (((system_byte & (1 << 6)) && address <= 0x37DF) ||
+	      ((system_byte & (1 << 5)) && address >= 0x37E0 && address <= 0x3FFF))
 		return memory[address];
 	  return trs80_model1_mmio(address);
 	}
-	if (address >= 0x8000 && (system_byte & (1 << 4)))
+	if ((system_byte & (1 << 4)) && address >= 0x8000)
 	  /* Read from "Expander RAM" */
 	  return memory[address + 0x8000];
 	else
@@ -737,7 +737,7 @@ int mem_read(int address)
 	  }
 	}
 	if ((system_byte & (1 << 0)) == 0) {
-	  if (address <= 0x2FFF && (system_byte & (1 << 2)) == 0)
+	  if ((system_byte & (1 << 2)) == 0 && address <= 0x2FFF)
 	    return rom[address];
 	  if (address >= 0x3400 && address <= 0x3FFF)
 	    return trs80_model1_mmio(address);
@@ -939,11 +939,11 @@ void mem_write(int address, int value)
 	break;
       case 0x21: /* EG-64 Memory-Banking-Adaptor */
 	if (address < RAM_START) {
-	  if ((address <= 0x2FFF && (system_byte & (1 << 1))) ||
-	      (address >= 0x3000 && address <= 0x35FF && (system_byte & (1 << 3))) ||
-	      (address >= 0x3600 && address <= 0x37FF && (system_byte & (1 << 4))) ||
-	      (address >= 0x3800 && address <= 0x3BFF && (system_byte & (1 << 5))) ||
-	      (address >= 0x3C00 && address <= 0x3FFF && (system_byte & (1 << 6)))) {
+	  if (((system_byte & (1 << 1)) && address <= 0x2FFF) ||
+	      ((system_byte & (1 << 3)) && address >= 0x3000 && address <= 0x35FF) ||
+	      ((system_byte & (1 << 4)) && address >= 0x3600 && address <= 0x37FF) ||
+	      ((system_byte & (1 << 5)) && address >= 0x3800 && address <= 0x3BFF) ||
+	      ((system_byte & (1 << 6)) && address >= 0x3C00 && address <= 0x3FFF)) {
 		memory[address] = value;
 		return;
 	  }
@@ -954,15 +954,15 @@ void mem_write(int address, int value)
 	break;
       case 0x22: /* Lubomir Soft Banker */
 	if (address < RAM_START) {
-	  if ((address <= 0x37DF && (system_byte & (1 << 7))) ||
-	      (address >= 0x37E0 && address <= 0x3FFF && (system_byte & (1 << 5)))) {
+	  if (((system_byte & (1 << 7)) && address <= 0x37DF) ||
+	      ((system_byte & (1 << 5)) && address >= 0x37E0 && address <= 0x3FFF)) {
 		memory[address] = value;
 		return;
 	  }
 	  trs80_model1_write_mmio(address, value);
 	  return;
 	}
-	if (address >= 0x8000 && (system_byte & (1 << 4)))
+	if ((system_byte & (1 << 4)) && address >= 0x8000)
 	  /* Write to "Expander RAM" */
 	  memory[address + 0x8000] = value;
 	else
@@ -1257,11 +1257,11 @@ Uint8 *mem_pointer(int address, int writing)
       case 0x21: /* EG-64 Memory-Banking-Adaptor */
       case 0x29:
 	if (address < RAM_START) {
-	  if ((address <= 0x2FFF && (system_byte & (1 << 0))) ||
-	      (address >= 0x3000 && address <= 0x35FF && (system_byte & (1 << 2))) ||
-	      (address >= 0x3600 && address <= 0x37FF && (system_byte & (1 << 4))) ||
-	      (address >= 0x3800 && address <= 0x3BFF && (system_byte & (1 << 5))) ||
-	      (address >= 0x3C00 && address <= 0x3FFF && (system_byte & (1 << 6))))
+	  if (((system_byte & (1 << 0)) && address <= 0x2FFF) ||
+	      ((system_byte & (1 << 2)) && address >= 0x3000 && address <= 0x35FF) ||
+	      ((system_byte & (1 << 4)) && address >= 0x3600 && address <= 0x37FF) ||
+	      ((system_byte & (1 << 5)) && address >= 0x3800 && address <= 0x3BFF) ||
+	      ((system_byte & (1 << 6)) && address >= 0x3C00 && address <= 0x3FFF))
 		return &memory[address];
 	  if (address <= 0x35FF) return &rom[address];
 	  return trs80_model1_mmio_addr(address, writing);
@@ -1270,12 +1270,12 @@ Uint8 *mem_pointer(int address, int writing)
       case 0x22: /* Lubomir Soft Banker */
       case 0x2A:
 	if (address < RAM_START) {
-	  if ((address <= 0x37DF && (system_byte & (1 << 6))) ||
-	      (address >= 0x37E0 && address <= 0x3FFF && (system_byte & (1 << 5))))
+	  if (((system_byte & (1 << 6)) && address <= 0x37DF) ||
+	      ((system_byte & (1 << 5)) && address >= 0x37E0 && address <= 0x3FFF))
 		return &memory[address];
 	  return trs80_model1_mmio_addr(address, writing);
 	}
-	if (address >= 0x8000 && (system_byte & (1 << 4)))
+	if ((system_byte & (1 << 4)) && address >= 0x8000)
 	  /* Read from "Expander RAM" */
 	  return &memory[address + 0x8000];
 	else
@@ -1338,7 +1338,7 @@ Uint8 *mem_pointer(int address, int writing)
 	    return &memory[address + bank_base];
 	}
 	if ((system_byte & (1 << 0)) == 0) {
-	  if (address <= 0x2FFF && (system_byte & (1 << 2)) == 0)
+	  if ((system_byte & (1 << 2)) == 0 && address <= 0x2FFF)
 	    return &rom[address];
 	  if (address >= 0x3400 && address <= 0x3FFF)
 	    return trs80_model1_mmio_addr(address, writing);
