@@ -389,11 +389,13 @@ void z80_out(int port, int value)
         stringy_out(port & 7, value);
       break;
     case 0xF8:
-      trs_uart_data_out(value);
+      trs_uart_control_out(value);
       break;
     case 0xF9:
       if (speedup < 4 && trs_rom_size <= 0x2000)
         genie3s_init_out(value);
+      else
+        trs_uart_data_out(value);
       break;
     case 0xFA:
       if (speedup < 4 && trs_rom_size <= 0x2000)
@@ -899,8 +901,11 @@ int z80_in(int port)
       if (stringy)
         value = stringy_in(port & 7);
       goto done;
-    case 0xF9:
+    case 0xF8:
       value = trs_uart_data_in();
+      goto done;
+    case 0xF9:
+      value = trs_uart_status_in();
       goto done;
     case 0xFD:
       /* GENIE location of printer port */
