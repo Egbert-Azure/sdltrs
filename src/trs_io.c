@@ -335,8 +335,9 @@ void z80_out(int port, int value)
       if (selector)
         selector_out(value);
       break;
-    case 0x7E: /* TCS Genie IIs/SpeedMaster 192 RAM B */
-      mem_bank_base(value);
+    case 0x7E: /* TCS Genie IIs/SpeedMaster RAM 192 B */
+      if (speedup == 6)
+        mem_bank_base(value);
       return;
     case 0xB5: /* Orchestra-85 right channel */
       trs_orch90_out(2, value);
@@ -879,7 +880,8 @@ int z80_in(int port)
       value = hrg_read_data();
       goto done;
     case 0x7E: /* TCS Genie IIs/SpeedMaster RAM 192 B */
-      value = mem_read_bank_base();
+      if (speedup == 6)
+        value = mem_read_bank_base();
       goto done;
     case 0xDF:
       if (speedup <= 3 && lubomir == 0) {
