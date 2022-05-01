@@ -52,6 +52,7 @@
 #include "trs_disk.h"
 #include "trs_imp_exp.h"
 #include "trs_state_save.h"
+#include "trs_uart.h"
 
 #define MAX_ROM_SIZE	(0x3800)
 #define MAX_VIDEO_SIZE	(0x0800)
@@ -449,6 +450,7 @@ void trs_reset(int poweron)
     /* Reset devices (Model I SYSRES, Model III/4 RESET) */
     trs_cassette_reset();
     trs_disk_init(poweron); /* also inits trs_hard and trs_stringy */
+    trs_uart_init(poweron);
 
     if (trs_model == 5) {
         /* Switch in boot ROM */
