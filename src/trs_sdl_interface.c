@@ -243,13 +243,13 @@ static void trs_opt_samplerate(char *arg, int intarg, int *stringarg);
 static void trs_opt_scale(char *arg, int intarg, int *stringarg);
 static void trs_opt_scanshade(char *arg, int intarg, int *stringarg);
 static void trs_opt_selector(char *arg, int intarg, int *stringarg);
+static void trs_opt_serial(char *arg, int intarg, int *stringarg);
 static void trs_opt_shiftbracket(char *arg, int intarg, int *stringarg);
 static void trs_opt_sizemap(char *arg, int intarg, int *stringarg);
 static void trs_opt_speedup(char *arg, int intarg, int *stringarg);
 #ifdef __linux
 static void trs_opt_stepmap(char *arg, int intarg, int *stringarg);
 #endif
-static void trs_opt_string(char *arg, int intarg, int *stringarg);
 static void trs_opt_supermem(char *arg, int intarg, int *stringarg);
 static void trs_opt_switches(char *arg, int intarg, int *stringarg);
 static void trs_opt_turborate(char *arg, int intarg, int *stringarg);
@@ -369,16 +369,16 @@ static const struct {
   { "resize3",         trs_opt_value,         0, 1, &resize3             },
   { "resize4",         trs_opt_value,         0, 1, &resize4             },
   { "rom",             trs_opt_rom,           1, 0, NULL                 },
-  { "romfile",         trs_opt_string,        1, 0, romfile              },
-  { "romfile1",        trs_opt_string,        1, 0, romfile              },
-  { "romfile3",        trs_opt_string,        1, 0, romfile3             },
-  { "romfile4p",       trs_opt_string,        1, 0, romfile4p            },
+  { "romfile",         trs_opt_rom,           1, 1, NULL                 },
+  { "romfile1",        trs_opt_rom,           1, 1, NULL                 },
+  { "romfile3",        trs_opt_rom,           1, 3, NULL                 },
+  { "romfile4p",       trs_opt_rom,           1, 5, NULL                 },
   { "samplerate",      trs_opt_samplerate,    1, 0, NULL                 },
   { "scale",           trs_opt_scale,         1, 0, NULL                 },
   { "scanlines",       trs_opt_value,         0, 1, &scanlines           },
   { "scanshade",       trs_opt_scanshade,     1, 0, NULL                 },
   { "selector",        trs_opt_selector,      0, 1, NULL                 },
-  { "serial",          trs_opt_string,        1, 0, trs_uart_name        },
+  { "serial",          trs_opt_serial,        1, 0, NULL                 },
   { "shiftbracket",    trs_opt_shiftbracket,  0, 1, NULL                 },
   { "showled",         trs_opt_value,         0, 1, &trs_show_led        },
   { "sizemap",         trs_opt_sizemap,       1, 0, NULL                 },
@@ -707,7 +707,7 @@ static void trs_opt_model(char *arg, int intarg, int *stringarg)
 
 static void trs_opt_rom(char *arg, int intarg, int *stringarg)
 {
-  switch (trs_model) {
+  switch (intarg ? intarg : trs_model) {
     case 1:
       snprintf(romfile, FILENAME_MAX, "%s", arg);
       break;
@@ -771,6 +771,11 @@ static void trs_opt_selector(char *arg, int intarg, int *stringarg)
     supermem = 0;
 }
 
+static void trs_opt_serial(char *arg, int intarg, int *stringarg)
+{
+  snprintf(trs_uart_name, FILENAME_MAX, "%s", arg);
+}
+
 static void trs_opt_shiftbracket(char *arg, int intarg, int *stringarg)
 {
   trs_kb_bracket(intarg);
@@ -811,11 +816,6 @@ static void trs_opt_speedup(char *arg, int intarg, int *stringarg)
     default:
       error("unknown speedup kit: '%s'", arg);
   }
-}
-
-static void trs_opt_string(char *arg, int intarg, int *stringarg)
-{
-  snprintf((char *)stringarg, FILENAME_MAX, "%s", arg);
 }
 
 static void trs_opt_supermem(char *arg, int intarg, int *stringarg)
