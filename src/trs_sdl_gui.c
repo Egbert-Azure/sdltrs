@@ -2409,15 +2409,15 @@ void trs_gui_joystick_display_map(int button)
       int const map = jbutton_map[pos];
 
       snprintf(text, 12, "%2d:%s", pos,
-          (map == -1)     ? "---     " :
-          (map == GUI)    ? "<GUI>   " :
-          (map == KEYBRD) ? "<KEYBRD>" :
-          (map == SAVE)   ? "<SAVE>  " :
-          (map == LOAD)   ? "<LOAD>  " :
-          (map == RESET)  ? "<RESET> " :
-          (map == EXIT)   ? "<EXIT>  " :
-          (map == PAUSE)  ? "<PAUSE> " :
-          (map == JOYGUI) ? "<JOYGUI>" : trs_gui_get_key_name(map));
+          map == -1     ? "---     " :
+          map == GUI    ? "<GUI>   " :
+          map == KEYBRD ? "<KEYBRD>" :
+          map == SAVE   ? "<SAVE>  " :
+          map == LOAD   ? "<LOAD>  " :
+          map == RESET  ? "<RESET> " :
+          map == EXIT   ? "<EXIT>  " :
+          map == PAUSE  ? "<PAUSE> " :
+          map == JOYGUI ? "<JOYGUI>" : trs_gui_get_key_name(map));
       trs_gui_write_text(text, 2 + col * 12, 11 + row, button == pos);
     }
   }
