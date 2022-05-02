@@ -215,12 +215,6 @@ void z80_out(int port, int value)
       case 0x5B:
         rtc_reg = value;
         break;
-      case 0xD0:
-        trs_uart_data_out(value);
-        break;
-      case 0xD2:
-        trs_uart_control_out(value);
-        break;
       case 0xE0:
       case 0xE1:
       case 0xE2:
@@ -246,7 +240,6 @@ void z80_out(int port, int value)
         trs_disk_data_write(value);
         break;
       case 0xF1:
-        trs_uart_baud_out((value & 0x0F) | ((value & 0x0F) << 4));
         modeimage = value;
         break;
       case 0xF6:
@@ -389,14 +382,9 @@ void z80_out(int port, int value)
       if (stringy)
         stringy_out(port & 7, value);
       break;
-    case 0xF8:
-      trs_uart_control_out(value);
-      break;
     case 0xF9:
       if (speedup < 4 && trs_rom_size <= 0x2000)
         genie3s_init_out(value);
-      else
-        trs_uart_data_out(value);
       break;
     case 0xFA:
       if (speedup < 4 && trs_rom_size <= 0x2000)
@@ -769,12 +757,6 @@ int z80_in(int port)
       case 0x57:
         value = trs_hard_in(TRS_HARD_STATUS);
         break;
-      case 0xD0:
-        value = trs_uart_data_in();
-        break;
-      case 0xD2:
-        value = trs_uart_status_in();
-        break;
       case 0xE0:
       case 0xE1:
       case 0xE2:
@@ -902,12 +884,6 @@ int z80_in(int port)
     case 0xF7:
       if (stringy)
         value = stringy_in(port & 7);
-      goto done;
-    case 0xF8:
-      value = trs_uart_data_in();
-      goto done;
-    case 0xF9:
-      value = trs_uart_status_in();
       goto done;
     case 0xFD:
       /* GENIE location of printer port */
