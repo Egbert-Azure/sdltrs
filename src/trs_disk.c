@@ -67,11 +67,12 @@
 #include "trs_stringy.h"
 #include "trs_state_save.h"
 
-int trs_disk_nocontroller;
 int trs_disk_doubler = TRSDISK_BOTH;
 float trs_disk_holewidth = 0.01;
 int trs_disk_truedam;
 int trs_disk_debug_flags;
+
+static int trs_disk_nocontroller;
 
 typedef struct {
   /* Registers */
