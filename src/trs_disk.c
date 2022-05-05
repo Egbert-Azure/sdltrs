@@ -68,10 +68,10 @@
 #include "trs_state_save.h"
 
 int trs_disk_doubler = TRSDISK_BOTH;
-float trs_disk_holewidth = 0.01;
 int trs_disk_truedam;
 int trs_disk_debug_flags;
 
+static const float trs_disk_holewidth = 0.01;
 static int trs_disk_nocontroller;
 
 typedef struct {
@@ -3814,7 +3814,6 @@ void trs_disk_save(FILE *file)
 
   trs_save_int(file, &trs_disk_nocontroller, 1);
   trs_save_int(file, &trs_disk_doubler, 1);
-  trs_save_float(file, &trs_disk_holewidth, 1);
   trs_save_int(file, &trs_disk_truedam, 1);
   trs_save_int(file, &trs_disk_debug_flags, 1);
 
@@ -3835,7 +3834,6 @@ void trs_disk_load(FILE *file)
   }
   trs_load_int(file, &trs_disk_nocontroller, 1);
   trs_load_int(file, &trs_disk_doubler, 1);
-  trs_load_float(file, &trs_disk_holewidth, 1);
   trs_load_int(file, &trs_disk_truedam, 1);
   trs_load_int(file, &trs_disk_debug_flags, 1);
   trs_fdc_load(file, &state);
