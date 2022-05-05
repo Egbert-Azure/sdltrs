@@ -1791,7 +1791,7 @@ trs_disk_data_write(Uint8 data)
 	} else {
 	  /* We do not have a flag for this; try using CRC error */
 	  d->u.jv3.id[state.format_sec].flags |= JV3_ERROR;
-	  warn("recording false sector ID as CRC error");
+	  error("warning: recording false sector ID as CRC error");
 
 	  /* Write the sector id */
 	  fseek(d->file, idoffset(d, state.format_sec), 0);
@@ -2059,7 +2059,7 @@ trs_disk_data_write(Uint8 data)
 	  trs_disk_unimpl(state.currcommand, "false sector ID (no data)");
 	} else {
 	  /* We do not have a flag for this; try using CRC error */
-	  warn("recording false sector ID as CRC error");
+	  error("warning: recording false sector ID as CRC error");
 	  d->u.jv3.id[state.format_sec].flags |= JV3_ERROR;
 
 	  /* Write the sector id */

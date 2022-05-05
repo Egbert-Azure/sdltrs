@@ -80,14 +80,3 @@ void fatal(const char *fmt, ...)
   exit(EXIT_FAILURE);
 }
 
-void warn(const char *fmt, ...)
-{
-  va_list args;
-
-  fprintf(stderr, "%s warning: ", program_name);
-  va_start(args, fmt);
-  vfprintf(stderr, fmt, args);
-  va_end(args);
-  fputc('\n', stderr);
-  fflush(stderr);
-}
