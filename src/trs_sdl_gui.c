@@ -1915,7 +1915,7 @@ void trs_gui_display_settings(void)
   int selection = 0;
   int value = 0;
   int gui_charset1 = trs_charset1 >= 10 ? trs_charset1 - 6 : trs_charset1;
-  unsigned int rgb_color = 0;
+  int rgb_color = 0;
 
   while (1) {
     snprintf(&menu[0].text[52], 9, "0x%06X", background);
