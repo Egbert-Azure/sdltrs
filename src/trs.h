@@ -72,10 +72,10 @@ extern char trs_state_file[FILENAME_MAX];
 extern int trs_model; /* 1, 3, 4, 5(=4p) */
 extern int eg3200;    /* EACA EG 3200: Genie III */
 extern int genie3s;   /* TCS Genie IIIs */
-extern unsigned int foreground;
-extern unsigned int background;
-extern unsigned int gui_foreground;
-extern unsigned int gui_background;
+extern int foreground;
+extern int background;
+extern int gui_foreground;
+extern int gui_background;
 extern int fullscreen;
 extern int trs_emu_mouse;
 

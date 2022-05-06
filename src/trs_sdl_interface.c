@@ -69,10 +69,10 @@
 #define ALTERNATE 4
 
 /* Public data */
-unsigned int foreground;
-unsigned int background;
-unsigned int gui_foreground;
-unsigned int gui_background;
+int foreground;
+int background;
+int gui_foreground;
+int gui_background;
 int trs_charset;
 int trs_charset1;
 int trs_charset3;
