@@ -1349,7 +1349,6 @@ void trs_screen_init(void)
     fatal("failed to create texture: %s", SDL_GetError());
 
   SDL_RenderSetLogicalSize(render, OrigWidth, OrigHeight);
-  SDL_RenderClear(render);
   SDL_SetWindowFullscreen(window, fullscreen ? SDL_WINDOW_FULLSCREEN_DESKTOP : 0);
   SDL_SetWindowSize(window, OrigWidth * scale, OrigHeight * scale);
   SDL_ShowWindow(window);
@@ -1373,6 +1372,8 @@ void trs_screen_init(void)
   back_color  = SDL_MapRGB(screen->format,
                            colors[0].r, colors[0].g, colors[0].b);
 
+  SDL_SetRenderDrawColor(render, colors[0].r, colors[0].g, colors[0].b, SDL_ALPHA_OPAQUE);
+  SDL_RenderFillRect(render, NULL);
   SDL_SetPaletteColors(image->format->palette, colors, 0, 2);
   TrsBlitMap(image->format->palette, screen->format);
 
