@@ -1042,18 +1042,14 @@ int trs_gui_display_popup(const char *title, const char **entry,
 
   while (1) {
     key = trs_gui_select(entry[selection], x, selection + y);
-    if (num == 1) {
-      switch (key) {
-        case 'n':
-        case 'N':
-          return 0;
-        case 'y':
-        case 'Y':
-          return 1;
-      }
-    }
     if (key >= '0' && key <= 'z') {
       key = toupper(key);
+      if (num == 1) {
+        if (key == 'N')
+          return 0;
+        if (key == 'Y')
+          return 1;
+      }
       for (i = 0; i <= num; i++) {
         if (strchr(entry[i], key)) {
           selection = i;
