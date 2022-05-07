@@ -433,7 +433,7 @@ int trs_gui_select(const char *text, int x, int y)
 
 void trs_gui_display_error(const char *name)
 {
-  if (errno > 0) {
+  if (errno) {
     char text[60];
 
     if (snprintf(text, 60, "%s: %s", strerror(errno), name))
