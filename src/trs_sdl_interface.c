@@ -2810,7 +2810,7 @@ void trs_screen_write_char(int position, Uint8 char_index)
 
   srcRect.x = 0;
   srcRect.y = 0;
-  srcRect.w = cur_char_width * (expanded + 1);
+  srcRect.w = expanded ? cur_char_width * 2 : cur_char_width;
   srcRect.h = cur_char_height;
   dstRect.x = col * cur_char_width + left_margin;
   dstRect.y = row * cur_char_height + top_margin;
@@ -3365,7 +3365,7 @@ void m6845_cursor(int position, int start, int end, int visible)
 
   srcRect.x = 0;
   srcRect.y = start * y_scale;
-  srcRect.w = cur_char_width * (expanded + 1);
+  srcRect.w = expanded ? cur_char_width * 2 : cur_char_width;
   srcRect.h = (end - start) * y_scale + y_scale;
   dstRect.x = col * cur_char_width + left_margin;
   dstRect.y = row * cur_char_height + top_margin + srcRect.y;
