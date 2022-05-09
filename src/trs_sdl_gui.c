@@ -796,7 +796,7 @@ int trs_gui_input_string(const char *title, const char* input, char* output,
   unsigned int first_disp;
 
   if (input != output)
-    snprintf(output, limit + 1, "%s", input);
+    snprintf(output, limit, "%s", input);
 
   pos = len = strlen(output);
 
@@ -882,7 +882,7 @@ redraw:
           char directory[FILENAME_MAX];
 
           if (trs_gui_file_browse(input, directory, NULL, 1, "") >= 0) {
-            snprintf(output, limit + 1, "%s", directory);
+            snprintf(output, limit, "%s", directory);
             pos = len = strlen(output);
           }
           goto redraw;
