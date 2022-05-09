@@ -257,15 +257,14 @@ void trs_gui_limit_string(const char *orig, char *limited, unsigned int limit)
 
 void trs_add_extension(char *name, const char *ext)
 {
-  int const flen = strlen(name);
-  int const elen = strlen(ext);
+  int const len = strlen(name);
 
-  if (flen > elen)
-    if (strcasecmp(&name[flen - elen], ext) == 0)
+  if (len >= 4)
+    if (strcasecmp(&name[len - 4], ext) == 0)
       return;
 
-  if (flen && name[flen - 1] != DIR_SLASH)
-    snprintf(name + flen, FILENAME_MAX - flen, "%s", ext);
+  if (len && name[len - 1] != DIR_SLASH)
+    snprintf(name + len, FILENAME_MAX - len, "%s", ext);
 }
 
 int trs_gui_get_key(void)
