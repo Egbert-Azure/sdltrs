@@ -452,6 +452,33 @@ void trs_reset(int poweron)
     trs_disk_init(poweron); /* also inits trs_hard and trs_stringy */
     trs_uart_init(poweron);
 
+    if (poweron || genie3s || trs_model >= 4) {
+	if (poweron || trs_model >= 4)
+		mem_init();
+	if (genie3s) {
+		/* Reset Interlace Mode */
+		z80_out(0xF6, 0x08);
+		z80_out(0xF7, 0x00);
+	}
+	/* Blank Video */
+	memset(&video, ' ', MAX_VIDEO_SIZE);
+	trs_screen_reset();
+	trs_screen_init();
+	if (trs_show_led) {
+	  trs_disk_led(-1, -1);
+	  trs_hard_led(-1, -1);
+	}
+	trs_rom_init();
+	trs_timer_init();
+        /* Reset processor */
+	z80_reset();
+    } else {
+	trs_timer_speed(0);
+	/* Signal a nonmaskable interrupt. */
+	trs_reset_button_interrupt(1);
+	trs_schedule_event(trs_reset_button_interrupt, 0, 2000);
+	trs_screen_refresh();
+    }
     if (trs_model == 5) {
         /* Switch in boot ROM */
 	z80_out(0x9C, 1);
@@ -483,33 +510,6 @@ void trs_reset(int poweron)
 
     trs_cancel_event();
     trs_timer_interrupt(0);
-    if (poweron || genie3s || trs_model >= 4) {
-	if (genie3s) {
-		/* Reset Interlace Mode */
-		z80_out(0xF6, 0x08);
-		z80_out(0xF7, 0x00);
-	}
-        /* Reset processor */
-	z80_reset();
-	if (poweron || trs_model >= 4)
-		mem_init();
-	/* Blank Video */
-	memset(&video, ' ', MAX_VIDEO_SIZE);
-	trs_rom_init();
-	trs_screen_reset();
-	trs_screen_init();
-	trs_timer_init();
-	if (trs_show_led) {
-	  trs_disk_led(-1, -1);
-	  trs_hard_led(-1, -1);
-	}
-    } else {
-	/* Signal a nonmaskable interrupt. */
-	trs_reset_button_interrupt(1);
-	trs_schedule_event(trs_reset_button_interrupt, 0, 2000);
-	trs_screen_refresh();
-	trs_timer_speed(0);
-    }
 }
 
 void mem_map(int which)
