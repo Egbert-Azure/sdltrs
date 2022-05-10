@@ -502,7 +502,6 @@ void trs_reset(int poweron)
 	if (trs_show_led) {
 	  trs_disk_led(-1, -1);
 	  trs_hard_led(-1, -1);
-	  trs_turbo_led();
 	}
     } else {
 	/* Signal a nonmaskable interrupt. */
