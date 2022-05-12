@@ -441,16 +441,16 @@ void z80_out(int port, int value)
       trs_orch90_out(1, value);
       break;
     case 0x80:
-      if (trs_model >= 3) grafyx_write_x(value);
+      grafyx_write_x(value);
       break;
     case 0x81:
-      if (trs_model >= 3) grafyx_write_y(value);
+      grafyx_write_y(value);
       break;
     case 0x82:
-      if (trs_model >= 3) grafyx_write_data(value);
+      grafyx_write_data(value);
       break;
     case 0x83:
-      if (trs_model >= 3) grafyx_write_mode(value);
+      grafyx_write_mode(value);
       break;
     case 0x84:
     case 0x85:
@@ -902,11 +902,8 @@ int z80_in(int port)
     /* Models III/4/4P only */
     switch (port) {
     case 0x82:
-      if (trs_model >= 3) {
-	value = grafyx_read_data();
-	goto done;
-      }
-      break;
+      value = grafyx_read_data();
+      goto done;
     case 0x94: /* Huffman memory expansion */
       value = mem_read_bank_base();
       goto done;
