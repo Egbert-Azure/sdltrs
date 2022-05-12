@@ -211,9 +211,10 @@ void do_emt_open(void)
   if (eoflag & EO_TRUNC)  oflag |= O_TRUNC;
   if (eoflag & EO_APPEND) oflag |= O_APPEND;
 
-  if (emt_block("open") && oflag != O_RDONLY)
-    return;
-
+  if (trs_emtsafe && oflag != O_RDONLY) {
+    if (emt_block("open"))
+      return;
+  }
   fd = open((char *)mem_pointer(Z80_HL, 0), oflag, Z80_DE);
   if (fd >= 0) {
     Z80_A = 0;
