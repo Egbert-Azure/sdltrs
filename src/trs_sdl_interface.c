@@ -187,11 +187,11 @@ static unsigned int cycles_saved;
 #define G_MSIZE (2 * G_YSIZE * MAX_SCALE) * (G_XSIZE * MAX_SCALE)
 static Uint8 grafyx[G_MSIZE];
 static Uint8 grafyx_unscaled[G_YSIZE][G_XSIZE];
-static Uint8 grafyx_microlabs;
-static Uint8 grafyx_x, grafyx_y, grafyx_mode;
-static Uint8 grafyx_enable;
-static Uint8 grafyx_overlay;
-static Uint8 grafyx_xoffset, grafyx_yoffset;
+static int grafyx_microlabs;
+static int grafyx_x, grafyx_y, grafyx_mode;
+static int grafyx_enable;
+static int grafyx_overlay;
+static int grafyx_xoffset, grafyx_yoffset;
 
 /* Port 0x83 (grafyx_mode) bits */
 #define G_ENABLE    1
@@ -3062,8 +3062,8 @@ int grafyx_read_data(void)
 
 void grafyx_write_mode(int value)
 {
-  const Uint8 old_enable = grafyx_enable;
-  const Uint8 old_overlay = grafyx_overlay;
+  int const old_enable = grafyx_enable;
+  int const old_overlay = grafyx_overlay;
 
   grafyx_enable = value & G_ENABLE;
   if (grafyx_microlabs)
@@ -3077,7 +3077,7 @@ void grafyx_write_mode(int value)
 
 void grafyx_write_xoffset(int value)
 {
-  const Uint8 old_xoffset = grafyx_xoffset;
+  int const old_xoffset = grafyx_xoffset;
 
   grafyx_xoffset = value % G_XSIZE;
   if (grafyx_enable && old_xoffset != grafyx_xoffset)
@@ -3086,7 +3086,7 @@ void grafyx_write_xoffset(int value)
 
 void grafyx_write_yoffset(int value)
 {
-  const Uint8 old_yoffset = grafyx_yoffset;
+  int const old_yoffset = grafyx_yoffset;
 
   grafyx_yoffset = value;
   if (grafyx_enable && old_yoffset != grafyx_yoffset)
@@ -3095,7 +3095,7 @@ void grafyx_write_yoffset(int value)
 
 void grafyx_write_overlay(int value)
 {
-  const Uint8 old_overlay = grafyx_overlay;
+  int const old_overlay = grafyx_overlay;
 
   grafyx_overlay = value & 1;
   if (grafyx_enable && old_overlay != grafyx_overlay) {
@@ -3559,13 +3559,13 @@ void trs_main_save(FILE *file)
     trs_save_uint8(file, char_ram[i], MAX_CHAR_HEIGHT);
   for (i = 0; i < G_YSIZE; i++)
     trs_save_uint8(file, grafyx_unscaled[i], G_XSIZE);
-  trs_save_uint8(file, &grafyx_x, 1);
-  trs_save_uint8(file, &grafyx_y, 1);
-  trs_save_uint8(file, &grafyx_enable, 1);
-  trs_save_uint8(file, &grafyx_overlay, 1);
-  trs_save_uint8(file, &grafyx_xoffset, 1);
-  trs_save_uint8(file, &grafyx_yoffset, 1);
-  trs_save_uint8(file, &grafyx_x, 1);
+  trs_save_int(file, &grafyx_x, 1);
+  trs_save_int(file, &grafyx_y, 1);
+  trs_save_int(file, &grafyx_enable, 1);
+  trs_save_int(file, &grafyx_overlay, 1);
+  trs_save_int(file, &grafyx_xoffset, 1);
+  trs_save_int(file, &grafyx_yoffset, 1);
+  trs_save_int(file, &grafyx_x, 1);
   trs_save_uint8(file, hrg_screen, HRG_MEMSIZE);
   trs_save_int(file, &hrg_enable, 1);
   trs_save_int(file, &hrg_addr, 1);
@@ -3599,13 +3599,13 @@ void trs_main_load(FILE *file)
     trs_load_uint8(file, char_ram[i], MAX_CHAR_HEIGHT);
   for (i = 0; i < G_YSIZE; i++)
     trs_load_uint8(file, grafyx_unscaled[i], G_XSIZE);
-  trs_load_uint8(file, &grafyx_x, 1);
-  trs_load_uint8(file, &grafyx_y, 1);
-  trs_load_uint8(file, &grafyx_enable, 1);
-  trs_load_uint8(file, &grafyx_overlay, 1);
-  trs_load_uint8(file, &grafyx_xoffset, 1);
-  trs_load_uint8(file, &grafyx_yoffset, 1);
-  trs_load_uint8(file, &grafyx_x, 1);
+  trs_load_int(file, &grafyx_x, 1);
+  trs_load_int(file, &grafyx_y, 1);
+  trs_load_int(file, &grafyx_enable, 1);
+  trs_load_int(file, &grafyx_overlay, 1);
+  trs_load_int(file, &grafyx_xoffset, 1);
+  trs_load_int(file, &grafyx_yoffset, 1);
+  trs_load_int(file, &grafyx_x, 1);
   trs_load_uint8(file, hrg_screen, HRG_MEMSIZE);
   trs_load_int(file, &hrg_enable, 1);
   trs_load_int(file, &hrg_addr, 1);
