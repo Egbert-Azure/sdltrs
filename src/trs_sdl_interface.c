@@ -3459,11 +3459,11 @@ void trs_main_save(FILE *file)
     trs_save_uint8(file, grafyx_unscaled[i], G_XSIZE);
   trs_save_int(file, &grafyx_x, 1);
   trs_save_int(file, &grafyx_y, 1);
+  trs_save_int(file, &grafyx_mode, 1);
   trs_save_int(file, &grafyx_enable, 1);
   trs_save_int(file, &grafyx_overlay, 1);
   trs_save_int(file, &grafyx_xoffset, 1);
   trs_save_int(file, &grafyx_yoffset, 1);
-  trs_save_int(file, &grafyx_x, 1);
   trs_save_uint8(file, hrg_screen, HRG_MEMSIZE);
   trs_save_int(file, &hrg_enable, 1);
   trs_save_int(file, &hrg_addr, 1);
@@ -3499,11 +3499,11 @@ void trs_main_load(FILE *file)
     trs_load_uint8(file, grafyx_unscaled[i], G_XSIZE);
   trs_load_int(file, &grafyx_x, 1);
   trs_load_int(file, &grafyx_y, 1);
+  trs_load_int(file, &grafyx_mode, 1);
   trs_load_int(file, &grafyx_enable, 1);
   trs_load_int(file, &grafyx_overlay, 1);
   trs_load_int(file, &grafyx_xoffset, 1);
   trs_load_int(file, &grafyx_yoffset, 1);
-  trs_load_int(file, &grafyx_x, 1);
   trs_load_uint8(file, hrg_screen, HRG_MEMSIZE);
   trs_load_int(file, &hrg_enable, 1);
   trs_load_int(file, &hrg_addr, 1);
