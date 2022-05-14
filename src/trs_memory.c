@@ -748,11 +748,11 @@ int mem_read(int address)
 
       case 0x30: /* Model III */
 	if (address >= RAM_START) return memory[address];
-	if (address == PRINTER_ADDRESS)	return trs_printer_read();
-	if (address < trs_rom_size) return rom[address];
 	if (address >= VIDEO_START) {
 	  return grafyx_m3_read_byte(address - VIDEO_START);
 	}
+	if (address < trs_rom_size) return rom[address];
+	if (address == PRINTER_ADDRESS)	return trs_printer_read();
 	if (address >= KEYBOARD_START) return trs_kb_mem_read(address);
 	return 0xff;
 
@@ -760,9 +760,9 @@ int mem_read(int address)
 	if (address >= RAM_START) {
 	    return memory[address + bank_offset[address >> 15]];
 	}
-	if (address == PRINTER_ADDRESS) return trs_printer_read();
-	if (address < trs_rom_size) return rom[address];
 	if (address >= VIDEO_START) return video[address - video_ram];
+	if (address < trs_rom_size) return rom[address];
+	if (address == PRINTER_ADDRESS) return trs_printer_read();
 	if (address >= KEYBOARD_START) return trs_kb_mem_read(address);
 	return 0xff;
 
@@ -1363,8 +1363,8 @@ Uint8 *mem_pointer(int address, int writing)
 	if (address >= RAM_START) {
 	    return &memory[address + bank_offset[address >> 15]];
 	}
-	if (address < trs_rom_size) return &rom[address];
 	if (address >= VIDEO_START) return &video[address - video_ram];
+	if (address < trs_rom_size) return &rom[address];
 	return NULL;
 
       case 0x48: /* Model 4 map 0 writing */
