@@ -161,6 +161,18 @@ void z80_out(int port, int value)
       case 0x4F:
         trs_hard_out(TRS_HARD_COMMAND, value);
         break;
+      case 0x80: /* Genie III VideoExtension HRG */
+        grafyx_write_x(value);
+        break;
+      case 0x81: /* Genie III VideoExtension HRG */
+        grafyx_write_y(value);
+        break;
+      case 0x82: /* Genie III VideoExtension HRG */
+        grafyx_write_data(value);
+        break;
+      case 0x83: /* Genie III VideoExtension HRG */
+        grafyx_write_mode(value);
+        break;
       case 0xE0:
         rtc_reg = value;
         break;
@@ -710,6 +722,12 @@ int z80_in(int port)
         break;
       case 0x4F:
         value = trs_hard_in(TRS_HARD_STATUS);
+        break;
+      case 0x82: /* Genie III VideoExtension HRG */
+        value = grafyx_read_data();
+        break;
+      case 0x83: /* Genie III VideoExtension HRG */
+        value = grafyx_read_mode();
         break;
       case 0xF7:
         switch (ctrlimage) {

@@ -243,6 +243,7 @@ void grafyx_write_y(int value);
 void grafyx_write_data(int value);
 int grafyx_read_data(void);
 void grafyx_write_mode(int value);
+int grafyx_read_mode(void);
 void grafyx_write_xoffset(int value);
 void grafyx_write_yoffset(int value);
 void grafyx_write_overlay(int value);
