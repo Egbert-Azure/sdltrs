@@ -663,10 +663,8 @@ int mem_read(int address)
 	  return memory[address];
       case 0x23: /* EG 3200: bit set to 0 => bank enabled */
 	/* Bit 0 - Bank 1: ROM/EPROM */
-	if ((eg3200 & (1 << 0)) == 0) {
-	  if (address < trs_rom_size)
-	    return rom[address];
-	}
+	if ((eg3200 & (1 << 0)) == 0 && address < trs_rom_size)
+	  return rom[address];
 	/* Bit 1 - Bank 2: Video Memory 0 (1k, 64x16, TRS-80 M1 compatible) */
 	if ((eg3200 & (1 << 1)) == 0) {
 	  if (address >= VIDEO_START && address <= 0x3FFF)
@@ -702,14 +700,12 @@ int mem_read(int address)
 	  if (address >= 0x37E0 && address <= 0x37EF)
 	    return trs80_model1_mmio(address);
 	}
-	if ((system_byte & (1 << 2)) == 0) {
-	  if (address <= 0x2FFF)
-	    return rom[address];
-	}
-	if (system_byte & (1 << 3)) {
-	  if (address >= 0x8000)
-	    return genie3s_hrg_read(address - 0x8000);
-	}
+	/* ROM/EPROM */
+	if ((system_byte & (1 << 2)) == 0 && address <= 0x2FFF)
+	  return rom[address];
+	/* HRG */
+	if ((system_byte & (1 << 3)) && address >= 0x8000)
+	  return genie3s_hrg_read(address - 0x8000);
 	/* "Constant bit" points to Bank 0 */
 	if ((address <= 0x3FFF && (genie3s & (1 << 0)) == 0) ||
 	    (address >= 0xE000 && (genie3s & (1 << 0))))
@@ -727,17 +723,14 @@ int mem_read(int address)
 	  return trs80_model1_mmio(address);
       case 0x26: /* TCS Genie IIs/SpeedMaster */
 	/* Expansions bit */
-	if (system_byte & (1 << 7)) {
-	  if (address <= 0xBFFF)
-	    return memory[address + bank_base];
-	}
+	if ((system_byte & (1 << 7)) && address <= 0xBFFF)
+	  return memory[address + bank_base];
 	/* HRG in low 16K */
-	if (system_byte & (1 << 3)) {
-	  if (address <= 0x3FFF) {
-	    hrg_write_addr(address, 0x3FFF);
-	    return hrg_read_data();
-	  }
+	if ((system_byte & (1 << 3)) && address <= 0x3FFF) {
+	  hrg_write_addr(address, 0x3FFF);
+	  return hrg_read_data();
 	}
+	/* ROM and MMIO */
 	if ((system_byte & (1 << 0)) == 0) {
 	  if ((system_byte & (1 << 2)) == 0 && address <= 0x2FFF)
 	    return rom[address];
@@ -1021,17 +1014,14 @@ void mem_write(int address, int value)
 	    return;
 	  }
 	}
-	if (system_byte & (1 << 3)) {
-	  if (address >= 0x8000) {
-	    genie3s_hrg_write(address - 0x8000, value);
-	    return;
-	  }
+	/* HRG */
+	if ((system_byte & (1 << 3)) && address >= 0x8000) {
+	  genie3s_hrg_write(address - 0x8000, value);
+	  return;
 	}
 	/* Write protect "Pseudo-ROM" */
-	if (system_byte & (1 << 5)) {
-	  if (address <= 0x2FFF)
-	    return;
-	}
+	if ((system_byte & (1 << 5)) && address <= 0x2FFF)
+	  return;
 	/* Write to Font-SRAM */
 	if (genie3s & (1 << 1)) {
 	  if (address >= 0x8000) {
@@ -1061,25 +1051,20 @@ void mem_write(int address, int value)
 	return;
       case 0x26: /* TCS Genie IIs/SpeedMaster */
 	/* Expansions bit */
-	if (system_byte & (1 << 7)) {
-	  if (address <= 0xBFFF) {
-	    memory[address + bank_base] = value;
-	    return;
-	  }
+	if ((system_byte & (1 << 7)) && address <= 0xBFFF) {
+	  memory[address + bank_base] = value;
+	  return;
 	}
 	/* HRG in low 16K */
-	if (system_byte & (1 << 3)) {
-	  if (address <= 0x3FFF) {
-	    hrg_write_addr(address, 0x3FFF);
-	    hrg_write_data(value);
-	    return;
-	  }
+	if ((system_byte & (1 << 3)) && address <= 0x3FFF) {
+	  hrg_write_addr(address, 0x3FFF);
+	  hrg_write_data(value);
+	  return;
 	}
 	/* Write protect "Pseudo-ROM" */
-	if (system_byte & (1 << 5)) {
-	  if (address <= 0x2FFF)
-	    return;
-	}
+	if ((system_byte & (1 << 5)) && address <= 0x2FFF)
+	  return;
+	/* MMIO */
 	if ((system_byte & (1 << 0)) == 0) {
 	  if (address >= 0x3400 && address <= 0x3FFF) {
 	    trs80_model1_write_mmio(address, value);
@@ -1285,10 +1270,8 @@ Uint8 *mem_pointer(int address, int writing)
       case 0x23: /* EG 3200: bit set to 0 => bank enabled */
       case 0x2B:
 	/* Bit 0 - Bank 1: ROM/EPROM */
-	if ((eg3200 & (1 << 0)) == 0) {
-	  if (address < trs_rom_size)
-	    return &rom[address];
-	}
+	if ((eg3200 & (1 << 0)) == 0 && address < trs_rom_size)
+	  return &rom[address];
 	/* Bit 1 - Bank 2: Video Memory 0 (1k, 64x16, TRS-80 M1 compatible) */
 	if ((eg3200 & (1 << 1)) == 0) {
 	  if (address >= VIDEO_START && address <= 0x3FFF)
@@ -1313,10 +1296,9 @@ Uint8 *mem_pointer(int address, int writing)
 	      return &video[(address - video_ram) & 0x7FF];
 	  }
 	}
-	if ((system_byte & (1 << 2)) == 0) {
-	  if (address <= 0x2FFF)
-	    return &rom[address];
-	}
+	/* ROM */
+	if ((system_byte & (1 << 2)) == 0 && address <= 0x2FFF)
+	  return &rom[address];
 	/* "Constant bit" points to Bank 0 */
 	if ((address <= 0x3FFF && (genie3s & (1 << 0)) == 0) ||
 	    (address >= 0xE000 && (genie3s & (1 << 0))))
@@ -1335,10 +1317,9 @@ Uint8 *mem_pointer(int address, int writing)
       case 0x26: /* TCS Genie IIs/SpeedMaster */
       case 0x2E:
 	/* Expansions bit */
-	if (system_byte & (1 < 7)) {
-	  if (address <= 0xBFFF)
-	    return &memory[address + bank_base];
-	}
+	if ((system_byte & (1 < 7)) && address <= 0xBFFF)
+	  return &memory[address + bank_base];
+	/* ROM and MMIO */
 	if ((system_byte & (1 << 0)) == 0) {
 	  if ((system_byte & (1 << 2)) == 0 && address <= 0x2FFF)
 	    return &rom[address];
