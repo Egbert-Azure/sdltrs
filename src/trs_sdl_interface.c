@@ -2923,6 +2923,10 @@ void grafyx_write_x(int value)
 
 void grafyx_write_y(int value)
 {
+  /* Genie III VideoExtension HRG */
+  if (eg3200 && grafyx_x & 0x80)
+    value |= 1 << 8; /* Y MSB in X-Reg */
+
   grafyx_y = value;
 }
 
@@ -2968,13 +2972,22 @@ void grafyx_write_mode(int value)
   int const old_overlay = grafyx_overlay;
 
   grafyx_enable = value & G_ENABLE;
-  if (grafyx_microlabs)
+  if (eg3200) /* Genie III VideoExtension HRG */
+    grafyx_overlay = grafyx_enable;
+  else if (grafyx_microlabs)
     grafyx_overlay = (value & G_UL_NOTEXT) == 0;
   grafyx_mode = value;
-  trs_screen_640x240((grafyx_enable && !grafyx_overlay) || text80x24);
+  if (trs_model >= 3)
+    trs_screen_640x240((grafyx_enable && !grafyx_overlay) || text80x24);
   if (old_enable != grafyx_enable ||
       (grafyx_enable && old_overlay != grafyx_overlay))
     trs_screen_refresh();
+}
+
+int grafyx_read_mode(void)
+{
+  /* Genie III VideoExtension HRG */
+  return grafyx_mode;
 }
 
 void grafyx_write_xoffset(int value)
