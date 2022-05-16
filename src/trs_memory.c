@@ -463,7 +463,7 @@ void trs_reset(int poweron)
 	/* Blank Video */
 	memset(&video, ' ', MAX_VIDEO_SIZE);
 	trs_screen_reset();
-	trs_screen_init();
+	trs_screen_init(1);
 	if (trs_show_led) {
 	  trs_disk_led(-1, -1);
 	  trs_hard_led(-1, -1);

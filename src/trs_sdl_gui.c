@@ -2032,7 +2032,7 @@ void trs_gui_display_settings(void)
         if (value != scale) {
           scale = value;
           fullscreen = 0;
-          redraw = 1;
+          trs_screen_init(1);
         }
         break;
       case 11:
@@ -2062,7 +2062,7 @@ void trs_gui_display_settings(void)
     }
 
     if (redraw) {
-      trs_screen_init();
+      trs_screen_init(0);
       redraw = 0;
     }
   }
@@ -2194,7 +2194,7 @@ int trs_gui_load_state(void)
   if (trs_gui_file_browse(trs_state_dir, filename, ".t8s", 0,
       "State (.t8s)") >= 0) {
     if (trs_state_load(filename) == 0) {
-      trs_screen_init();
+      trs_screen_init(1);
       return 0;
     } else
       trs_gui_display_error(filename);

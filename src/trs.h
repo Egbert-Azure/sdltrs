@@ -91,7 +91,7 @@ extern int trs_write_config_file(const char *filename);
 extern int trs_load_cmd(const char *filename);
 extern int trs_load_config_file(void);
 
-extern void trs_screen_init(void);
+extern void trs_screen_init(int resize);
 extern void trs_screen_reset(void);
 extern void trs_rom_init(void);
 extern void trs_screen_write_char(int position, Uint8 char_index);

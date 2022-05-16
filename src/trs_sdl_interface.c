@@ -119,7 +119,7 @@ static int scale_factor = 2;
 static int m6845_raster = 12;
 static int window_scale;
 static int y_scale = 2;
-static int resize;
+static int trs_resize;
 static int text80x24, screen640x240;
 static int drawnRectCount;
 static int top_margin;
@@ -1228,7 +1228,7 @@ void trs_screen_caption(void)
 #endif
 }
 
-void trs_screen_init(void)
+void trs_screen_init(int resize)
 {
   int led_height;
   int x, y;
@@ -1249,11 +1249,11 @@ void trs_screen_init(void)
     case 3:
       trs_charset = trs_charset3;
       currentmode = NORMAL;
-           resize = resize3;
+       trs_resize = resize3;
       break;
     default:
       trs_charset = trs_charset4;
-           resize = resize4;
+       trs_resize = resize4;
   }
 
   y_scale = scale * scale_factor;
@@ -1280,7 +1280,7 @@ void trs_screen_init(void)
   border_width = fullscreen ? 0 : window_border_width;
   led_height = trs_show_led ? (8 * scale) : 0;
 
-  if (trs_model >= 3 && !resize) {
+  if (trs_model >= 3 && !trs_resize) {
     OrigWidth = cur_char_width * 80 + 2 * border_width;
     left_margin = cur_char_width * (80 - row_chars) / 2 + border_width;
     OrigHeight = TRS_CHAR_HEIGHT4 * y_scale * 24 + 2 * border_width + led_height;
@@ -1313,17 +1313,21 @@ void trs_screen_init(void)
     if (window == NULL)
       fatal("failed to create window: %s", SDL_GetError());
   }
-  SDL_SetWindowFullscreen(window, fullscreen ? SDL_WINDOW_FULLSCREEN : 0);
-  SDL_SetWindowSize(window, OrigWidth, OrigHeight);
+  if (resize) {
+    SDL_SetWindowFullscreen(window, fullscreen ? SDL_WINDOW_FULLSCREEN : 0);
+    SDL_SetWindowSize(window, OrigWidth, OrigHeight);
+  }
   screen = SDL_GetWindowSurface(window);
   if (screen == NULL)
     fatal("failed to get window surface: %s", SDL_GetError());
 #else
-  screen = SDL_SetVideoMode(OrigWidth, OrigHeight, 0, fullscreen ?
+  if (resize) {
+    screen = SDL_SetVideoMode(OrigWidth, OrigHeight, 0, fullscreen ?
                             SDL_ANYFORMAT | SDL_FULLSCREEN : SDL_ANYFORMAT);
-  if (screen == NULL)
-    fatal("failed to set video mode: %s", SDL_GetError());
-  SDL_WarpMouse(OrigWidth / 2, OrigHeight / 2);
+    if (screen == NULL)
+      fatal("failed to set video mode: %s", SDL_GetError());
+    SDL_WarpMouse(OrigWidth / 2, OrigHeight / 2);
+  }
 #endif
   SDL_ShowCursor(mousepointer ? SDL_ENABLE : SDL_DISABLE);
 
@@ -1719,7 +1723,7 @@ static void trs_flip_fullscreen(void)
   } else
     scale = window_scale;
 
-  trs_screen_init();
+  trs_screen_init(1);
 }
 
 /*
@@ -1940,21 +1944,21 @@ void trs_get_event(int wait)
             case SDLK_HOME:
               fullscreen = 0;
               scale = 1;
-              trs_screen_init();
+              trs_screen_init(1);
               break;
             case SDLK_PAGEDOWN:
               fullscreen = 0;
               scale++;
               if (scale > MAX_SCALE)
                 scale = 1;
-              trs_screen_init();
+              trs_screen_init(1);
               break;
             case SDLK_PAGEUP:
               fullscreen = 0;
               scale--;
               if (scale < 1)
                 scale = MAX_SCALE;
-              trs_screen_init();
+              trs_screen_init(1);
               break;
             case SDLK_MINUS:
             case SDLK_8:
@@ -1982,7 +1986,7 @@ void trs_get_event(int wait)
               break;
             case SDLK_b:
               trs_show_led = !trs_show_led;
-              trs_screen_init();
+              trs_screen_init(1);
               break;
             case SDLK_d:
             case SDLK_f:
@@ -2429,8 +2433,8 @@ static void trs_screen_640x240(int flag)
     cur_char_height = TRS_CHAR_HEIGHT * y_scale;
   }
   screen_chars = row_chars * col_chars;
-  if (resize)
-    trs_screen_init();
+  if (trs_resize)
+    trs_screen_init(1);
   else {
     left_margin = cur_char_width * (80 - row_chars) / 2 + border_width;
     top_margin = (TRS_CHAR_HEIGHT4 * y_scale * 24 -
@@ -3298,7 +3302,7 @@ hrg_onoff(int enable)
 
   if (speedup > 4) {
     memset(grafyx_unscaled, 0, G_YSIZE * G_XSIZE);
-    trs_screen_init();
+    trs_screen_init(1);
   } else
     trs_screen_refresh();
 }
@@ -3409,7 +3413,7 @@ void m6845_screen(int chars, int lines, int raster, int factor)
     screen_chars = row_chars * col_chars;
     if (screen_chars > 2048)
       screen_chars = 2048;
-    trs_screen_init();
+    trs_screen_init(1);
   }
 }
 
