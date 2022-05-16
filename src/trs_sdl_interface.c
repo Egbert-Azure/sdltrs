@@ -116,7 +116,7 @@ static int col_chars = 16;
 static int border_width = 2;
 static int scale_factor = 2;
 static int m6845_raster = 12;
-static int resize;
+static int trs_resize;
 static int text80x24, screen640x240;
 static int drawnRectCount;
 static int top_margin;
@@ -1225,7 +1225,7 @@ void trs_screen_caption(void)
   SDL_SetWindowTitle(window, title);
 }
 
-void trs_screen_init(void)
+void trs_screen_init(int resize)
 {
   int led_height;
   SDL_Color colors[2];
@@ -1248,11 +1248,11 @@ void trs_screen_init(void)
     case 3:
       trs_charset = trs_charset3;
       currentmode = NORMAL;
-           resize = resize3;
+       trs_resize = resize3;
       break;
     default:
       trs_charset = trs_charset4;
-           resize = resize4;
+       trs_resize = resize4;
   }
 
   if (trs_model == 1) {
@@ -1277,7 +1277,7 @@ void trs_screen_init(void)
   border_width = fullscreen ? 0 : window_border_width;
   led_height = trs_show_led ? 8 : 0;
 
-  if (trs_model >= 3 && !resize) {
+  if (trs_model >= 3 && !trs_resize) {
     OrigWidth = cur_char_width * 80 + 2 * border_width;
     left_margin = cur_char_width * (80 - row_chars) / 2 + border_width;
     OrigHeight = TRS_CHAR_HEIGHT4 * 2 * 24 + 2 * border_width + led_height;
@@ -1348,8 +1348,10 @@ void trs_screen_init(void)
     fatal("failed to create texture: %s", SDL_GetError());
 
   SDL_RenderSetLogicalSize(render, OrigWidth, OrigHeight);
-  SDL_SetWindowFullscreen(window, fullscreen ? SDL_WINDOW_FULLSCREEN_DESKTOP : 0);
-  SDL_SetWindowSize(window, OrigWidth * scale, OrigHeight * scale);
+  if (resize) {
+    SDL_SetWindowFullscreen(window, fullscreen ? SDL_WINDOW_FULLSCREEN_DESKTOP : 0);
+    SDL_SetWindowSize(window, OrigWidth * scale, OrigHeight * scale);
+  }
   SDL_ShowWindow(window);
   SDL_ShowCursor(mousepointer ? SDL_ENABLE : SDL_DISABLE);
 
@@ -1954,7 +1956,7 @@ void trs_get_event(int wait)
               break;
             case SDLK_b:
               trs_show_led = !trs_show_led;
-              trs_screen_init();
+              trs_screen_init(1);
               break;
             case SDLK_d:
             case SDLK_f:
@@ -2379,8 +2381,8 @@ static void trs_screen_640x240(int flag)
     cur_char_height = TRS_CHAR_HEIGHT * 2;
   }
   screen_chars = row_chars * col_chars;
-  if (resize)
-    trs_screen_init();
+  if (trs_resize)
+    trs_screen_init(1);
   else {
     left_margin = cur_char_width * (80 - row_chars) / 2 + border_width;
     top_margin = (TRS_CHAR_HEIGHT4 * 2 * 24 -
@@ -3200,7 +3202,7 @@ hrg_onoff(int enable)
 
   if (speedup > 4) {
     memset(grafyx, 0, G_YSIZE * G_XSIZE);
-    trs_screen_init();
+    trs_screen_init(1);
   } else
     trs_screen_refresh();
 }
@@ -3311,7 +3313,7 @@ void m6845_screen(int chars, int lines, int raster, int factor)
     screen_chars = row_chars * col_chars;
     if (screen_chars > 2048)
       screen_chars = 2048;
-    trs_screen_init();
+    trs_screen_init(1);
   }
 }
 

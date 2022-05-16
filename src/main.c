@@ -283,7 +283,7 @@ int main(int argc, char *argv[])
 
   if (trs_state_file[0]) {
     trs_state_load(trs_state_file);
-    trs_screen_init();
+    trs_screen_init(1);
   }
   if (trs_cmd_file[0])
     trs_load_cmd(trs_cmd_file);
