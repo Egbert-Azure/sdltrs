@@ -143,6 +143,10 @@ static SDL_Surface *screen;
 static SDL_Window *window;
 static SDL_Renderer *render;
 static SDL_Texture *texture;
+static int window_x = SDL_WINDOWPOS_UNDEFINED;
+static int window_y = SDL_WINDOWPOS_UNDEFINED;
+static int window_w;
+static int window_h;
 static Uint32 light_red;
 static Uint32 bright_red;
 static Uint32 light_orange;
@@ -250,6 +254,7 @@ static void trs_opt_switches(char *arg, int intarg, int *stringarg);
 static void trs_opt_turborate(char *arg, int intarg, int *stringarg);
 static void trs_opt_value(char *arg, int intarg, int *variable);
 static void trs_opt_wafer(char *arg, int intarg, int *stringarg);
+static void trs_opt_window(char *arg, int intarg, int *stringarg);
 
 /* Option handling */
 static const struct {
@@ -397,6 +402,7 @@ static const struct {
   { "wafer5",          trs_opt_wafer,         1, 5, NULL                 },
   { "wafer6",          trs_opt_wafer,         1, 6, NULL                 },
   { "wafer7",          trs_opt_wafer,         1, 7, NULL                 },
+  { "window",          trs_opt_window,        1, 0, NULL                 },
 };
 
 static const int num_options = sizeof(options) / sizeof(options[0]);
@@ -855,6 +861,11 @@ static void trs_opt_wafer(char *arg, int intarg, int *stringarg)
     stringy_insert(intarg, arg);
 }
 
+static void trs_opt_window(char *arg, int intarg, int *stringag)
+{
+  sscanf(arg, "%d,%d,%d,%d", &window_x, &window_y, &window_w, &window_h);
+}
+
 static void trs_disk_setsizes(void)
 {
   int i;
@@ -1170,6 +1181,7 @@ int trs_write_config_file(const char *filename)
   for (i = 0; i < 8; i++) {
     fprintf(config_file, "wafer%d=%s\n", i, stringy_get_name(i));
   }
+  fprintf(config_file, "window=%d,%d,%d,%d\n", window_x, window_y, window_w, window_h);
 
   fclose(config_file);
   return 0;
@@ -1299,8 +1311,7 @@ void trs_screen_init(int resize)
 
   if (window == NULL) {
     window = SDL_CreateWindow(NULL,
-                              SDL_WINDOWPOS_UNDEFINED,
-                              SDL_WINDOWPOS_UNDEFINED,
+                              window_x, window_y,
                               800, 600,
                               SDL_WINDOW_HIDDEN|SDL_WINDOW_RESIZABLE);
     if (window == NULL)
@@ -1350,7 +1361,11 @@ void trs_screen_init(int resize)
   SDL_RenderSetLogicalSize(render, OrigWidth, OrigHeight);
   if (resize) {
     SDL_SetWindowFullscreen(window, fullscreen ? SDL_WINDOW_FULLSCREEN_DESKTOP : 0);
-    SDL_SetWindowSize(window, OrigWidth * scale, OrigHeight * scale);
+    SDL_SetWindowPosition(window, window_x, window_y);
+    if (window_w && window_h)
+      SDL_SetWindowSize(window, window_w, window_h);
+    else
+      SDL_SetWindowSize(window, OrigWidth * scale, OrigHeight * scale);
   }
   SDL_ShowWindow(window);
   SDL_ShowCursor(mousepointer ? SDL_ENABLE : SDL_DISABLE);
@@ -1802,6 +1817,8 @@ void trs_get_event(int wait)
           debug("Active\n");
 #endif
         }
+        SDL_GetWindowPosition(window, &window_x, &window_y);
+        SDL_GetWindowSize(window, &window_w, &window_h);
         break;
 
       case SDL_KEYDOWN:
