@@ -146,6 +146,10 @@ static SDL_Surface *screen;
 static SDL_Rect drawnRects[MAX_RECTS];
 #ifdef SDL2
 static SDL_Window *window;
+static int window_x = SDL_WINDOWPOS_UNDEFINED;
+static int window_y = SDL_WINDOWPOS_UNDEFINED;
+static int window_w;
+static int window_h;
 #endif
 static Uint32 light_red;
 static Uint32 bright_red;
@@ -255,6 +259,9 @@ static void trs_opt_switches(char *arg, int intarg, int *stringarg);
 static void trs_opt_turborate(char *arg, int intarg, int *stringarg);
 static void trs_opt_value(char *arg, int intarg, int *variable);
 static void trs_opt_wafer(char *arg, int intarg, int *stringarg);
+#ifdef SDL2
+static void trs_opt_window(char *arg, int intarg, int *stringarg);
+#endif
 
 /* Option handling */
 static const struct {
@@ -405,6 +412,9 @@ static const struct {
   { "wafer5",          trs_opt_wafer,         1, 5, NULL                 },
   { "wafer6",          trs_opt_wafer,         1, 6, NULL                 },
   { "wafer7",          trs_opt_wafer,         1, 7, NULL                 },
+#ifdef SDL2
+  { "window",          trs_opt_window,        1, 0, NULL                 },
+#endif
 };
 
 static const int num_options = sizeof(options) / sizeof(options[0]);
@@ -853,6 +863,13 @@ static void trs_opt_wafer(char *arg, int intarg, int *stringarg)
     stringy_insert(intarg, arg);
 }
 
+#ifdef SDL2
+static void trs_opt_window(char *arg, int intarg, int *stringag)
+{
+  sscanf(arg, "%d,%d,%d,%d", &window_x, &window_y, &window_w, &window_h);
+}
+#endif
+
 static void trs_disk_setsizes(void)
 {
   int i;
@@ -1169,6 +1186,9 @@ int trs_write_config_file(const char *filename)
   for (i = 0; i < 8; i++) {
     fprintf(config_file, "wafer%d=%s\n", i, stringy_get_name(i));
   }
+#ifdef SDL2
+  fprintf(config_file, "window=%d,%d,%d,%d\n", window_x, window_y, window_w, window_h);
+#endif
 
   fclose(config_file);
   return 0;
@@ -1306,8 +1326,7 @@ void trs_screen_init(int resize)
     debug("SDL_VIDEODRIVER=%s\n", SDL_GetCurrentVideoDriver());
 #endif
     window = SDL_CreateWindow(NULL,
-                              SDL_WINDOWPOS_UNDEFINED,
-                              SDL_WINDOWPOS_UNDEFINED,
+                              window_x, window_y,
                               OrigWidth, OrigHeight,
                               SDL_WINDOW_SHOWN);
     if (window == NULL)
@@ -1315,7 +1334,11 @@ void trs_screen_init(int resize)
   }
   if (resize) {
     SDL_SetWindowFullscreen(window, fullscreen ? SDL_WINDOW_FULLSCREEN : 0);
-    SDL_SetWindowSize(window, OrigWidth, OrigHeight);
+    SDL_SetWindowPosition(window, window_x, window_y);
+    if (window_w && window_h)
+      SDL_SetWindowSize(window, window_w, window_h);
+    else
+      SDL_SetWindowSize(window, OrigWidth, OrigHeight);
   }
   screen = SDL_GetWindowSurface(window);
   if (screen == NULL)
@@ -1823,6 +1846,19 @@ void trs_get_event(int wait)
             debug("Active\n");
 #endif
           }
+        }
+        switch (event.window.event) {
+          case SDL_WINDOWEVENT_MOVED:
+            window_x = event.window.data1;
+            window_y = event.window.data2;
+            break;
+          case SDL_WINDOWEVENT_RESIZED:
+          case SDL_WINDOWEVENT_SIZE_CHANGED:
+            window_w = event.window.data1;
+            window_h = event.window.data2;
+            break;
+          default:
+            break;
         }
         break;
 #endif
