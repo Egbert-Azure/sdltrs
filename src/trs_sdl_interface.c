@@ -1817,8 +1817,19 @@ void trs_get_event(int wait)
           debug("Active\n");
 #endif
         }
-        SDL_GetWindowPosition(window, &window_x, &window_y);
-        SDL_GetWindowSize(window, &window_w, &window_h);
+        switch (event.window.event) {
+          case SDL_WINDOWEVENT_MOVED:
+            window_x = event.window.data1;
+            window_y = event.window.data2;
+            break;
+          case SDL_WINDOWEVENT_RESIZED:
+          case SDL_WINDOWEVENT_SIZE_CHANGED:
+            window_w = event.window.data1;
+            window_h = event.window.data2;
+            break;
+          default:
+            break;
+        }
         break;
 
       case SDL_KEYDOWN:
