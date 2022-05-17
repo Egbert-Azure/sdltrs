@@ -3279,6 +3279,7 @@ void m6845_cursor(int position, int start, int end, int visible)
   int row, col;
   int cur_char;
   int expanded;
+  int inverted;
   SDL_Rect srcRect, dstRect;
 
   /* Hack for homebrew 80*22 SYS80.SYS */
@@ -3296,6 +3297,7 @@ void m6845_cursor(int position, int start, int end, int visible)
   }
 
   expanded = (currentmode & EXPANDED) != 0;
+  inverted = (currentmode & INVERSE) && (cur_char & 0x80) ? 0 : 2;
 
   if (row_chars == 64) {
     row = position / 64;
@@ -3312,7 +3314,7 @@ void m6845_cursor(int position, int start, int end, int visible)
   dstRect.x = col * cur_char_width + left_margin;
   dstRect.y = row * cur_char_height + top_margin + srcRect.y;
 
-  SDL_BlitSurface(trs_char[2 + expanded][cur_char], &srcRect, screen, &dstRect);
+  SDL_BlitSurface(trs_char[inverted + expanded][cur_char], &srcRect, screen, &dstRect);
   drawnRectCount = MAX_RECTS;
 }
 
