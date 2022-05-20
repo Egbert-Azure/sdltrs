@@ -106,8 +106,6 @@ Running:\n\
 Printing:\n\
     (dum)p\n\
         Print the values of the Z80 registers.\n\
-    in <port>\n\
-        Read the value of the given I/O port.\n\
     l(ist)\n\
     l(ist) <addr>\n\
     l(ist) <start addr> , <end addr>\n\
@@ -153,6 +151,8 @@ Miscellaneous:\n\
     set I<port> = <value>\n\
     set <addr> = <value>\n\
         Change the value of a register, register pair, I/O or memory byte.\n\
+    in <port>\n\
+        Input from the given I/O port.\n\
     load <start addr> <filename>\n\
         Load memory from file to the specified hex address.\n\
     save <start addr> , <end addr> <filename>\n\
