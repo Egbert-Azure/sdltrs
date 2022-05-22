@@ -145,14 +145,14 @@ Traps:\n\
         Set a trap to watch specified hex address for changes.\n\
 Miscellaneous:\n\
     a(ssign) $<reg> = <value>\n\
-    a(ssign) I<port> = <value>\n\
     a(ssign) <addr> = <value>\n\
     set $<reg> = <value>\n\
-    set I<port> = <value>\n\
     set <addr> = <value>\n\
         Change the value of a register, register pair, I/O or memory byte.\n\
     in <port>\n\
         Input from the given I/O port.\n\
+    out <port> = <value>\n\
+        Output to the given I/O port.\n\
     load <start addr> <filename>\n\
         Load memory from file to the specified hex address.\n\
     save <start addr> , <end addr> <filename>\n\
@@ -644,12 +644,21 @@ void debug_shell(void)
 	    }
 	    else if(!strcmp(command, "in"))
 	    {
-		unsigned int port;
+		int port;
 
 		if(sscanf(input, "in %x", &port) == 1)
 			printf("in %x = %x\n", port, z80_in(port));
 		else
 			puts("A port must be specified.");
+	    }
+	    else if(!strcmp(command, "out"))
+	    {
+		int port, value;
+
+		if(sscanf(input, "out %x = %x", &port, &value) == 2)
+			z80_out(port, value);
+		else
+			puts("A port and a value must be specified.\n");
 	    }
 	    else if(!strcmp(command, "next") || !strcmp(command, "nextint") ||
 		    !strcmp(command, "n") || !strcmp(command, "ni"))
@@ -804,10 +813,6 @@ void debug_shell(void)
 		    } else {
 			printf("Unrecognized register name '%s'.\n", regname);
 		    }
-		}
-		else if(sscanf(input, "%*s I%x = %x", &addr, &value) == 2)
-		{
-		    z80_out(addr, value);
 		}
 		else if(sscanf(input, "%*s %x = %x", &addr, &value) == 2)
 		{
