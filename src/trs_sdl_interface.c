@@ -3393,10 +3393,6 @@ void m6845_cursor(int position, int start, int end, int visible)
   int inverted;
   SDL_Rect srcRect, dstRect;
 
-  /* Hack for homebrew 80*22 SYS80.SYS */
-  if (screen_chars == 1760)
-    position -= 256;
-
   if (position >= screen_chars)
     return;
 
