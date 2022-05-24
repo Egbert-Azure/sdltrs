@@ -1362,7 +1362,7 @@ void trs_screen_init(int resize)
   if (resize) {
     SDL_SetWindowFullscreen(window, fullscreen ? SDL_WINDOW_FULLSCREEN_DESKTOP : 0);
     SDL_SetWindowPosition(window, window_x, window_y);
-    if (window_w && window_h)
+    if (window_w > (OrigWidth * scale) && window_h > (OrigHeight * scale))
       SDL_SetWindowSize(window, window_w, window_h);
     else
       SDL_SetWindowSize(window, OrigWidth * scale, OrigHeight * scale);
