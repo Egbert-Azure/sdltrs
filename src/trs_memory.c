@@ -82,14 +82,14 @@
 Uint8 memory[MAX_MEMORY_SIZE + 1]; /* +1 so strings from mem_pointer are NUL-terminated */
 int trs_rom_size;
 int lowercase = 1;
-int lubomir; /* Lubomir Soft Banker */
-int megamem;
-int huffman;
-int hypermem;
-int supermem;
-int selector;
-int eg3200; /* EACA EG 3200 Genie III */
-int genie3s; /* TCS Genie IIIs */
+int lubomir;  /* Lubomir Soft Banker */
+int megamem;  /* Anitek MegaMem (III/4/4P) */
+int huffman;  /* Dave Huffman (4/4P) */
+int hypermem; /* Anitek HyperMem (4/4P) */
+int supermem; /* AlphaTech SuperMem (I/III) */
+int selector; /* Selector (Model I / LNW80) */
+int eg3200;   /* EACA EG 3200 Genie III */
+int genie3s;  /* TCS Genie IIIs */
 
 /* private data */
 static Uint8 video[MAX_VIDEO_SIZE + 1];
