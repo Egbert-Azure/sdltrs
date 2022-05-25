@@ -63,7 +63,7 @@ static int rominimage;      /* Model 4p */
 /* RTC addr/data */
 static int rtc_reg;
 
-/* M6845 CRT */
+/* 6845 CRTC */
 static int cursor_csr;
 static int cursor_cer;
 static int cursor_pos;
@@ -403,11 +403,11 @@ void z80_out(int port, int value)
         eg3200_init_out(value);
       break;
     case 0xFD:
-      /* GENIE location of printer port */
+      /* Printer port of EACA Genie/System 80 */
       trs_printer_write(value);
       break;
     case 0xFE:
-      /* Typical location for clock speedup kits */
+      /* Speedup kit or Banking/LNW80/TCS Genie IIs and SpeedMaster */
       if (speedup) {
         if (speedup < 4)
           trs_timer_speed(value);
