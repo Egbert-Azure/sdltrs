@@ -1506,12 +1506,9 @@ static void MarkSelection(void)
     drawnRectCount = MAX_RECTS;
     copyStatus = COPY_DEFINED;
   } else {
-    int win_w, win_h;
-
     mouse = SDL_GetMouseState(&copy_x, &copy_y);
-    SDL_GetWindowSize(window, &win_w, &win_h);
-    copy_x /= ((float)win_w / (float)OrigWidth);
-    copy_y /= ((float)win_h / (float)OrigHeight);
+    copy_x /= ((float)window_w / (float)OrigWidth);
+    copy_y /= ((float)window_h / (float)OrigHeight);
 
     if (copy_x > OrigWidth - scale)
       copy_x = OrigWidth - scale;
