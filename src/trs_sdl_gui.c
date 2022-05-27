@@ -1884,7 +1884,7 @@ void trs_gui_display_settings(void)
                           "         Bold"};
   const char *scales[] = {" None", "  2 x", "  3 x", "  4 x"};
   char input[8];
-  int redraw = 0;
+  int resize = -1;
   int selection = 0;
   int value = 0;
   int gui_charset1 = trs_charset1 >= 10 ? trs_charset1 - 6 : trs_charset1;
@@ -1919,7 +1919,7 @@ void trs_gui_display_settings(void)
           rgb_color = strtol(input, NULL, 16);
           if (rgb_color != background) {
             background = rgb_color;
-            redraw = 1;
+            resize = 0;
           }
         }
         break;
@@ -1930,7 +1930,7 @@ void trs_gui_display_settings(void)
           rgb_color = strtol(input, NULL, 16);
           if (rgb_color != foreground) {
             foreground = rgb_color;
-            redraw = 1;
+            resize = 0;
           }
         }
         break;
@@ -1941,7 +1941,7 @@ void trs_gui_display_settings(void)
           rgb_color = strtol(input, NULL, 16);
           if (rgb_color != gui_background) {
             gui_background = rgb_color;
-            redraw = 1;
+            resize = 0;
           }
         }
         break;
@@ -1952,7 +1952,7 @@ void trs_gui_display_settings(void)
           rgb_color = strtol(input, NULL, 16);
           if (rgb_color != gui_foreground) {
             gui_foreground = rgb_color;
-            redraw = 1;
+            resize = 0;
           }
         }
         break;
@@ -1961,21 +1961,21 @@ void trs_gui_display_settings(void)
         if (value != gui_charset1) {
           gui_charset1 = value;
           trs_charset1 = value >= 4 ? value += 6 : value;
-          redraw = 1;
+          resize = 1;
         }
         break;
       case 5:
         value = trs_gui_display_popup("Charset III", font34, 3, trs_charset3 - 4) + 4;
         if (value != trs_charset3) {
           trs_charset3 = value;
-          redraw = 1;
+          resize = 1;
         }
         break;
       case 6:
         value = trs_gui_display_popup("Charset 4/4P", font34, 3, trs_charset4 - 7) + 7;
         if (value != trs_charset4) {
           trs_charset4 = value;
-          redraw = 1;
+          resize = 1;
         }
         break;
       case 7:
@@ -1987,7 +1987,7 @@ void trs_gui_display_settings(void)
             window_border_width = value;
             if (window_border_width < 0 || window_border_width > 50)
               window_border_width = 2;
-            redraw = 1;
+            resize = 1;
           }
         }
         break;
@@ -1995,14 +1995,14 @@ void trs_gui_display_settings(void)
         value = trs_gui_display_popup("Resize III", yes_no, 2, resize3);
         if (value != resize3) {
           resize3 = value;
-          redraw = 1;
+          resize = 1;
         }
         break;
       case 9:
         value = trs_gui_display_popup("Resize 4", yes_no, 2, resize4);
         if (value != resize4) {
           resize4 = value;
-          redraw = 1;
+          resize = 1;
         }
         break;
       case 10:
@@ -2010,14 +2010,14 @@ void trs_gui_display_settings(void)
         if (value != scale) {
           scale = value;
           fullscreen = 0;
-          trs_screen_init(1);
+          resize = 1;
         }
         break;
       case 11:
         value = trs_gui_display_popup("LEDs", yes_no, 2, trs_show_led);
         if (value != trs_show_led) {
           trs_show_led = value;
-          redraw = 1;
+          resize = 1;
         }
         break;
       case 12:
@@ -2032,16 +2032,16 @@ void trs_gui_display_settings(void)
             scanshade = atoi(input) & 255;
         }
 #endif
-          redraw = 1;
+          resize = 0;
         scanlines = value;
         break;
       case -1:
         return;
     }
 
-    if (redraw) {
-      trs_screen_init(0);
-      redraw = 0;
+    if (resize >= 0) {
+      trs_screen_init(resize);
+      resize = -1;
     }
   }
 }
