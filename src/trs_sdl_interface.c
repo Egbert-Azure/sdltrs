@@ -1876,16 +1876,9 @@ void trs_get_event(int wait)
       case SDL_WINDOWEVENT:
         SDL_FlushEvent(SDL_KEYDOWN);
         SDL_UpdateWindowSurface(window);
-        if (event.window.event == SDL_WINDOWEVENT_SIZE_CHANGED) {
-          if ((screen = SDL_GetWindowSurface(window)) == NULL)
-            fatal("failed to get window surface: %s", SDL_GetError());
-          else {
-            trs_screen_refresh();
 #if XDEBUG
-            debug("Active\n");
+        debug("Active\n");
 #endif
-          }
-        }
         switch (event.window.event) {
           case SDL_WINDOWEVENT_MOVED:
             window_x = event.window.data1;
@@ -1895,6 +1888,10 @@ void trs_get_event(int wait)
           case SDL_WINDOWEVENT_SIZE_CHANGED:
             window_w = event.window.data1;
             window_h = event.window.data2;
+            if ((screen = SDL_GetWindowSurface(window)) == NULL)
+              fatal("failed to get window surface: %s", SDL_GetError());
+            else
+              trs_screen_refresh();
             break;
           default:
             break;
