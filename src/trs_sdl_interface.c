@@ -3047,14 +3047,13 @@ void grafyx_write_mode(int value)
   int const old_enable = grafyx_enable;
   int const old_overlay = grafyx_overlay;
 
+  grafyx_mode = value;
   grafyx_enable = value & G_ENABLE;
 
   if (eg3200) /* Genie III VideoExtension HRG */
     grafyx_overlay = grafyx_enable;
   else if (grafyx_microlabs)
     grafyx_overlay = (value & G_UL_NOTEXT) == 0;
-
-  grafyx_mode = value;
 
   if (trs_model >= 3)
     trs_screen_640x240((grafyx_enable && !grafyx_overlay) || text80x24);
