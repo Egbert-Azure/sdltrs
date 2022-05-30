@@ -1592,8 +1592,6 @@ static char *GetSelection(void)
 {
   static char copy_data[2048];
   char *curr_data = copy_data;
-  Uint8 data;
-  Uint8 *screen_ptr;
   int col, row;
   int start_col, end_col, start_row, end_row;
 
@@ -1635,9 +1633,10 @@ static char *GetSelection(void)
     end_row = col_chars - 1;
 
   for (row = start_row; row <= end_row; row++) {
-    screen_ptr = &trs_screen[row * row_chars + start_col];
+    Uint8 const *screen_ptr = &trs_screen[row * row_chars + start_col];
+
     for (col = start_col; col <= end_col; col++, screen_ptr++) {
-      data = *screen_ptr;
+      Uint8 data = *screen_ptr;
 
       if (data < 0x20)
         data += 0x40;
