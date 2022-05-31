@@ -371,18 +371,18 @@ void sys_byte_out(int value)
 		return;
 
 	switch (speedup) {
-		case 6: /* TCS Genie IIs/SpeedMaster */
-			memory_map = 0x26;
-			if ((value & (1 << 1)) != (system_byte & (1 << 1)))
-				hrg_onoff((value & (1 << 1)) ? 2 : 0);
+		case 4: /* Banking-Modification from Martin Doppelbauer */
+			memory_map = (value & (1 << 4)) ? 0x14 : 0x10;
 			break;
 		case 5: /* LNW80: HRG in low 16 kB */
 			memory_map = (value & (1 << 3)) ? 0x20 : 0x10;
 			if ((value & (1 << 1)) != (system_byte & (1 << 1)))
 				hrg_onoff((value & (1 << 1)) ? 2 : 0);
 			break;
-		case 4: /* Banking-Modification from Martin Doppelbauer */
-			memory_map = (value & (1 << 4)) ? 0x14 : 0x10;
+		case 6: /* TCS Genie IIs/SpeedMaster */
+			memory_map = 0x26;
+			if ((value & (1 << 1)) != (system_byte & (1 << 1)))
+				hrg_onoff((value & (1 << 1)) ? 2 : 0);
 			break;
 	}
 
