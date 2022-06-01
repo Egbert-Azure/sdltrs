@@ -42,7 +42,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-extern char *program_name;
+extern const char *program_name;
 
 void debug(const char *fmt, ...)
 {
