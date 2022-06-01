@@ -60,7 +60,7 @@
 #define BUFFER_SIZE 256
 
 int trs_model = 1;
-char *program_name;
+const char *program_name;
 
 static int hex_byte(const char *string)
 {
