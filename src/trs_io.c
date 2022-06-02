@@ -137,6 +137,9 @@ void z80_out(int port, int value)
   /* EG 3200 Genie III */
   if (eg3200) {
     switch (port) {
+      case 0x28: /* Genieplus Memory Card */
+        mem_bank_base(value);
+        break;
       case 0x48:
         trs_hard_out(TRS_HARD_DATA, value);
         break;

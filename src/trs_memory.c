@@ -204,6 +204,19 @@ void mem_bank_base(int bits)
 		    supermem_hi = 0x8000;
 		return;
 	}
+	if (eg3200) {
+		/* Genieplus Memory Card */
+		if (bits & 0x07) {
+			bank_base = ((bits & 0x07) * 65536);
+			/* Select upper 32K of bank */
+			if (bits & (1 << 3))
+				bank_base += 32768;
+
+		} else {
+			bank_base = 0;
+		}
+		return;
+	}
 	if (speedup == 6) {
 		/* TCS Genie IIs/SpeedMaster RAM 192 B */
 		bank_base = ((bits & 0x0C) * 192) /* card */
@@ -683,7 +696,10 @@ int mem_read(int address)
 	    return trs_kb_mem_read(address);
 	}
 	/* Bank 0: RAM */
-	return memory[address];
+	if (address <= 0x7FFF)
+	  return memory[address + bank_base];
+	else
+	  return memory[address];
       case 0x24: /* TCS Genie IIIs */
 	if ((system_byte & (1 << 0)) == 0) {
 	  if ((system_byte & (1 << 4)) == 0) {
@@ -992,7 +1008,10 @@ void mem_write(int address, int value)
 	  }
 	}
 	/* Bank 0: RAM */
-	memory[address] = value;
+	if (address <= 0x7FFF)
+	  memory[address + bank_base] = value;
+	else
+	  memory[address] = value;
 	return;
       case 0x24: /* TCS Genie IIIs */
 	if ((system_byte & (1 << 0)) == 0) {
