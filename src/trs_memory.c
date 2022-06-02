@@ -1303,7 +1303,10 @@ Uint8 *mem_pointer(int address, int writing)
 	    return &video[address - VIDEO_START];
 	}
 	/* Bank 0: RAM */
-	return &memory[address];
+	if (address <= 0x7FFF)
+	  return &memory[address + bank_base];
+	else
+	  return &memory[address];
       case 0x24: /* TCS Genie IIIs */
       case 0x2C:
 	if ((system_byte & (1 << 0)) == 0) {
