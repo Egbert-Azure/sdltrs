@@ -269,6 +269,7 @@ void eg3200_init_out(int value)
 	memory_map = 0x23;
 	trs_disk_doubler = TRSDISK_PERCOM;
 	trs_timer_init();
+	trs_screen_inverse(0);
 }
 
 void eg64_mba_out(int value)
