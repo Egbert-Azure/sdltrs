@@ -183,7 +183,8 @@ static int timer_saved;
 static unsigned int cycles_saved;
 #endif
 
-/* Support for Micro-Labs Grafyx Solution and Radio Shack hi-res card */
+/* Support for Micro-Labs Grafyx Solution and Radio Shack hi-res card
+ * ... also used for other graphic cards ... */
 
 /* True size of graphics memory -- some is offscreen */
 #define G_XSIZE 128
@@ -214,7 +215,7 @@ static int grafyx_xoffset, grafyx_yoffset;
 #define G3_COMMAND  0x20
 #define G3_YLOW(v)  (((v) & 0x1e) >> 1)
 
-/* HRG1B and Lowe LE18 */
+/* HRG1B, LE18, LWN80 and TCS Genie IIs/SpeedMaster */
 #define HRG_MEMSIZE (1024 * 16)        /* 16k * 8 bit graphics memory */
 static Uint8 hrg_screen[HRG_MEMSIZE];
 static int hrg_enable;
