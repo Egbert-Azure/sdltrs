@@ -1293,7 +1293,7 @@ void trs_gui_disk_steps(void)
   while (1) {
     for (i = 0; i < 8; i++) {
       snprintf(menu[i].text, 63,
-          "Drive # %d Step                                        %s",
+          " %d: Drive Step                                        %s",
           i, steps[trs_disk_getstep(i) == 1 ? 0 : 1]);
     }
     trs_gui_clear_screen();
@@ -1332,7 +1332,7 @@ void trs_gui_disk_options(void)
   while (1) {
     for (i = 0; i < 8; i++) {
       snprintf(menu[i].text, 63,
-          "Drive # %d Size                                        %s",
+          " %d: Drive Size                                        %s",
           i, disk_size[trs_disk_getsize(i) == 5 ? 0 : 1]);
     }
     snprintf(&menu[9].text[51], 10, "%s", doubler[trs_disk_doubler]);
