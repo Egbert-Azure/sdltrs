@@ -1855,16 +1855,10 @@ void trs_get_event(int wait)
 #if XDEBUG
         debug("Active\n");
 #endif
-        switch (event.window.event) {
-          case SDL_WINDOWEVENT_RESIZED:
-          case SDL_WINDOWEVENT_SIZE_CHANGED:
-            if ((screen = SDL_GetWindowSurface(window)) == NULL)
-              fatal("failed to get window surface: %s", SDL_GetError());
-            else
-              trs_screen_refresh();
-            break;
-          default:
-            break;
+        if (event.window.event == SDL_WINDOWEVENT_SIZE_CHANGED) {
+          if ((screen = SDL_GetWindowSurface(window)) == NULL)
+            fatal("failed to get window surface: %s", SDL_GetError());
+          trs_screen_refresh();
         }
         break;
 #endif
