@@ -2146,7 +2146,7 @@ void trs_get_event(int wait)
           }
           /* End for Escape */
           if (keysym.sym == SDLK_END) {
-            keysym.sym = eg3200 ? 0x111 : 0x8d;
+            keysym.sym = 0x8d;
             goto done;
           }
           if (keysym.sym == SDLK_LCTRL) {
