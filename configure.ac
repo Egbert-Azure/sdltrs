@@ -62,7 +62,7 @@ AS_IF([test "x$enable_zbx" = "xyes"],
   [AC_MSG_NOTICE([integrated Z80 debugger zbx DISABLED])])
 
 AC_CHECK_LIB([$SDL_VERS], [SDL_Init], [:],
-  AC_MSG_ERROR([Unable to find SDL_Init function in $SDL_VERS]))
+  AC_MSG_WARN([Unable to find SDL_Init function (Please ignore on OS/2)]))
 
 AC_CONFIG_FILES([Makefile])
 AC_OUTPUT
