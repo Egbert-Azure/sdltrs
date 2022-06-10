@@ -2101,27 +2101,21 @@ void trs_get_event(int wait)
               trs_flip_fullscreen();
 #endif
               break;
-            case SDLK_0:
-            case SDLK_1:
-            case SDLK_2:
-            case SDLK_3:
-            case SDLK_4:
-            case SDLK_5:
-            case SDLK_6:
-            case SDLK_7:
-              if (SDL_GetModState() & KMOD_SHIFT) {
-                trs_disk_remove(keysym.sym - SDLK_0);
-              } else {
-                char filename[FILENAME_MAX];
-
-                if (trs_gui_file_browse(trs_disk_dir, filename, NULL, 0,
-                      "Floppy Disk Image") != -1)
-                  trs_disk_insert(keysym.sym - SDLK_0, filename);
-                trs_screen_refresh();
-              }
-              break;
             default:
-              break;
+              if (keysym.sym >= SDLK_0 && keysym.sym <= SDLK_7) {
+                keysym.sym -= SDLK_0;
+
+                if (SDL_GetModState() & KMOD_SHIFT) {
+                  trs_disk_remove(keysym.sym);
+                } else {
+                  char filename[FILENAME_MAX];
+
+                  if (trs_gui_file_browse(trs_disk_dir, filename, NULL, 0,
+                        "Floppy Disk Image") != -1)
+                    trs_disk_insert(keysym.sym, filename);
+                  trs_screen_refresh();
+                }
+              }
           }
           continue;
         }
