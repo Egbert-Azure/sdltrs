@@ -206,14 +206,12 @@ void mem_bank_base(int bits)
 	}
 	if (eg3200) {
 		/* Genieplus Memory Card */
-		if (bits & 0x07) {
-			bank_base = ((bits & 0x07) * 65536);
+		bank_base = (bits & 0x07) << 16;
+		if (bank_base) {
 			/* Select upper 32K of bank */
 			if (bits & (1 << 3))
 				bank_base += 32768;
 
-		} else {
-			bank_base = 0;
 		}
 		return;
 	}
