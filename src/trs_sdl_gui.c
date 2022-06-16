@@ -1225,9 +1225,9 @@ void trs_gui_disk_creation(void)
   const char *disk_side[] = {"     1", "     2"};
   const char *disk_dens[] = {"Single", "Double"};
   const char *disk_size[] = {"5 Inch", "8 Inch"};
-  static int type = 1;
-  static int sides = 1;
-  static int density = 1;
+  static int type = 2;
+  static int sides = 2;
+  static int density = 2;
   static int size;
   static int ignore_density;
   static int insert;
