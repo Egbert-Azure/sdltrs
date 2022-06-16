@@ -268,9 +268,18 @@ void TrsBlitMap(SDL_Palette *src, SDL_PixelFormat *dst)
         *((Uint16 *)(&map[i * 2])) = (Uint16)mapValue;
         break;
       case 3:
+        /* Seems that RGB values are swapped for 24-bit color depth
+         * in SDL 1.2: https://github.com/libsdl-org/SDL/issues/121
+         */
+#if defined(big_endian) || defined(SDL2)
         map[i * 3] = mapValue >> 16;
         map[i * 3 + 1] = mapValue >> 8;
         map[i * 3 + 2] = mapValue & 0xFF;
+#else
+        map[i * 3] = mapValue & 0xFF;
+        map[i * 3 + 1] = mapValue >> 8;
+        map[i * 3 + 2] = mapValue >> 16;
+#endif
         break;
       case 4:
         *((Uint32 *)(&map[i * 4])) = (Uint32)mapValue;
