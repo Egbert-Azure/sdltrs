@@ -428,13 +428,13 @@ static void stripWhitespace(char *inputStr)
 {
   char *pos = inputStr;
 
-  while (*pos && isspace(*pos))
+  while (*pos && isspace((unsigned char)*pos))
     pos++;
 
   memmove(inputStr, pos, strlen(pos) + 1);
   pos = inputStr + strlen(inputStr) - 1;
 
-  while (*pos && isspace(*pos))
+  while (*pos && isspace((unsigned char)*pos))
     pos--;
 
   *(pos + 1) = '\0';
