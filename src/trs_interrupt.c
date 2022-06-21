@@ -191,8 +191,7 @@ trs_disk_intrq_interrupt(int state)
   if (trs_model == 1) {
     if (state) {
       interrupt_latch |= M1_DISK_BIT;
-      if (genie3s == 0)
-        z80_state.irq = 1;
+      z80_state.irq = 1;
     } else {
       interrupt_latch &= ~M1_DISK_BIT;
     }
@@ -291,6 +290,8 @@ trs_interrupt_latch_read(void)
   Uint8 tmp = interrupt_latch;
   if (trs_model == 1) {
     trs_timer_interrupt(0); /* acknowledge this one (only) */
+    if (genie3s)
+      interrupt_latch = 0;
     z80_state.irq = (interrupt_latch != 0);
     return tmp;
   } else {
