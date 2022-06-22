@@ -16,7 +16,6 @@ build:
 build-32-sdl1:
  <<: *job_definition
  script:
- - apt-get update -qq 1> /dev/null
  - dpkg --add-architecture i386
  - apt-get update -qq 1> /dev/null
  - apt-get install -y cmake gcc-multilib libgcc1:i386 libreadline-dev:i386 libsdl1.2-dev:i386 1> /dev/null
