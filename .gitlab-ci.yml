@@ -6,18 +6,17 @@
    - src/*
    - .gitlab-ci.yml
 
-before_script:
- - apt-get update -qq 1> /dev/null
-
 build:
  <<: *job_definition
  script:
+ - apt-get update -qq 1> /dev/null
  - apt-get install -y -qq cmake libreadline-dev libsdl2-dev 1> /dev/null
  - mkdir -p build && cd build && cmake .. && cmake --build .
 
 build-32-sdl1:
  <<: *job_definition
  script:
+ - apt-get update -qq 1> /dev/null
  - dpkg --add-architecture i386
  - apt-get update -qq 1> /dev/null
  - apt-get install -y cmake gcc-multilib libgcc1:i386 libreadline-dev:i386 libsdl1.2-dev:i386 1> /dev/null
@@ -27,5 +26,19 @@ build-32-sdl1:
 build-clang:
  <<: *job_definition
  script:
+ - apt-get update -qq 1> /dev/null
  - apt-get install -y -qq clang meson libreadline-dev libsdl2-dev 1> /dev/null
  - CC="clang" meson build && cd build && ninja
+
+pages:
+ script:
+ - mkdir .public
+ - cp -r html/* .public
+ - mv .public public
+ artifacts:
+    paths:
+    - public
+ only:
+   changes:
+   - html/*
+   - html/images/*
