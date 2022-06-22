@@ -40,6 +40,8 @@ SDL(2)TRS is based on Tim Mann's excellent TRS-80 emulator [xtrs] and also
 has very low system requirements: it works on all platforms supported by the
 [SDL] library, even on machines with only a few hundred MHz of CPU speed.
 
+Browse the [Documentation] online ...
+
 ## License
 
   [BSD 2-Clause](LICENSE)
@@ -85,6 +87,7 @@ Lupi's fork of [RetroPie-Setup] ...
 
 [AUR]: https://aur.archlinux.org/packages/sdltrs
 [BUILDING.md]: BUILDING.md
+[Documentation]: https://jengun.gitlab.io/sdltrs
 [EtchedPixels]: https://www.github.com/EtchedPixels/xtrs
 [MinGW]: https://osdn.net/projects/mingw/
 [MinGW-w64]: http://mingw-w64.org
