@@ -50,7 +50,7 @@ has very low system requirements: it works on all platforms supported by the
   * [sdl2trs.exe]    (32-bit, needs [SDL2.DLL])
   * [sdl2trs64.exe]  (64-bit, needs [SDL2.DLL])
 
-(Build with [MinGW] & [MinGW-w64])
+(Release 1.2.23 build with [MinGW] & [MinGW-w64])
 
 ## Packages
 
