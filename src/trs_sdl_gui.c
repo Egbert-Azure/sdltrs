@@ -1288,7 +1288,7 @@ void trs_gui_disk_steps(void)
    {"", 0}};
   const char *steps[] = {"Single", "Double"};
   int selection = 0;
-  int i, step;
+  int i;
 
   while (1) {
     for (i = 0; i < 8; i++) {
@@ -1299,8 +1299,8 @@ void trs_gui_disk_steps(void)
     trs_gui_clear_screen();
     if ((selection = trs_gui_display_menu("Floppy Disk Step", menu, selection)) == -1)
       return;
-    step = trs_gui_display_popup("Step", steps, 2, trs_disk_getstep(selection) == 2);
-    trs_disk_setstep(selection, step == 0 ? 1 : 2);
+    trs_disk_setstep(selection, trs_gui_display_popup("Step", steps, 2,
+        trs_disk_getstep(selection) == 2) == 0 ? 1 : 2);
   }
 }
 #endif
@@ -1327,7 +1327,7 @@ void trs_gui_disk_options(void)
   const char *doubler[]   = {"     None", "   Percom", "    Tandy", "     Both"};
   const char *disk_size[] = {"5 Inch", "8 Inch"};
   int selection = 0;
-  int i, size;
+  int i;
 
   while (1) {
     for (i = 0; i < 8; i++) {
@@ -1341,8 +1341,8 @@ void trs_gui_disk_options(void)
 
     selection = trs_gui_display_menu("Floppy Disk Options", menu, selection);
     if (selection >= 0 && selection < 8) {
-      size = trs_gui_display_popup("Size", disk_size, 2, trs_disk_getsize(selection) == 8);
-      trs_disk_setsize(selection, size == 0 ? 5 : 8);
+      trs_disk_setsize(selection, trs_gui_display_popup("Size", disk_size, 2,
+          trs_disk_getsize(selection) == 8) == 0 ? 5 : 8);
     }
     else switch (selection) {
       case 9:
