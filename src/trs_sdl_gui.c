@@ -51,12 +51,12 @@
 #include "trs_stringy.h"
 #include "trs_uart.h"
 
-#define MENU_NORMAL       1
-#define MENU_TITLE        2
-#define MENU_DISK_BROWSE  3
-#define MENU_HARD_BROWSE  4
-#define MENU_WAFER_BROWSE 5
-#define MENU_CASS_BROWSE  6
+#define MENU_NORMAL   1
+#define MENU_TITLE    2
+#define MENU_DISK     3
+#define MENU_HARD     4
+#define MENU_WAFER    5
+#define MENU_CASS     6
 
 #define MAX_JOYSTICKS 8
 
@@ -963,16 +963,16 @@ int trs_gui_display_menu(const char *title, MENU_ENTRY *entry, int selection)
           break;
         case SDLK_DELETE:
           switch (entry[selection].type) {
-            case MENU_DISK_BROWSE:
+            case MENU_DISK:
               trs_disk_remove(selection);
               break;
-            case MENU_HARD_BROWSE:
+            case MENU_HARD:
               trs_hard_remove(selection);
               break;
-            case MENU_WAFER_BROWSE:
+            case MENU_WAFER:
               stringy_remove(selection);
               break;
-            case MENU_CASS_BROWSE:
+            case MENU_CASS:
               trs_cassette_remove();
               break;
           }
@@ -985,25 +985,25 @@ int trs_gui_display_menu(const char *title, MENU_ENTRY *entry, int selection)
         case SDLK_RETURN:
         case SDLK_TAB:
           switch (entry[selection].type) {
-            case MENU_DISK_BROWSE:
+            case MENU_DISK:
               if (trs_gui_file_browse(trs_disk_getfilename(selection)[0] == 0 ?
                   trs_disk_dir : trs_disk_getfilename(selection), filename, NULL,
                   0, "Floppy Disk Image") >= 0)
                 trs_disk_insert(selection, filename);
               break;
-            case MENU_HARD_BROWSE:
+            case MENU_HARD:
               if (trs_gui_file_browse(trs_hard_getfilename(selection)[0] == 0 ?
                   trs_hard_dir : trs_hard_getfilename(selection), filename, NULL,
                   0, "Hard Disk Image") >= 0)
                 trs_hard_attach(selection, filename);
               break;
-            case MENU_WAFER_BROWSE:
+            case MENU_WAFER:
               if (trs_gui_file_browse(stringy_get_name(selection)[0] == 0 ?
                   trs_cass_dir : stringy_get_name(selection), filename, NULL,
                   0, "Wafer Image") >= 0)
                 stringy_insert(selection, filename);
               break;
-            case MENU_CASS_BROWSE:
+            case MENU_CASS:
               if (trs_gui_file_browse(trs_cassette_getfilename()[0] == 0 ?
                   trs_cass_dir : trs_cassette_getfilename(), filename, NULL,
                   0, "Cassette Image") >= 0)
@@ -1386,14 +1386,14 @@ void trs_gui_diskset_save(void)
 void trs_gui_disk_management(void)
 {
   MENU_ENTRY menu[] =
-  {{" 0: ", MENU_DISK_BROWSE},
-   {" 1: ", MENU_DISK_BROWSE},
-   {" 2: ", MENU_DISK_BROWSE},
-   {" 3: ", MENU_DISK_BROWSE},
-   {" 4: ", MENU_DISK_BROWSE},
-   {" 5: ", MENU_DISK_BROWSE},
-   {" 6: ", MENU_DISK_BROWSE},
-   {" 7: ", MENU_DISK_BROWSE},
+  {{" 0: ", MENU_DISK},
+   {" 1: ", MENU_DISK},
+   {" 2: ", MENU_DISK},
+   {" 3: ", MENU_DISK},
+   {" 4: ", MENU_DISK},
+   {" 5: ", MENU_DISK},
+   {" 6: ", MENU_DISK},
+   {" 7: ", MENU_DISK},
    {"", MENU_TITLE},
    {"Save Disk Set", MENU_NORMAL},
    {"Load Disk Set", MENU_NORMAL},
@@ -1433,10 +1433,10 @@ void trs_gui_disk_management(void)
 void trs_gui_hard_management(void)
 {
   MENU_ENTRY menu[] =
-  {{" 0: ", MENU_HARD_BROWSE},
-   {" 1: ", MENU_HARD_BROWSE},
-   {" 2: ", MENU_HARD_BROWSE},
-   {" 3: ", MENU_HARD_BROWSE},
+  {{" 0: ", MENU_HARD},
+   {" 1: ", MENU_HARD},
+   {" 2: ", MENU_HARD},
+   {" 3: ", MENU_HARD},
    {"", MENU_TITLE},
    {"Save Disk Set", MENU_NORMAL},
    {"Load Disk Set", MENU_NORMAL},
@@ -1567,14 +1567,14 @@ void trs_gui_hard_management(void)
 void trs_gui_stringy_management(void)
 {
   MENU_ENTRY menu[] =
-  {{" 0: ", MENU_WAFER_BROWSE},
-   {" 1: ", MENU_WAFER_BROWSE},
-   {" 2: ", MENU_WAFER_BROWSE},
-   {" 3: ", MENU_WAFER_BROWSE},
-   {" 4: ", MENU_WAFER_BROWSE},
-   {" 5: ", MENU_WAFER_BROWSE},
-   {" 6: ", MENU_WAFER_BROWSE},
-   {" 7: ", MENU_WAFER_BROWSE},
+  {{" 0: ", MENU_WAFER},
+   {" 1: ", MENU_WAFER},
+   {" 2: ", MENU_WAFER},
+   {" 3: ", MENU_WAFER},
+   {" 4: ", MENU_WAFER},
+   {" 5: ", MENU_WAFER},
+   {" 6: ", MENU_WAFER},
+   {" 7: ", MENU_WAFER},
    {"", MENU_TITLE},
    {"Save Disk Set", MENU_NORMAL},
    {"Load Disk Set", MENU_NORMAL},
@@ -1627,7 +1627,7 @@ void trs_gui_stringy_management(void)
 void trs_gui_cassette_management(void)
 {
   MENU_ENTRY menu[] =
-  {{" Cass : ", MENU_CASS_BROWSE},
+  {{" Cass : ", MENU_CASS},
    {"", MENU_TITLE},
    {"Cassette Position                                     ", MENU_NORMAL},
    {"Cassette Default Sample Rate                          ", MENU_NORMAL},
