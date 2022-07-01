@@ -1927,7 +1927,7 @@ void trs_get_event(int wait)
           case SDLK_PAGEDOWN:
           case SDLK_PAGEUP:
             if (SDL_GetModState() & KMOD_SHIFT) {
-              trs_timer_speed(keysym.sym == SDLK_PAGEDOWN);
+              trs_timer_speed(keysym.sym == SDLK_PAGEUP);
               continue;
             }
             break;
