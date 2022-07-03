@@ -141,7 +141,7 @@ static void trs_gui_write_text(const char *text, int x, int y, int invert);
 static void trs_gui_center_text(const char *text, int y, int invert);
 static void trs_gui_frame(int x1, int y1, int x2, int y2);
 static void trs_gui_clear_screen(void);
-static void trs_gui_limit_string(const char *orig, char *limited, unsigned int limit);
+static void trs_gui_limit_string(const char *orig, char *limited, int limit);
 static void trs_add_extension(char *name, const char *ext);
 static int  trs_gui_get_key(void);
 static int  trs_gui_select(const char *text, int x, int y);
@@ -245,7 +245,7 @@ void trs_gui_clear_screen(void)
   trs_gui_clear_rect(0, 0, 64, 16);
 }
 
-void trs_gui_limit_string(const char *orig, char *limited, unsigned int limit)
+void trs_gui_limit_string(const char *orig, char *limited, int limit)
 {
   int const len = strlen(orig);
 
