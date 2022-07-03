@@ -2270,12 +2270,11 @@ int trs_gui_virtual_keyboard(void)
   int key_index = SHIFT, shifted = 0;
 
   while (key_index == SHIFT || (shifted && key_syms_shifted[key_index] == -1)) {
-    key_index = trs_gui_display_popup_matrix("Select Key",
-        !shifted ? key_names : key_names_shifted, 4, 13, saved_selection);
-    if (key_index == -1)
+    if ((key_index = trs_gui_display_popup_matrix("Select Key",
+        !shifted ? key_names : key_names_shifted, 4, 13, saved_selection)) == -1)
       return -1;
     if (key_index == SHIFT)
-      shifted = 1 - shifted;
+      shifted = !shifted;
     saved_selection = key_index;
   }
   return !shifted ? key_syms[key_index] : key_syms_shifted[key_index];
