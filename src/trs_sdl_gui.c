@@ -247,9 +247,11 @@ void trs_gui_clear_screen(void)
 
 void trs_gui_limit_string(const char *orig, char *limited, unsigned int limit)
 {
-  if (strlen(orig) > limit) {
+  int const len = strlen(orig);
+
+  if (len > limit) {
     int const len_1st_part = (limit - 3) / 2;
-    int const pos_2nd_part = strlen(orig) - (limit - len_1st_part - 3);
+    int const pos_2nd_part = len - (limit - len_1st_part - 3);
 
     snprintf(limited, limit + 1, "%.*s...%s", len_1st_part, orig,
         orig + pos_2nd_part);
