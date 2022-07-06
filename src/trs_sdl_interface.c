@@ -2703,13 +2703,13 @@ void trs_screen_refresh(void)
     for (i = 0; i < screen_chars; i++)
       trs_screen_write_char(i, trs_screen[i]);
 
-    /* Redraw HRG extension region */
+    /* Redraw HRG screen */
     if (hrg_enable == 2) {
       for (i = 0; i < 192; i++)
-        memset(&grafyx_unscaled[i][64], 0, 16);
+        memset(&grafyx_unscaled[i][0], 0, 80);
 
       grafyx_overlay = 0;
-      for (i = 0x3000; i <= 0x3FFF; i++) {
+      for (i = 0; i <= 0x3FFF; i++) {
         hrg_write_addr(i, 0x3FFF);
         hrg_write_data(hrg_screen[i]);
       }
