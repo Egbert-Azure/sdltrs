@@ -40,7 +40,8 @@ SDL(2)TRS is based on Tim Mann's excellent TRS-80 emulator [xtrs] and also
 has very low system requirements: it works on all platforms supported by the
 [SDL] library, even on machines with only a few hundred MHz of CPU speed.
 
-Browse the [Documentation] online ...
+Browse the [Documentation] online and checkout [SDLTRS and the Video Genies]
+by Fritz Chwolka ...
 
 ## License
 
@@ -99,6 +100,7 @@ Lupi's fork of [RetroPie-Setup] ...
 [SDL2.DLL]: https://www.libsdl.org/download-2.0.php
 [SDL-1.2.14]: https://www.libsdl.org/release/SDL-1.2.14-win32.zip
 [SDLTRS]: http://sdltrs.sourceforge.net
+[SDLTRS and the Video Genies]: http://www.myoldc.info/eaca_tcs_computer/sdltrs_and_the_videogenies.html
 [SDLTRS-SH]: https://github.com/shaeberling/sdltrs
 [SDLTRS-TRS-IO]: https://github.com/apuder/sdltrs-trs-io
 [sdltrs.exe]: bin/sdltrs.exe
