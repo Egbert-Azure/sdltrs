@@ -70,9 +70,9 @@
 int trs_disk_doubler = TRSDISK_BOTH;
 int trs_disk_truedam;
 int trs_disk_debug_flags;
+int trs_disk_nocontroller;
 
 static const float trs_disk_holewidth = 0.01;
-static int trs_disk_nocontroller;
 
 typedef struct {
   /* Registers */
