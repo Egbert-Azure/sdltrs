@@ -2538,7 +2538,7 @@ boxes_init(int fg_color, int bg_color, int width, int height, int expanded)
 }
 
 static SDL_Surface *CreateSurfaceFromDataScale(const Uint8 *data,
-    int fg_color, int bg_color, int scale_x,  int scale_y)
+    int fg_color, int bg_color, int scale_x)
 {
   Uint8 *mypixels, *currpixel;
   int *mydata, *currdata;
@@ -2551,7 +2551,7 @@ static SDL_Surface *CreateSurfaceFromDataScale(const Uint8 *data,
    * "trs_char_bitmap" and "trs_sdl_cleanup" functions.
    */
   mydata = (int*)calloc(1, TRS_CHAR_WIDTH * MAX_CHAR_HEIGHT *
-      scale_x * scale_y * sizeof(int));
+      scale_x * y_scale * sizeof(int));
   mypixels = (Uint8 *)calloc(1, TRS_CHAR_WIDTH * MAX_CHAR_HEIGHT * 8);
   if (mydata == NULL || mypixels == NULL)
     fatal("CreateSurfaceFromDataScale: failed to allocate memory");
@@ -2563,8 +2563,8 @@ static SDL_Surface *CreateSurfaceFromDataScale(const Uint8 *data,
 
   currdata = mydata;
   /* And prepare our rescaled character. */
-  for (j = 0; j < MAX_CHAR_HEIGHT * scale_y; j++) {
-    currpixel = mypixels + ((j / scale_y) * TRS_CHAR_WIDTH);
+  for (j = 0; j < MAX_CHAR_HEIGHT * y_scale; j++) {
+    currpixel = mypixels + ((j / y_scale) * TRS_CHAR_WIDTH);
     for (w = 0; w < TRS_CHAR_WIDTH; w++) {
       if (*currpixel++ == 0) {
         for (i = 0; i < scale_x; i++)
@@ -2579,7 +2579,7 @@ static SDL_Surface *CreateSurfaceFromDataScale(const Uint8 *data,
   free(mypixels);
 
   return SDL_CreateRGBSurfaceFrom(mydata, TRS_CHAR_WIDTH * scale_x,
-         MAX_CHAR_HEIGHT * scale_y, 32, TRS_CHAR_WIDTH * scale_x * 4,
+         MAX_CHAR_HEIGHT * y_scale, 32, TRS_CHAR_WIDTH * scale_x * 4,
 #if defined(big_endian) && !defined(__linux)
          0x000000ff, 0x0000ff00, 0x00ff0000, 0);
 #else
@@ -2616,29 +2616,29 @@ trs_char_bitmap(int char_index, int ram)
   }
   /* Normal */
   trs_char[0][char_index] = CreateSurfaceFromDataScale(
-      char_data, foreground, background, scale, y_scale);
+      char_data, foreground, background, scale);
   /* Expanded */
   trs_char[1][char_index] = CreateSurfaceFromDataScale(
-      char_data, foreground, background, scale * 2, y_scale);
+      char_data, foreground, background, scale * 2);
   /* Inverse */
   trs_char[2][char_index] = CreateSurfaceFromDataScale(
-      char_data, background, foreground, scale, y_scale);
+      char_data, background, foreground, scale);
   /* Expanded + Inverse */
   trs_char[3][char_index] = CreateSurfaceFromDataScale(
-      char_data, background, foreground, scale * 2, y_scale);
+      char_data, background, foreground, scale * 2);
   /* GUI Normal + Inverse */
   if (char_index >= '[' && char_index <= ']') {
     trs_char[4][char_index] = CreateSurfaceFromDataScale(
         trs_char_data[0][char_index],
-        gui_foreground, gui_background, scale, y_scale);
+        gui_foreground, gui_background, scale);
     trs_char[5][char_index] = CreateSurfaceFromDataScale(
         trs_char_data[0][char_index],
-        gui_background, gui_foreground, scale, y_scale);
+        gui_background, gui_foreground, scale);
   } else {
     trs_char[4][char_index] = CreateSurfaceFromDataScale(
-        char_data, gui_foreground, gui_background, scale, y_scale);
+        char_data, gui_foreground, gui_background, scale);
     trs_char[5][char_index] = CreateSurfaceFromDataScale(
-        char_data, gui_background, gui_foreground, scale, y_scale);
+        char_data, gui_background, gui_foreground, scale);
   }
 }
 
