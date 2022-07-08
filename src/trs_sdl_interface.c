@@ -2604,10 +2604,10 @@ trs_char_bitmap(int char_index, int ram)
   /* GUI Normal + Inverse */
   if (char_index >= '[' && char_index <= ']') {
     trs_char[4][char_index] = CreateSurfaceFromDataScale(
-        trs_char_data[0][char_index],
+        trs_char_data[7][char_index],
         gui_foreground, gui_background, 1, 0);
     trs_char[5][char_index] = CreateSurfaceFromDataScale(
-        trs_char_data[0][char_index],
+        trs_char_data[7][char_index],
         gui_background, gui_foreground, 1, 0);
   } else {
     trs_char[4][char_index] = CreateSurfaceFromDataScale(
