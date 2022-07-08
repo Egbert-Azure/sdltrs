@@ -1270,10 +1270,8 @@ void trs_screen_init(int resize)
   switch (trs_model) {
     case 1:
       if (eg3200) {
-        if (trs_rom_size > 2048)
-          trs_charset = 14;
-        else
-          trs_charset = 13;
+        /* Use alternate font for Holte-ROM */
+        trs_charset = trs_rom_size > 2048 ? 14 : 13;
       } else {
         trs_charset = trs_charset1;
         currentmode = NORMAL;
