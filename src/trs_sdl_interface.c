@@ -1478,12 +1478,7 @@ static void DrawRectangle(int orig_x, int orig_y, int copy_x, int copy_y)
 
 static void MarkSelection(void)
 {
-  static int orig_x;
-  static int orig_y;
-  static int end_x;
-  static int end_y;
-  static int copy_x;
-  static int copy_y;
+  static int orig_x, orig_y, end_x, end_y, copy_x, copy_y;
   static Uint8 mouse;
 
   if (selectAll) {
