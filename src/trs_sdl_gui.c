@@ -1902,6 +1902,7 @@ void trs_gui_display_settings(void)
                           "      Wider",
                           "      Genie",
                           "   HT-1080Z",
+                          "  Meritum I",
                           "Video Genie"};
   const char *font34[] = {"     Katakana",
                           "International",
@@ -1981,7 +1982,7 @@ void trs_gui_display_settings(void)
         }
         break;
       case 4:
-        value = trs_gui_display_popup("Charset I", font1, 7, gui_charset1);
+        value = trs_gui_display_popup("Charset I", font1, 8, gui_charset1);
         if (value != gui_charset1) {
           gui_charset1 = value;
           trs_charset1 = value >= 4 ? value += 6 : value;

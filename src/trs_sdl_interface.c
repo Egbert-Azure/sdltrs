@@ -466,6 +466,8 @@ static const char *charset_name(int charset)
     case 11:
       return "ht-1080z";
     case 12:
+      return "meritum";
+    case 13:
       return "videogenie";
   }
 }
@@ -511,8 +513,12 @@ static void trs_opt_charset(char *arg, int intarg, int *stringarg)
         case 'h': /*ht-1080z*/
           trs_charset1 = 11;
           break;
-        case 'v': /*video genie*/
+        case 'm': /*meritum (uppercase only)*/
           trs_charset1 = 12;
+          lowercase = 0;
+          break;
+        case 'v': /*video genie*/
+          trs_charset1 = 13;
           break;
         default:
           error("unknown charset1: '%s'", arg);
@@ -1259,7 +1265,7 @@ void trs_screen_init(int resize)
     case 1:
       if (eg3200) {
         /* Use alternate font for Holte-ROM */
-        trs_charset = trs_rom_size > 2048 ? 14 : 13;
+        trs_charset = trs_rom_size > 2048 ? 15 : 14;
       } else {
         trs_charset = trs_charset1;
         currentmode = NORMAL;
@@ -2621,7 +2627,7 @@ trs_char_bitmap(int char_index, int ram)
   trs_char[3][char_index] = CreateSurfaceFromDataScale(
       char_data, background, foreground, scale * 2, ram);
   /* GUI Normal + Inverse */
-  if (char_index >= '[' && char_index <= ']') {
+  if ((char_index >= '[' && char_index <= ']') || trs_charset == 12) {
     trs_char[4][char_index] = CreateSurfaceFromDataScale(
         trs_char_data[7][char_index],
         gui_foreground, gui_background, scale, 0);
