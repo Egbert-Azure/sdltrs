@@ -2627,19 +2627,12 @@ trs_char_bitmap(int char_index, int ram)
   trs_char[3][char_index] = CreateSurfaceFromDataScale(
       char_data, background, foreground, scale * 2, ram);
   /* GUI Normal + Inverse */
-  if ((char_index >= '[' && char_index <= ']') || trs_charset == 12) {
-    trs_char[4][char_index] = CreateSurfaceFromDataScale(
-        trs_char_data[7][char_index],
-        gui_foreground, gui_background, scale, 0);
-    trs_char[5][char_index] = CreateSurfaceFromDataScale(
-        trs_char_data[7][char_index],
-        gui_background, gui_foreground, scale, 0);
-  } else {
-    trs_char[4][char_index] = CreateSurfaceFromDataScale(
-        char_data, gui_foreground, gui_background, scale, ram);
-    trs_char[5][char_index] = CreateSurfaceFromDataScale(
-        char_data, gui_background, gui_foreground, scale, ram);
-  }
+  trs_char[4][char_index] = CreateSurfaceFromDataScale(
+      trs_char_data[7][char_index],
+      gui_foreground, gui_background, scale, 0);
+  trs_char[5][char_index] = CreateSurfaceFromDataScale(
+      trs_char_data[7][char_index],
+      gui_background, gui_foreground, scale, 0);
 }
 
 void trs_screen_refresh(void)
