@@ -3246,9 +3246,8 @@ static Uint8 pack8to6(Uint8 c)
 
 static Uint8 expand6to8(Uint8 c)
 {
-  Uint8 r;
+  Uint8 r = (c & 0x07);
 
-  r = (c & 0x07);
   if (r & 0x04)
     r |= 0x08;
   r |= (c << 1) & 0x70;
