@@ -434,8 +434,11 @@ will be executed upon startup of the emulator.</p>
         the romfile specified by <code>filename3</code> in Model III and
         Model 4 mode, or the romfile specified by <code>filename4p</code> in
         Model 4P mode, A romfile can be either a raw binary dump, Intel hex
-        format, or TRS-80 cmd format (for example, a MODELA/III file). If you
-        do not set this option, a default established at compile time is used.
+        format, or TRS-80 cmd format (for example, a MODELA/III file). If no
+        ROM files are specified, default filenames in the current directory
+        are used to load the ROM: <code>level2.rom</code> for the Model I,
+        <code>model3.rom</code> for Model III/4 and <code>model4p.rom</code>
+        for the TRS-80 Model 4P.</td>
     </td>
   </tr>
   <tr>
