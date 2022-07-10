@@ -49,8 +49,7 @@
 #include "trs_state_save.h"
 
 /* Include ROMs */
-#include "trs_rom1.c"
-#include "trs_rom3.c"
+#include "trs_fakerom.c"
 #include "trs_rom4p.c"
 #include "trs_romesf.c"
 
@@ -225,7 +224,7 @@ void trs_rom_init(void)
   switch (trs_model) {
     case 1:
       if (trs_load_rom(romfile) != 0)
-        trs_load_compiled_rom(0, sizeof(trs_rom1), trs_rom1);
+        trs_load_compiled_rom(0, sizeof(trs_fakerom), trs_fakerom);
       if (stringy)
         trs_load_compiled_rom(0x3000, sizeof(trs_romesf), trs_romesf);
       /* Do not overwrite memory mapped disk I/O */
@@ -237,7 +236,7 @@ void trs_rom_init(void)
     case 3:
     case 4:
       if (trs_load_rom(romfile3) != 0)
-        trs_load_compiled_rom(0, sizeof(trs_rom3), trs_rom3);
+        trs_load_compiled_rom(0, sizeof(trs_fakerom), trs_fakerom);
       break;
     case 5:
       if (trs_load_rom(romfile4p) != 0)
