@@ -74,15 +74,15 @@ typedef struct menu_entry_type {
 } MENU_ENTRY;
 
 static const char *drives[] = {
-  "  None",
-  "     0",
-  "     1",
-  "     2",
-  "     3",
-  "     4",
-  "     5",
-  "     6",
-  "     7"
+  " None",
+  "    0",
+  "    1",
+  "    2",
+  "    3",
+  "    4",
+  "    5",
+  "    6",
+  "    7"
 };
 
 static const char *yes_no[] = {
@@ -1193,12 +1193,12 @@ int trs_gui_file_overwrite(void)
 void trs_gui_disk_creation(void)
 {
   MENU_ENTRY menu[] =
-  {{"Image Type                                            ", MENU_NORMAL},
-   {"Number of Sides                                       ", MENU_NORMAL},
-   {"Density                                               ", MENU_NORMAL},
-   {"Physical Size                                         ", MENU_NORMAL},
-   {"Ignore Density Flag                                   ", MENU_NORMAL},
-   {"Insert Created Disk Into This Drive                   ", MENU_NORMAL},
+  {{"Image Type                                             ", MENU_NORMAL},
+   {"Number of Sides                                        ", MENU_NORMAL},
+   {"Density                                                ", MENU_NORMAL},
+   {"Physical Size                                          ", MENU_NORMAL},
+   {"Ignore Density Flag                                    ", MENU_NORMAL},
+   {"Insert Created Floppy Disk Image Into Drive            ", MENU_NORMAL},
    {"Create Disk Image with Above Parameters", MENU_NORMAL},
    {"", 0}};
   const char *disk_type[] = {"   JV1", "   JV3", "   DMK"};
@@ -1210,7 +1210,7 @@ void trs_gui_disk_creation(void)
   static int density = 2;
   static int size;
   static int ignore_density;
-  static int insert;
+  static int drive;
   int selection = 6;
 
   while (1) {
@@ -1219,7 +1219,7 @@ void trs_gui_disk_creation(void)
     snprintf(&menu[2].text[54], 7, "%s", disk_dens[density - 1]);
     snprintf(&menu[3].text[54], 7, "%s", disk_size[size]);
     snprintf(&menu[4].text[50], 11, "%s", yes_no[ignore_density]);
-    snprintf(&menu[5].text[54], 7, "%s", drives[insert]);
+    snprintf(&menu[5].text[55], 6, "%s", drives[drive]);
     trs_gui_clear_screen();
 
     selection = trs_gui_display_menu("Floppy Disk Creation", menu, selection);
@@ -1240,7 +1240,7 @@ void trs_gui_disk_creation(void)
         ignore_density = trs_gui_display_popup("Ignore", yes_no, 2, ignore_density);
         break;
       case 5:
-        insert = trs_gui_display_popup("Disk", drives, 9, insert);
+        drive = trs_gui_display_popup("Drive", drives, 9, drive);
         break;
       case 6:
         filename[0] = 0;
@@ -1263,8 +1263,8 @@ void trs_gui_disk_creation(void)
 
             if (ret)
               trs_gui_display_error(filename);
-            else if (insert)
-              trs_disk_insert(insert - 1, filename);
+            else if (drive)
+              trs_disk_insert(drive - 1, filename);
             return;
           }
         }
@@ -1446,14 +1446,14 @@ void trs_gui_hard_management(void)
    {"Sector Count                                             ", MENU_NORMAL},
    {"Granularity                                              ", MENU_NORMAL},
    {"Directory Sector                                         ", MENU_NORMAL},
-   {"Insert Created Disk Into This Drive                      ", MENU_NORMAL},
+   {"Insert Created Hard Disk Image Into Drive                ", MENU_NORMAL},
    {"Create Hard Disk Image with Above Parameters", MENU_NORMAL},
    {"", 0}};
   static int cylinder_count = 202;
   static int sector_count = 256;
   static int granularity = 8;
   static int dir_sector = 1;
-  static int insert;
+  static int drive;
   char input[4];
   int selection = 0;
   int i, value;
@@ -1467,7 +1467,7 @@ void trs_gui_hard_management(void)
     snprintf(&menu[8].text[57], 4, "%3d", sector_count);
     snprintf(&menu[9].text[57], 4, "%3d", granularity);
     snprintf(&menu[10].text[57], 4, "%3d", dir_sector);
-    snprintf(&menu[11].text[54], 7, "%6s", drives[insert]);
+    snprintf(&menu[11].text[55], 6, "%s", drives[drive]);
     trs_gui_clear_screen();
 
     selection = trs_gui_display_menu("Hard Disk Management", menu, selection);
@@ -1532,7 +1532,7 @@ void trs_gui_hard_management(void)
         }
         break;
       case 11:
-        insert = trs_gui_display_popup("Hard", drives, 5, insert);
+        drive = trs_gui_display_popup("Drive", drives, 5, drive);
         break;
       case 12:
         if (sector_count < granularity) {
@@ -1554,8 +1554,8 @@ void trs_gui_hard_management(void)
             if (trs_create_blank_hard(filename, cylinder_count, sector_count,
                 granularity, dir_sector) != 0)
               trs_gui_display_error(filename);
-            else if (insert)
-              trs_hard_attach(insert - 1, filename);
+            else if (drive)
+              trs_hard_attach(drive - 1, filename);
             return;
           }
         }
@@ -1580,10 +1580,10 @@ void trs_gui_stringy_management(void)
    {"", MENU_TITLE},
    {"Save Disk Set", MENU_NORMAL},
    {"Load Disk Set", MENU_NORMAL},
-   {"Insert Created Image Into This Wafer                  ", MENU_NORMAL},
+   {"Insert Created Wafer Image Into Stringy Drive          ", MENU_NORMAL},
    {"Create Blank Floppy Wafer", MENU_NORMAL},
    {"", 0}};
-  static int insert;
+  static int drive;
   int selection = 0;
   int i;
 
@@ -1592,7 +1592,7 @@ void trs_gui_stringy_management(void)
       trs_gui_limit_string(stringy_get_name(i), &menu[i].text[4], 56);
       menu[i].text[0] = stringy_get_writeprotect(i) ? '*' : ' ';
     }
-    snprintf(&menu[11].text[54], 7, "%6s", drives[insert]);
+    snprintf(&menu[11].text[55], 6, "%5s", drives[drive]);
     trs_gui_clear_screen();
 
     selection = trs_gui_display_menu("Stringy Wafer Management", menu, selection);
@@ -1604,7 +1604,7 @@ void trs_gui_stringy_management(void)
         trs_gui_diskset_load();
         break;
       case 11:
-        insert = trs_gui_display_popup("Wafer", drives, 9, insert);
+        drive = trs_gui_display_popup("Drive", drives, 9, drive);
         break;
       case 12:
         filename[0] = 0;
@@ -1614,8 +1614,8 @@ void trs_gui_stringy_management(void)
             if (stringy_create(filename) != 0)
               trs_gui_display_error(filename);
             else
-              if (insert)
-                stringy_insert(insert - 1, filename);
+              if (drive)
+                stringy_insert(drive - 1, filename);
             return;
           }
         }
