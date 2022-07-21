@@ -427,8 +427,8 @@ void s80z_out(int value)
 static void mem_init(void)
 {
     /* Initialize RAM & ROM */
-    memset(&memory, 0xFF, MAX_MEMORY_SIZE);
-    memset(&supermem_ram, 0xFF, MAX_SUPERMEM_SIZE);
+    memset(&memory, 0xC9, MAX_MEMORY_SIZE);
+    memset(&supermem_ram, 0xC9, MAX_SUPERMEM_SIZE);
     memset(&rom, 0, MAX_ROM_SIZE);
     memset(&cp500_rom, 0, CP500_ROM_SIZE);
 
