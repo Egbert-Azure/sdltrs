@@ -432,11 +432,6 @@ static void mem_init(void)
     memset(&rom, 0, MAX_ROM_SIZE);
     memset(&cp500_rom, 0, CP500_ROM_SIZE);
 
-    if (trs_model < 4) {
-        /* Fill memory of random seed buffer */
-        memset(&memory[0x4090], 0x7F, 0x3);
-    }
-
     mem_map(0);
     mem_bank(0);
     mem_video_page(0);
