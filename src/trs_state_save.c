@@ -34,7 +34,7 @@
 #include "error.h"
 #include "trs_state_save.h"
 
-static const char stateFileBanner[] = "sldtrs State Save File";
+static const char stateFileBanner[] = "sdltrs State Save File";
 static int const stateFileBannerLen = sizeof(stateFileBanner) - 1;
 static unsigned stateVersionNumber = 4;
 
