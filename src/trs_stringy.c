@@ -696,10 +696,12 @@ static void trs_load_stringy(FILE *file, stringy_info_t *d)
   int file_not_null;
 
   trs_load_int(file, &file_not_null, 1);
+
   if (file_not_null)
     d->file = (FILE *) 1;
   else
     d->file = NULL;
+
   trs_load_filename(file, d->name);
   trs_load_uint64(file, (Uint64 *)&d->length, 1);
   trs_load_uint64(file, (Uint64 *)&d->eotWidth, 1);

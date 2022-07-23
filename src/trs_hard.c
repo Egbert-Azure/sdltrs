@@ -159,10 +159,12 @@ trs_hard_getwriteprotect(int unit)
 int trs_hard_in(int port)
 {
   int v;
+
   if (state.present) {
     switch (port) {
     case TRS_HARD_WP: {
       int i;
+
       v = 0;
       for (i = 0; i < TRS_HARD_MAXDRIVES; i++) {
 	open_drive(i);
@@ -476,6 +478,7 @@ static int open_drive(int drive)
 static int find_sector(int newstatus)
 {
   Drive *d = &state.d[state.drive];
+
   if (open_drive(state.drive) < 0) return 0;
   if (/**state.cyl >= d->cyls ||**/ /* ignore this limit */
       state.head >= d->heads ||
@@ -515,8 +518,10 @@ static void hard_data_out(int value)
 {
   Drive *d = &state.d[state.drive];
   int res = 0;
+
   if (trs_show_led)
     trs_hard_led(state.drive, 1);
+
   state.data = value;
   if ((state.command & TRS_HARD_CMDMASK) == TRS_HARD_WRITE &&
       (state.status & TRS_HARD_ERR) == 0) {
@@ -547,6 +552,7 @@ static void set_dir_cyl(int cyl)
 {
   Drive *d = &state.d[state.drive];
   long where = ftell(d->file);
+
   fseek(d->file, 31, 0);
   putc(cyl, d->file);
   fseek(d->file, where, 0);

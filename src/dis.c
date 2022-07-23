@@ -2119,11 +2119,13 @@ int disassemble(Uint16 pc)
 	code = &major[i];
     }
     printf ("%04x  ", addr);
+
     for (i = 0; i < ((pc + arglen(code->args) - addr) & 0xffff); i++)
 	printf("%02x ", mem_read(addr + i));
     for (; i < 4; i++)
 	printf("   ");
     putchar (' ');
+
     switch (code->args) {
       case A_16: /* 16-bit number */
 	printf (code->name, mem_read(pc + 1), mem_read(pc));

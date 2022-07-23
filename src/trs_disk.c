@@ -322,6 +322,7 @@ void
 trs_disk_debug(void)
 {
   int i;
+
   puts("Floppy disk controller state:");
   printf("  status 0x%02x, track %d (0x%02x), sector %d (0x%02x), "
 	 "data 0x%02x\n", state.status, state.track, state.track,
@@ -340,6 +341,7 @@ trs_disk_debug(void)
   printf("  debug flags: %#x\n", trs_disk_debug_flags);
   for (i = 0; i < NDRIVES; i++) {
     DiskState *d = &disk[i];
+
     printf("Drive %d state: "
 	   "writeprot %d, phytrack %d (0x%02x), inches %d, step %d, type ",
 	   i, d->writeprot, d->phytrack, d->phytrack, d->inches, d->real_step);
@@ -526,6 +528,7 @@ jv3_id_compare(const void* p1, const void* p2)
   int const i1 = *(short*)p1;
   int const i2 = *(short*)p2;
   int r = d->u.jv3.id[i1].track - d->u.jv3.id[i2].track;
+
   if (r != 0) return r;
   r = (d->u.jv3.id[i1].flags & JV3_SIDE) - (d->u.jv3.id[i2].flags & JV3_SIDE);
   if (r != 0) return r;
@@ -622,6 +625,7 @@ idoffset(DiskState *d, int id_index)
       if (d->u.jv3.nblocks == 1) {
         /* Initialize new block of ids */
 	int c;
+
 	fseek(d->file, idstart2, 0);
         c = fwrite((void*)&d->u.jv3.id[JV3_SECSPERBLK], JV3_SECSTART, 1, d->file);
 	if (c == EOF) state.status |= TRSDISK_WRITEFLT;
@@ -638,6 +642,7 @@ static int
 jv3_alloc_sector(DiskState *d, int size_code)
 {
   int maybe = d->u.jv3.free_id[size_code];
+
   d->u.jv3.sorted_valid = 0;
   while (maybe <= d->u.jv3.last_used_id) {
     if (d->u.jv3.id[maybe].track == JV3_FREE &&
@@ -665,6 +670,7 @@ jv3_free_sector(DiskState *d, int id_index)
 {
   int c;
   int const size_code = (d->u.jv3.id[id_index].flags & JV3_SIZE) ^ 1;
+
   if (d->u.jv3.free_id[size_code] > id_index) {
     d->u.jv3.free_id[size_code] = id_index;
   }
@@ -679,6 +685,7 @@ jv3_free_sector(DiskState *d, int id_index)
 
   if (id_index == d->u.jv3.last_used_id) {
     int newlen;
+
     while (d->u.jv3.id[d->u.jv3.last_used_id].track == JV3_FREE) {
       d->u.jv3.last_used_id--;
     }
@@ -794,6 +801,7 @@ trs_disk_insert(int drive, const char *diskname)
     int fd;
     int reset_now = 0;
     struct floppy_drive_params fdp;
+
     fd = open(diskname, O_ACCMODE|O_NDELAY);
     if (fd == -1) {
       error("'%s': %s", diskname, strerror(errno));
@@ -999,6 +1007,7 @@ search(int sector, int side)
   } else if (d->emutype == JV3) {
     int i;
     SectorId *sid;
+
     if (d->phytrack < 0 || d->phytrack >= MAXTRACKS ||
 	state.curside >= JV3_SIDES ||
 	(side != -1 && side != state.curside) ||
@@ -1401,6 +1410,7 @@ trs_disk_data_read(void)
   case TRSDISK_READ:
     if (state.bytecount > 0 && (state.status & TRSDISK_DRQ)) {
       int c;
+
       if (d->emutype == REAL) {
 	c = d->u.real.buf[size_code_to_size(d->u.real.size_code)
 			 - state.bytecount];
@@ -1602,6 +1612,7 @@ trs_disk_data_write(Uint8 data)
       if (state.bytecount <= 0) {
 	if (d->emutype == DMK) {
 	  int idamp, i, j;
+
 	  c = state.crc >> 8;
 	  d->u.dmk.buf[d->u.dmk.curbyte++] = c;
 	  c = putc(c, d->file);
@@ -1727,6 +1738,7 @@ trs_disk_data_write(Uint8 data)
 	  if (!state.density || state.format == FMT_PREAM) {
 	    Uint16 const idamp = d->u.dmk.curbyte +
 	      (state.density ? DMK_DDEN_FLAG : 0);
+
 	    if (d->u.dmk.nextidam >= DMK_TKHDR_SIZE) {
 	      error("DMK formatting too many address marks on track");
 	    } else if (d->u.dmk.curbyte > d->u.dmk.tracklen) {
@@ -1750,6 +1762,7 @@ trs_disk_data_write(Uint8 data)
 	  if (!state.density || state.format == FMT_IPREAM) {
 	    Uint16 const idamp = d->u.dmk.curbyte +
 	      (state.density ? DMK_DDEN_FLAG : 0);
+
 	    if (d->u.dmk.nextidam >= DMK_TKHDR_SIZE) {
 	      error("DMK formatting too many address marks on track");
 	    } else if (d->u.dmk.curbyte > d->u.dmk.tracklen) {
@@ -1926,6 +1939,7 @@ trs_disk_data_write(Uint8 data)
       }
       if (d->emutype == JV3) {
 	int const id_index = jv3_alloc_sector(d, data);
+
 	if (id_index == -1) {
 	  /* Data structure full */
 	  state.status |= TRSDISK_WRITEFLT;
@@ -2611,6 +2625,7 @@ trs_disk_command_write(Uint8 cmd)
       trs_schedule_event(trs_disk_done, 0, 512);
     } else {
       int jv3dam = 0, dam = 0;
+
       if (state.controller == TRSDISK_P1771) {
 	switch (cmd & (TRSDISK_CBIT|TRSDISK_DBIT)) {
 	case 0:
@@ -2681,8 +2696,10 @@ trs_disk_command_write(Uint8 cmd)
 	Uint8 newflags = sid->flags;
 	newflags &= ~(JV3_ERROR|JV3_DAM); /* clear CRC error and DAM */
 	newflags |= jv3dam;
+
 	if (newflags != sid->flags) {
 	  int c;
+
 	  fseek(d->file, idoffset(d, id_index)
 		         + ((char *) &sid->flags) - ((char *) sid), 0);
 	  c = putc(newflags, d->file);
@@ -2695,6 +2712,7 @@ trs_disk_command_write(Uint8 cmd)
 	/* Kludge for VTOS 3.0 */
 	if (sid->flags & JV3_NONIBM) {
 	  int i, j, c;
+
 	  /* Smash following sectors. This is especially a kludge because
 	     it uses the sector numbers, not the known physical sector
 	     order. */
@@ -2805,6 +2823,7 @@ trs_disk_command_write(Uint8 cmd)
     } else if (d->emutype == JV1 || d->emutype == JV3) {
       int totbyt, i, ts, denok;
       float a, b, bytlen;
+
       id_index = search_adr();
       if (id_index == -1) {
 	state.status = TRSDISK_BUSY;
@@ -2847,6 +2866,7 @@ trs_disk_command_write(Uint8 cmd)
 	for (;;) {
 	  SectorId *sid = &d->u.jv3.id[d->u.jv3.sorted_id[i]];
 	  int dden = (sid->flags & JV3_DENSITY) != 0;
+
 	  if (sid->track != d->phytrack ||
 	      (sid->flags & JV3_SIDE ? 1 : 0) != state.curside) break;
 	  totbyt += (dden ? 1 : 2) *
@@ -3022,6 +3042,7 @@ trs_disk_command_write(Uint8 cmd)
       if (d->emutype == JV3) {
 	/* Erase track if already formatted */
 	int i;
+
 	for (i = 0; i <= d->u.jv3.last_used_id; i++) {
 	  if (d->u.jv3.id[i].track == d->phytrack &&
 	      ((d->u.jv3.id[i].flags & JV3_SIDE) != 0) == state.curside) {
@@ -3103,6 +3124,7 @@ void
 real_error(DiskState *d, unsigned int flags, const char *msg)
 {
   time_t now = time(NULL);
+
   if (now > d->u.real.empty_timeout) {
     d->u.real.empty_timeout = time(NULL) + EMPTY_TIMEOUT;
     d->u.real.empty = 1;

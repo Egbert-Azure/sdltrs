@@ -293,6 +293,7 @@ int main(int argc, char *argv[])
     /* Run continuously until exit or request to enter debugger */
     z80_run(TRUE);
   }
+
 #ifdef ZBX
   puts("Entering debugger.");
   debug_init();
