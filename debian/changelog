@@ -1,3 +1,9 @@
+sdl2trs (1.2.24-1) unstable; urgency=medium
+
+  * New upstream release
+
+ -- Jens Guenther <Jenz.Guenther@T-Online.de>  Sun, 24 Jul 2022 00:28:33 +0100
+
 sdl2trs (1.2.23-1) unstable; urgency=medium
 
   * New upstream release
