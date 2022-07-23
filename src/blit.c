@@ -256,10 +256,13 @@ void TrsBlitMap(SDL_Palette *src, SDL_PixelFormat *dst)
 
   alpha = dst->Amask ? SDL_ALPHA_OPAQUE : 0;
   for (i = 0; i < src->ncolors; ++i) {
-    mapValue = SDL_MapRGBA(dst, src->colors[i].r,
+
+    mapValue = SDL_MapRGBA(dst,
+        src->colors[i].r,
         src->colors[i].g,
         src->colors[i].b,
         alpha);
+
     switch (dst->BytesPerPixel) {
       case 1:
         map[i] = (Uint8)mapValue;

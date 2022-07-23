@@ -71,6 +71,7 @@ void PasteManagerStartCopy(const char *string)
 {
   SDL_SetClipboardText(string);
 }
+
 #elif _WIN32
 #include <stdio.h>
 #include <SDL_types.h>
@@ -133,6 +134,7 @@ void PasteManagerStartCopy(const char *string)
     CloseClipboard();
   }
 }
+
 #elif !NOX
 #include <stdio.h>
 #include <stdlib.h>
@@ -141,10 +143,8 @@ void PasteManagerStartCopy(const char *string)
 #include <time.h>
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
-
 #include <SDL.h>
 #include <SDL_syswm.h>
-
 #include "error.h"
 
 int  PasteManagerGetChar(Uint8 *character);
@@ -226,6 +226,7 @@ static int init_scrap(void)
 static int lost_scrap(void)
 {
   int retval;
+
   Lock_Display();
   retval = (XGetSelectionOwner(SDL_Display, _atom_CLIPBOARD) != SDL_Window);
   Unlock_Display();
@@ -401,6 +402,7 @@ static void get_scrap(int *dstlen, char **dst)
   retval = malloc (length + 1);
   if (retval) {
     unsigned long boffset = 0;
+
     chunk = MAX_CHUNK_SIZE(SDL_Display);
     memset (retval, 0, (size_t)(length + 1));
 

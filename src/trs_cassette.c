@@ -243,6 +243,7 @@ put_twobyte(Uint16 n, FILE* f)
 {
   int c;
   struct twobyte *p = (struct twobyte *) &n;
+
   c = putc(p->low, f);
   if (c == -1) return c;
   c = putc(p->high, f);
@@ -257,6 +258,7 @@ put_fourbyte(Uint32 n, FILE* f)
 {
   int c;
   struct fourbyte *p = (struct fourbyte *) &n;
+
   c = putc(p->byte0, f);
   if (c == -1) return c;
   c = putc(p->byte1, f);
@@ -275,6 +277,7 @@ get_twobyte(Uint16 *pp, FILE* f)
 {
   int c;
   struct twobyte *p = (struct twobyte *) pp;
+
   c = getc(f);
   if (c == -1) return c;
   p->low = c;
@@ -291,6 +294,7 @@ get_fourbyte(Uint32 *pp, FILE* f)
 {
   int c;
   struct fourbyte *p = (struct fourbyte *) pp;
+
   c = getc(f);
   if (c == -1) return c;
   p->byte0 = c;
@@ -393,6 +397,7 @@ static int
 check_chunk_id(char *expected, FILE* f)
 {
   char c4[5];
+
   c4[4] = '\0';
   if (fread(c4, 4, 1, f) != 1) return -1;
   if (strcmp(c4, expected) != 0) {
@@ -1256,6 +1261,7 @@ trs_cassette_update(int dummy)
 {
   if (cassette_motor && cassette_state != WRITE && assert_state(READ) >= 0) {
     int newtrans = 0;
+
     while ((z80_state.t_count - cassette_transition) >= cassette_delta) {
 
 	/* Simulate analog signal processing on the 500-bps cassette input */

@@ -134,6 +134,7 @@ trs_cassette_rise_interrupt(int dummy)
   interrupt_latch = (interrupt_latch & ~M3_CASSRISE_BIT) |
     (interrupt_mask & M3_CASSRISE_BIT);
   z80_state.irq = (interrupt_latch & interrupt_mask) != 0;
+
   trs_cassette_update(0);
 }
 
@@ -143,6 +144,7 @@ trs_cassette_fall_interrupt(int dummy)
   interrupt_latch = (interrupt_latch & ~M3_CASSFALL_BIT) |
     (interrupt_mask & M3_CASSFALL_BIT);
   z80_state.irq = (interrupt_latch & interrupt_mask) != 0;
+
   trs_cassette_update(0);
 }
 
@@ -288,6 +290,7 @@ Uint8
 trs_interrupt_latch_read(void)
 {
   Uint8 tmp = interrupt_latch;
+
   if (trs_model == 1) {
     trs_timer_interrupt(0); /* acknowledge this one (only) */
     if (genie3s)
@@ -357,6 +360,7 @@ void trs_timer_sync_with_host(void)
     trs_disk_led(0,0);
     trs_hard_led(0,0);
   }
+
   trs_timer_event();
 }
 
@@ -614,6 +618,7 @@ void trs_interrupt_save(FILE *file)
   trs_save_int(file, &timer_hz, 1);
   trs_save_uint32(file, &cycles_per_timer, 1);
   trs_save_int(file, &timer_on, 1);
+
   if (event_func == assert_state_void)
     event = 1;
   else if (event_func == transition_out)
@@ -642,6 +647,7 @@ void trs_interrupt_save(FILE *file)
     event = 13;
   else
     event = 0;
+
   trs_save_int(file, &event, 1);
   trs_save_int(file, &event_arg, 1);
 }
@@ -657,6 +663,7 @@ void trs_interrupt_load(FILE *file)
   trs_load_uint32(file, &cycles_per_timer, 1);
   trs_load_int(file, &timer_on, 1);
   trs_load_int(file, &event, 1);
+
   switch(event) {
     case 1:
       event_func = assert_state_void;
@@ -701,5 +708,6 @@ void trs_interrupt_load(FILE *file)
       event_func = NULL;
       break;
   }
+
   trs_load_int(file, &event_arg, 1);
 }

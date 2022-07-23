@@ -193,6 +193,7 @@ void do_emt_setddir(void)
 void do_emt_open(void)
 {
   int fd, oflag, eoflag;
+
   eoflag = Z80_BC;
   switch (eoflag & EO_ACCMODE) {
   case EO_RDONLY:
@@ -298,6 +299,7 @@ void do_emt_lseek(void)
 {
   int i;
   off_t offset;
+
   if (Z80_HL + 8 > 0x10000) {
     Z80_A = EFAULT;
     Z80_F &= ~ZERO_MASK;
@@ -325,6 +327,7 @@ void do_emt_strerror(void)
 {
   char *msg;
   int size;
+
   if (Z80_HL + Z80_BC > 0x10000) {
     Z80_A = EFAULT;
     Z80_F &= ~ZERO_MASK;
@@ -360,6 +363,7 @@ void do_emt_strerror(void)
 void do_emt_time(void)
 {
   time_t now = time(0);
+
   if (Z80_A == 1) {
 #if __alpha
     struct tm *loctm = localtime(&now);
@@ -404,6 +408,7 @@ void do_emt_opendir(void)
 {
   int i;
   char *dirname;
+
   for (i = 0; i < MAX_OPENDIR; i++) {
     if (dir[i].dir == NULL) break;
   }
@@ -430,6 +435,7 @@ void do_emt_closedir(void)
 {
   int const i = Z80_DE;
   int ok;
+
   if (i < 0 || i >= MAX_OPENDIR || dir[i].dir == NULL) {
     Z80_A = EBADF;
     Z80_F &= ~ZERO_MASK;
@@ -503,6 +509,7 @@ void do_emt_chdir(void)
 void do_emt_getcwd(void)
 {
   char *result;
+
   if (Z80_HL + Z80_BC > 0x10000) {
     Z80_A = EFAULT;
     Z80_F &= ~ZERO_MASK;
@@ -614,6 +621,7 @@ void do_emt_ftruncate(void)
 {
   int i, result;
   off_t offset;
+
   if (Z80_HL + 8 > 0x10000) {
     Z80_A = EFAULT;
     Z80_F &= ~ZERO_MASK;
@@ -691,6 +699,7 @@ static
 int do_emt_closefd(int odindex)
 {
   int i;
+
   if (od[odindex].xtrshard) {
     for (i = 0; i < 4; i++) {
       if (xtrshard_fd[i] == od[odindex].fd)
@@ -703,6 +712,7 @@ int do_emt_closefd(int odindex)
 void do_emt_closedisk(void)
 {
   int i;
+
   if (Z80_DE == 0xffff) {
     for (i = 0; i < MAX_OPENDISK; i++) {
       if (od[i].inuse) {
