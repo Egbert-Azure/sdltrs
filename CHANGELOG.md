@@ -1,3 +1,12 @@
+## Version 1.2.24 Release 07-24-2022:
+
+ * Added 6845 CRTC Interlace Mode Emulation.
+ * Added VideoExtension HRG for EACA EG 3200 Genie III.
+ * Added Genieplus Memory Card for EACA EG 3200 Genie III.
+ * Added character set for Meritum I (Mera-Elzab).
+ * Fixed Virtual Keyboard for SDL2.
+ * Fixed more bugs and other improvements.
+
 ## Version 1.2.23 Release 03-27-2022:
 
  * Added Anitek MegaMem card for TRS-80 Model III and 4/4P.
