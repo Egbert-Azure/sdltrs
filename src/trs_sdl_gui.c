@@ -153,7 +153,7 @@ static int  trs_gui_filename_cmp(const void *nptr1, const void *nptr2);
 static void trs_gui_delete_filename_list(void);
 static int  trs_gui_readdirectory(const char *path, const char *mask, int browse_dir);
 static int  trs_gui_input_string(const char *title, const char *input, char* output,
-                                 unsigned int limit, int file);
+                                 int limit, int file);
 static int  trs_gui_display_menu(const char* title, MENU_ENTRY *entry, int selection);
 static int  trs_gui_display_popup(const char *title, const char **entry,
                                   int num, int selection);
@@ -788,13 +788,13 @@ done:
 }
 
 int trs_gui_input_string(const char *title, const char* input, char* output,
-                         unsigned int limit, int file)
+                         int limit, int file)
 {
   int key;
   int insert = 1;
-  unsigned int i, pos;
-  unsigned int len;
-  unsigned int first_disp;
+  int i, pos;
+  int len;
+  int first_disp;
 
   if (input != output)
     snprintf(output, limit, "%s", input);
@@ -814,7 +814,7 @@ redraw:
 
   while (1) {
     for (i = 0; i < 60; i++) {
-      unsigned int const cur_pos = first_disp + i;
+      int const cur_pos = first_disp + i;
 
       trs_gui_write_char(i + 2, 7,
           (cur_pos >= len) ? ' ' : output[cur_pos],
