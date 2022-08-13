@@ -2698,8 +2698,7 @@ void trs_screen_refresh(void)
 
     /* Redraw HRG screen */
     if (hrg_enable == 2) {
-      for (i = 0; i < 192; i++)
-        memset(&grafyx_unscaled[i][0], 0, 80);
+      memset(grafyx_unscaled, 0, G_YSIZE * G_XSIZE);
 
       grafyx_overlay = 0;
       for (i = 0; i <= 0x3FFF; i++) {
