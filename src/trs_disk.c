@@ -3130,7 +3130,7 @@ real_error(DiskState *d, unsigned int flags, const char *msg)
     d->u.real.empty = 1;
   }
   if (trs_disk_debug_flags & DISKDEBUG_REALERR) {
-    debug("error on real_%s\n", msg);
+    debug("error on real_%s: %s\n", msg, strerror(errno));
   }
 }
 
