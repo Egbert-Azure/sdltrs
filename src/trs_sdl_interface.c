@@ -3587,12 +3587,6 @@ void trs_set_mouse_max(int x, int y, unsigned int sens)
   mouse_sens = sens;
 }
 
-int trs_get_mouse_type(void)
-{
-  /* !!Note: assuming 3-button mouse */
-  return 1;
-}
-
 void trs_main_save(FILE *file)
 {
   int i;

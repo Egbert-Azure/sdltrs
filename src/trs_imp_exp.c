@@ -141,7 +141,7 @@ void do_emt_mouse(void)
     Z80_F |= ZERO_MASK;
     break;
   case 5:
-    Z80_A = trs_get_mouse_type();
+    Z80_A = 1;  /* !!Note: assuming 3-button mouse */
     if (Z80_A) {
       Z80_F &= ~ZERO_MASK;
     } else {

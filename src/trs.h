@@ -268,7 +268,6 @@ void trs_get_mouse_pos(int *x, int *y, unsigned int *buttons);
 void trs_set_mouse_pos(int x, int y);
 void trs_get_mouse_max(int *x, int *y, unsigned int *sens);
 void trs_set_mouse_max(int x, int y, unsigned int sens);
-int trs_get_mouse_type(void);
 
 extern int timer_hz;
 extern int timer_overclock_rate;
