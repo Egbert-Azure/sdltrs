@@ -272,6 +272,7 @@ static const struct {
   { "cass",            trs_opt_cass,          1, 0, NULL                 },
   { "cassdir",         trs_opt_dirname,       1, 0, trs_cass_dir         },
   { "cassette",        trs_opt_cass,          1, 0, NULL                 },
+  { "charset",         trs_opt_charset,       1, 0, NULL                 },
   { "charset1",        trs_opt_charset,       1, 1, NULL                 },
   { "charset3",        trs_opt_charset,       1, 3, NULL                 },
   { "charset4",        trs_opt_charset,       1, 4, NULL                 },
@@ -484,6 +485,9 @@ static void trs_opt_cass(char *arg, int intarg, int *stringarg)
 
 static void trs_opt_charset(char *arg, int intarg, int *stringarg)
 {
+  if (intarg == 0)
+    intarg = trs_model;
+
   if (intarg == 1) {
     if (isdigit((int)*arg)) {
       trs_charset1 = atoi(arg);
