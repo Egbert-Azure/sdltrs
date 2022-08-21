@@ -49,6 +49,9 @@ Browse the [Documentation] online ...
 
   [BSD 2-Clause](LICENSE)
 
+## Contributing
+All contributions are welcome.
+
 ## SDL2
 
 This branch contains the SDL2 version with hardware rendering support.
