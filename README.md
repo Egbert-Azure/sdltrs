@@ -50,6 +50,9 @@ by Fritz Chwolka ...
 
   [BSD 2-Clause](LICENSE)
 
+## Contributing
+All contributions are welcome.
+
 ## Binaries
 
   * [sdltrs.exe]     (32-bit, needs [SDL.DLL] of [SDL-1.2.14] for Win9X)
