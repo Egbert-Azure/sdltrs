@@ -256,8 +256,6 @@ int cp500_a11_flipflop_toggle(void)
 	/* toggle the flip-flop at every read at io addresses 0xf4-f7 */
 	m_a11_flipflop ^= 1;
 
-	memcpy(&rom[0], &cp500_rom[m_a11_flipflop * 0x800], MAX_ROM_SIZE);
-
 	return 0x00; /* really?! */
 }
 
@@ -754,7 +752,12 @@ int mem_read(int address)
 	if (address >= VIDEO_START) {
 	  return grafyx_m3_read_byte(address - VIDEO_START);
 	}
-	if (address < trs_rom_size) return rom[address];
+	if (address < trs_rom_size) {
+	  if (m_a11_flipflop)
+	    return cp500_rom[address | 0x0800];
+	  else
+	    return rom[address];
+	}
 	if (address == PRINTER_ADDRESS)	return trs_printer_read();
 	if (address >= KEYBOARD_START) return trs_kb_mem_read(address);
 	return 0xff;
@@ -1348,7 +1351,12 @@ Uint8 *mem_pointer(int address, int writing)
         if (trs_model < 4 && address >= 32768)
 	    return &memory[address + bank_base];
 	if (address >= VIDEO_START) return &memory[address];
-	if (address < trs_rom_size) return &rom[address];
+	if (address < trs_rom_size) {
+	  if (m_a11_flipflop)
+	    return &cp500_rom[address | 0x0800];
+	  else
+	    return &rom[address];
+	}
 	return NULL;
 
       case 0x38: /* Model III writing */
