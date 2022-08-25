@@ -47,8 +47,10 @@
 
 #include "error.h"
 #include "trs.h"
+#include "trs_clones.h"
 #include "trs_disk.h"
 #include "trs_hard.h"
+#include "trs_memory.h"
 #include "trs_state_save.h"
 #include "trs_stringy.h"
 #include "trs_uart.h"
@@ -970,10 +972,7 @@ int z80_in(int port)
       value = trs_disk_data_read();
       goto done;
     case 0xF4:
-    case 0xF5:
-    case 0xF6:
-    case 0xF7:
-      value = cp500_a11_flipflop_toggle();
+      value = cp500_switch_mode(Z80_A);
       goto done;
     case 0xF8:
     case 0xF9:

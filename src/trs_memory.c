@@ -49,14 +49,15 @@
 #include <string.h>
 #include "error.h"
 #include "trs.h"
+#include "trs_clones.h"
 #include "trs_disk.h"
+#include "trs_memory.h"
 #include "trs_imp_exp.h"
 #include "trs_state_save.h"
 #include "trs_uart.h"
 
-#define MAX_ROM_SIZE	(0x3800)
-#define MAX_VIDEO_SIZE	(0x0800)
-#define CP500_ROM_SIZE	(0x4000)
+#define MAX_ROM_SIZE    (0x3800)
+#define MAX_VIDEO_SIZE  (0x0C00)  /* CP-500 M80 has 3K */
 
 #define MAX_MEMORY_SIZE	(4 * 1024 * 1024) + 65536
 
@@ -67,12 +68,6 @@
 
 /* Start MegaMem > 1MB to leave space for SuperMem or HyperMem */
 #define MEGAMEM_START	(1 * 1024 * 1024) + 65536
-
-/* Locations for Model I, Model III, and Model 4 map 0 */
-#define KEYBOARD_START	(0x3800)
-#define VIDEO_START	(0x3c00)
-#define RAM_START	(0x4000)
-#define PRINTER_ADDRESS	(0x37E8)
 
 /* Interrupt latch register in EI (Model 1) */
 #define TRS_INTLATCH(addr) (((addr)&~3) == 0x37e0)
@@ -101,6 +96,7 @@ static Uint8 supermem_ram[MAX_SUPERMEM_SIZE + 1];
 static int memory_map;
 static int bank_offset[2];
 static int video_ram = VIDEO_START;
+static int video_offset;
 static unsigned int bank_base = 0x10000;
 static int megamem_addr;
 static unsigned int megamem_base;
@@ -109,12 +105,53 @@ static int romin; /* Model 4p */
 static int supermem_base;
 static unsigned int supermem_hi;
 static int selector_reg;
-static int m_a11_flipflop;
 static int system_byte;
 
-void mem_video_page(int offset)
+static inline int vaddr_mask(Uint16 vaddr) {
+  int size = 0x0800;
+  if (model_quirks.vram_size > 0) {
+    size = model_quirks.vram_size;
+  }
+  if (vaddr < size && vaddr < MAX_VIDEO_SIZE) {
+    return vaddr;
+  } else { // emulator bug, should never happen
+    error("video address %04x out of range [size=%04x]",
+          vaddr, size);
+    return -1;
+  }
+}
+inline Uint8 mem_video_read(int vaddr) {
+  vaddr = vaddr_mask(vaddr);
+  if (vaddr < 0) { // emulator bug, should never happen
+    return 0xFF;
+  }
+  return video[vaddr];
+}
+inline int mem_video_write(int vaddr, Uint8 value) {
+  vaddr = vaddr_mask(vaddr);
+  if(vaddr < 0) { // emulator bug, should never happen
+    return 0;
+  }
+  if (video[vaddr] != value) {
+    video[vaddr] = value;
+    return 1;
+  }  else {
+    return 0;
+  }
+}
+
+inline void mem_video_page(int offset)
 {
   video_ram = VIDEO_START + offset;
+  video_offset = offset;
+}
+
+inline Uint8 mem_video_page_read(int vaddr) {
+  return mem_video_read(vaddr + video_offset);
+}
+
+inline int mem_video_page_write(int vaddr, Uint8 value) {
+  return mem_video_write(vaddr + video_offset, value);
 }
 
 void mem_bank(int command)
@@ -247,16 +284,6 @@ void megamem_out(int mem_slot, Uint8 value)
 		megamem_base = (((value - (value & 0xC0)) * 16) +
 				(mem_slot * 1024)) * 1024 + MEGAMEM_START;
 	}
-}
-
-/* The A11 flipflop is used for enabling access to the CP-500
-   system monitor code at the EPROM address range 3800-3fff */
-int cp500_a11_flipflop_toggle(void)
-{
-	/* toggle the flip-flop at every read at io addresses 0xf4-f7 */
-	m_a11_flipflop ^= 1;
-
-	return 0x00; /* really?! */
 }
 
 void eg3200_init_out(int value)
@@ -441,7 +468,6 @@ void trs_reset(int poweron)
 {
     bank_base = 0x10000;
     eg3200 = 0;
-    m_a11_flipflop = 0;
     megamem_addr = 0;
     megamem_base = 0;
     mem_command = 0;
@@ -503,6 +529,7 @@ void trs_reset(int poweron)
     }
     if (trs_model == 3) {
         grafyx_m3_reset();
+        cp500_reset_mode();
     }
     if (trs_model == 1) {
 	hrg_onoff(0);		/* Switch off HRG1B hi-res graphics. */
@@ -748,19 +775,11 @@ int mem_read(int address)
 	return memory[address];
 
       case 0x30: /* Model III */
-	if (address >= RAM_START) return memory[address];
-	if (address >= VIDEO_START) {
-	  return grafyx_m3_read_byte(address - VIDEO_START);
-	}
-	if (address < trs_rom_size) {
-	  if (m_a11_flipflop)
-	    return cp500_rom[address | 0x0800];
-	  else
-	    return rom[address];
-	}
-	if (address == PRINTER_ADDRESS)	return trs_printer_read();
-	if (address >= KEYBOARD_START) return trs_kb_mem_read(address);
-	return 0xff;
+        return trs80_model3_mem_read(address);
+      case 0x31: /* CP-500: */
+      case 0x32:
+      case 0x33:
+        return cp500_mem_read(address, memory_map, cp500_rom, memory);
 
       case 0x40: /* Model 4 map 0 */
 	if (address >= RAM_START) {
@@ -805,12 +824,26 @@ int mem_read(int address)
     return 0xff;
 }
 
-static void trs80_screen_write_char(int vaddr, int value)
-{
-  vaddr &= 0x7ff;
+int trs80_model3_mem_read(int address) {
+  if (address >= RAM_START) {
+    return memory[address];
+  } else if (address >= VIDEO_START) {
+    return grafyx_m3_read_byte(address - VIDEO_START);
+  } else if (address >= KEYBOARD_START) {
+    return trs_kb_mem_read(address);
+  } else if (address == PRINTER_ADDRESS) {
+    return trs_printer_read();
+  } else if (address < trs_rom_size) {
+    return rom[address];
+  } else {
+    error("Invalid read of address %04x, returning FF [PC=%04x, mem_map=%02x]\n", address, Z80_PC, memory_map);
+    return 0xFF;
+  }
+}
 
-  if (video[vaddr] != value) {
-      video[vaddr] = value;
+void trs80_screen_write_char(int vaddr, int value)
+{
+  if (mem_video_write(vaddr, value)) {
       trs_screen_write_char(vaddr, value);
   }
 }
@@ -1091,15 +1124,13 @@ void mem_write(int address, int value)
 	break;
 
       case 0x30: /* Model III */
-	if (address >= RAM_START) {
-	    memory[address] = value;
-	} else if (address >= VIDEO_START) {
-	    if (grafyx_m3_write_byte(address - video_ram, value)) return;
-	    trs80_screen_write_char(address - video_ram, value);
-	} else if (address == PRINTER_ADDRESS) {
-	    trs_printer_write(value);
-	}
-	break;
+        trs80_model3_mem_write(address, value);
+        break;
+      case 0x31: /* CP-500 */
+      case 0x32:
+      case 0x33:
+        cp500_mem_write(address, value, memory_map, memory);
+        break;
 
       case 0x40: /* Model 4 map 0 */
       case 0x50: /* Model 4P map 0, boot ROM out */
@@ -1139,6 +1170,21 @@ void mem_write(int address, int value)
 	memory[address + bank_offset[address >> 15]] = value;
 	break;
     }
+}
+
+void trs80_model3_mem_write(int address, int value) {
+  if (address >= RAM_START) {
+    memory[address] = value;
+  } else if (address >= VIDEO_START) {
+    if (grafyx_m3_write_byte(address - video_ram, value)) {
+      return;
+    }
+    trs80_screen_write_char(address - video_ram, value);
+  } else if (address == PRINTER_ADDRESS) {
+    trs_printer_write(value);
+  } else {
+    error("Invalid write of address %04x [PC=%04x, mem_map=%02x]\n", address, Z80_PC, memory_map);
+  }
 }
 
 /*
@@ -1352,9 +1398,6 @@ Uint8 *mem_pointer(int address, int writing)
 	    return &memory[address + bank_base];
 	if (address >= VIDEO_START) return &memory[address];
 	if (address < trs_rom_size) {
-	  if (m_a11_flipflop)
-	    return &cp500_rom[address | 0x0800];
-	  else
 	    return &rom[address];
 	}
 	return NULL;
@@ -1443,7 +1486,6 @@ void trs_mem_save(FILE *file)
   trs_save_int(file, &selector, 1);
   trs_save_int(file, &selector_reg, 1);
   trs_save_int(file, &lubomir, 1);
-  trs_save_int(file, &m_a11_flipflop, 1);
   trs_save_int(file, &megamem, 1);
   trs_save_int(file, &megamem_addr, 1);
   trs_save_uint32(file, &megamem_base, 1);
@@ -1474,7 +1516,6 @@ void trs_mem_load(FILE *file)
   trs_load_int(file, &selector, 1);
   trs_load_int(file, &selector_reg, 1);
   trs_load_int(file, &lubomir, 1);
-  trs_load_int(file, &m_a11_flipflop, 1);
   trs_load_int(file, &megamem, 1);
   trs_load_int(file, &megamem_addr, 1);
   trs_load_uint32(file, &megamem_base, 1);
