@@ -45,6 +45,7 @@
 #include "error.h"
 #include "trs.h"
 #include "trs_cassette.h"
+#include "trs_clones.h"
 #include "trs_disk.h"
 #include "trs_iodefs.h"
 #include "trs_sdl_gui.h"
@@ -1253,8 +1254,12 @@ void trs_screen_caption(void)
     snprintf(title, 79, "AF:%04X BC:%04X DE:%04X HL:%04X IX/IY:%04X/%04X PC/SP:%04X/%04X",
              Z80_AF, Z80_BC, Z80_DE, Z80_HL, Z80_IX, Z80_IY, Z80_PC, Z80_SP);
   else {
-    static const char *trs_name[] = {
-        "TRS-80 Model I", "", "TRS-80 Model III", "TRS-80 Model 4", "TRS-80 Model 4P" };
+    const char *model_name = model_quirks.name_override;
+    if (!model_name) {
+      static const char *trs_name[] = {
+          "TRS-80 Model I", "", "TRS-80 Model III", "TRS-80 Model 4", "TRS-80 Model 4P" };
+      model_name = trs_name[trs_model - 1];
+    }
 
     snprintf(title, 79, "%s %s (%.2f MHz) %s%s",
              timer_overclock ? "Turbo " : "",
@@ -1262,7 +1267,7 @@ void trs_screen_caption(void)
              genie3s ? "TCS Genie IIIs" :
              speedup == 5 ? "LNW80" :
              speedup == 6 ? "TCS SpeedMaster" :
-             trs_name[trs_model - 1],
+             model_name,
              z80_state.clockMHz,
              trs_paused ? "PAUSED " : "",
              trs_sound ? "" : "(Mute)");
