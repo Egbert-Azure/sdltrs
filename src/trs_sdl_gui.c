@@ -1964,21 +1964,21 @@ void trs_gui_display_settings(void)
         if (value != gui_charset1) {
           gui_charset1 = value;
           trs_charset1 = value >= 4 ? value += 6 : value;
-          resize = 1;
+          resize = 0;
         }
         break;
       case 5:
         value = trs_gui_display_popup("Charset III", font34, 3, trs_charset3 - 4) + 4;
         if (value != trs_charset3) {
           trs_charset3 = value;
-          resize = 1;
+          resize = 0;
         }
         break;
       case 6:
         value = trs_gui_display_popup("Charset 4/4P", font34, 3, trs_charset4 - 7) + 7;
         if (value != trs_charset4) {
           trs_charset4 = value;
-          resize = 1;
+          resize = 0;
         }
         break;
       case 7:
