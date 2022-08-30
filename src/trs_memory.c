@@ -457,6 +457,9 @@ void trs_reset(int poweron)
     trs_disk_init(poweron); /* also inits trs_hard and trs_stringy */
     trs_uart_init(poweron);
 
+    trs_cancel_event();
+    trs_timer_interrupt(0);
+
     if (poweron || genie3s || trs_model >= 4) {
 	if (poweron || trs_model >= 4)
 		mem_init();
@@ -512,9 +515,6 @@ void trs_reset(int poweron)
     }
     trs_kb_reset();  /* Part of keyboard stretch kludge */
     clear_key_queue(); /* init the key queue */
-
-    trs_cancel_event();
-    trs_timer_interrupt(0);
 }
 
 void mem_map(int which)
