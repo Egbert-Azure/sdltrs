@@ -2590,8 +2590,16 @@ bitmap_init(int ram)
 {
   int i;
 
-  for (i = 0; i < MAXCHARS; i++)
+  for (i = 0; i < MAXCHARS; i++) {
     trs_char_bitmap(i, (i > 191 && eg3200) ? 1 : ram);
+
+    /* GUI Normal + Inverse */
+    trs_free_bitmap(i, 4, 5);
+    trs_char[4][i] = CreateSurfaceFromDataScale(
+        trs_char_data[7][i], gui_foreground, gui_background, scale, 0);
+    trs_char[5][i] = CreateSurfaceFromDataScale(
+        trs_char_data[7][i], gui_background, gui_foreground, scale, 0);
+  }
 
   boxes_init(foreground, background, cur_char_width, cur_char_height, 0);
   boxes_init(foreground, background, cur_char_width * 2, cur_char_height, 1);
@@ -2604,7 +2612,7 @@ trs_char_bitmap(int char_index, int ram)
   Uint8 const *char_data = ram ?
       char_ram[char_index] : trs_char_data[trs_charset][char_index];
 
-  trs_free_bitmap(char_index, 0, 5);
+  trs_free_bitmap(char_index, 0, 3);
 
   /* Normal */
   trs_char[0][char_index] = CreateSurfaceFromDataScale(
@@ -2618,13 +2626,6 @@ trs_char_bitmap(int char_index, int ram)
   /* Expanded + Inverse */
   trs_char[3][char_index] = CreateSurfaceFromDataScale(
       char_data, background, foreground, scale * 2, ram);
-  /* GUI Normal + Inverse */
-  trs_char[4][char_index] = CreateSurfaceFromDataScale(
-      trs_char_data[7][char_index],
-      gui_foreground, gui_background, scale, 0);
-  trs_char[5][char_index] = CreateSurfaceFromDataScale(
-      trs_char_data[7][char_index],
-      gui_background, gui_foreground, scale, 0);
 }
 
 static void
