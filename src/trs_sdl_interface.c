@@ -2517,8 +2517,6 @@ static SDL_Surface *CreateSurfaceFromDataScale(const Uint8 *data,
   int const size = TRS_CHAR_WIDTH * (ram ? MAX_CHAR_HEIGHT : TRS_CHAR_HEIGHT);
 
   /*
-   * Allocate a bit more room than necessary - There shouldn't be
-   * any proportional characters, but just in case...
    * The memory allocated for "mydata" will be released in the
    * "trs_free_bitmap" function.
    */
