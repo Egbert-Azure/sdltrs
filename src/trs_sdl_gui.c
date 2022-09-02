@@ -1964,7 +1964,7 @@ void trs_gui_display_settings(void)
         if (value != gui_charset1) {
           gui_charset1 = value;
           trs_charset1 = value >= 4 ? value += 6 : value;
-          resize = 0;
+          resize = 1;
         }
         break;
       case 5:
