@@ -2588,6 +2588,7 @@ static SDL_Surface *CreateSurfaceFromDataScale(const Uint8 *data,
 static void
 bitmap_init(int ram)
 {
+  int const gui = trs_charset <= 2 ? 2 : 7;
   int i;
 
   for (i = 0; i < MAXCHARS; i++) {
@@ -2596,9 +2597,9 @@ bitmap_init(int ram)
     /* GUI Normal + Inverse */
     trs_free_bitmap(i, 4, 5);
     trs_char[4][i] = CreateSurfaceFromDataScale(
-        trs_char_data[7][i], gui_foreground, gui_background, scale, 0);
+        trs_char_data[gui][i], gui_foreground, gui_background, scale, 0);
     trs_char[5][i] = CreateSurfaceFromDataScale(
-        trs_char_data[7][i], gui_background, gui_foreground, scale, 0);
+        trs_char_data[gui][i], gui_background, gui_foreground, scale, 0);
   }
 
   boxes_init(foreground, background, cur_char_width, cur_char_height, 0);
@@ -2641,6 +2642,7 @@ trs_free_bitmap(int char_index, int start, int end)
     }
   }
 }
+
 
 void trs_screen_refresh(void)
 {
