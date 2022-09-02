@@ -415,6 +415,7 @@ static const int num_options = sizeof(options) / sizeof(options[0]);
 static void grafyx_rescale(int y, int x, Uint8 byte);
 static void bitmap_init(int ram);
 static void trs_char_bitmap(int char_index, int ram);
+static void trs_free_bitmap(int char_index, int start, int end);
 
 static Uint8 mirror_bits(Uint8 byte)
 {
@@ -1730,15 +1731,8 @@ void trs_sdl_cleanup(void)
   /* Free color map */
   TrsBlitMap(NULL, NULL);
 
-  /* SDL cleanup */
-  for (i = 0; i < 6; i++) {
-    for (ch = 0; ch < MAXCHARS; ch++) {
-      if (trs_char[i][ch]) {
-        free(trs_char[i][ch]->pixels);
-        SDL_FreeSurface(trs_char[i][ch]);
-      }
-    }
-  }
+  for (ch = 0; ch < MAXCHARS; ch++)
+    trs_free_bitmap(ch, 0, 5);
 
   for (i = 0; i < 3; i++) {
     for (ch = 0; ch < 64; ch++)
@@ -2552,7 +2546,7 @@ static SDL_Surface *CreateSurfaceFromDataScale(const Uint8 *data,
    * Allocate a bit more room than necessary - There shouldn't be
    * any proportional characters, but just in case...
    * The memory allocated for "mydata" will be released in the
-   * "trs_char_bitmap" and "trs_sdl_cleanup" functions.
+   * "trs_free_bitmap" function.
    */
   mydata = (int*)calloc(1, TRS_CHAR_WIDTH * MAX_CHAR_HEIGHT *
       scale_x * y_scale * sizeof(int));
@@ -2609,15 +2603,9 @@ trs_char_bitmap(int char_index, int ram)
 {
   Uint8 const *char_data = ram ?
       char_ram[char_index] : trs_char_data[trs_charset][char_index];
-  int i;
 
-  /* Free all surface pixels */
-  for (i = 0; i < 6; i++) {
-    if (trs_char[i][char_index]) {
-      free(trs_char[i][char_index]->pixels);
-      SDL_FreeSurface(trs_char[i][char_index]);
-    }
-  }
+  trs_free_bitmap(char_index, 0, 5);
+
   /* Normal */
   trs_char[0][char_index] = CreateSurfaceFromDataScale(
       char_data, foreground, background, scale, ram);
@@ -2637,6 +2625,20 @@ trs_char_bitmap(int char_index, int ram)
   trs_char[5][char_index] = CreateSurfaceFromDataScale(
       trs_char_data[7][char_index],
       gui_background, gui_foreground, scale, 0);
+}
+
+static void
+trs_free_bitmap(int char_index, int start, int end)
+{
+  int i;
+
+  /* Free all surface pixels */
+  for (i = start; i <= end; i++) {
+    if (trs_char[i][char_index]) {
+      free(trs_char[i][char_index]->pixels);
+      SDL_FreeSurface(trs_char[i][char_index]);
+    }
+  }
 }
 
 void trs_screen_refresh(void)
