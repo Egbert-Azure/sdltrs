@@ -58,7 +58,6 @@
 
 #define MAX_ROM_SIZE       (0x4000)  /* 16K for CP-300/500 */
 #define MAX_VIDEO_SIZE     (0x0C00)  /* CP-500 M80 has 3K */
-
 #define MAX_MEMORY_SIZE    (4 * 1024 * 1024) + 65536
 
 /* 512K is the largest we support. There were it seems 1MByte
@@ -118,6 +117,7 @@ static inline int vaddr_mask(Uint16 vaddr) {
     return -1;
   }
 }
+
 static inline Uint8 mem_video_read(int vaddr) {
   vaddr = vaddr_mask(vaddr);
   if (vaddr < 0) { /* emulator bug, should never happen */
@@ -128,13 +128,13 @@ static inline Uint8 mem_video_read(int vaddr) {
 
 static inline int mem_video_write(int vaddr, Uint8 value) {
   vaddr = vaddr_mask(vaddr);
-  if(vaddr < 0) { /* emulator bug, should never happen */
+  if (vaddr < 0) { /* emulator bug, should never happen */
     return 0;
   }
   if (video[vaddr] != value) {
     video[vaddr] = value;
     return 1;
-  }  else {
+  } else {
     return 0;
   }
 }
@@ -615,7 +615,7 @@ int mem_read(int address)
        the address. Deal with these first so that we take their
        output and feed it into the memory map */
 
-    /* Anitek's MegaMem */
+    /* Anitek MegaMem */
     if (megamem_addr) {
       if (address >= megamem_addr && address <= megamem_addr + 0x3FFF)
         return memory[megamem_base + (address & 0x3FFF)];
@@ -623,7 +623,7 @@ int mem_read(int address)
     /* The SuperMem sits between the system and the Z80 */
     if (supermem) {
       if (!((address ^ supermem_hi) & 0x8000))
-          return supermem_ram[supermem_base + (address & 0x7FFF)];
+        return supermem_ram[supermem_base + (address & 0x7FFF)];
       /* Otherwise the request comes from the system */
     }
     switch (memory_map) {
@@ -913,7 +913,7 @@ void mem_write(int address, int value)
 {
     address &= 0xffff;
 
-    /* Anitek's MegaMem */
+    /* Anitek MegaMem */
     if (megamem_addr) {
       if (address >= megamem_addr && address <= megamem_addr + 0x3FFF) {
         memory[megamem_base + (address & 0x3FFF)] = value;
@@ -923,8 +923,8 @@ void mem_write(int address, int value)
     /* The SuperMem sits between the system and the Z80 */
     if (supermem) {
       if (!((address ^ supermem_hi) & 0x8000)) {
-          supermem_ram[supermem_base + (address & 0x7FFF)] = value;
-          return;
+        supermem_ram[supermem_base + (address & 0x7FFF)] = value;
+        return;
       }
       /* Otherwise the request comes from the system */
     }
@@ -1252,7 +1252,7 @@ Uint8 *mem_pointer(int address, int writing)
 {
     address &= 0xffff;
 
-    /* Anitek's MegaMem */
+    /* Anitek MegaMem */
     if (megamem_addr) {
       if (address >= megamem_addr && address <= megamem_addr + 0x3FFF)
         return &memory[megamem_base + (address & 0x3FFF)];
@@ -1260,7 +1260,7 @@ Uint8 *mem_pointer(int address, int writing)
     /* The SuperMem sits between the system and the Z80 */
     if (supermem) {
       if (!((address ^ supermem_hi) & 0x8000))
-          return &supermem_ram[supermem_base + (address & 0x7FFF)];
+        return &supermem_ram[supermem_base + (address & 0x7FFF)];
       /* Otherwise the request comes from the system */
     }
 
