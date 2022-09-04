@@ -10,8 +10,6 @@
 int  trs80_model3_mem_read(int address);
 void trs80_model3_mem_write(int address, int value);
 
-Uint8 mem_video_read(int vaddr);
-int mem_video_write(int vaddr, Uint8 value);
 void mem_video_page(int offset);
 Uint8 mem_video_page_read(int vaddr);
 int mem_video_page_write(int vaddr, Uint8 value);

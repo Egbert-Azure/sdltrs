@@ -119,14 +119,15 @@ static inline int vaddr_mask(Uint16 vaddr) {
     return -1;
   }
 }
-inline Uint8 mem_video_read(int vaddr) {
+static inline Uint8 mem_video_read(int vaddr) {
   vaddr = vaddr_mask(vaddr);
   if (vaddr < 0) { /* emulator bug, should never happen */
     return 0xFF;
   }
   return video[vaddr];
 }
-inline int mem_video_write(int vaddr, Uint8 value) {
+
+static inline int mem_video_write(int vaddr, Uint8 value) {
   vaddr = vaddr_mask(vaddr);
   if(vaddr < 0) { /* emulator bug, should never happen */
     return 0;
@@ -836,7 +837,7 @@ int trs80_model3_mem_read(int address) {
   }
 }
 
-void trs80_screen_write_char(int vaddr, int value)
+static void trs80_screen_write_char(int vaddr, int value)
 {
   if (mem_video_write(vaddr, value)) {
       trs_screen_write_char(vaddr, value);
