@@ -38,6 +38,19 @@ static struct {
   int video_first_row;
 } cp500_m80;
 
+static const struct model_quirks cp500_quirks = {
+    "CP-500",
+    0,
+    0,
+    0,
+};
+static const struct model_quirks cp500_m80_quirks = {
+    "CP-500 M80", /* name */
+    3072, /* 3 pages of 1K (128x24) */
+    1, /* do not fire early disk interrupts */
+    1, /* clear timer when latch is read */
+};
+
 void cp500_reset_mode() {
   if (model != none) { /* Have we ever been in CP-500 mode? */
     cp500_switch_mode(0);
@@ -118,9 +131,8 @@ Uint8 cp500_switch_mode(int mode) {
       trs_screen_80x24(1);
       model = M80;
       /* Precalculate now to avoid doing on every memory access: */
-      int i = mode >> 6;
-      cp500_m80.video_first_row = i * 8;
-      mem_video_page(i * 1024);
+      cp500_m80.video_first_row = (mode >> 6) * 8;
+      mem_video_page((mode >> 6) * 1024);
       break;
 
     default:
@@ -138,19 +150,6 @@ Uint8 cp500_switch_mode(int mode) {
    * only SO-08 is known to be affected, and it can only run in the M80.
    * So for now we enable the quirks only for M80.
    */
-
-  static struct model_quirks cp500_quirks = {
-      "CP-500",
-      0,
-      0,
-      0,
-  };
-  static struct model_quirks cp500_m80_quirks = {
-      "CP-500 M80", /* name */
-      3072, /* 3 pages of 1K (128x24) */
-      1, /* do not fire early disk interrupts */
-      1, /* clear timer when latch is read */
-  };
 
   switch (model) {
     case none:
