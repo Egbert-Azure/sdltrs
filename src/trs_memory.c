@@ -56,18 +56,18 @@
 #include "trs_state_save.h"
 #include "trs_uart.h"
 
-#define MAX_ROM_SIZE    (0x4000)  /* 16K for CP-300/500 */
-#define MAX_VIDEO_SIZE  (0x0C00)  /* CP-500 M80 has 3K */
+#define MAX_ROM_SIZE       (0x4000)  /* 16K for CP-300/500 */
+#define MAX_VIDEO_SIZE     (0x0C00)  /* CP-500 M80 has 3K */
 
-#define MAX_MEMORY_SIZE	(4 * 1024 * 1024) + 65536
+#define MAX_MEMORY_SIZE    (4 * 1024 * 1024) + 65536
 
 /* 512K is the largest we support. There were it seems 1MByte
    options at some point which is the full range of the mapping.
    How the mapping register worked for > 1MB is not known */
-#define MAX_SUPERMEM_SIZE	(512 * 1024)
+#define MAX_SUPERMEM_SIZE  (512 * 1024)
 
 /* Start MegaMem > 1MB to leave space for SuperMem or HyperMem */
-#define MEGAMEM_START	(1 * 1024 * 1024) + 65536
+#define MEGAMEM_START      (1 * 1024 * 1024) + 65536
 
 /* Interrupt latch register in EI (Model 1) */
 #define TRS_INTLATCH(addr) (((addr)&~3) == 0x37e0)
