@@ -56,7 +56,7 @@
 #include "trs_state_save.h"
 #include "trs_uart.h"
 
-#define MAX_ROM_SIZE    (0x3800)
+#define MAX_ROM_SIZE    (0x4000)  /* 16K for CP-300/500 */
 #define MAX_VIDEO_SIZE  (0x0C00)  /* CP-500 M80 has 3K */
 
 #define MAX_MEMORY_SIZE	(4 * 1024 * 1024) + 65536
@@ -89,7 +89,6 @@ int supermem; /* AlphaTech SuperMem (I/III) */
 /* private data */
 static Uint8 video[MAX_VIDEO_SIZE + 1];
 static Uint8 rom[MAX_ROM_SIZE + 1];
-static Uint8 cp500_rom[CP500_ROM_SIZE + 1];
 /* We map the SuperMem separately, otherwise it can get really
    confusing when combining with other stuff */
 static Uint8 supermem_ram[MAX_SUPERMEM_SIZE + 1];
@@ -455,7 +454,6 @@ static void mem_init(void)
     memset(&memory, 0xC9, MAX_MEMORY_SIZE);
     memset(&supermem_ram, 0xC9, MAX_SUPERMEM_SIZE);
     memset(&rom, 0, MAX_ROM_SIZE);
-    memset(&cp500_rom, 0, CP500_ROM_SIZE);
 
     mem_map(0);
     mem_bank(0);
@@ -562,9 +560,6 @@ void rom_write(int address, int value)
 {
     if (address < MAX_ROM_SIZE)
       rom[address] = value;
-
-    if (address < CP500_ROM_SIZE)
-      cp500_rom[address] = value;
 }
 
 static int trs80_model1_ram(int address)
@@ -779,7 +774,7 @@ int mem_read(int address)
       case 0x31: /* CP-500: */
       case 0x32:
       case 0x33:
-        return cp500_mem_read(address, memory_map, cp500_rom, memory);
+        return cp500_mem_read(address, memory_map, rom, memory);
 
       case 0x40: /* Model 4 map 0 */
 	if (address >= RAM_START) {
@@ -1469,7 +1464,6 @@ void trs_mem_save(FILE *file)
   trs_save_uint8(file, memory, MAX_MEMORY_SIZE + 1);
   trs_save_uint8(file, supermem_ram, MAX_SUPERMEM_SIZE + 1);
   trs_save_uint8(file, rom, MAX_ROM_SIZE + 1);
-  trs_save_uint8(file, cp500_rom, CP500_ROM_SIZE + 1);
   trs_save_uint8(file, video, MAX_VIDEO_SIZE + 1);
   trs_save_int(file, &trs_rom_size, 1);
   trs_save_int(file, &memory_map, 1);
@@ -1499,7 +1493,6 @@ void trs_mem_load(FILE *file)
   trs_load_uint8(file, memory, MAX_MEMORY_SIZE + 1);
   trs_load_uint8(file, supermem_ram, MAX_SUPERMEM_SIZE + 1);
   trs_load_uint8(file, rom, MAX_ROM_SIZE + 1);
-  trs_load_uint8(file, cp500_rom, CP500_ROM_SIZE + 1);
   trs_load_uint8(file, video, MAX_VIDEO_SIZE + 1);
   trs_load_int(file, &trs_rom_size, 1);
   trs_load_int(file, &memory_map, 1);
