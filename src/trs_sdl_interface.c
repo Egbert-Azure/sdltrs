@@ -2185,6 +2185,11 @@ void trs_get_event(int wait)
               default:
                 break;
             }
+          } else {
+            if (trs_model == 3 && keysym.sym == SDLK_LCTRL) {
+              keysym.sym = 0x117; /* Shifted Down Arrow */
+              goto done;
+            }
           }
         }
 
