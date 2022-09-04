@@ -146,8 +146,8 @@ Uint8 cp500_switch_mode(int mode) {
       0,
   };
   static struct model_quirks cp500_m80_quirks = {
-      "CP-500 M80", // name,
-      3072, // 3 pages of 1K (128x24)
+      "CP-500 M80", /* name */
+      3072, /* 3 pages of 1K (128x24) */
       1, /* do not fire early disk interrupts */
       1, /* clear timer when latch is read */
   };

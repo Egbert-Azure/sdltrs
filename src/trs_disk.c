@@ -1257,7 +1257,7 @@ trs_disk_select_write(Uint8 data)
     state.curside = (data & TRSDISK3_SIDE) != 0;
     state.density = (data & TRSDISK3_MFM) != 0;
     if (data & TRSDISK3_WAIT
-        // Some clones (like CP-500) seem to ignore this bit:
+        /* Some clones (like CP-500) seem to ignore this bit: */
         && !model_quirks.disk_select_ignore_wait) {
       /* If there was an event pending, simulate waiting until it was due. */
       if (trs_event_scheduled() != NULL &&

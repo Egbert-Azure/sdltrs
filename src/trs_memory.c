@@ -113,7 +113,7 @@ static inline int vaddr_mask(Uint16 vaddr) {
   }
   if (vaddr < size && vaddr < MAX_VIDEO_SIZE) {
     return vaddr;
-  } else { // emulator bug, should never happen
+  } else { /* emulator bug, should never happen */
     error("video address %04x out of range [size=%04x]",
           vaddr, size);
     return -1;
@@ -121,14 +121,14 @@ static inline int vaddr_mask(Uint16 vaddr) {
 }
 inline Uint8 mem_video_read(int vaddr) {
   vaddr = vaddr_mask(vaddr);
-  if (vaddr < 0) { // emulator bug, should never happen
+  if (vaddr < 0) { /* emulator bug, should never happen */
     return 0xFF;
   }
   return video[vaddr];
 }
 inline int mem_video_write(int vaddr, Uint8 value) {
   vaddr = vaddr_mask(vaddr);
-  if(vaddr < 0) { // emulator bug, should never happen
+  if(vaddr < 0) { /* emulator bug, should never happen */
     return 0;
   }
   if (video[vaddr] != value) {

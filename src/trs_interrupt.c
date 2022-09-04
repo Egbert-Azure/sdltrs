@@ -299,8 +299,8 @@ trs_interrupt_latch_read(void)
     z80_state.irq = (interrupt_latch != 0);
     return tmp;
   } else {
-    // In some clones (like CP-500) reading from the
-    // interrupt latch clears pending timer interrupts:
+    /* In some clones (like CP-500) reading from the
+       interrupt latch clears pending timer interrupts */
     if (model_quirks.interrupt_latch_clears_timer) {
       trs_timer_interrupt(0);
     }
