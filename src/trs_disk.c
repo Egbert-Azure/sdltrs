@@ -62,6 +62,7 @@
 #include "trs.h"
 #include "crc.c"
 #include "error.h"
+#include "trs_clones.h"
 #include "trs_disk.h"
 #include "trs_hard.h"
 #include "trs_stringy.h"
@@ -1255,9 +1256,10 @@ trs_disk_select_write(Uint8 data)
   } else {
     state.curside = (data & TRSDISK3_SIDE) != 0;
     state.density = (data & TRSDISK3_MFM) != 0;
-    if (data & TRSDISK3_WAIT) {
-      /* If there was an event pending, simulate waiting until
-	 it was due. */
+    if (data & TRSDISK3_WAIT
+        // Some clones (like CP-500) seem to ignore this bit:
+        && !model_quirks.disk_select_ignore_wait) {
+      /* If there was an event pending, simulate waiting until it was due. */
       if (trs_event_scheduled() != NULL &&
 	  trs_event_scheduled() != trs_disk_lostdata) {
 	z80_state.t_count = z80_state.sched;

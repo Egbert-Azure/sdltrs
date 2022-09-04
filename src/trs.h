@@ -204,13 +204,11 @@ extern int lowercase;
 extern int lubomir;
 extern int stringy;
 
-extern void mem_video_page(int offset);
 extern void mem_bank(int which);
 extern void mem_map(int which);
 extern void mem_bank_base(int bits);
 extern int mem_read_bank_base(void);
 extern void mem_romin(int state);
-extern int cp500_a11_flipflop_toggle(void);
 extern void eg3200_init_out(int value);
 extern void genie3s_bank_out(int value);
 extern void genie3s_init_out(int value);
