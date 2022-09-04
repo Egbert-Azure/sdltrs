@@ -7,6 +7,7 @@ SRCS	+= error.c
 SRCS	+= load_cmd.c
 SRCS	+= main.c
 SRCS	+= trs_cassette.c
+SRCS	+= trs_clones.c
 SRCS	+= trs_disk.c
 SRCS	+= trs_hard.c
 SRCS	+= trs_imp_exp.c
