@@ -103,13 +103,13 @@ Uint8 cp500_switch_mode(int mode) {
 
     case 0x00: /* Standard TRS-80 Model III memory map */
       mem_map(0);
-      if(model == none) {
+      if (model == none) {
         model = original;
       }
       break;
     case 0x20: /* 3000-37FF points to extra 2K region in EPROM 4 */
       mem_map(1);
-      if(model == none) {
+      if (model == none) {
         model = original;
       }
       break;
