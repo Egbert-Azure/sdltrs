@@ -1471,6 +1471,7 @@ void trs_mem_save(FILE *file)
   trs_save_int(file, &memory_map, 1);
   trs_save_int(file, bank_offset, 2);
   trs_save_int(file, &video_ram, 1);
+  trs_save_int(file, &video_offset, 1);
   trs_save_int(file, &romin, 1);
   trs_save_uint32(file, &bank_base, 1);
   trs_save_uint8(file, &mem_command, 1);
@@ -1500,6 +1501,7 @@ void trs_mem_load(FILE *file)
   trs_load_int(file, &memory_map, 1);
   trs_load_int(file, bank_offset, 2);
   trs_load_int(file, &video_ram, 1);
+  trs_load_int(file, &video_offset, 1);
   trs_load_int(file, &romin, 1);
   trs_load_uint32(file, &bank_base, 1);
   trs_load_uint8(file, &mem_command, 1);
