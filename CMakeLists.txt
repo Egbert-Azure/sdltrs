@@ -17,7 +17,7 @@ set(SOURCES
 	src/load_cmd.c
 	src/main.c
 	src/trs_cassette.c
-	src/trs_clones.c
+	src/trs_cp500.c
 	src/trs_disk.c
 	src/trs_hard.c
 	src/trs_imp_exp.c

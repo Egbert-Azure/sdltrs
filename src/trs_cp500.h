@@ -1,5 +1,5 @@
-#ifndef _TRS_CLONES_H
-#define _TRS_CLONES_H
+#ifndef _TRS_CP500_H
+#define _TRS_CP500_H
 
 #include "trs.h"
 

@@ -30,7 +30,7 @@
 #include <time.h>
 #include <SDL.h>
 #include "trs.h"
-#include "trs_clones.h"
+#include "trs_cp500.h"
 #include "trs_state_save.h"
 
 /*#define IDEBUG 1*/

@@ -62,7 +62,7 @@
 #include "trs.h"
 #include "crc.c"
 #include "error.h"
-#include "trs_clones.h"
+#include "trs_cp500.h"
 #include "trs_disk.h"
 #include "trs_hard.h"
 #include "trs_stringy.h"
