@@ -2464,6 +2464,8 @@ static void trs_screen_640x240(int flag)
 
 void trs_screen_80x24(int flag)
 {
+  if (flag == text80x24) return;
+
   if (!grafyx_enable || grafyx_overlay)
     trs_screen_640x240(flag);
 
