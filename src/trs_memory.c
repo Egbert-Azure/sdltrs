@@ -93,7 +93,7 @@ static Uint8 rom[MAX_ROM_SIZE + 1];
 static Uint8 supermem_ram[MAX_SUPERMEM_SIZE + 1];
 static int memory_map;
 static int bank_offset[2];
-static int video_ram = VIDEO_START;
+static int video_memory = VIDEO_START;
 static int video_offset;
 static unsigned int bank_base = 0x10000;
 static int megamem_addr;
@@ -141,7 +141,7 @@ static inline int mem_video_write(int vaddr, Uint8 value) {
 
 inline void mem_video_page(int offset)
 {
-  video_ram = VIDEO_START + offset;
+  video_memory = VIDEO_START + offset;
   video_offset = offset;
 }
 
@@ -434,11 +434,11 @@ void s80z_out(int value)
 {
 	if (value & (1 << 2)) {
 		if (speedup == 4)
-			video_ram = 0x3900; /* Homebrew 80*22 SYS80.SYS */
+			video_memory = 0x3900; /* Homebrew 80*22 SYS80.SYS */
 		else
-			video_ram = (value & (1 << 1)) ? 0xB000 : 0xF000;
+			video_memory = (value & (1 << 1)) ? 0xB000 : 0xF000;
 	} else {
-		video_ram = VIDEO_START;
+		video_memory = VIDEO_START;
 	}
 
 	if ((value & (1 << 6)) != (system_byte & (1 << 6)))
@@ -592,7 +592,7 @@ static int trs80_model1_ram(int address)
 
 static int trs80_model1_mmio(int address)
 {
-  if (address >= VIDEO_START) return video[address - video_ram];
+  if (address >= VIDEO_START) return video[address - video_memory];
   if (address < trs_rom_size) return rom[address];
   if (address == TRSDISK_DATA) return trs_disk_data_read();
   if (TRS_INTLATCH(address)) return trs_interrupt_latch_read();
@@ -720,11 +720,11 @@ int mem_read(int address)
 	    if (address >= KEYBOARD_START && address <= 0x38FF)
 	      return trs_kb_mem_read(address);
 	    if (address >= VIDEO_START && address <= 0x3FFF)
-	      return video[address - video_ram];
+	      return video[address - video_memory];
 	  } else {
 	    /* 2K Video RAM */
 	    if (address >= KEYBOARD_START && address <= 0x3FFF)
-	      return video[(address - video_ram) & 0x7FF];
+	      return video[(address - video_memory) & 0x7FF];
 	  }
 	  /* Disk I/O */
 	  if (address >= 0x37E0 && address <= 0x37EF)
@@ -744,8 +744,8 @@ int mem_read(int address)
 	  return memory[address + bank_base];
       case 0x25: /* Schmidtke 80-Z Video Card */
 	if (system_byte & (1 << 0)) {
-	  if (address >= video_ram && address <= video_ram + 0xFFF)
-	    return video[((address - video_ram) & 0x7FF)];
+	  if (address >= video_memory && address <= video_memory + 0xFFF)
+	    return video[((address - video_memory) & 0x7FF)];
 	}
 	if ((system_byte & (1 << 3)) || address >= RAM_START)
 	  return memory[address];
@@ -780,7 +780,7 @@ int mem_read(int address)
 	if (address >= RAM_START) {
 	    return memory[address + bank_offset[address >> 15]];
 	}
-	if (address >= VIDEO_START) return video[address - video_ram];
+	if (address >= VIDEO_START) return video[address - video_memory];
 	if (address < trs_rom_size) return rom[address];
 	if (address == PRINTER_ADDRESS) return trs_printer_read();
 	if (address >= KEYBOARD_START) return trs_kb_mem_read(address);
@@ -796,7 +796,7 @@ int mem_read(int address)
 	if (address >= RAM_START || address < KEYBOARD_START) {
 	    return memory[address + bank_offset[address >> 15]];
 	}
-	if (address >= VIDEO_START) return video[address - video_ram];
+	if (address >= VIDEO_START) return video[address - video_memory];
 	if (address >= KEYBOARD_START) return trs_kb_mem_read(address);
 	return 0xff;
 
@@ -892,7 +892,7 @@ static void trs80_model1_write_mmio(int address, int value)
           value |= 0x40;
       }
     }
-    trs80_screen_write_char(address - video_ram, value);
+    trs80_screen_write_char(address - video_memory, value);
   } else if (address == TRSDISK_DATA) {
     trs_disk_data_write(value);
   } else if (address == TRSDISK_COMMAND) {
@@ -1043,13 +1043,13 @@ void mem_write(int address, int value)
 	if ((system_byte & (1 << 0)) == 0) {
 	  if ((system_byte & (1 << 4)) == 0) {
 	    if (address >= VIDEO_START && address <= 0x3FFF) {
-	      trs80_screen_write_char(address - video_ram, value);
+	      trs80_screen_write_char(address - video_memory, value);
 	      return;
 	    }
 	  } else {
 	    /* 2K Video RAM */
 	    if (address >= KEYBOARD_START && address <= 0x3FFF) {
-	      trs80_screen_write_char((address - video_ram) & 0x7FF, value);
+	      trs80_screen_write_char((address - video_memory) & 0x7FF, value);
 	      return;
 	    }
 	  }
@@ -1070,7 +1070,7 @@ void mem_write(int address, int value)
 	/* Write to Font-SRAM */
 	if (genie3s & (1 << 1)) {
 	  if (address >= 0x8000) {
-	    genie3s_char(video[(VIDEO_START - video_ram)],
+	    genie3s_char(video[(VIDEO_START - video_memory)],
 	        (address - 0x8000) >> 11, value);
 	    return;
 	  }
@@ -1084,8 +1084,8 @@ void mem_write(int address, int value)
 	return;
       case 0x25: /* Schmidtke 80-Z Video Card */
 	if (system_byte & (1 << 0)) {
-	  if (address >= video_ram && address <= video_ram + 0xFFF) {
-	    trs80_screen_write_char(((address - video_ram) & 0x7FF), value);
+	  if (address >= video_memory && address <= video_memory + 0xFFF) {
+	    trs80_screen_write_char(((address - video_memory) & 0x7FF), value);
 	    return;
 	  }
 	}
@@ -1134,7 +1134,7 @@ void mem_write(int address, int value)
 	if (address >= RAM_START) {
 	    memory[address + bank_offset[address >> 15]] = value;
 	} else if (address >= VIDEO_START) {
-	    trs80_screen_write_char(address - video_ram, value);
+	    trs80_screen_write_char(address - video_memory, value);
 	} else if (address == PRINTER_ADDRESS) {
 	    trs_printer_write(value);
 	}
@@ -1146,7 +1146,7 @@ void mem_write(int address, int value)
 	if (address >= RAM_START || address < KEYBOARD_START) {
 	    memory[address + bank_offset[address >> 15]] = value;
 	} else if (address >= VIDEO_START) {
-	    trs80_screen_write_char(address - video_ram, value);
+	    trs80_screen_write_char(address - video_memory, value);
 	}
 	break;
 
@@ -1172,10 +1172,10 @@ void trs80_model3_mem_write(int address, int value) {
   if (address >= RAM_START) {
     memory[address] = value;
   } else if (address >= VIDEO_START) {
-    if (grafyx_m3_write_byte(address - video_ram, value)) {
+    if (grafyx_m3_write_byte(address - video_memory, value)) {
       return;
     }
-    trs80_screen_write_char(address - video_ram, value);
+    trs80_screen_write_char(address - video_memory, value);
   } else if (address == PRINTER_ADDRESS) {
     trs_printer_write(value);
   } else {
@@ -1351,11 +1351,11 @@ Uint8 *mem_pointer(int address, int writing)
 	if ((system_byte & (1 << 0)) == 0) {
 	  if ((system_byte & (1 << 4)) == 0) {
 	    if (address >= VIDEO_START && address <= 0x3FFF)
-	      return &video[address - video_ram];
+	      return &video[address - video_memory];
 	  } else {
 	    /* 2K Video RAM */
 	    if (address >= KEYBOARD_START && address <= 0x3FFF)
-	      return &video[(address - video_ram) & 0x7FF];
+	      return &video[(address - video_memory) & 0x7FF];
 	  }
 	}
 	/* ROM */
@@ -1370,8 +1370,8 @@ Uint8 *mem_pointer(int address, int writing)
       case 0x25: /* Schmidtke 80-Z Video Card */
       case 0x2D:
 	if (system_byte & (1 << 0)) {
-	  if (address >= video_ram && address <= video_ram + 0xFFF)
-	    return &video[((address - video_ram) & 0x7FF)];
+	  if (address >= video_memory && address <= video_memory + 0xFFF)
+	    return &video[((address - video_memory) & 0x7FF)];
 	}
 	if ((system_byte & (1 << 3)) || address >= RAM_START)
 	  return &memory[address];
@@ -1401,14 +1401,14 @@ Uint8 *mem_pointer(int address, int writing)
 
       case 0x38: /* Model III writing */
 	if (address >= RAM_START) return &memory[address];
-	if (address >= VIDEO_START) return &video[address - video_ram];
+	if (address >= VIDEO_START) return &video[address - video_memory];
 	return NULL;
 
       case 0x40: /* Model 4 map 0 reading */
 	if (address >= RAM_START) {
 	    return &memory[address + bank_offset[address >> 15]];
 	}
-	if (address >= VIDEO_START) return &video[address - video_ram];
+	if (address >= VIDEO_START) return &video[address - video_memory];
 	if (address < trs_rom_size) return &rom[address];
 	return NULL;
 
@@ -1418,7 +1418,7 @@ Uint8 *mem_pointer(int address, int writing)
 	if (address >= RAM_START) {
 	    return &memory[address + bank_offset[address >> 15]];
 	}
-	if (address >= VIDEO_START) return &video[address - video_ram];
+	if (address >= VIDEO_START) return &video[address - video_memory];
 	return NULL;
 
       case 0x54: /* Model 4P map 0, boot ROM in, reading */
@@ -1434,7 +1434,7 @@ Uint8 *mem_pointer(int address, int writing)
 	if (address >= RAM_START || address < KEYBOARD_START) {
 	    return &memory[address + bank_offset[address >> 15]];
 	}
-	if (address >= VIDEO_START) return &video[address - video_ram];
+	if (address >= VIDEO_START) return &video[address - video_memory];
 	return NULL;
 
       case 0x42: /* Model 4 map 1, reading */
@@ -1470,7 +1470,7 @@ void trs_mem_save(FILE *file)
   trs_save_int(file, &trs_rom_size, 1);
   trs_save_int(file, &memory_map, 1);
   trs_save_int(file, bank_offset, 2);
-  trs_save_int(file, &video_ram, 1);
+  trs_save_int(file, &video_memory, 1);
   trs_save_int(file, &video_offset, 1);
   trs_save_int(file, &romin, 1);
   trs_save_uint32(file, &bank_base, 1);
@@ -1500,7 +1500,7 @@ void trs_mem_load(FILE *file)
   trs_load_int(file, &trs_rom_size, 1);
   trs_load_int(file, &memory_map, 1);
   trs_load_int(file, bank_offset, 2);
-  trs_load_int(file, &video_ram, 1);
+  trs_load_int(file, &video_memory, 1);
   trs_load_int(file, &video_offset, 1);
   trs_load_int(file, &romin, 1);
   trs_load_uint32(file, &bank_base, 1);
