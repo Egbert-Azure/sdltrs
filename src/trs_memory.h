@@ -1,9 +1,9 @@
 #ifndef _TRS_MEMORY_H
 #define _TRS_MEMORY_H
 
+/* Locations for Model I, Model III, and Model 4 map 0 */
 #define VIDEO_START     (0x3c00)
 #define PRINTER_ADDRESS (0x37E8)
-/* Locations for Model I, Model III, and Model 4 map 0 */
 #define KEYBOARD_START  (0x3800)
 #define RAM_START       (0x4000)
 
