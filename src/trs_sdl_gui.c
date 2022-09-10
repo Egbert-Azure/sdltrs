@@ -950,6 +950,8 @@ int trs_gui_display_menu(const char *title, MENU_ENTRY *entry, int selection)
       while (entry[selection].type == MENU_TITLE) {
         if (selection < num)
           selection++;
+        else
+          selection = 0;
       }
     } else {
       switch (key) {
