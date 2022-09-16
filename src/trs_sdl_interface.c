@@ -1249,10 +1249,6 @@ void trs_screen_caption(void)
 
     snprintf(title, 79, "%s %s (%.2f MHz) %s%s",
              timer_overclock ? "Turbo " : "",
-             eg3200 ? "EACA EG 3200 Genie III" :
-             genie3s ? "TCS Genie IIIs" :
-             speedup == 5 ? "LNW80" :
-             speedup == 6 ? "TCS SpeedMaster" :
              model_name,
              z80_state.clockMHz,
              trs_paused ? "PAUSED " : "",

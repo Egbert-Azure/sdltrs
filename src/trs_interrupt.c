@@ -376,17 +376,21 @@ trs_timer_init(void)
   switch (trs_model) {
     case 1:
       timer_hz = TIMER_HZ_1;
-      if (eg3200)
+      if (eg3200) {
         z80_state.clockMHz = EG_3200_MHZ;
-      else if (genie3s)
+        model_quirks.name_override = "EACA EG 3200 Genie III";
+      } else if (genie3s) {
         z80_state.clockMHz = TCS_G3S_MHZ;
-      else {
+        model_quirks.name_override = "TCS Genie IIIs";
+      } else {
         switch (speedup) {
           case 5: /* LNW80 */
             z80_state.clockMHz = CLOCK_4_MHZ;
+            model_quirks.name_override = "LNW80";
             break;
           case 6: /* TCS SpeedMaster 5.3 */
             z80_state.clockMHz = TCS_SPM_MHZ;
+            model_quirks.name_override = "TCS SpeedMaster";
             break;
           default:
             z80_state.clockMHz = clock_mhz_1;
@@ -402,6 +406,7 @@ trs_timer_init(void)
       timer_hz = TIMER_HZ_4;
       z80_state.clockMHz = clock_mhz_4;
   }
+
   trs_timer_event();
   trs_timer_mode(timer_overclock);
 
