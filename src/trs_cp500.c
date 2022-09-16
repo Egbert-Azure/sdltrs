@@ -53,6 +53,7 @@ static const struct model_quirks cp500_m80_quirks = {
 void cp500_reset_mode() {
   if (model != none) { /* Have we ever been in CP-500 mode? */
     cp500_switch_mode(0);
+    model_quirks = no_model_quirks;
   }
 }
 
