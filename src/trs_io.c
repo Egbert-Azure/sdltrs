@@ -788,7 +788,6 @@ int z80_in(int port)
       case 0xE1:
       case 0xE2:
       case 0xE3:
-        trs_disk_intrq_interrupt(0);
         value = trs_interrupt_latch_read();
         break;
       case 0xE8:

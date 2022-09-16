@@ -294,6 +294,8 @@ trs_interrupt_latch_read(void)
 
   if (trs_model == 1) {
     trs_timer_interrupt(0); /* acknowledge this one (only) */
+    if (genie3s)
+      interrupt_latch = 0;
     z80_state.irq = (interrupt_latch != 0);
     return tmp;
   } else {
