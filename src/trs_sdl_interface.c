@@ -45,7 +45,7 @@
 #include "error.h"
 #include "trs.h"
 #include "trs_cassette.h"
-#include "trs_cp500.h"
+#include "trs_clones.h"
 #include "trs_disk.h"
 #include "trs_iodefs.h"
 #include "trs_sdl_gui.h"
