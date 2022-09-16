@@ -1,9 +1,8 @@
 #include "error.h"
 #include "trs.h"
+#include "trs_clones.h"
 #include "trs_cp500.h"
 #include "trs_memory.h"
-
-struct model_quirks model_quirks; /* No quirks by default. */
 
 /**********************************************************************
  * CP-500 - Model III clone from Brazil, made by Prologica.
