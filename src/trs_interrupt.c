@@ -371,6 +371,8 @@ void trs_timer_sync_with_host(void)
 void
 trs_timer_init(void)
 {
+  model_quirks = no_model_quirks;
+
   switch (trs_model) {
     case 1:
       timer_hz = TIMER_HZ_1;
