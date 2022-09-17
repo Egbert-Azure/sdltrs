@@ -45,8 +45,9 @@ struct model_quirks {
    * Therefore, allow making reading the port clear the timer latch:
    */
   int interrupt_latch_clears_timer;
-} model_quirks;
+};
 
-static const struct model_quirks no_model_quirks; /* No quirks by default. */
+extern struct model_quirks model_quirks;
+static const struct model_quirks no_model_quirks;
 
 #endif
