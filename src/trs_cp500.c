@@ -131,7 +131,7 @@ Uint8 cp500_switch_mode(int mode) {
       trs_screen_80x24(1);
       model = M80;
       /* Precalculate now to avoid doing on every memory access: */
-      cp500_m80.video_first_row = (mode >> 6) * 8;
+      cp500_m80.video_first_row = mode >> 3;
       mem_video_page((mode >> 6) * 1024);
       break;
 
