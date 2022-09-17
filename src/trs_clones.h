@@ -11,11 +11,6 @@ struct model_quirks {
    */
   char *name_override;
 
-  /**
-   * Different video RAM size:
-   */
-  int vram_size;
-
   /*
    * In Model III, when port F4 is written to, and bit 0x40 is enabled,
    * and there a disk event pending, then the emulator triggers an

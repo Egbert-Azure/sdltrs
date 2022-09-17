@@ -107,14 +107,10 @@ static int selector_reg;
 static int system_byte;
 
 static inline int vaddr_mask(Uint16 vaddr) {
-  int size = 0x0800;
-  if (model_quirks.vram_size > 0) {
-    size = model_quirks.vram_size;
-  }
-  if (vaddr < size && vaddr < MAX_VIDEO_SIZE) {
+  if (vaddr < MAX_VIDEO_SIZE) {
     return vaddr;
   } else { /* emulator bug, should never happen */
-    error("video address %04x out of range [size=%04x]", vaddr, size);
+    error("video address %04x out of range [size=%04x]", vaddr, MAX_VIDEO_SIZE);
     return -1;
   }
 }
