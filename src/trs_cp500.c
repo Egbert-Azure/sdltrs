@@ -43,11 +43,10 @@ static const struct model_quirks cp500_quirks = {
     "CP-500",
     0,
     0,
-    0,
 };
+
 static const struct model_quirks cp500_m80_quirks = {
     "CP-500 M80", /* name */
-    3072, /* 3 pages of 1K (128x24) */
     1, /* do not fire early disk interrupts */
     1, /* clear timer when latch is read */
 };
