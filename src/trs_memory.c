@@ -538,6 +538,7 @@ void trs_reset(int poweron)
 	bank_base = 0;
 	selector_reg = 0;
 	system_byte = 0;
+	trs_interrupt_latch_clear();
     }
     trs_kb_reset();  /* Part of keyboard stretch kludge */
     clear_key_queue(); /* init the key queue */

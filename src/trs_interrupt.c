@@ -379,8 +379,7 @@ void trs_timer_sync_with_host(void)
 void
 trs_timer_init(void)
 {
-  /* Reset interrupt latch and model quirks */
-  trs_interrupt_latch_clear();
+  /* Reset model quirks */
   model_quirks = no_model_quirks;
 
   switch (trs_model) {
