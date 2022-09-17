@@ -7,9 +7,9 @@
  */
 struct model_quirks {
   /*
-   * Allow changing to a different model name:
+   * Model name of the clone:
    */
-  char *name_override;
+  char *clone;
 
   /*
    * In Model III, when port F4 is written to, and bit 0x40 is enabled,

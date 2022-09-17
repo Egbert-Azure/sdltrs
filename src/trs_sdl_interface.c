@@ -1240,7 +1240,7 @@ void trs_screen_caption(void)
     snprintf(title, 79, "AF:%04X BC:%04X DE:%04X HL:%04X IX/IY:%04X/%04X PC/SP:%04X/%04X",
              Z80_AF, Z80_BC, Z80_DE, Z80_HL, Z80_IX, Z80_IY, Z80_PC, Z80_SP);
   else {
-    const char *model_name = model_quirks.name_override;
+    const char *model_name = model_quirks.clone;
     if (!model_name) {
       static const char *trs_name[] = {
           "TRS-80 Model I", "", "TRS-80 Model III", "TRS-80 Model 4", "TRS-80 Model 4P" };
