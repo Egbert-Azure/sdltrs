@@ -287,6 +287,12 @@ trs_reset_button_interrupt(int state)
   if (!z80_state.nmi) z80_state.nmi_seen = 0;
 }
 
+void
+trs_interrupt_latch_clear(void)
+{
+  interrupt_latch = 0;
+}
+
 Uint8
 trs_interrupt_latch_read(void)
 {
@@ -374,7 +380,7 @@ void
 trs_timer_init(void)
 {
   /* Reset interrupt latch and model quirks */
-  interrupt_latch = 0;
+  trs_interrupt_latch_clear();
   model_quirks = no_model_quirks;
 
   switch (trs_model) {

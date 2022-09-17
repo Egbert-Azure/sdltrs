@@ -152,6 +152,7 @@ extern int trs_joystick_in(void);
 
 extern int trs_rom_size;
 
+extern void trs_interrupt_latch_clear(void);
 extern Uint8 trs_interrupt_latch_read(void);
 extern Uint8 trs_nmi_latch_read(void);
 extern void trs_interrupt_mask_write(Uint8);
