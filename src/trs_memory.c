@@ -115,7 +115,7 @@ static inline int vaddr_mask(Uint16 vaddr) {
   }
 }
 
-static inline Uint8 mem_video_read(int vaddr) {
+inline Uint8 mem_video_read(int vaddr) {
   vaddr = vaddr_mask(vaddr);
   if (vaddr < 0) { /* emulator bug, should never happen */
     return 0xFF;
@@ -123,7 +123,7 @@ static inline Uint8 mem_video_read(int vaddr) {
   return video[vaddr];
 }
 
-static inline int mem_video_write(int vaddr, Uint8 value) {
+inline int mem_video_write(int vaddr, Uint8 value) {
   vaddr = vaddr_mask(vaddr);
   if (vaddr < 0) { /* emulator bug, should never happen */
     return 0;
