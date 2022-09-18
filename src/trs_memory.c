@@ -45,6 +45,8 @@
  * as the screen and keyboard.
  */
 
+/*#define MEMDEBUG 1*/
+
 #include <stdlib.h>
 #include <string.h>
 #include "error.h"
@@ -110,7 +112,9 @@ static inline int vaddr_mask(Uint16 vaddr) {
   if (vaddr < MAX_VIDEO_SIZE) {
     return vaddr;
   } else { /* emulator bug, should never happen */
+#if MEMDEBUG
     error("video address %04x out of range [size=%04x]", vaddr, MAX_VIDEO_SIZE);
+#endif
     return -1;
   }
 }
@@ -829,8 +833,10 @@ int trs80_model3_mem_read(int address) {
   } else if (address < trs_rom_size) {
     return rom[address];
   } else {
+#if MEMDEBUG
     error("Invalid read of address %04x, returning FF [PC=%04x, mem_map=%02x]",
         address, Z80_PC, memory_map);
+#endif
     return 0xFF;
   }
 }
@@ -1176,9 +1182,11 @@ void trs80_model3_mem_write(int address, int value) {
     trs80_screen_write_char(address - video_memory, value);
   } else if (address == PRINTER_ADDRESS) {
     trs_printer_write(value);
+#if MEMDEBUG
   } else {
     error("Invalid write of address %04x [PC=%04x, mem_map=%02x]",
         address, Z80_PC, memory_map);
+#endif
   }
 }
 
