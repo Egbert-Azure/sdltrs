@@ -212,52 +212,55 @@ void mem_bank(int command)
 
 void mem_bank_base(int bits)
 {
-	if (eg3200) {
-		/* Genieplus Memory Card */
-		bank_base = (bits & 0x07) << 16;
-		if (bank_base) {
-			/* Select upper 32K of bank */
-			if (bits & (1 << 3))
-				bank_base += 32768;
-
+	if (trs_model >= 4) {
+		if (huffman) {
+			bits &= 0x1F;
+			bank_base = bits << 16;
+			mem_bank(mem_command);
+			return;
 		}
-		return;
-	}
-	if (speedup == 6) {
-		/* TCS Genie IIs/SpeedMaster RAM 192 B */
-		bank_base = ((bits & 0x0C) * 192) /* card */
-			  + ((bits & 0x30) *  48) /* block */
-			  * 1024 + 65536;
-		mem_command = bits;
-	}
-	if (huffman) {
-		bits &= 0x1F;
-		bank_base = bits << 16;
-		mem_bank(mem_command);
-		return;
-	}
-	if (hypermem) {
-	        /* HyperMem replaces the upper 64K bank with multiple
-	           banks according to port 0x90 bits 4-1 */
-		bits &= 0x1E;
-		/* 0 base is upper bank of 64K */
-		bits += 2;
-		bank_base = bits << 15;
-		mem_bank(mem_command);
-		return;
-	}
-	if (supermem) {
-		/* Emulate a 512Kb system. A standard model 1 SuperMEM is 256K
-		   or 512K with double stacked chips */
-		bits &= 0x0F; /* 15 bits of address + 4bits logical */
-		supermem_base = bits << 15;
-		/* The supermem can flip the low or high 32K. Set
-		   bit 5 to map low */
-		if (bits & 0x20)
-		    supermem_hi = 0x0000;
-		else
-		    supermem_hi = 0x8000;
-		return;
+		if (hypermem) {
+		        /* HyperMem replaces the upper 64K bank with multiple
+		           banks according to port 0x90 bits 4-1 */
+			bits &= 0x1E;
+			/* 0 base is upper bank of 64K */
+			bits += 2;
+			bank_base = bits << 15;
+			mem_bank(mem_command);
+			return;
+		}
+	} else {
+		if (eg3200) {
+			/* Genieplus Memory Card */
+			bank_base = (bits & 0x07) << 16;
+			if (bank_base) {
+				/* Select upper 32K of bank */
+				if (bits & (1 << 3))
+					bank_base += 32768;
+			}
+			return;
+		}
+		if (speedup == 6) {
+			/* TCS Genie IIs/SpeedMaster RAM 192 B */
+			bank_base = ((bits & 0x0C) * 192) /* card */
+				  + ((bits & 0x30) *  48) /* block */
+				  * 1024 + 65536;
+			mem_command = bits;
+			return;
+		}
+		if (supermem) {
+			/* Emulate a 512Kb system. A standard model 1 SuperMEM
+			   is 256K or 512K with double stacked chips */
+			bits &= 0x0F; /* 15 bits of address + 4bits logical */
+			supermem_base = bits << 15;
+			/* The supermem can flip the low or high 32K. Set
+			   bit 5 to map low */
+			if (bits & 0x20)
+			    supermem_hi = 0x0000;
+			else
+			    supermem_hi = 0x8000;
+			return;
+		}
 	}
 }
 
