@@ -212,6 +212,24 @@ void mem_bank(int command)
 
 void mem_bank_base(int bits)
 {
+	if (eg3200) {
+		/* Genieplus Memory Card */
+		bank_base = (bits & 0x07) << 16;
+		if (bank_base) {
+			/* Select upper 32K of bank */
+			if (bits & (1 << 3))
+				bank_base += 32768;
+
+		}
+		return;
+	}
+	if (speedup == 6) {
+		/* TCS Genie IIs/SpeedMaster RAM 192 B */
+		bank_base = ((bits & 0x0C) * 192) /* card */
+			  + ((bits & 0x30) *  48) /* block */
+			  * 1024 + 65536;
+		mem_command = bits;
+	}
 	if (huffman) {
 		bits &= 0x1F;
 		bank_base = bits << 16;
@@ -241,35 +259,17 @@ void mem_bank_base(int bits)
 		    supermem_hi = 0x8000;
 		return;
 	}
-	if (eg3200) {
-		/* Genieplus Memory Card */
-		bank_base = (bits & 0x07) << 16;
-		if (bank_base) {
-			/* Select upper 32K of bank */
-			if (bits & (1 << 3))
-				bank_base += 32768;
-
-		}
-		return;
-	}
-	if (speedup == 6) {
-		/* TCS Genie IIs/SpeedMaster RAM 192 B */
-		bank_base = ((bits & 0x0C) * 192) /* card */
-			  + ((bits & 0x30) *  48) /* block */
-			  * 1024 + 65536;
-		mem_command = bits;
-	}
 }
 
 int mem_read_bank_base(void)
 {
+	if (speedup == 6)
+		return (mem_command);
 	if (huffman)
 		return (bank_base >> 16) & 0x1F;
 	if (supermem)
 		return (supermem_base >> 15) |
 			((supermem_hi == 0) ? 0x20 : 0);
-	if (speedup == 6)
-		return (mem_command);
 	/* And the HyperMem appears to be write-only */
 	return 0xFF;
 }
