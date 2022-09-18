@@ -103,7 +103,7 @@ Lupi's fork of [RetroPie-Setup] ...
 [SDL]: https://www.libsdl.org
 [SDL2]: https://gitlab.com/jengun/sdltrs/-/tree/sdl2
 [SDL.DLL]: https://www.libsdl.org/download-1.2.php
-[SDL2.DLL]: https://www.libsdl.org/download-2.0.php
+[SDL2.DLL]: https://github.com/libsdl-org/SDL/releases/latest
 [SDL-1.2.14]: https://www.libsdl.org/release/SDL-1.2.14-win32.zip
 [SDLTRS]: http://sdltrs.sourceforge.net
 [SDLTRS and the Video Genies]: http://www.myoldc.info/eaca_tcs_computer/sdltrs_and_the_videogenies.html
