@@ -933,7 +933,8 @@ int z80_in(int port)
       value = grafyx_read_data();
       goto done;
     case 0x94: /* Huffman memory expansion */
-      value = mem_read_bank_base(HUFFMAN);
+      if (trs_model >= 4 && huffman)
+        value = mem_read_bank_base(HUFFMAN);
       goto done;
     case 0x9C: /* !!? */
     case 0x9D: /* !!? */
