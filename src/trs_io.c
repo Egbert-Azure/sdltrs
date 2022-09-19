@@ -144,7 +144,7 @@ void z80_out(int port, int value)
   if (eg3200) {
     switch (port) {
       case 0x28: /* Genieplus Memory Card */
-        mem_bank_base(value);
+        mem_bank_base(GENIEPLUS, value);
         break;
       case 0x48:
         trs_hard_out(TRS_HARD_DATA, value);
@@ -323,7 +323,7 @@ void z80_out(int port, int value)
     break;
   case 0x43: /* Alpha Technologies SuperMem */
     if (trs_model < 4 && supermem)
-      mem_bank_base(value);
+      mem_bank_base(SUPERMEM, value);
     break;
   }
 
@@ -351,7 +351,7 @@ void z80_out(int port, int value)
       break;
     case 0x7E: /* TCS Genie IIs/SpeedMaster RAM 192 B */
       if (speedup == 6)
-        mem_bank_base(value);
+        mem_bank_base(RAM192B, value);
       return;
     case 0xB5: /* Orchestra-85 right channel */
       trs_orch90_out(2, value);
@@ -510,7 +510,7 @@ void z80_out(int port, int value)
       /* HyperMem uses bits 4-1 of this port, 0 is the existing
          sound */
       if (trs_model >= 4 && hypermem)
-        mem_bank_base(value);
+        mem_bank_base(HYPERMEM, value);
       /* Fall through - we affect the sound as well */
     case 0x91:
     case 0x92:
@@ -519,7 +519,7 @@ void z80_out(int port, int value)
       break;
     case 0x94:			/* Huffman memory expansion */
       if (trs_model >= 4 && huffman)
-        mem_bank_base(value);
+        mem_bank_base(HUFFMAN, value);
       break;
     case 0x9C:
     case 0x9D: /* !!? */
@@ -872,7 +872,7 @@ int z80_in(int port)
     goto done;
   case 0x43: /* Supermem memory expansion */
     if (trs_model < 4 && supermem) {
-      value = mem_read_bank_base();
+      value = mem_read_bank_base(SUPERMEM);
       goto done;
     }
   }
@@ -891,7 +891,7 @@ int z80_in(int port)
       goto done;
     case 0x7E: /* TCS Genie IIs/SpeedMaster RAM 192 B */
       if (speedup == 6)
-        value = mem_read_bank_base();
+        value = mem_read_bank_base(RAM192B);
       goto done;
     case 0xDF:
       if (speedup <= 3 && lubomir == 0) {
@@ -933,7 +933,7 @@ int z80_in(int port)
       value = grafyx_read_data();
       goto done;
     case 0x94: /* Huffman memory expansion */
-      value = mem_read_bank_base();
+      value = mem_read_bank_base(HUFFMAN);
       goto done;
     case 0x9C: /* !!? */
     case 0x9D: /* !!? */
