@@ -282,6 +282,7 @@ static const struct {
   { "clock4",          trs_opt_clock,         1, 4, NULL                 },
 #ifdef ZBX
   { "debug",           trs_opt_value,         0, 1, &debugger            },
+  { "nodebug",         trs_opt_value,         0, 0, &debugger            },
 #endif
   { "disk0",           trs_opt_disk,          1, 0, NULL                 },
   { "disk1",           trs_opt_disk,          1, 1, NULL                 },
@@ -297,6 +298,8 @@ static const struct {
   { "doubler",         trs_opt_doubler,       1, 0, NULL                 },
 #ifdef __linux
   { "doublestep",      trs_opt_doublestep,    0, 2, NULL                 },
+  { "nodoublestep",    trs_opt_doublestep,    0, 1, NULL                 },
+  { "stepmap",         trs_opt_stepmap,       1, 0, NULL                 },
 #endif
   { "emtsafe",         trs_opt_value,         0, 1, &trs_emtsafe         },
   { "fg",              trs_opt_color,         1, 0, &foreground          },
@@ -333,12 +336,6 @@ static const struct {
   { "megamem",         trs_opt_value,         0, 1, &megamem             },
   { "model",           trs_opt_model,         1, 0, NULL                 },
   { "mousepointer",    trs_opt_value,         0, 1, &mousepointer        },
-#ifdef ZBX
-  { "nodebug",         trs_opt_value,         0, 0, &debugger            },
-#endif
-#ifdef __linux
-  { "nodoublestep",    trs_opt_doublestep,    0, 1, NULL                 },
-#endif
   { "noemtsafe",       trs_opt_value,         0, 0, &trs_emtsafe         },
   { "nofullscreen",    trs_opt_value,         0, 0, &fullscreen          },
   { "nofs",            trs_opt_value,         0, 0, &fullscreen          },
@@ -364,9 +361,6 @@ static const struct {
   { "nosupermem",      trs_opt_supermem,      0, 0, NULL                 },
   { "notruedam",       trs_opt_value,         0, 0, &trs_disk_truedam    },
   { "noturbo",         trs_opt_value,         0, 0, &timer_overclock     },
-#if defined(SDL2) || !defined(NOX)
-  { "noturbopaste",    trs_opt_value,         0, 0, &turbo_paste         },
-#endif
   { "printer",         trs_opt_printer,       1, 0, NULL                 },
   { "printerdir",      trs_opt_dirname,       1, 0, trs_printer_dir      },
   { "resize3",         trs_opt_value,         0, 1, &resize3             },
@@ -388,9 +382,6 @@ static const struct {
   { "sound",           trs_opt_value,         0, 1, &trs_sound           },
   { "speedup",         trs_opt_speedup,       1, 0, NULL                 },
   { "statedir",        trs_opt_dirname,       1, 0, trs_state_dir        },
-#ifdef __linux
-  { "stepmap",         trs_opt_stepmap,       1, 0, NULL                 },
-#endif
   { "stringy",         trs_opt_value,         0, 1, &stringy             },
   { "supermem",        trs_opt_supermem,      0, 1, NULL                 },
   { "switches",        trs_opt_switches,      1, 0, NULL                 },
@@ -398,6 +389,7 @@ static const struct {
   { "turbo",           trs_opt_value,         0, 1, &timer_overclock     },
 #if defined(SDL2) || !defined(NOX)
   { "turbopaste",      trs_opt_value,         0, 1, &turbo_paste         },
+  { "noturbopaste",    trs_opt_value,         0, 0, &turbo_paste         },
 #endif
   { "turborate",       trs_opt_turborate,     1, 0, NULL                 },
   { "wafer0",          trs_opt_wafer,         1, 0, NULL                 },
