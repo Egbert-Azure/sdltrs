@@ -23,4 +23,19 @@ Uint8 mem_video_page_read(int vaddr);
 int mem_video_write(int vaddr, Uint8 value);
 int mem_video_page_write(int vaddr, Uint8 value);
 
+extern void mem_bank(int which);
+extern void mem_map(int which);
+extern void mem_bank_base(int card, int bits);
+extern int mem_read_bank_base(int card);
+extern void mem_romin(int state);
+
+extern void megamem_out(int mem_slot, Uint8 value);
+extern void selector_out(Uint8);
+
+extern void eg64_mba_out(int value);
+extern void lsb_bank_out(int value);
+extern void s80z_out(int value);
+extern void sys_byte_out(int value);
+extern int  sys_byte_in(void);
+
 #endif

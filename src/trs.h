@@ -198,18 +198,10 @@ extern int megamem;
 extern int supermem;
 extern int selector;
 
-extern void megamem_out(int mem_slot, Uint8 value);
-extern void selector_out(Uint8);
-
 extern int lowercase;
 extern int lubomir;
 extern int stringy;
 
-extern void mem_bank(int which);
-extern void mem_map(int which);
-extern void mem_bank_base(int card, int bits);
-extern int mem_read_bank_base(int card);
-extern void mem_romin(int state);
 extern void eg3200_init_out(int value);
 extern void genie3s_bank_out(int value);
 extern void genie3s_init_out(int value);
@@ -220,13 +212,6 @@ extern void genie3s_hrg_write(int position, int byte);
 extern Uint8 genie3s_hrg_read(int position);
 extern void m6845_cursor(int position, int start, int end, int visible);
 extern void m6845_screen(int chars, int lines, int raster, int factor);
-
-extern void eg64_mba_out(int value);
-extern void lsb_bank_out(int value);
-extern void sys_byte_out(int value);
-extern int  sys_byte_in(void);
-
-extern void s80z_out(int value);
 
 extern void trs_debug(void);
 
