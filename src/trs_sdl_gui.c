@@ -1846,7 +1846,7 @@ void trs_gui_emulator_settings(void)
         break;
       case -1:
         model_selection = (model_selection == 0 ? 1 : model_selection + 2);
-        if (trs_model != model_selection) {
+        if (trs_model != model_selection || speedup >= 5) {
           trs_model = model_selection;
           trs_reset(1);
         }
