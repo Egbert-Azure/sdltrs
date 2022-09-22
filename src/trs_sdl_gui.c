@@ -2011,9 +2011,9 @@ void trs_gui_display_settings(void)
             input, input, 2, 0) == 0) {
           value = atol(input);
           if (value != window_border_width) {
+            if (value < 0 || value > 50)
+              value = 2;
             window_border_width = value;
-            if (window_border_width < 0 || window_border_width > 50)
-              window_border_width = 2;
             resize = 1;
           }
         }
