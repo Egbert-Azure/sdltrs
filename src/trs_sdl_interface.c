@@ -1974,20 +1974,20 @@ void trs_get_event(int wait)
               SDL_SetWindowSize(window, OrigWidth * scale, OrigHeight * scale);
               break;
             case SDLK_PAGEDOWN:
-              fullscreen = 0;
-              scale++;
-              if (scale > MAX_SCALE)
-                scale = 1;
-              SDL_SetWindowFullscreen(window, 0);
-              SDL_SetWindowSize(window, OrigWidth * scale, OrigHeight * scale);
+              if (scale < MAX_SCALE) {
+                scale++;
+                fullscreen = 0;
+                SDL_SetWindowFullscreen(window, 0);
+                SDL_SetWindowSize(window, OrigWidth * scale, OrigHeight * scale);
+              }
               break;
             case SDLK_PAGEUP:
-              fullscreen = 0;
-              scale--;
-              if (scale < 1)
-                scale = MAX_SCALE;
-              SDL_SetWindowFullscreen(window, 0);
-              SDL_SetWindowSize(window, OrigWidth * scale, OrigHeight * scale);
+              if (scale > 1) {
+                scale--;
+                fullscreen = 0;
+                SDL_SetWindowFullscreen(window, 0);
+                SDL_SetWindowSize(window, OrigWidth * scale, OrigHeight * scale);
+              }
               break;
             case SDLK_MINUS:
             case SDLK_8:
