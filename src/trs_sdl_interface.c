@@ -1973,18 +1973,18 @@ void trs_get_event(int wait)
               trs_screen_init(1);
               break;
             case SDLK_PAGEDOWN:
-              fullscreen = 0;
-              scale++;
-              if (scale > MAX_SCALE)
-                scale = 1;
-              trs_screen_init(1);
+              if (scale < MAX_SCALE) {
+                scale++;
+                fullscreen = 0;
+                trs_screen_init(1);
+              }
               break;
             case SDLK_PAGEUP:
-              fullscreen = 0;
-              scale--;
-              if (scale < 1)
-                scale = MAX_SCALE;
-              trs_screen_init(1);
+              if (scale > 1) {
+                scale--;
+                fullscreen = 0;
+                trs_screen_init(1);
+              }
               break;
             case SDLK_MINUS:
             case SDLK_8:
