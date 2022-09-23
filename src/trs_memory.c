@@ -495,6 +495,8 @@ void trs_reset(int poweron)
 		z80_out(0xF6, 0x08);
 		z80_out(0xF7, 0x00);
 	}
+	/* No quirks */
+	model_quirks = no_model_quirks;
 	/* Blank Video */
 	memset(&video, ' ', MAX_VIDEO_SIZE);
 	trs_screen_reset();
