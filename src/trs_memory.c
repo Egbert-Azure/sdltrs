@@ -292,6 +292,7 @@ void eg3200_init_out(int value)
 {
 	eg3200 = value;
 	memory_map = 0x23;
+	model_quirks.clone = "EACA EG 3200 Genie III";
 	trs_disk_doubler = TRSDISK_PERCOM;
 	trs_timer_init();
 	trs_screen_inverse(0);
@@ -339,9 +340,10 @@ void genie3s_bank_out(int value)
 void genie3s_init_out(int value)
 {
 	genie3s_bank_out(value);
-	trs_timer_init();
 	mem_video_page(0);
 	memory_map = 0x24;
+	model_quirks.clone = "TCS Genie IIIs";
+	trs_timer_init();
 }
 
 void genie3s_sys_out(int value)
