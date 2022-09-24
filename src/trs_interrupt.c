@@ -382,10 +382,8 @@ trs_timer_init(void)
       timer_hz = TIMER_HZ_1;
       if (eg3200) {
         z80_state.clockMHz = EG_3200_MHZ;
-        model_quirks.clone = "EACA EG 3200 Genie III";
       } else if (genie3s) {
         z80_state.clockMHz = TCS_G3S_MHZ;
-        model_quirks.clone = "TCS Genie IIIs";
       } else {
         switch (speedup) {
           case 5: /* LNW80 */
