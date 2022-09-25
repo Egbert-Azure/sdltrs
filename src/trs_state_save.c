@@ -29,8 +29,6 @@
 #include <errno.h>
 #include <stdio.h>
 #include <string.h>
-#include <SDL_types.h>
-
 #include "error.h"
 #include "trs_state_save.h"
 
@@ -48,6 +46,7 @@ int trs_state_save(const char *filename)
     trs_save_uint32(file, &stateVersionNumber, 1);
     trs_main_save(file);
     trs_cassette_save(file);
+    trs_clone_save(file);
     trs_disk_save(file);
     trs_hard_save(file);
     trs_stringy_save(file);
@@ -87,6 +86,7 @@ int trs_state_load(const char *filename)
     }
     trs_main_load(file);
     trs_cassette_load(file);
+    trs_clone_load(file);
     trs_disk_load(file);
     trs_hard_load(file);
     trs_stringy_load(file);
