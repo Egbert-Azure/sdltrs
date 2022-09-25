@@ -9,24 +9,29 @@ static const struct model_quirks quirks[CLONES] = {
   { NULL,
     0,
     0,
+    0,
   },
 
   { "CP-500",
     0,
     0,
+    0,
   },
 
   { "CP-500 M80", /* name */
+    0,
     1, /* do not fire early disk interrupts */
     1, /* clear timer when latch is read */
   },
 
   { "EACA EG 3200 Genie III",
+    1,
     0,
     0,
   },
 
   { "TCS Genie IIIs",
+    1,
     0,
     0,
   },
@@ -34,9 +39,11 @@ static const struct model_quirks quirks[CLONES] = {
   { "LNW80",
     0,
     0,
+    0,
   },
 
   { "TCS SpeedMaster",
+    1,
     0,
     0,
   },
