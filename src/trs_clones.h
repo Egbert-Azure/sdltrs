@@ -1,6 +1,13 @@
 #ifndef _TRS_CLONES_H
 #define _TRS_CLONES_H
 
+#define CP500       (1)
+#define CP500_M80   (2)
+#define EG3200      (3)
+#define GENIE3S     (4)
+#define LNW80       (5)
+#define SPEEDMASTER (6)
+
 /*
  * Some clones contain seem to behave in a slightly different way
  * than stock TRS-80 models:
@@ -43,6 +50,6 @@ struct model_quirks {
 };
 
 extern struct model_quirks model_quirks;
-static const struct model_quirks no_model_quirks;
+extern void trs_clone_quirks(int clone);
 
 #endif
