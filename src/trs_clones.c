@@ -1,4 +1,7 @@
+#include <stdio.h>
+
 #include "trs_clones.h"
+#include "trs_state_save.h"
 
 struct model_quirks model_quirks;
 static const struct model_quirks no_model_quirks;
@@ -39,6 +42,8 @@ static const struct model_quirks speedmaster_quirks = {
     0,
 };
 
+static int selected_clone;
+
 void trs_clone_quirks(int clone)
 {
   switch (clone) {
@@ -64,4 +69,16 @@ void trs_clone_quirks(int clone)
       model_quirks = speedmaster_quirks;
       break;
   }
+  selected_clone = clone;
+}
+
+void trs_clone_save(FILE *file)
+{
+  trs_save_int(file, &selected_clone, 1);
+}
+
+void trs_clone_load(FILE *file)
+{
+  trs_load_int(file, &selected_clone, 1);
+  trs_clone_quirks(selected_clone);
 }
