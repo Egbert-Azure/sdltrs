@@ -292,7 +292,7 @@ void eg3200_init_out(int value)
 {
 	eg3200 = value;
 	memory_map = 0x23;
-	model_quirks.clone = "EACA EG 3200 Genie III";
+	trs_clone_quirks(EG3200);
 	trs_disk_doubler = TRSDISK_PERCOM;
 	trs_timer_init();
 	trs_screen_inverse(0);
@@ -342,7 +342,7 @@ void genie3s_init_out(int value)
 	genie3s_bank_out(value);
 	mem_video_page(0);
 	memory_map = 0x24;
-	model_quirks.clone = "TCS Genie IIIs";
+	trs_clone_quirks(GENIE3S);
 	trs_timer_init();
 }
 
@@ -498,7 +498,7 @@ void trs_reset(int poweron)
 		z80_out(0xF7, 0x00);
 	}
 	/* No quirks */
-	model_quirks = no_model_quirks;
+	trs_clone_quirks(0);
 	/* Blank Video */
 	memset(&video, ' ', MAX_VIDEO_SIZE);
 	trs_screen_reset();

@@ -4,8 +4,6 @@
 #include "trs_cp500.h"
 #include "trs_memory.h"
 
-struct model_quirks model_quirks; /* No quirks by default. */
-
 /**********************************************************************
  * CP-500 - Model III clone from Brazil, made by Prologica.
  *
@@ -39,22 +37,10 @@ static struct {
   int video_first_row;
 } cp500_m80;
 
-static const struct model_quirks cp500_quirks = {
-    "CP-500",
-    0,
-    0,
-};
-
-static const struct model_quirks cp500_m80_quirks = {
-    "CP-500 M80", /* name */
-    1, /* do not fire early disk interrupts */
-    1, /* clear timer when latch is read */
-};
-
 void cp500_reset_mode() {
   if (model != none) { /* Have we ever been in CP-500 mode? */
     cp500_switch_mode(0);
-    model_quirks = no_model_quirks;
+    trs_clone_quirks(0);
   }
 }
 
@@ -157,10 +143,10 @@ Uint8 cp500_switch_mode(int mode) {
       fatal("mode should have been changed to CP-500");
       break;
     case original:
-      model_quirks = cp500_quirks;
+      trs_clone_quirks(CP500);
       break;
     case M80:
-      model_quirks = cp500_m80_quirks;
+      trs_clone_quirks(CP500_M80);
       break;
     default:
       fatal("unimplemented CP-500 model: %x\n", model);

@@ -388,11 +388,11 @@ trs_timer_init(void)
         switch (speedup) {
           case 5: /* LNW80 */
             z80_state.clockMHz = CLOCK_4_MHZ;
-            model_quirks.clone = "LNW80";
+            trs_clone_quirks(LNW80);
             break;
           case 6: /* TCS SpeedMaster 5.3 */
             z80_state.clockMHz = TCS_SPM_MHZ;
-            model_quirks.clone = "TCS SpeedMaster";
+            trs_clone_quirks(SPEEDMASTER);
             break;
           default:
             z80_state.clockMHz = clock_mhz_1;
