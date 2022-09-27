@@ -3629,9 +3629,6 @@ void trs_main_save(FILE *file)
   trs_save_uint8(file, hrg_screen, HRG_MEMSIZE);
   trs_save_int(file, &hrg_enable, 1);
   trs_save_int(file, &hrg_addr, 1);
-  trs_save_int(file, key_queue, KEY_QUEUE_SIZE);
-  trs_save_int(file, &key_queue_head, 1);
-  trs_save_int(file, &key_queue_entries, 1);
   trs_save_int(file, &lowe_le18, 1);
   trs_save_int(file, &lowercase, 1);
   trs_save_int(file, &stringy, 1);
@@ -3672,9 +3669,6 @@ void trs_main_load(FILE *file)
   trs_load_uint8(file, hrg_screen, HRG_MEMSIZE);
   trs_load_int(file, &hrg_enable, 1);
   trs_load_int(file, &hrg_addr, 1);
-  trs_load_int(file, key_queue, KEY_QUEUE_SIZE);
-  trs_load_int(file, &key_queue_head, 1);
-  trs_load_int(file, &key_queue_entries, 1);
   trs_load_int(file, &lowe_le18, 1);
   trs_load_int(file, &lowercase, 1);
   trs_load_int(file, &stringy, 1);

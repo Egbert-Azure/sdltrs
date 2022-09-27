@@ -888,6 +888,9 @@ void trs_keyboard_save(FILE *file)
   trs_save_int(file, &force_shift, 1);
   trs_save_int(file, &joystate, 1);
   trs_save_uint64(file, &key_stretch_timeout, 1);
+  trs_save_int(file, key_queue, KEY_QUEUE_SIZE);
+  trs_save_int(file, &key_queue_head, 1);
+  trs_save_int(file, &key_queue_entries, 1);
   trs_save_int(file, &stretch_amount, 1);
   trs_save_int(file, &trs_kb_bracket_state, 1);
 }
@@ -898,6 +901,9 @@ void trs_keyboard_load(FILE *file)
   trs_load_int(file, &force_shift, 1);
   trs_load_int(file, &joystate, 1);
   trs_load_uint64(file, &key_stretch_timeout, 1);
+  trs_load_int(file, key_queue, KEY_QUEUE_SIZE);
+  trs_load_int(file, &key_queue_head, 1);
+  trs_load_int(file, &key_queue_entries, 1);
   trs_load_int(file, &stretch_amount, 1);
   trs_load_int(file, &trs_kb_bracket_state, 1);
 }
