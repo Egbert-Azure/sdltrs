@@ -45,6 +45,7 @@
 #include "error.h"
 #include "trs.h"
 #include "trs_sdl_keyboard.h"
+#include "trs_state_save.h"
 
 static void queue_key(int state);
 static int dequeue_key(void);
@@ -883,20 +884,20 @@ int dequeue_key(void)
 
 void trs_keyboard_save(FILE *file)
 {
-  fwrite(&keystate, 8, sizeof(int), file);
-  fwrite(&force_shift, 1, sizeof(int), file);
-  fwrite(&joystate, 1, sizeof(int), file);
-  fwrite(&key_stretch_timeout, 1, sizeof(long long), file);
-  fwrite(&stretch_amount, 1, sizeof(int), file);
-  fwrite(&trs_kb_bracket_state, 1, sizeof(int), file);
+  trs_save_int(file, keystate, 9);
+  trs_save_int(file, &force_shift, 1);
+  trs_save_int(file, &joystate, 1);
+  trs_save_uint64(file, &key_stretch_timeout, 1);
+  trs_save_int(file, &stretch_amount, 1);
+  trs_save_int(file, &trs_kb_bracket_state, 1);
 }
 
 void trs_keyboard_load(FILE *file)
 {
-  fread(&keystate, 8, sizeof(int), file);
-  fread(&force_shift, 1, sizeof(int), file);
-  fread(&joystate, 1, sizeof(int), file);
-  fread(&key_stretch_timeout, 1, sizeof(long long), file);
-  fread(&stretch_amount, 1, sizeof(int), file);
-  fread(&trs_kb_bracket_state, 1, sizeof(int), file);
+  trs_load_int(file, keystate, 9);
+  trs_load_int(file, &force_shift, 1);
+  trs_load_int(file, &joystate, 1);
+  trs_load_uint64(file, &key_stretch_timeout, 1);
+  trs_load_int(file, &stretch_amount, 1);
+  trs_load_int(file, &trs_kb_bracket_state, 1);
 }
