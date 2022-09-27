@@ -2439,18 +2439,18 @@ void trs_gui_joystick_settings(void)
   int selection = 0;
   int button, key;
   int i, num_joysticks, joy_index;
-  int gui_keypad_joystick = trs_keypad_joystick;
-  int gui_joystick_num = trs_joystick_num;
 
   for (i = 0; i < MAX_JOYSTICKS + 1; i++)
     joystick[i] = joysticks[i];
 
   while (1) {
-    snprintf(&menu[0].text[50], 11, "%s", yes_no[gui_keypad_joystick]);
-    if (gui_joystick_num == -1)
+    snprintf(&menu[0].text[50], 11, "%s", yes_no[trs_keypad_joystick]);
+
+    if (trs_joystick_num == -1)
       snprintf(&menu[1].text[50], 11, "      None");
     else
-      snprintf(&menu[1].text[50], 11, "Joystick %1d", gui_joystick_num);
+      snprintf(&menu[1].text[50], 11, "Joystick %1d", trs_joystick_num);
+
     snprintf(&menu[2].text[50], 11, "%s", yes_no[jaxis_mapped]);
     trs_gui_clear_screen();
     trs_gui_joystick_display_map(-1);
@@ -2458,7 +2458,8 @@ void trs_gui_joystick_settings(void)
     selection = trs_gui_display_menu("Joystick Settings", menu, selection);
     switch (selection) {
       case 0:
-        gui_keypad_joystick = trs_gui_display_popup("Keypad", yes_no, 2, gui_keypad_joystick);
+        trs_keypad_joystick = trs_gui_display_popup("Keypad", yes_no, 2, trs_keypad_joystick);
+        trs_set_keypad_joystick();
         break;
       case 1:
         num_joysticks = SDL_NumJoysticks();
@@ -2473,13 +2474,14 @@ void trs_gui_joystick_settings(void)
               SDL_JoystickName(i));
 #endif
         }
-        if ((gui_joystick_num == -1) || (gui_joystick_num >= num_joysticks))
+        if ((trs_joystick_num == -1) || (trs_joystick_num >= num_joysticks))
           joy_index = 0;
         else
-          joy_index = gui_joystick_num + 1;
+          joy_index = trs_joystick_num + 1;
         joy_index = trs_gui_display_popup("Joystick", (const char**)joystick,
             num_joysticks + 1, joy_index);
-        gui_joystick_num = joy_index - 1;
+        trs_joystick_num = joy_index - 1;
+        trs_open_joystick();
         break;
       case 2:
         jaxis_mapped = trs_gui_display_popup("Arrow", yes_no, 2, jaxis_mapped);
@@ -2514,14 +2516,6 @@ void trs_gui_joystick_settings(void)
         }
         break;
       case -1:
-        if (trs_keypad_joystick != gui_keypad_joystick) {
-          trs_keypad_joystick = gui_keypad_joystick;
-          trs_set_keypad_joystick();
-        }
-        if (trs_joystick_num != gui_joystick_num) {
-          trs_joystick_num = gui_joystick_num;
-          trs_open_joystick();
-        }
         return;
     }
   }
