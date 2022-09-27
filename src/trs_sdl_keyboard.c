@@ -53,9 +53,9 @@ static int dequeue_key(void);
 /*
  * Key event queue
  */
-int key_queue[KEY_QUEUE_SIZE];
-int key_queue_head;
-int key_queue_entries;
+static int key_queue[KEY_QUEUE_SIZE];
+static int key_queue_head;
+static int key_queue_entries;
 
 /*
  * TRS-80 key matrix
@@ -170,7 +170,7 @@ typedef struct
 
 /* Keysyms in the extended ASCII range 0x0000 - 0x00ff */
 
-KeyTable ascii_key_table[] = {
+static KeyTable ascii_key_table[] = {
 /* 0x0 */     { TK_NULL, TK_Neutral }, /* undefined keysyms... */
 /* 0x1 */     { TK_NULL, TK_Neutral },
 /* 0x2 */     { TK_NULL, TK_Neutral },
@@ -499,7 +499,7 @@ KeyTable ascii_key_table[] = {
 static int keystate[9];
 static int force_shift = TK_Neutral;
 static int joystate;
-int key_heartbeat;
+static int key_heartbeat;
 int trs_joystick_num;
 int trs_keypad_joystick = TRUE;
 
