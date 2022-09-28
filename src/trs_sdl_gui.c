@@ -2150,12 +2150,15 @@ void trs_gui_misc_settings(void)
         break;
       case 8:
         trs_kb_bracket_state = trs_gui_display_popup("Bracket", yes_no, 2, trs_kb_bracket_state);
+        trs_kb_bracket(trs_kb_bracket_state);
         break;
       case 9:
         trs_sound = trs_gui_display_popup("Sound", yes_no, 2, trs_sound);
+        trs_screen_caption();
         break;
       case 10:
         timer_overclock = trs_gui_display_popup("Turbo", yes_no, 2, timer_overclock);
+        trs_timer_mode(timer_overclock);
         break;
       case 11:
         snprintf(input, 11, "%d", timer_overclock_rate);
@@ -2163,6 +2166,7 @@ void trs_gui_misc_settings(void)
           timer_overclock_rate = atoi(input);
           if (timer_overclock_rate <= 0)
             timer_overclock_rate = 1;
+          trs_timer_mode(timer_overclock);
         }
         break;
 #if defined(SDL2) || !defined(NOX)
@@ -2171,8 +2175,6 @@ void trs_gui_misc_settings(void)
         break;
 #endif
       case -1:
-        trs_kb_bracket(trs_kb_bracket_state);
-        trs_timer_mode(timer_overclock);
         return;
     }
   }
