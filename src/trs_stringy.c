@@ -722,6 +722,8 @@ void trs_stringy_save(FILE *file)
 {
   int i;
 
+  trs_save_int(file, &stringy, 1);
+
   for (i = 0; i < STRINGY_MAX_UNITS; i++)
     trs_save_stringy(file, &stringy_info[i]);
 }
@@ -729,6 +731,8 @@ void trs_stringy_save(FILE *file)
 void trs_stringy_load(FILE *file)
 {
   int i;
+
+  trs_load_int(file, &stringy, 1);
 
   for (i = 0; i < STRINGY_MAX_UNITS; i++) {
     trs_load_stringy(file, &stringy_info[i]);
