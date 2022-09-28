@@ -3630,7 +3630,6 @@ void trs_main_save(FILE *file)
   trs_save_int(file, &hrg_enable, 1);
   trs_save_int(file, &hrg_addr, 1);
   trs_save_int(file, &lowe_le18, 1);
-  trs_save_int(file, &stringy, 1);
 }
 
 void trs_main_load(FILE *file)
@@ -3669,7 +3668,6 @@ void trs_main_load(FILE *file)
   trs_load_int(file, &hrg_enable, 1);
   trs_load_int(file, &hrg_addr, 1);
   trs_load_int(file, &lowe_le18, 1);
-  trs_load_int(file, &stringy, 1);
 }
 
 int trs_sdl_savebmp(const char *filename)
