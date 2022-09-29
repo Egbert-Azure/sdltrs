@@ -2245,21 +2245,15 @@ static int trs_gui_config_management(void)
    {"Load Emulator State (Alt-L)", MENU_NORMAL},
    {"Write Configuration (Alt-W)", MENU_NORMAL},
    {"Read Configuration  (Alt-R)", MENU_NORMAL},
-   {"", MENU_TITLE},
-   {"", MENU_TITLE},
-   {"", MENU_TITLE},
-   {"State File:", MENU_TITLE},
-   {"   ", MENU_TITLE},
-   {"", MENU_TITLE},
-   {"Configuration File:", MENU_TITLE},
-   {"   ", MENU_TITLE},
    {"", 0}};
   int selection = 0;
 
   while (1) {
-    trs_gui_limit_string(trs_state_file, &menu[8].text[2], 58);
-    trs_gui_limit_string(trs_config_file, &menu[11].text[2], 58);
     trs_gui_clear_screen();
+    trs_gui_write_text("State File:", 2, 8, 0);
+    trs_gui_write_text(trs_state_file, 4, 9, 0);
+    trs_gui_write_text("Configuration File:", 2, 11, 0);
+    trs_gui_write_text(trs_config_file, 4, 12, 0);
 
     selection = trs_gui_display_menu("Configuration/State Files", menu, selection);
     switch (selection) {
