@@ -29,6 +29,7 @@
 
 #define JOY_BOUNCE      (20000)
 #define KEY_QUEUE_SIZE  (32)
+#define STRETCH_AMOUNT  (4000)
 
 void trs_joy_button_down(void);
 void trs_joy_button_up(void);

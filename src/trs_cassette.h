@@ -37,6 +37,8 @@
  * SOFTWARE.
  */
 
+#define MAX_SAMPLE_RATE 44100  /* samples/sec to use for .wav files */
+
 int create_wav_header(FILE *f);
 void trs_cassette_insert(const char *filename);
 void trs_cassette_remove(void);

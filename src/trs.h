@@ -45,8 +45,6 @@
 
 #include "z80.h"
 
-#define STRETCH_AMOUNT 4000
-#define MAX_SAMPLE_RATE 44100  /* samples/sec to use for .wav files */
 
 #if defined(__OS2__) || defined(_WIN32)
 #define DIR_SLASH '\\'
