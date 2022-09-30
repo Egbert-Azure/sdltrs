@@ -47,6 +47,7 @@
 #include "trs_cassette.h"
 #include "trs_clones.h"
 #include "trs_disk.h"
+#include "trs_hard.h"
 #include "trs_iodefs.h"
 #include "trs_sdl_gui.h"
 #include "trs_sdl_keyboard.h"

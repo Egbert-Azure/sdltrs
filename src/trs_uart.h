@@ -28,7 +28,6 @@
 
 #include <errno.h>
 #include "trs.h"
-#include "trs_hard.h"
 
 extern void trs_uart_init(int reset_button);
 extern int trs_uart_check_avail(void);
