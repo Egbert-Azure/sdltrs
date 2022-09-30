@@ -25,10 +25,6 @@
 /*
  * Emulation of the Radio Shack TRS-80 Model I/III/4/4P serial port.
  */
-
-#include <errno.h>
-#include "trs.h"
-
 extern void trs_uart_init(int reset_button);
 extern int trs_uart_check_avail(void);
 extern int trs_uart_modem_in(void);
