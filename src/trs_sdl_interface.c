@@ -229,6 +229,7 @@ static void trs_opt_dirname(char *arg, int intarg, int *stringarg);
 static void trs_opt_doubler(char *arg, int intarg, int *stringarg);
 #ifdef __linux
 static void trs_opt_doublestep(char *arg, int intarg, int *stringarg);
+static void trs_opt_stepmap(char *arg, int intarg, int *stringarg);
 #endif
 static void trs_opt_hard(char *arg, int intarg, int *stringarg);
 static void trs_opt_huffman(char *arg, int intarg, int *stringarg);
@@ -249,9 +250,6 @@ static void trs_opt_serial(char *arg, int intarg, int *stringarg);
 static void trs_opt_shiftbracket(char *arg, int intarg, int *stringarg);
 static void trs_opt_sizemap(char *arg, int intarg, int *stringarg);
 static void trs_opt_speedup(char *arg, int intarg, int *stringarg);
-#ifdef __linux
-static void trs_opt_stepmap(char *arg, int intarg, int *stringarg);
-#endif
 static void trs_opt_supermem(char *arg, int intarg, int *stringarg);
 static void trs_opt_switches(char *arg, int intarg, int *stringarg);
 static void trs_opt_turborate(char *arg, int intarg, int *stringarg);
