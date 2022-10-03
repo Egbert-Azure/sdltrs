@@ -61,7 +61,6 @@ extern char trs_disk_dir[FILENAME_MAX];
 extern char trs_disk_set_dir[FILENAME_MAX];
 extern char trs_state_dir[FILENAME_MAX];
 extern char trs_printer_dir[FILENAME_MAX];
-extern char trs_printer_command[FILENAME_MAX];
 extern char trs_cmd_file[FILENAME_MAX];
 extern char trs_config_file[FILENAME_MAX];
 extern char trs_state_file[FILENAME_MAX];
