@@ -1637,7 +1637,7 @@ static char *GetSelection(void)
 /*
  * Flush SDL output
  */
-void trs_sdl_flush(void)
+static void trs_sdl_flush(void)
 {
 #if defined(SDL2) || !defined(NOX)
   if (mousepointer) {
