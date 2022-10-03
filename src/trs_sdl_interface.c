@@ -1022,7 +1022,7 @@ void trs_parse_command_line(int argc, char **argv, int *debug)
 {
   int i, j, len;
 
-  /* Check for config or state files on the command line */
+  /* Check for config or state files and CMD file on the command line */
   trs_config_file[0] = 0;
   trs_state_file[0] = 0;
   trs_cmd_file[0] = 0;
