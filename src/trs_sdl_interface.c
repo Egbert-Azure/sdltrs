@@ -405,8 +405,8 @@ static const int num_options = sizeof(options) / sizeof(options[0]);
 
 /* Private routines */
 static void bitmap_init(int ram);
-static void trs_char_bitmap(int char_index, int ram);
-static void trs_free_bitmap(int char_index, int start, int end);
+static void bitmap_char(int char_index, int ram);
+static void bitmap_free(int char_index, int start, int end);
 
 static Uint8 mirror_bits(Uint8 byte)
 {
@@ -1736,7 +1736,7 @@ void trs_sdl_cleanup(void)
   TrsBlitMap(NULL, NULL);
 
   for (ch = 0; ch < MAXCHARS; ch++)
-    trs_free_bitmap(ch, 0, 5);
+    bitmap_free(ch, 0, 5);
 
   for (i = 0; i < 3; i++) {
     for (ch = 0; ch < 64; ch++)
@@ -2519,7 +2519,7 @@ static SDL_Surface *CreateSurfaceFromDataScale(const Uint8 *data,
 
   /*
    * The memory allocated for "mydata" will be released in the
-   * "trs_free_bitmap" function.
+   * "bitmap_free" function.
    */
   mydata = (int*)calloc(1, TRS_CHAR_WIDTH * MAX_CHAR_HEIGHT *
       scale_x * scale_factor * sizeof(int));
@@ -2565,10 +2565,10 @@ bitmap_init(int ram)
   int i;
 
   for (i = 0; i < MAXCHARS; i++) {
-    trs_char_bitmap(i, (i > 191 && eg3200) ? 1 : ram);
+    bitmap_char(i, (i > 191 && eg3200) ? 1 : ram);
 
     /* GUI Normal + Inverse */
-    trs_free_bitmap(i, 4, 5);
+    bitmap_free(i, 4, 5);
     trs_char[4][i] = CreateSurfaceFromDataScale(
         trs_char_data[gui][i], gui_foreground, gui_background, 1, 0);
     trs_char[5][i] = CreateSurfaceFromDataScale(
@@ -2581,12 +2581,12 @@ bitmap_init(int ram)
 }
 
 static void
-trs_char_bitmap(int char_index, int ram)
+bitmap_char(int char_index, int ram)
 {
   Uint8 const *char_data = ram ?
       char_ram[char_index] : trs_char_data[trs_charset][char_index];
 
-  trs_free_bitmap(char_index, 0, 3);
+  bitmap_free(char_index, 0, 3);
 
   /* Normal */
   trs_char[0][char_index] = CreateSurfaceFromDataScale(
@@ -2603,7 +2603,7 @@ trs_char_bitmap(int char_index, int ram)
 }
 
 static void
-trs_free_bitmap(int char_index, int start, int end)
+bitmap_free(int char_index, int start, int end)
 {
   int i;
 
@@ -3394,7 +3394,7 @@ void genie3s_char(int char_index, int scanline, int byte)
   char_ram[char_index][scanline] = eg3200 ? mirror_bits(byte) : byte;
 
   if (scanline == (m6845_raster - 1)) {
-    trs_char_bitmap(char_index, 1);
+    bitmap_char(char_index, 1);
 
     if (eg3200)
       trs_screen_refresh();
