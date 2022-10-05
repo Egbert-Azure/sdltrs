@@ -2289,17 +2289,23 @@ trs_disk_command_write(Uint8 cmd)
   state.bytecount = 0;
   state.currcommand = cmd;
 
-  if (eg3200) {
-    if ((cmd & 0xF8) == 0xF8) {
-      state.density = cmd & 1;
-      return;
-    }
-  }
-  if (genie3s || speedup == 6) {
-    if (cmd == 0xFE || cmd == 0xFF) {
-      state.density = (cmd == 0xFF) ? 1 : 0;
-      return;
-    }
+  /* Select Disk Density for EACA and TCS */
+  switch (model_quirks.ID) {
+    case EG3200:
+      if ((cmd & 0xF8) == 0xF8) {
+        state.density = cmd & 1;
+        return;
+      }
+      break;
+    case GENIE3S:
+    case SPEEDMASTER:
+      if (cmd == 0xFE || cmd == 0xFF) {
+        state.density = (cmd == 0xFF) ? 1 : 0;
+        return;
+      }
+      break;
+    default:
+      break;
   }
 
   switch (cmd & TRSDISK_CMDMASK) {
