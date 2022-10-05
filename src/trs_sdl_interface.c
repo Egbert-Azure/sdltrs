@@ -2565,6 +2565,7 @@ bitmap_init(int ram)
   int i;
 
   for (i = 0; i < MAXCHARS; i++) {
+    /* Create also bitmap chars 192-255 for Genie III EG 3210 PGA Card */
     bitmap_char(i, (i > 191 && eg3200) ? 1 : ram);
 
     /* GUI Normal + Inverse */
