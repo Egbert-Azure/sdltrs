@@ -2455,10 +2455,10 @@ void trs_screen_80x24(int flag)
 {
   if (flag == text80x24) return;
 
+  text80x24 = flag;
+
   if (!grafyx_enable || grafyx_overlay)
     trs_screen_640x240(flag);
-
-  text80x24 = flag;
 }
 
 static void
