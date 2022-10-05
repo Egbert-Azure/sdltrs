@@ -2586,6 +2586,7 @@ static void
 bitmap_init(int ram)
 {
   int const gui = trs_charset <= 2 ? 2 : 7;
+  int height;
   int i;
 
   for (i = 0; i < MAXCHARS; i++) {
@@ -2600,8 +2601,13 @@ bitmap_init(int ram)
         trs_char_data[gui][i], gui_background, gui_foreground, scale, 0);
   }
 
-  boxes_init(foreground, background, cur_char_width, cur_char_height, 0);
-  boxes_init(foreground, background, cur_char_width * 2, cur_char_height, 1);
+  if (model_quirks.ID == CP500_M80)
+    height = MAX_CHAR_HEIGHT * y_scale;
+  else
+    height = cur_char_height;
+
+  boxes_init(foreground, background, cur_char_width, height, 0);
+  boxes_init(foreground, background, cur_char_width * 2, height, 1);
   boxes_init(gui_foreground, gui_background, cur_char_width, cur_char_height, 2);
 }
 
