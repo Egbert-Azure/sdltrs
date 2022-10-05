@@ -28,7 +28,7 @@
  */
 
 enum cp500_model {
-  none = -1, original = 0, M80 = 1
+  none = 0, original = CP500, M80 = CP500_M80
 };
 
 static enum cp500_model model = none;
@@ -38,10 +38,8 @@ static struct {
 } cp500_m80;
 
 void cp500_reset_mode() {
-  if (model != none) { /* Have we ever been in CP-500 mode? */
-    cp500_switch_mode(0);
-    trs_clone_quirks(0);
-  }
+  model = none;
+  mem_map(0);
 }
 
 /*
@@ -90,15 +88,11 @@ Uint8 cp500_switch_mode(int mode) {
 
     case 0x00: /* Standard TRS-80 Model III memory map */
       mem_map(0);
-      if (model == none) {
-        model = original;
-      }
+      model = original;
       break;
     case 0x20: /* 3000-37FF points to extra 2K region in EPROM 4 */
       mem_map(1);
-      if (model == none) {
-        model = original;
-      }
+      model = original;
       break;
 
       /*
@@ -137,20 +131,8 @@ Uint8 cp500_switch_mode(int mode) {
    * only SO-08 is known to be affected, and it can only run in the M80.
    * So for now we enable the quirks only for M80.
    */
-
-  switch (model) {
-    case none:
-      fatal("mode should have been changed to CP-500");
-      break;
-    case original:
-      trs_clone_quirks(CP500);
-      break;
-    case M80:
-      trs_clone_quirks(CP500_M80);
-      break;
-    default:
-      fatal("unimplemented CP-500 model: %x\n", model);
-  }
+  if (model_quirks.ID != model)
+    trs_clone_quirks(model);
 
 #ifdef DEBUG_CP500
   debug("CP-500: switched to mode A=%02x [PC=%04x]\n", Z80_A, Z80_PC);
@@ -221,8 +203,8 @@ void cp500_mem_write(int address, Uint8 value, int mem_map, Uint8 *ram) {
           int col = address % 128;
           if (col < 80) {
             int row = address / 128 + cp500_m80.video_first_row;
-            address = row * 80 + col;
-            trs_screen_write_char(address, value);
+
+            trs_screen_write_char(row * 80 + col, value);
           }
         }
       }
