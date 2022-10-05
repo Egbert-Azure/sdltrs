@@ -1,6 +1,7 @@
 #ifndef _TRS_CLONES_H
 #define _TRS_CLONES_H
 
+/* Clone ID */
 #define CP500       (1)
 #define CP500_M80   (2)
 #define EG3200      (3)
@@ -13,6 +14,10 @@
  * than stock TRS-80 models:
  */
 struct model_quirks {
+  /*
+   * Clone ID
+   */
+  int ID;
   /*
    * Model name of the clone:
    */
