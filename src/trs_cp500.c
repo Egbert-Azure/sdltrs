@@ -179,8 +179,10 @@ Uint8 cp500_mem_read(int address, int mem_map, Uint8 *rom, Uint8 *ram) {
         return trs_kb_mem_read(address);
       }
   }
+#ifdef DEBUG_CP500
   error("Invalid read of address %04x, returning FF [PC=%04x, mem_map=%02x]",
       address, Z80_PC, mem_map);
+#endif
   return 0xFF;
 }
 
@@ -226,6 +228,8 @@ void cp500_mem_write(int address, Uint8 value, int mem_map, Uint8 *ram) {
       }
       return;
   }
+#ifdef DEBUG_CP500
   error("Invalid write of address %04x [PC=%04x, mem_map=%02x]",
       address, Z80_PC, mem_map);
+#endif
 }
