@@ -47,6 +47,7 @@ int trs_state_save(const char *filename)
     trs_main_save(file);
     trs_cassette_save(file);
     trs_clone_save(file);
+    trs_cp500_save(file);
     trs_disk_save(file);
     trs_hard_save(file);
     trs_stringy_save(file);
@@ -87,6 +88,7 @@ int trs_state_load(const char *filename)
     trs_main_load(file);
     trs_cassette_load(file);
     trs_clone_load(file);
+    trs_cp500_load(file);
     trs_disk_load(file);
     trs_hard_load(file);
     trs_stringy_load(file);
