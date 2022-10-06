@@ -27,18 +27,14 @@
  *   - Not emulated yet.
  */
 
-enum cp500_model {
-  none = 0, original = CP500, M80 = CP500_M80
-};
-
-static enum cp500_model model = none;
+static int cp500_model;
 
 static struct {
   int video_first_row;
 } cp500_m80;
 
 void cp500_reset_mode() {
-  model = none;
+  cp500_model = 0;
   mem_map(0);
 }
 
@@ -88,11 +84,11 @@ Uint8 cp500_switch_mode(int mode) {
 
     case 0x00: /* Standard TRS-80 Model III memory map */
       mem_map(0);
-      model = original;
+      cp500_model = CP500;
       break;
     case 0x20: /* 3000-37FF points to extra 2K region in EPROM 4 */
       mem_map(1);
-      model = original;
+      cp500_model = CP500;
       break;
 
       /*
@@ -102,18 +98,18 @@ Uint8 cp500_switch_mode(int mode) {
     case 0x1d: /* 64K RAM */
     case 0x1c: /* TODO: it is still unknown how this differs from 1D */
       mem_map(2);
-      model = M80;
+      cp500_model = CP500_M80;
       break;
 
     case 0x05: /* 64K RAM, 80x24, video lines 1-8 mapped to RAM */
     case 0x45: /* 64K RAM, 80x24, video lines 9-15 mapped to RAM */
     case 0x85: /* 64K RAM, 80x24, video lines 15-24 mapped to RAM */
       mem_map(3);
-      trs_screen_80x24(1);
-      model = M80;
+      cp500_model = CP500_M80;
       /* Precalculate now to avoid doing on every memory access: */
       cp500_m80.video_first_row = mode >> 3;
       mem_video_page((mode >> 6) * 1024);
+      trs_screen_80x24(1);
       break;
 
     default:
@@ -131,8 +127,8 @@ Uint8 cp500_switch_mode(int mode) {
    * only SO-08 is known to be affected, and it can only run in the M80.
    * So for now we enable the quirks only for M80.
    */
-  if (model_quirks.ID != model)
-    trs_clone_quirks(model);
+  if (model_quirks.ID != cp500_model)
+    trs_clone_quirks(cp500_model);
 
 #ifdef DEBUG_CP500
   debug("CP-500: switched to mode A=%02x [PC=%04x]\n", Z80_A, Z80_PC);
