@@ -3,6 +3,7 @@
 #include "trs_clones.h"
 #include "trs_cp500.h"
 #include "trs_memory.h"
+#include "trs_state_save.h"
 
 /**********************************************************************
  * CP-500 - Model III clone from Brazil, made by Prologica.
@@ -210,4 +211,16 @@ void cp500_mem_write(int address, Uint8 value, int mem_map, Uint8 *ram) {
   error("Invalid write of address %04x [PC=%04x, mem_map=%02x]",
       address, Z80_PC, mem_map);
 #endif
+}
+
+void trs_cp500_save(FILE *file)
+{
+  trs_save_int(file, &cp500_model, 1);
+  trs_save_int(file, &cp500_m80.video_first_row, 1);
+}
+
+void trs_cp500_load(FILE *file)
+{
+  trs_load_int(file, &cp500_model, 1);
+  trs_load_int(file, &cp500_m80.video_first_row, 1);
 }

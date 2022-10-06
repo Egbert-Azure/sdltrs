@@ -46,6 +46,7 @@ void trs_load_uint64(FILE *file, Uint64 *buffer, int count);
 
 void trs_cassette_save(FILE *file);
 void trs_clone_save(FILE *file);
+void trs_cp500_save(FILE *file);
 void trs_disk_save(FILE *file);
 void trs_hard_save(FILE *file);
 void trs_imp_exp_save(FILE *file);
@@ -60,6 +61,7 @@ void trs_z80_save(FILE *file);
 
 void trs_cassette_load(FILE *file);
 void trs_clone_load(FILE *file);
+void trs_cp500_load(FILE *file);
 void trs_disk_load(FILE *file);
 void trs_hard_load(FILE *file);
 void trs_imp_exp_load(FILE *file);
