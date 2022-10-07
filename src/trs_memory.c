@@ -1312,6 +1312,12 @@ Uint8 *mem_pointer(int address, int writing)
 	  return trs80_model1_ram_addr(address);
       case 0x17: /* Model 1: Described in the selector doc as 'not useful' */
 	return NULL;	/* Not clear what really happens */
+      case 0x20: /* LNW80: HRG in low 16K */
+      case 0x28:
+	if (address < RAM_START)
+	  return NULL;
+	else
+	  return trs80_model1_ram_addr(address);
       case 0x21: /* EG-64 Memory-Banking-Adaptor */
       case 0x29:
 	if (address < RAM_START) {
