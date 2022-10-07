@@ -27,6 +27,7 @@
  * - CP-500 Turbo (4 MHz clock)
  *   - Not emulated yet.
  */
+/*#define DEBUG_CP500 1*/
 
 static int cp500_model;
 
