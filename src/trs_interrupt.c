@@ -33,6 +33,7 @@
 #include "trs_clones.h"
 #include "trs_state_save.h"
 
+/*#define EDEBUG 1*/
 /*#define IDEBUG 1*/
 /*#define IDEBUG2 1*/
 
