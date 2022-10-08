@@ -1348,7 +1348,7 @@ Uint8 *mem_pointer(int address, int writing)
       case 0x2B:
 	/* Bit 0 - Bank 1: ROM/EPROM */
 	if ((eg3200 & (1 << 0)) == 0 && address < trs_rom_size)
-	  return &rom[address];
+	  return writing ? NULL : &rom[address];
 	/* Bit 1 - Bank 2: Video Memory 0 (1k, 64x16, TRS-80 M1 compatible) */
 	if ((eg3200 & (1 << 1)) == 0) {
 	  if (address >= VIDEO_START && address <= 0x3FFF)
@@ -1378,7 +1378,7 @@ Uint8 *mem_pointer(int address, int writing)
 	}
 	/* ROM */
 	if ((system_byte & (1 << 2)) == 0 && address <= 0x2FFF)
-	  return &rom[address];
+	  return writing ? NULL : &rom[address];
 	/* "Constant bit" points to Bank 0 */
 	if ((address <= 0x3FFF && (genie3s & (1 << 0)) == 0) ||
 	    (address >= 0xE000 && (genie3s & (1 << 0))))
@@ -1402,7 +1402,7 @@ Uint8 *mem_pointer(int address, int writing)
 	/* ROM and MMIO */
 	if ((system_byte & (1 << 0)) == 0) {
 	  if ((system_byte & (1 << 2)) == 0 && address <= 0x2FFF)
-	    return &rom[address];
+	    return writing ? NULL : &rom[address];
 	  if (address >= 0x3400 && address <= 0x3FFF)
 	    return trs80_model1_mmio_addr(address, writing);
 	}
