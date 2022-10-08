@@ -233,6 +233,7 @@ trs_disk_drq_interrupt(int state)
   /* no effect */
 }
 
+/* UNUSED
 void
 trs_uart_err_interrupt(int state)
 {
@@ -245,6 +246,7 @@ trs_uart_err_interrupt(int state)
     z80_state.irq = (interrupt_latch & interrupt_mask) != 0;
   }
 }
+*/
 
 void
 trs_uart_rcv_interrupt(int state)
