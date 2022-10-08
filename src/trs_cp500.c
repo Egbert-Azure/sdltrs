@@ -214,6 +214,30 @@ void cp500_mem_write(int address, Uint8 value, int mem_map, Uint8 *ram) {
 #endif
 }
 
+Uint8 *cp500_mem_addr(int address, int mem_map, Uint8 *rom, Uint8 *ram, int writing) {
+  switch (mem_map) {
+    case 0x31: /* 3000-37FF = extra 2K in EPROM 4 */
+    case 0x39:
+      if (address >= 0x3000 && address <= 0x3FFF && writing == 0) {
+        return &rom[address | 0x0800];
+      }
+      return trs80_model3_mem_addr(address, writing);
+
+    case 0x32: /* 64K of RAM, nothing else mapped */
+    case 0x3A:
+      return &ram[address];
+
+    case 0x33: /* 80x24, 3800 = keyboard, 3C00-3CFF = VRAM */
+    case 0x3B:
+      if (address >= RAM_START) {
+        return &ram[address];
+      } else if (address >= VIDEO_START) {
+        return mem_video_page_addr(address - VIDEO_START);
+      }
+  }
+  return NULL;
+}
+
 void trs_cp500_save(FILE *file)
 {
   trs_save_int(file, &cp500_model, 1);
