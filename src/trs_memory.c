@@ -787,9 +787,9 @@ int mem_read(int address)
 
       case 0x30: /* Model III */
         return trs80_model3_mem_read(address);
-      case 0x31: /* CP-500: */
-      case 0x32:
-      case 0x33:
+      case 0x31: /* CP-500 */
+      case 0x32: /* CP-500 64K RAM */
+      case 0x33: /* CP-500 80x24 video */
         return cp500_mem_read(address, memory_map, rom, memory);
 
       case 0x40: /* Model 4 map 0 */
@@ -1141,8 +1141,8 @@ void mem_write(int address, int value)
         trs80_model3_mem_write(address, value);
         break;
       case 0x31: /* CP-500 */
-      case 0x32:
-      case 0x33:
+      case 0x32: /* CP-500 64K RAM */
+      case 0x33: /* CP-500 80x24 video */
         cp500_mem_write(address, value, memory_map, memory);
         break;
 
@@ -1433,6 +1433,13 @@ Uint8 *mem_pointer(int address, int writing)
       case 0x30: /* Model III reading */
       case 0x38: /* Model III writing */
 	return trs80_model3_mem_addr(address, writing);
+      case 0x31: /* CP-500 reading */
+      case 0x32: /* CP-500 64K RAM, reading */
+      case 0x33: /* CP-500 80x24 video, reading */
+      case 0x39: /* CP-500 writing */
+      case 0x3A: /* CP-500 64K RAM, writing */
+      case 0x3B: /* CP-500 80x24 video, writing */
+	return cp500_mem_addr(address, memory_map, rom, memory, writing);
 
       case 0x40: /* Model 4 map 0 reading */
 	if (address >= RAM_START) {
