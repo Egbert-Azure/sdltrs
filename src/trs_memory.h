@@ -22,6 +22,7 @@ Uint8 mem_video_read(int vaddr);
 Uint8 mem_video_page_read(int vaddr);
 int mem_video_write(int vaddr, Uint8 value);
 int mem_video_page_write(int vaddr, Uint8 value);
+Uint8 *mem_video_page_addr(int vaddr);
 
 extern void mem_bank(int which);
 extern void mem_map(int which);

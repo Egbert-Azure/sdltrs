@@ -154,6 +154,14 @@ inline int mem_video_page_write(int vaddr, Uint8 value) {
   return mem_video_write(vaddr + video_offset, value);
 }
 
+Uint8 *mem_video_page_addr(int vaddr) {
+  vaddr = vaddr_mask(vaddr + video_offset);
+  if (vaddr < 0) {
+    return NULL;
+  }
+  return video + vaddr;
+}
+
 void mem_bank(int command)
 {
     switch (command) {
