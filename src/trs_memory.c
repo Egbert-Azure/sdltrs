@@ -1260,6 +1260,20 @@ static Uint8 *trs80_model1_mmio_addr(int address, int writing)
   return NULL;
 }
 
+Uint8 *trs80_model3_mem_addr(int address, int writing)
+{
+  if (writing) {
+    if (address >= RAM_START) return &memory[address];
+    if (address >= VIDEO_START) return &video[address - video_memory];
+  } else {
+    if (trs_model < 4 && address >= 32768)
+      return &memory[address + bank_base];
+    if (address >= VIDEO_START) return &memory[address];
+    if (address < trs_rom_size) return &rom[address];
+  }
+  return NULL;
+}
+
 /*
  * Get a pointer to the given address.  Note that there is no checking
  * whether the next virtual address is physically contiguous.  The
@@ -1417,18 +1431,8 @@ Uint8 *mem_pointer(int address, int writing)
 	return &memory[address];
 
       case 0x30: /* Model III reading */
-        if (trs_model < 4 && address >= 32768)
-	    return &memory[address + bank_base];
-	if (address >= VIDEO_START) return &memory[address];
-	if (address < trs_rom_size) {
-	    return &rom[address];
-	}
-	return NULL;
-
       case 0x38: /* Model III writing */
-	if (address >= RAM_START) return &memory[address];
-	if (address >= VIDEO_START) return &video[address - video_memory];
-	return NULL;
+	return trs80_model3_mem_addr(address, writing);
 
       case 0x40: /* Model 4 map 0 reading */
 	if (address >= RAM_START) {
