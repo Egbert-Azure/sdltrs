@@ -129,8 +129,8 @@ Uint8 cp500_switch_mode(int mode) {
    * only SO-08 is known to be affected, and it can only run in the M80.
    * So for now we enable the quirks only for M80.
    */
-  if (model_quirks.ID != cp500_model)
-    trs_clone_quirks(cp500_model);
+
+   trs_clone_quirks(cp500_model);
 
 #ifdef DEBUG_CP500
   debug("CP-500: switched to mode A=%02x [PC=%04x]\n", Z80_A, Z80_PC);
