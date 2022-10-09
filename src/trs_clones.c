@@ -24,6 +24,9 @@ static int selected_clone;
 
 void trs_clone_quirks(int clone)
 {
+  if (clone == selected_clone)
+    return;
+
   if (clone >= 0 && clone < CLONES) {
     model_quirks = quirks[clone];
     selected_clone = clone;
