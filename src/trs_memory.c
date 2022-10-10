@@ -108,7 +108,7 @@ static unsigned int supermem_hi;
 static int selector_reg;
 static int system_byte;
 
-static inline int vaddr_mask(Uint16 vaddr) {
+static int vaddr_mask(Uint16 vaddr) {
   if (vaddr < MAX_VIDEO_SIZE) {
     return vaddr;
   } else { /* emulator bug, should never happen */
@@ -119,7 +119,7 @@ static inline int vaddr_mask(Uint16 vaddr) {
   }
 }
 
-inline Uint8 mem_video_read(int vaddr) {
+Uint8 mem_video_read(int vaddr) {
   vaddr = vaddr_mask(vaddr);
   if (vaddr < 0) { /* emulator bug, should never happen */
     return 0xFF;
@@ -127,7 +127,7 @@ inline Uint8 mem_video_read(int vaddr) {
   return video[vaddr];
 }
 
-inline int mem_video_write(int vaddr, Uint8 value) {
+int mem_video_write(int vaddr, Uint8 value) {
   vaddr = vaddr_mask(vaddr);
   if (vaddr < 0) { /* emulator bug, should never happen */
     return 0;
@@ -140,17 +140,17 @@ inline int mem_video_write(int vaddr, Uint8 value) {
   }
 }
 
-inline void mem_video_page(int offset)
+void mem_video_page(int offset)
 {
   video_memory = VIDEO_START + offset;
   video_offset = offset;
 }
 
-inline Uint8 mem_video_page_read(int vaddr) {
+Uint8 mem_video_page_read(int vaddr) {
   return mem_video_read(vaddr + video_offset);
 }
 
-inline int mem_video_page_write(int vaddr, Uint8 value) {
+int mem_video_page_write(int vaddr, Uint8 value) {
   return mem_video_write(vaddr + video_offset, value);
 }
 
