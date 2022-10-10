@@ -622,6 +622,26 @@ static int trs80_model1_mmio(int address)
   return 0xff;
 }
 
+int trs80_model3_mem_read(int address) {
+  if (address >= RAM_START) {
+    return memory[address];
+  } else if (address >= VIDEO_START) {
+    return grafyx_m3_read_byte(address - VIDEO_START);
+  } else if (address >= KEYBOARD_START) {
+    return trs_kb_mem_read(address);
+  } else if (address == PRINTER_ADDRESS) {
+    return trs_printer_read();
+  } else if (address < trs_rom_size) {
+    return rom[address];
+  } else {
+#if MEMDEBUG
+    error("Invalid read of address %04x, returning FF [PC=%04x, mem_map=%02x]",
+        address, Z80_PC, memory_map);
+#endif
+    return 0xFF;
+  }
+}
+
 int mem_read(int address)
 {
     address &= 0xffff; /* allow callers to be sloppy */
@@ -835,26 +855,6 @@ int mem_read(int address)
     return 0xff;
 }
 
-int trs80_model3_mem_read(int address) {
-  if (address >= RAM_START) {
-    return memory[address];
-  } else if (address >= VIDEO_START) {
-    return grafyx_m3_read_byte(address - VIDEO_START);
-  } else if (address >= KEYBOARD_START) {
-    return trs_kb_mem_read(address);
-  } else if (address == PRINTER_ADDRESS) {
-    return trs_printer_read();
-  } else if (address < trs_rom_size) {
-    return rom[address];
-  } else {
-#if MEMDEBUG
-    error("Invalid read of address %04x, returning FF [PC=%04x, mem_map=%02x]",
-        address, Z80_PC, memory_map);
-#endif
-    return 0xFF;
-  }
-}
-
 static void trs80_screen_write_char(int vaddr, int value)
 {
   if (mem_video_write(vaddr, value)) {
@@ -925,6 +925,24 @@ static void trs80_model1_write_mmio(int address, int value)
     trs_printer_write(value);
   } else if (address >= 0x3900 && selector)
     trs80_model1_write_mem(address, value);
+}
+
+void trs80_model3_mem_write(int address, int value) {
+  if (address >= RAM_START) {
+    memory[address] = value;
+  } else if (address >= VIDEO_START) {
+    if (grafyx_m3_write_byte(address - video_memory, value)) {
+      return;
+    }
+    trs80_screen_write_char(address - video_memory, value);
+  } else if (address == PRINTER_ADDRESS) {
+    trs_printer_write(value);
+#if MEMDEBUG
+  } else {
+    error("Invalid write of address %04x [PC=%04x, mem_map=%02x]",
+        address, Z80_PC, memory_map);
+#endif
+  }
 }
 
 void mem_write(int address, int value)
@@ -1184,24 +1202,6 @@ void mem_write(int address, int value)
 	memory[address + bank_offset[address >> 15]] = value;
 	break;
     }
-}
-
-void trs80_model3_mem_write(int address, int value) {
-  if (address >= RAM_START) {
-    memory[address] = value;
-  } else if (address >= VIDEO_START) {
-    if (grafyx_m3_write_byte(address - video_memory, value)) {
-      return;
-    }
-    trs80_screen_write_char(address - video_memory, value);
-  } else if (address == PRINTER_ADDRESS) {
-    trs_printer_write(value);
-#if MEMDEBUG
-  } else {
-    error("Invalid write of address %04x [PC=%04x, mem_map=%02x]",
-        address, Z80_PC, memory_map);
-#endif
-  }
 }
 
 /*
