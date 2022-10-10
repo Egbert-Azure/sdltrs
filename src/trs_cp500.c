@@ -29,15 +29,13 @@
  */
 /*#define DEBUG_CP500 1*/
 
-static int cp500_model;
-
 static struct {
   int video_first_row;
 } cp500_m80;
 
 void cp500_reset_mode() {
-  cp500_model = 0;
   mem_map(0);
+  trs_clone_quirks(0);
 }
 
 /*
@@ -78,19 +76,29 @@ Uint8 cp500_switch_mode(int mode) {
    * by SO-08. As far as it is known, only SO-08 uses this
    * functionality.
    *
+   * Set the right quirks. While reverse engineering SO-08, it was
+   * found that some behaviour of the emulator don't quite match the
+   * expectations of the code. This tweaks the emulator to adapt the
+   * behaviour only when CP-500 is being emulated.
+   *
+   * It is unknown if the original CP-500 and M80 behave the same since
+   * only SO-08 is known to be affected, and it can only run in the M80.
+   * So for now we enable the quirks only for M80.
+   *
    * -- Leonardo Brondani Schenkel, 2022-08.
    */
+
   switch (mode) {
 
     /* CP-500 (all models): */
 
     case 0x00: /* Standard TRS-80 Model III memory map */
       mem_map(0);
-      cp500_model = CP500;
+      trs_clone_quirks(CP500);
       break;
     case 0x20: /* 3000-37FF points to extra 2K region in EPROM 4 */
       mem_map(1);
-      cp500_model = CP500;
+      trs_clone_quirks(CP500);
       break;
 
       /*
@@ -100,17 +108,17 @@ Uint8 cp500_switch_mode(int mode) {
     case 0x1d: /* 64K RAM */
     case 0x1c: /* TODO: it is still unknown how this differs from 1D */
       mem_map(2);
-      cp500_model = CP500_M80;
+      trs_clone_quirks(CP500_M80);
       break;
 
     case 0x05: /* 64K RAM, 80x24, video lines 1-8 mapped to RAM */
     case 0x45: /* 64K RAM, 80x24, video lines 9-15 mapped to RAM */
     case 0x85: /* 64K RAM, 80x24, video lines 15-24 mapped to RAM */
       mem_map(3);
-      cp500_model = CP500_M80;
       /* Precalculate now to avoid doing on every memory access: */
       cp500_m80.video_first_row = mode >> 3;
       mem_video_page((mode >> 6) * 1024);
+      trs_clone_quirks(CP500_M80);
       trs_screen_80x24(1);
       break;
 
@@ -118,19 +126,6 @@ Uint8 cp500_switch_mode(int mode) {
       fatal("CP-500: port=0xF4 A=0x%02x: unimplemented PC=%04x\n", Z80_A,
             Z80_PC - 2);
   }
-
-  /*
-   * Set the right quirks. While reverse engineering SO-08, it was
-   * found that some behaviour of the emulator don't quite match the
-   * expectations of the code. This tweaks the emulator to adapt the
-   * behaviour only when CP-500 is being emulated.
-   *
-   * It is unknown if the original CP-500 and M80 behave the same since
-   * only SO-08 is known to be affected, and it can only run in the M80.
-   * So for now we enable the quirks only for M80.
-   */
-
-   trs_clone_quirks(cp500_model);
 
 #ifdef DEBUG_CP500
   debug("CP-500: switched to mode A=%02x [PC=%04x]\n", Z80_A, Z80_PC);
@@ -240,12 +235,10 @@ Uint8 *cp500_mem_addr(int address, int mem_map, Uint8 *rom, Uint8 *ram, int writ
 
 void trs_cp500_save(FILE *file)
 {
-  trs_save_int(file, &cp500_model, 1);
   trs_save_int(file, &cp500_m80.video_first_row, 1);
 }
 
 void trs_cp500_load(FILE *file)
 {
-  trs_load_int(file, &cp500_model, 1);
   trs_load_int(file, &cp500_m80.video_first_row, 1);
 }
