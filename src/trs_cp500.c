@@ -1,10 +1,3 @@
-#include "error.h"
-#include "trs.h"
-#include "trs_clones.h"
-#include "trs_cp500.h"
-#include "trs_memory.h"
-#include "trs_state_save.h"
-
 /**********************************************************************
  * CP-500 - Model III clone from Brazil, made by Prologica.
  *
@@ -27,7 +20,14 @@
  * - CP-500 Turbo (4 MHz clock)
  *   - Not emulated yet.
  */
+
 /*#define DEBUG_CP500 1*/
+#include "error.h"
+#include "trs.h"
+#include "trs_clones.h"
+#include "trs_cp500.h"
+#include "trs_memory.h"
+#include "trs_state_save.h"
 
 static struct {
   int video_first_row;
