@@ -2577,6 +2577,7 @@ bitmap_init(int ram)
         trs_char_data[gui][i], gui_background, gui_foreground, 1, 0);
   }
 
+  /* Adjust block graphics for CP-500/M80 80x24 video mode */
   if (model_quirks.ID == CP500_M80)
     height = MAX_CHAR_HEIGHT * 2;
   else
