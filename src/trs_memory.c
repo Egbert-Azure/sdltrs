@@ -1405,7 +1405,7 @@ Uint8 *mem_pointer(int address, int writing)
       case 0x26: /* TCS Genie IIs/SpeedMaster */
       case 0x2E:
 	/* Expansions bit */
-	if ((system_byte & (1 < 7)) && address <= 0xBFFF)
+	if ((system_byte & (1 << 7)) && address <= 0xBFFF)
 	  return &memory[address + bank_base];
 	/* ROM and MMIO */
 	if ((system_byte & (1 << 0)) == 0) {
