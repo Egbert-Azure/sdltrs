@@ -614,24 +614,18 @@ static int trs80_model1_mmio(int address)
   return 0xff;
 }
 
-int trs80_model3_mem_read(int address) {
-  if (address >= RAM_START) {
-    return memory[address];
-  } else if (address >= VIDEO_START) {
-    return grafyx_m3_read_byte(address - VIDEO_START);
-  } else if (address >= KEYBOARD_START) {
-    return trs_kb_mem_read(address);
-  } else if (address == PRINTER_ADDRESS) {
-    return trs_printer_read();
-  } else if (address < trs_rom_size) {
-    return rom[address];
-  } else {
+int trs80_model3_mem_read(int address)
+{
+  if (address >= RAM_START) return memory[address];
+  if (address >= VIDEO_START) return grafyx_m3_read_byte(address - VIDEO_START);
+  if (address >= KEYBOARD_START) return trs_kb_mem_read(address);
+  if (address == PRINTER_ADDRESS) return trs_printer_read();
+  if (address < trs_rom_size) return rom[address];
 #if MEMDEBUG
-    error("Invalid read of address %04x, returning FF [PC=%04x, mem_map=%02x]",
-        address, Z80_PC, memory_map);
+  error("Invalid read of address %04x, returning FF [PC=%04x, mem_map=%02x]",
+      address, Z80_PC, memory_map);
 #endif
-    return 0xFF;
-  }
+  return 0xFF;
 }
 
 int mem_read(int address)
