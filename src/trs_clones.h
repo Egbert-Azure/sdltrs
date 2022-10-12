@@ -24,13 +24,6 @@ struct clone_quirks {
   char *name;
 
   /*
-   * Some extended Model I clones like the EACA EG 3200 Genie III and
-   * the TCS Genie IIs (Speedmaster) / IIIs use bit 4 instead of bit 3
-   * to select the disk side:
-   */
-  int disk_side_select_bit4;
-
-  /*
    * In Model III, when port F4 is written to, and bit 0x40 is enabled,
    * and there a disk event pending, then the emulator triggers an
    * interrupt immediately instead of when the event deadline arrives.
