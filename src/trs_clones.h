@@ -1,7 +1,7 @@
 #ifndef _TRS_CLONES_H
 #define _TRS_CLONES_H
 
-/* Clone ID */
+/* Clones */
 #define CP500       (1)
 #define CP500_M80   (2)
 #define EG3200      (3)
@@ -13,15 +13,15 @@
  * Some clones contain seem to behave in a slightly different way
  * than stock TRS-80 models:
  */
-struct model_quirks {
+struct clone_quirks {
   /*
-   * Clone ID
+   * Clone:
    */
-  int ID;
+  int clone;
   /*
    * Model name of the clone:
    */
-  char *clone;
+  char *name;
 
   /*
    * Some extended Model I clones like the EACA EG 3200 Genie III and
@@ -61,7 +61,7 @@ struct model_quirks {
   int interrupt_latch_clears_timer;
 };
 
-extern struct model_quirks model_quirks;
+extern struct clone_quirks clone_quirks;
 extern void trs_clone_quirks(int clone);
 
 #endif
