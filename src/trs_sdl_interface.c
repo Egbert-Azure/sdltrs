@@ -48,7 +48,6 @@
 #include "trs_clones.h"
 #include "trs_disk.h"
 #include "trs_hard.h"
-#include "trs_iodefs.h"
 #include "trs_sdl_gui.h"
 #include "trs_sdl_keyboard.h"
 #include "trs_state_save.h"
@@ -69,6 +68,13 @@
 #define EXPANDED  1
 #define INVERSE   2
 #define ALTERNATE 4
+
+/* TRS-80 character sizes */
+#define MAX_CHARS        256
+#define MAX_CHAR_HEIGHT  16
+#define TRS_CHAR_WIDTH   8
+#define TRS_CHAR_HEIGHT  12
+#define TRS_CHAR_HEIGHT4 10
 
 /* Public data */
 int foreground;
@@ -108,7 +114,7 @@ char trs_state_file[FILENAME_MAX];
 #include "trs_chars.c"
 
 static Uint8 trs_screen[2048];
-static Uint8 char_ram[MAXCHARS][MAX_CHAR_HEIGHT];
+static Uint8 char_ram[MAX_CHARS][MAX_CHAR_HEIGHT];
 static char scale_quality = '1';
 static int cpu_panel;
 static int debugger;
@@ -138,7 +144,7 @@ static int mouse_sens = 3;
 static int mouse_last_x = -1, mouse_last_y = -1;
 static int mouse_old_style;
 static unsigned int mouse_last_buttons;
-static SDL_Surface *trs_char[6][MAXCHARS];
+static SDL_Surface *trs_char[6][MAX_CHARS];
 static SDL_Surface *trs_box[3][64];
 static SDL_Surface *image;
 static SDL_Surface *screen;
@@ -1735,7 +1741,7 @@ void trs_sdl_cleanup(void)
   /* Free color map */
   TrsBlitMap(NULL, NULL);
 
-  for (ch = 0; ch < MAXCHARS; ch++)
+  for (ch = 0; ch < MAX_CHARS; ch++)
     bitmap_free(ch, 0, 5);
 
   for (i = 0; i < 3; i++) {
@@ -2565,7 +2571,7 @@ bitmap_init(int ram)
   int height;
   int i;
 
-  for (i = 0; i < MAXCHARS; i++) {
+  for (i = 0; i < MAX_CHARS; i++) {
     /* Create also bitmap chars 192-255 for Genie III EG 3210 PGA Card */
     bitmap_char(i, (i > 191 && eg3200) ? 1 : ram);
 
@@ -3544,7 +3550,7 @@ void trs_main_save(FILE *file)
   trs_save_int(file, &trs_charset3, 1);
   trs_save_int(file, &trs_charset4, 1);
 
-  for (i = 0; i < MAXCHARS; i++)
+  for (i = 0; i < MAX_CHARS; i++)
     trs_save_uint8(file, char_ram[i], MAX_CHAR_HEIGHT);
 
   for (i = 0; i < G_YSIZE; i++)
@@ -3582,7 +3588,7 @@ void trs_main_load(FILE *file)
   trs_load_int(file, &trs_charset3, 1);
   trs_load_int(file, &trs_charset4, 1);
 
-  for (i = 0; i < MAXCHARS; i++)
+  for (i = 0; i < MAX_CHARS; i++)
     trs_load_uint8(file, char_ram[i], MAX_CHAR_HEIGHT);
 
   for (i = 0; i < G_YSIZE; i++)

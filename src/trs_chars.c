@@ -9,9 +9,7 @@
  * Model III character generator ROMs.
  */
 
-#include "trs_iodefs.h"
-
-static const Uint8 trs_char_data[][MAXCHARS][TRS_CHAR_HEIGHT] = {
+static const Uint8 trs_char_data[][MAX_CHARS][TRS_CHAR_HEIGHT] = {
 
 {
   /* CG 0 - for Model I */
