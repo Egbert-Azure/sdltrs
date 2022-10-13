@@ -75,7 +75,7 @@
 #define TRS_INTLATCH(addr) (((addr)&~3) == 0x37e0)
 
 /* Check address in video memory */
-#define VADDR_MASK(vaddr)  (vaddr < MAX_VIDEO_SIZE ? vaddr : -1)
+#define VADDR_MASK(vaddr)  ((Uint16)vaddr < MAX_VIDEO_SIZE ? vaddr : -1)
 
 /* We allow for 2MB of banked memory via port 0x94. That is the extreme limit
    of the port mods rather than anything normal (512K might be more 'normal' */
