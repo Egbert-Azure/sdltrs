@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include "trs.h"
 #include "trs_clones.h"
 #include "trs_state_save.h"
 
@@ -49,6 +50,8 @@ void trs_clone_quirks(int clone)
     default:
       clone_quirks = quirks[0];
   }
+
+  trs_screen_caption();
 }
 
 void trs_clone_save(FILE *file)
