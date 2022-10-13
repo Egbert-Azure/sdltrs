@@ -47,6 +47,7 @@
 
 #include "error.h"
 #include "trs.h"
+#include "trs_clones.h"
 #include "trs_cp500.h"
 #include "trs_disk.h"
 #include "trs_hard.h"
@@ -553,8 +554,11 @@ void z80_out(int port, int value)
       trs_screen_expanded((modeimage & 0x04) >> 2);
       /* alternate char set is on D3 */
       trs_screen_alternate(!((modeimage & 0x08) >> 3));
-      /* Skip Holmes Sprinter III */
-      if (trs_model == 3 && speedup == 2) break;
+      /* Skip clock speed for Holmes Sprinter III & SO-08 (CP-500/M80) */
+      if (trs_model == 3) {
+        if (speedup == 2 || clone_quirks.clone == CP500_M80)
+          break;
+      }
       /* clock speed is on D6; it affects timer HZ too */
       trs_timer_speed(modeimage & 0xC0);
       break;
