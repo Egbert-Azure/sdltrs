@@ -1400,7 +1400,6 @@ void trs_screen_init(int resize)
   TrsBlitMap(image->format->palette, screen->format);
 
   bitmap_init(genie3s);
-  trs_screen_caption();
   trs_screen_refresh();
 }
 
@@ -2742,6 +2741,7 @@ void trs_screen_refresh(void)
 
   drawnRectCount = MAX_RECTS; /* Will force redraw of whole screen */
   trs_sdl_flush();
+  trs_screen_caption();
 }
 
 void trs_disk_led(int drive, int on_off)
