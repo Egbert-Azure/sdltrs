@@ -1661,7 +1661,7 @@ static char *GetSelection(void)
 /*
  * Flush SDL output
  */
-static void trs_sdl_flush(void)
+static void trs_screen_flush(void)
 {
   if (mousepointer) {
     if (!trs_emu_mouse && paste_state == PASTE_IDLE) {
@@ -1779,7 +1779,7 @@ void trs_get_event(int wait)
   if (trs_model > 1)
     (void)trs_uart_check_avail();
 
-  trs_sdl_flush();
+  trs_screen_flush();
 
   if (cpu_panel)
     trs_screen_caption();
@@ -1874,7 +1874,7 @@ void trs_get_event(int wait)
         if (keysym.sym != SDLK_LALT) {
           if (copyStatus != COPY_IDLE) {
             copyStatus = COPY_CLEAR;
-            trs_sdl_flush();
+            trs_screen_flush();
           }
         }
 
@@ -2321,7 +2321,7 @@ done:
             if (event.button.button == SDL_BUTTON_RIGHT) {
               if (copyStatus != COPY_IDLE) {
                 copyStatus = COPY_CLEAR;
-                trs_sdl_flush();
+                trs_screen_flush();
               }
               call_function(GUI);
             }
@@ -2712,7 +2712,7 @@ void trs_screen_refresh(void)
   }
 
   drawnRectCount = MAX_RECTS; /* Will force redraw of whole screen */
-  trs_sdl_flush();
+  trs_screen_flush();
   trs_screen_caption();
 }
 
