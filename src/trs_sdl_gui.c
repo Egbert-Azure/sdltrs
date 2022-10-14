@@ -1741,7 +1741,7 @@ void trs_gui_emulator_settings(void)
                          " TRS-80 Model 4P"};
   const char *speed[] = {"           None",
                          "       Archbold",
-                         "         Holmes",
+                         "  Holmes II/III",
                          "     Seatronics",
                          "        Banking",
                          "          LNW80",
