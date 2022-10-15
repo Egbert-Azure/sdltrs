@@ -59,8 +59,8 @@
 #include "trs_state_save.h"
 #include "trs_uart.h"
 
-#define MAX_ROM_SIZE       (0x4000)  /* 16K for CP-300/500 */
-#define MAX_VIDEO_SIZE     (0x0C00)  /* CP-500 M80 has 3K */
+#define MAX_ROM_SIZE       (16384)  /* 16K for CP-300/500 */
+#define MAX_VIDEO_SIZE     (3072)   /* CP-500 M80 has 3K */
 #define MAX_MEMORY_SIZE    (4 * 1024 * 1024) + 65536
 
 /* 512K is the largest we support. There were it seems 1MByte
