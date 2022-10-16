@@ -123,8 +123,8 @@ Uint8 cp500_switch_mode(int mode) {
       break;
 
     default:
-      fatal("CP-500: port=0xF4 A=0x%02x: unimplemented PC=%04x\n", Z80_A,
-            Z80_PC - 2);
+      error("CP-500: port=0xF4 A=0x%02x: unimplemented PC=%04x\n",
+          Z80_A, Z80_PC - 2);
   }
 
 #ifdef DEBUG_CP500
