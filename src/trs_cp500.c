@@ -179,19 +179,14 @@ void cp500_mem_write(int address, Uint8 value, int mem_map, Uint8 *ram) {
         address = address - VIDEO_START;
         if (mem_video_page_write(address, value)) {
           /*
-           * This is a hack to allow using the Model 4 video code for now.
-           *
            * In M80, the 80x24 modes use 3 banks of 128x8 characters.
            * each. That conveniently adds up to 1K per bank (the exact
            * address space in the original Model III memory map) and
            * simplifies the video circuitry. Anything beyond column 80
            * in each row is ignored.
            *
-           * In Model 4, the video RAM is a linear address space of
-           * 80 columns each.
-           *
            * So we figure out the row/col of the byte in M80 addressing
-           * rules, and convert that into the right offset in Model 4:
+           * rules, and convert that into the right offset for 80x24:
            */
           int col = address % 128;
           if (col < 80) {
