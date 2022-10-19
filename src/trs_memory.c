@@ -732,7 +732,7 @@ int mem_read(int address)
 	    return trs_kb_mem_read(address);
 	}
 	/* Bank 0: RAM */
-	if (address <= 0x7FFF)
+	if (address <= 0x7FFF) /* Low 32 KB for Genieplus Banking */
 	  return memory[address + bank_base];
 	else
 	  return memory[address];
@@ -1056,7 +1056,7 @@ void mem_write(int address, int value)
 	  }
 	}
 	/* Bank 0: RAM */
-	if (address <= 0x7FFF)
+	if (address <= 0x7FFF) /* Low 32 KB for Genieplus Banking */
 	  memory[address + bank_base] = value;
 	else
 	  memory[address] = value;
@@ -1368,7 +1368,7 @@ Uint8 *mem_pointer(int address, int writing)
 	    return &video[address - VIDEO_START];
 	}
 	/* Bank 0: RAM */
-	if (address <= 0x7FFF)
+	if (address <= 0x7FFF) /* Low 32 KB for Genieplus Banking */
 	  return &memory[address + bank_base];
 	else
 	  return &memory[address];
