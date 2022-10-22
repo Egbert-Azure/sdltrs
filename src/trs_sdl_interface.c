@@ -3498,34 +3498,40 @@ void genie3s_hrg(int value)
 
 void genie3s_hrg_write(int position, int byte)
 {
+  int pos, row, col;
+
   if ((currentmode & EXPANDED) && (position & 1)) return;
 
   if (row_chars == 64) {
-    int const region = position & (screen_chars - 1);
-
-    grafyx_write_byte(region % 64, (region / 64) * m6845_raster
-        + (position >> 11), mirror_bits(byte));
+    pos = position & (screen_chars - 1);
+    row = pos / 64;
+    col = pos - (row * 64);
   } else {
-    int const region = position & 0x7FF;
-
-    grafyx_write_byte(region % 80, (region / 80) * m6845_raster
-        + (position >> 11), mirror_bits(byte));
+    pos = position & 0x7FF;
+    row = pos / 80;
+    col = pos - (row * 80);
   }
+
+  grafyx_write_byte(col, row * m6845_raster + (position >> 11),
+      mirror_bits(byte));
 }
 
 Uint8 genie3s_hrg_read(int position)
 {
+  int pos, row, col;
+
   if (row_chars == 64) {
-    int const region = position & (screen_chars - 1);
-
-    return mirror_bits(grafyx_unscaled[(region / 64) * m6845_raster
-        + (position >> 11)][region % 64]);
+    pos = position & (screen_chars - 1);
+    row = pos / 64;
+    col = pos - (row * 64);
   } else {
-    int const region = position & 0x7FF;
-
-    return mirror_bits(grafyx_unscaled[(region / 80) * m6845_raster
-        + (position >> 11)][region % 80]);
+    pos = position & 0x7FF;
+    row = pos / 80;
+    col = pos - (row * 80);
   }
+
+  return mirror_bits(grafyx_unscaled[row * m6845_raster
+      + (position >> 11)][col]);
 }
 
 void trs_get_mouse_pos(int *x, int *y, unsigned int *buttons)
