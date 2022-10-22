@@ -421,7 +421,6 @@ void sys_byte_out(int value)
 				hrg_onoff((value & (1 << 1)) ? 2 : 0);
 			break;
 		case 6: /* TCS Genie IIs/SpeedMaster */
-			memory_map = 0x26;
 			if ((value & (1 << 1)) != (system_byte & (1 << 1)))
 				hrg_onoff((value & (1 << 1)) ? 2 : 0);
 			break;
@@ -551,6 +550,7 @@ void trs_reset(int poweron)
 			trs_clone_quirks(LNW80);
 			break;
 		case 6:		/* TCS SpeedMaster 5.3 */
+			memory_map = 0x26;
 			trs_clone_quirks(SPEEDMASTER);
 			break;
 	}
