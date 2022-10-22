@@ -545,6 +545,15 @@ void trs_reset(int poweron)
 	selector_reg = 0;
 	system_byte = 0;
 	trs_interrupt_latch_clear();
+
+	switch (speedup) {
+		case 5:		/* LNW80 */
+			trs_clone_quirks(LNW80);
+			break;
+		case 6:		/* TCS SpeedMaster 5.3 */
+			trs_clone_quirks(SPEEDMASTER);
+			break;
+	}
     }
     trs_kb_reset();  /* Part of keyboard stretch kludge */
     clear_key_queue(); /* init the key queue */
