@@ -2816,7 +2816,7 @@ void trs_turbo_led(void)
 
 void trs_screen_write_char(int position, Uint8 char_index)
 {
-  int row, col;
+  unsigned int row, col;
   int expanded;
   SDL_Rect srcRect, dstRect;
 
