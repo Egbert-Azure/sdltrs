@@ -32,9 +32,9 @@
 #include "error.h"
 #include "trs_state_save.h"
 
-static const char stateFileBanner[] = "sdltrs State Save File";
+static const char stateFileBanner[] = "SDLTRS State Save File";
 static int const stateFileBannerLen = sizeof(stateFileBanner) - 1;
-static unsigned stateVersionNumber = 4;
+static unsigned stateVersionNumber = 5;
 
 int trs_state_save(const char *filename)
 {
