@@ -67,6 +67,7 @@ Thanks to Tércio Martins a package for Arch Linux is available in the [AUR].
 ![screenshot](screenshots/sdltrs02.png)
 ![screenshot](screenshots/sdltrs03.png)
 ![screenshot](screenshots/sdltrs04.png)
+![screenshot](screenshots/sdltrs05.png)
 
 [AUR]: https://aur.archlinux.org/packages/sdl2trs/
 [BUILDING.md]: BUILDING.md
