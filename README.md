@@ -91,6 +91,7 @@ Lupi's fork of [RetroPie-Setup] ...
 ![screenshot](screenshots/sdltrs02.png)
 ![screenshot](screenshots/sdltrs03.png)
 ![screenshot](screenshots/sdltrs04.png)
+![screenshot](screenshots/sdltrs05.png)
 
 [AUR]: https://aur.archlinux.org/packages/sdltrs
 [BUILDING.md]: BUILDING.md
