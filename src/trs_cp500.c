@@ -188,12 +188,8 @@ void cp500_mem_write(int address, Uint8 value, int mem_map, Uint8 *ram) {
            * So we figure out the row/col of the byte in M80 addressing
            * rules, and convert that into the right offset for 80x24:
            */
-          int col = address % 128;
-          if (col < 80) {
-            int row = address / 128 + cp500_m80.video_first_row;
-
-            trs_screen_write_char(row * 80 + col, value);
-          }
+          trs_screen_write_char((address % 128) + (((address / 128) +
+              cp500_m80.video_first_row) * 80), value);
         }
       }
       return;
