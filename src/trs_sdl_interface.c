@@ -832,7 +832,6 @@ static void trs_opt_speedup(char *arg, int intarg, int *stringarg)
       speedup = 3;
       break;
     case 'b': /*Banking*/
-    case 'c': /* CP/M */
       speedup = 4;
       break;
     case 'l': /*LNW80*/
