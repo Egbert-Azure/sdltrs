@@ -1168,7 +1168,7 @@ int trs_write_config_file(const char *filename)
   fprintf(config_file, "printerdir=%s\n", trs_printer_dir);
   fprintf(config_file, "%sresize3\n", resize3 ? "" : "no");
   fprintf(config_file, "%sresize4\n", resize4 ? "" : "no");
-  fprintf(config_file, "romfile=%s\n", romfile);
+  fprintf(config_file, "romfile1=%s\n", romfile);
   fprintf(config_file, "romfile3=%s\n", romfile3);
   fprintf(config_file, "romfile4p=%s\n", romfile4p);
   fprintf(config_file, "samplerate=%d\n", cassette_default_sample_rate);
