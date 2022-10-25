@@ -1320,7 +1320,7 @@ Uint8 *mem_pointer(int address, int writing)
       case 0x1D:
 	return trs80_model1_ram_addr(address);
       case 0x16: /* Model 1: Low 16K in top 16K */
-      case 0x1F:
+      case 0x1E:
 	if (address < RAM_START)
 	  return trs80_model1_mmio_addr(address, writing);
 	else
