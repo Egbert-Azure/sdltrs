@@ -27,7 +27,7 @@
  */
 
 /*#define MOUSEDEBUG 1*/
-/*#define XDEBUG 1*/
+/*#define SDLDEBUG 1*/
 
 /*
  * trs_sdl_interface.c
@@ -1269,7 +1269,7 @@ void trs_screen_init(int resize)
 {
   int led_height;
   SDL_Color colors[2];
-#if XDEBUG
+#if SDLDEBUG
   SDL_RendererInfo renderinfo = { 0 };
 #endif
 
@@ -1349,7 +1349,7 @@ void trs_screen_init(int resize)
 
     SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, &scale_quality);
 
-#if XDEBUG
+#if SDLDEBUG
     SDL_GetRendererInfo(render, &renderinfo);
     debug("SDL_VIDEODRIVER=%s\n", SDL_GetCurrentVideoDriver());
     debug("SDL_RENDER_DRIVER=%s\n", renderinfo.name);
@@ -1841,7 +1841,7 @@ void trs_get_event(int wait)
         drawnRectCount = MAX_RECTS;
         if (event.window.event & SDL_WINDOWEVENT_EXPOSED) {
           SDL_FlushEvent(SDL_KEYDOWN);
-#if XDEBUG
+#if SDLDEBUG
           debug("Active\n");
 #endif
         }
@@ -1862,7 +1862,7 @@ void trs_get_event(int wait)
 
       case SDL_KEYDOWN:
         keysym = event.key.keysym;
-#if XDEBUG
+#if SDLDEBUG
         debug("KeyDown: mod 0x%x, scancode 0x%x keycode 0x%x\n",
             keysym.mod, keysym.scancode, keysym.sym);
 #endif
@@ -2215,7 +2215,7 @@ done:
 
       case SDL_KEYUP:
         keysym = event.key.keysym;
-#if XDEBUG
+#if SDLDEBUG
         debug("KeyUp: mod 0x%x, scancode 0x%x keycode 0x%x\n",
             keysym.mod, keysym.scancode, keysym.sym);
 #endif
@@ -2376,7 +2376,7 @@ done:
         break;
 
       default:
-#if XDEBUG
+#if SDLDEBUG
       /* debug("Unhandled event: type %d\n", event.type); */
 #endif
         break;
@@ -2627,7 +2627,7 @@ bitmap_free(int char_index, int start, int end)
 
 void trs_screen_refresh(void)
 {
-#if XDEBUG
+#if SDLDEBUG
   debug("trs_screen_refresh\n");
 #endif
   SDL_FillRect(screen, NULL, back_color);
