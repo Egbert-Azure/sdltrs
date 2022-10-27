@@ -27,7 +27,7 @@
  */
 
 /*#define MOUSEDEBUG 1*/
-/*#define XDEBUG 1*/
+/*#define SDLDEBUG 1*/
 
 /*
  * trs_sdl_interface.c
@@ -1325,7 +1325,7 @@ void trs_screen_init(int resize)
 
 #ifdef SDL2
   if (window == NULL) {
-#ifdef XDEBUG
+#ifdef SDLDEBUG
     debug("SDL_VIDEODRIVER=%s\n", SDL_GetCurrentVideoDriver());
 #endif
     window = SDL_CreateWindow(NULL,
@@ -1841,7 +1841,7 @@ void trs_get_event(int wait)
       case SDL_WINDOWEVENT:
         SDL_FlushEvent(SDL_KEYDOWN);
         SDL_UpdateWindowSurface(window);
-#if XDEBUG
+#if SDLDEBUG
         debug("Active\n");
 #endif
         if (event.window.event == SDL_WINDOWEVENT_SIZE_CHANGED) {
@@ -1854,7 +1854,7 @@ void trs_get_event(int wait)
 
       case SDL_KEYDOWN:
         keysym = event.key.keysym;
-#if XDEBUG
+#if SDLDEBUG
         debug("KeyDown: mod 0x%x, scancode 0x%x keycode 0x%x\n",
             keysym.mod, keysym.scancode, keysym.sym);
 #endif
@@ -2235,7 +2235,7 @@ done:
 
       case SDL_KEYUP:
         keysym = event.key.keysym;
-#if XDEBUG
+#if SDLDEBUG
         debug("KeyUp: mod 0x%x, scancode 0x%x keycode 0x%x\n",
             keysym.mod, keysym.scancode, keysym.sym);
 #endif
@@ -2398,7 +2398,7 @@ done:
         break;
 
       default:
-#if XDEBUG
+#if SDLDEBUG
       /* debug("Unhandled event: type %d\n", event.type); */
 #endif
         break;
@@ -2651,7 +2651,7 @@ bitmap_free(int char_index, int start, int end)
 
 void trs_screen_refresh(void)
 {
-#if XDEBUG
+#if SDLDEBUG
   debug("trs_screen_refresh\n");
 #endif
   SDL_FillRect(screen, NULL, back_color);
