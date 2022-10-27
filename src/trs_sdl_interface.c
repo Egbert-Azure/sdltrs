@@ -3387,10 +3387,8 @@ hrg_write_data(int data)
     grafyx_write_byte(64 + (hrg_addr & 0x0F), ((hrg_addr >> 6) & 0x0F) * 12
         + (4 * ((hrg_addr >> 4) & 0x03) + ((hrg_addr >> 10) & 0x03)), data);
   } else { /* 384*192 inner region */
-    int const position = hrg_addr & 0x3ff; /* bits 0-9: "PRINT @" position */
-
-    grafyx_write_byte(position % 64, (position / 64) * 12
-        + (hrg_addr >> 10), data);
+    grafyx_write_byte((hrg_addr & 0x3FF) % 64, ((hrg_addr & 0x3FF) / 64) * 12
+        + (hrg_addr >> 10), data); /* bits 0-9: "PRINT @" position */
   }
 }
 
