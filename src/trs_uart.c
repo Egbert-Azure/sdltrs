@@ -315,7 +315,7 @@ trs_uart_check_avail(void)
 #if !UARTDEBUG2
     if (rc >= 0 || errno != EAGAIN)
 #endif
-      debug("trs_uart read returns %d, errno %d\n", rc, errno);
+      debug("trs_uart read returns %d, errno %d: %s\n", rc, errno, strerror(errno));
 #endif
     if (rc < 0) {
       if (errno != EAGAIN) {
