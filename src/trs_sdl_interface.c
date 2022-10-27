@@ -2578,7 +2578,7 @@ bitmap_init(int ram)
   }
 
   /* Adjust block graphics for CP-500/M80 80x24 video mode */
-  if (clone_quirks.clone == CP500_M80)
+  if (clone_quirks.model == CP500_M80)
     height = MAX_CHAR_HEIGHT * 2;
   else
     height = cur_char_height;
