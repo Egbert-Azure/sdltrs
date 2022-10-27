@@ -6,17 +6,15 @@
 struct clone_quirks clone_quirks;
 static const struct clone_quirks quirks[] = {
   /*
-   *
-   * Clone       name of clone             +------ do not fire early disk interrupts
-   *                                       |  +--- clear timer when latch is read
-   *                                       |  |  */
-  { 0,           NULL,                     0, 0, },
-  { CP500,       "CP-500",                 0, 0, },
-  { CP500_M80,   "CP-500 M80",             1, 1, },
-  { EG3200,      "EACA EG 3200 Genie III", 0, 0, },
-  { GENIE3S,     "TCS Genie IIIs",         0, 0, },
-  { LNW80,       "LNW80",                  0, 0, },
-  { SPEEDMASTER, "TCS SpeedMaster",        0, 0, },
+   * Clone       Name of clone
+   */
+  { 0,           NULL,                    },
+  { CP500,       "CP-500"                 },
+  { CP500_M80,   "CP-500 M80"             },
+  { EG3200,      "EACA EG 3200 Genie III" },
+  { GENIE3S,     "TCS Genie IIIs"         },
+  { LNW80,       "LNW80"                  },
+  { SPEEDMASTER, "TCS SpeedMaster"        },
 };
 
 static int current_clone;
