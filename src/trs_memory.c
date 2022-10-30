@@ -417,7 +417,7 @@ void sys_byte_out(int value)
 			break;
 		case 5: /* LNW80: HRG in low 16 kB */
 			memory_map = (value & (1 << 3)) ? 0x20 : 0x10;
-			/* Fall through: bit for HRG display is identical */
+			/* Fall through - HRG on/off bit is identical */
 		case 6: /* TCS Genie IIs/SpeedMaster */
 			if ((value & (1 << 1)) != (system_byte & (1 << 1)))
 				hrg_onoff((value & (1 << 1)) ? 2 : 0);
