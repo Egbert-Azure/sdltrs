@@ -302,14 +302,15 @@ trs_interrupt_latch_read(void)
   Uint8 tmp = interrupt_latch;
 
   if (trs_model == 1) {
-    trs_timer_interrupt(0); /* acknowledge this one (only) */
+    interrupt_latch &= ~M1_TIMER_BIT; /* acknowledge this one (only) */
     z80_state.irq = (interrupt_latch != 0);
     return tmp;
   } else {
     /* In some clones (like CP-500/M80) reading from the
        interrupt latch clears pending timer interrupts */
     if (clone_quirks.model & CP500_M80) {
-      trs_timer_interrupt(0);
+      interrupt_latch &= ~M3_TIMER_BIT;
+      z80_state.irq = (interrupt_latch & interrupt_mask) != 0;
     }
     return ~tmp;
   }
