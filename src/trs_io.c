@@ -556,7 +556,7 @@ void z80_out(int port, int value)
       trs_screen_alternate(!((modeimage & 0x08) >> 3));
       /* Skip clock speed for Holmes Sprinter III & SO-08 (CP-500/M80) */
       if (trs_model == 3) {
-        if (speedup == 2 || clone_quirks.model == CP500_M80)
+        if (speedup == 2 || trs_clones.model == CP500_M80)
           break;
       }
       /* clock speed is on D6; it affects timer HZ too */

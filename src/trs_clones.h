@@ -9,7 +9,7 @@
 #define LNW80       (1 << 5)
 #define SPEEDMASTER (1 << 6)
 
-struct clone_quirks {
+struct trs_clones {
   /*
    * Clone Model:
    */
@@ -20,7 +20,7 @@ struct clone_quirks {
   char *name;
 };
 
-extern struct clone_quirks clone_quirks;
-extern void trs_clone_quirks(int clone);
+extern struct trs_clones trs_clones;
+extern void trs_clones_model(int clone);
 
 #endif

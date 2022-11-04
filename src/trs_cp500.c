@@ -35,7 +35,7 @@ static struct {
 
 void cp500_reset_mode() {
   mem_map(0);
-  trs_clone_quirks(0);
+  trs_clones_model(0);
 }
 
 /*
@@ -115,11 +115,11 @@ Uint8 cp500_switch_mode(int mode) {
 
     case 0x00: /* Standard TRS-80 Model III memory map */
       mem_map(0);
-      trs_clone_quirks(CP500);
+      trs_clones_model(CP500);
       break;
     case 0x20: /* 3000-37FF points to extra 2K region in EPROM 4 */
       mem_map(1);
-      trs_clone_quirks(CP500);
+      trs_clones_model(CP500);
       break;
 
       /*
@@ -129,7 +129,7 @@ Uint8 cp500_switch_mode(int mode) {
     case 0x1d: /* 64K RAM */
     case 0x1c: /* TODO: it is still unknown how this differs from 1D */
       mem_map(2);
-      trs_clone_quirks(CP500_M80);
+      trs_clones_model(CP500_M80);
       break;
 
     case 0x05: /* 64K RAM, 80x24, video lines 1-8 mapped to RAM */
@@ -139,7 +139,7 @@ Uint8 cp500_switch_mode(int mode) {
       /* Precalculate now to avoid doing on every memory access: */
       cp500_m80.video_first_row = mode >> 3;
       mem_video_page((mode >> 6) * 1024);
-      trs_clone_quirks(CP500_M80);
+      trs_clones_model(CP500_M80);
       trs_screen_80x24(1);
       break;
 

@@ -292,7 +292,7 @@ void eg3200_init_out(int value)
 {
 	eg3200 = value;
 	memory_map = 0x23;
-	trs_clone_quirks(EG3200);
+	trs_clones_model(EG3200);
 	trs_disk_doubler = TRSDISK_PERCOM;
 	trs_timer_init();
 	trs_screen_inverse(0);
@@ -342,7 +342,7 @@ void genie3s_init_out(int value)
 	genie3s_bank_out(value);
 	mem_video_page(0);
 	memory_map = 0x24;
-	trs_clone_quirks(GENIE3S);
+	trs_clones_model(GENIE3S);
 	trs_timer_init();
 }
 
@@ -495,7 +495,7 @@ void trs_reset(int poweron)
 		z80_out(0xF7, 0x00);
 	}
 	/* No quirks */
-	trs_clone_quirks(0);
+	trs_clones_model(0);
 	/* Blank Video */
 	memset(&video, ' ', MAX_VIDEO_SIZE);
 	trs_screen_reset();
@@ -545,11 +545,11 @@ void trs_reset(int poweron)
 
 	switch (speedup) {
 		case 5:		/* LNW80 */
-			trs_clone_quirks(LNW80);
+			trs_clones_model(LNW80);
 			break;
 		case 6:		/* TCS SpeedMaster 5.3 */
 			memory_map = 0x26;
-			trs_clone_quirks(SPEEDMASTER);
+			trs_clones_model(SPEEDMASTER);
 			break;
 	}
     }

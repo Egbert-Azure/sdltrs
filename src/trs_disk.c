@@ -1245,7 +1245,7 @@ trs_disk_select_write(Uint8 data)
   state.status &= ~TRSDISK_NOTRDY;
   if (trs_model == 1) {
     /* EG 3200 and TCS Genie IIs/IIIs/SpeedMaster uses bit 4 to select side */
-    if (clone_quirks.model & (EG3200 | GENIE3S | SPEEDMASTER)) {
+    if (trs_clones.model & (EG3200 | GENIE3S | SPEEDMASTER)) {
       state.curside = (data & 0x10) != 0;
     } else {
       /* Disk 3 and side select share a bit.  You can't have a drive :3
@@ -1260,7 +1260,7 @@ trs_disk_select_write(Uint8 data)
     state.density = (data & TRSDISK3_MFM) != 0;
     if (data & TRSDISK3_WAIT
         /* Some clones (like CP-500 M80) seem to ignore this bit: */
-        && !(clone_quirks.model & CP500_M80)) {
+        && !(trs_clones.model & CP500_M80)) {
       /* If there was an event pending, simulate waiting until it was due. */
       if (trs_event_scheduled() != NULL &&
 	  trs_event_scheduled() != trs_disk_lostdata) {
@@ -2292,7 +2292,7 @@ trs_disk_command_write(Uint8 cmd)
   state.currcommand = cmd;
 
   /* Select Disk Density for EACA and TCS */
-  switch (clone_quirks.model) {
+  switch (trs_clones.model) {
     case EG3200:
       if ((cmd & 0xF8) == 0xF8) {
         state.density = cmd & 1;
