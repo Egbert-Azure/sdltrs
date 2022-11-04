@@ -3,8 +3,8 @@
 #include "trs_clones.h"
 #include "trs_state_save.h"
 
-struct clone_quirks clone_quirks;
-static const struct clone_quirks quirks[] = {
+struct trs_clones trs_clones;
+static const struct trs_clones clones[] = {
   /*
    * Clone       Name of clone
    */
@@ -19,7 +19,7 @@ static const struct clone_quirks quirks[] = {
 
 static int current_clone;
 
-void trs_clone_quirks(int clone)
+void trs_clones_model(int clone)
 {
   if (clone == current_clone)
     return;
@@ -28,25 +28,25 @@ void trs_clone_quirks(int clone)
 
   switch (clone) {
     case CP500:
-      clone_quirks = quirks[1];
+      trs_clones = clones[1];
       break;
     case CP500_M80:
-      clone_quirks = quirks[2];
+      trs_clones = clones[2];
       break;
     case EG3200:
-      clone_quirks = quirks[3];
+      trs_clones = clones[3];
       break;
     case GENIE3S:
-      clone_quirks = quirks[4];
+      trs_clones = clones[4];
       break;
     case LNW80:
-      clone_quirks = quirks[5];
+      trs_clones = clones[5];
       break;
     case SPEEDMASTER:
-      clone_quirks = quirks[6];
+      trs_clones = clones[6];
       break;
     default:
-      clone_quirks = quirks[0];
+      trs_clones = clones[0];
   }
 
   trs_screen_caption();
@@ -60,5 +60,5 @@ void trs_clone_save(FILE *file)
 void trs_clone_load(FILE *file)
 {
   trs_load_int(file, &current_clone, 1);
-  trs_clone_quirks(current_clone);
+  trs_clones_model(current_clone);
 }

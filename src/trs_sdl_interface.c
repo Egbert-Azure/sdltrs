@@ -1257,7 +1257,7 @@ void trs_screen_caption(void)
 
     snprintf(title, 79, "%s %s (%.2f MHz) %s%s",
              timer_overclock ? "Turbo " : "",
-             clone_quirks.name ? clone_quirks.name : trs_name[trs_model - 1],
+             trs_clones.name ? trs_clones.name : trs_name[trs_model - 1],
              z80_state.clockMHz,
              trs_paused ? "PAUSED " : "",
              trs_sound ? "" : "(Mute)");
@@ -2578,7 +2578,7 @@ bitmap_init(int ram)
   }
 
   /* Adjust block graphics for CP-500/M80 80x24 video mode */
-  if (clone_quirks.model == CP500_M80)
+  if (trs_clones.model == CP500_M80)
     height = MAX_CHAR_HEIGHT * 2;
   else
     height = cur_char_height;

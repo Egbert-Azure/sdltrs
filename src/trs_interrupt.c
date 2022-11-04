@@ -308,7 +308,7 @@ trs_interrupt_latch_read(void)
   } else {
     /* In some clones (like CP-500/M80) reading from the
        interrupt latch clears pending timer interrupts */
-    if (clone_quirks.model & CP500_M80) {
+    if (trs_clones.model & CP500_M80) {
       interrupt_latch &= ~M3_TIMER_BIT;
       z80_state.irq = (interrupt_latch & interrupt_mask) != 0;
     }
