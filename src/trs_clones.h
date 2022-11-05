@@ -8,6 +8,7 @@
 #define GENIE3S     (1 << 4)
 #define LNW80       (1 << 5)
 #define SPEEDMASTER (1 << 6)
+#define CT80        (1 << 7)
 
 struct trs_clones {
   /*

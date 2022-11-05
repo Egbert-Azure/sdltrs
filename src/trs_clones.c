@@ -15,6 +15,7 @@ static const struct trs_clones clones[] = {
   { GENIE3S,     "TCS Genie IIIs"         },
   { LNW80,       "LNW80"                  },
   { SPEEDMASTER, "TCS SpeedMaster"        },
+  { CT80,        "Aster CT-80"            },
 };
 
 static int current_clone;
@@ -44,6 +45,9 @@ void trs_clones_model(int clone)
       break;
     case SPEEDMASTER:
       trs_clones = clones[6];
+      break;
+    case CT80:
+      trs_clones = clones[7];
       break;
     default:
       trs_clones = clones[0];

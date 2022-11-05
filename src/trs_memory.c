@@ -557,6 +557,11 @@ void trs_reset(int poweron)
 			memory_map = 0x26;
 			trs_clones_model(SPEEDMASTER);
 			break;
+		case 7:		/* Aster CT-80 */
+			memory_map = 0x27;
+			system_byte = 0x06;
+			trs_clones_model(CT80);
+			break;
 	}
     }
     trs_kb_reset();  /* Part of keyboard stretch kludge */
@@ -801,6 +806,34 @@ int mem_read(int address)
 	    return rom[address];
 	  if (address >= 0x3400 && address <= 0x3FFF)
 	    return trs80_model1_mmio(address);
+	}
+	return memory[address];
+       case 0x27: /* Aster CT-80 */
+	if ((system_byte & (1 << 5)) == 0) {
+	  /* Boot-ROM */
+	  if ((system_byte & (1 << 1)) && address <= 0x7FF)
+	    return rom[address | 0x3000];
+	  /* CP/M mode */
+	  if ((system_byte & (1 << 3))) {
+	    /* 2K Video RAM */
+	    if (address >= 0xF800)
+	      return video[address - 0xF800];
+	    /* Keyboard */
+	    if (address >= 0xF400 && address <= 0xF7FF)
+	      return trs_kb_mem_read(address - 0xBC00);
+	    /* Disk MMIO (needed?) */
+	    if (address >= 0xEFE0 && address <= 0xEFEF)
+	      return trs80_model1_mmio(address - 0xB800);
+	    /* Boot-ROM copy (needed?) */
+	    if (address >= 0xEC00 && address <= 0xF3FF)
+	      return rom[(address - 0xEC00) | 0x3000];
+	  } else {
+	    /* TRS-80 mode */
+	    if ((system_byte & (1 << 2)) == 0 && address <= 0x2FFF)
+	      return rom[address];
+	    if (address >= 0x3000 && address <= 0x3FFF)
+	      return trs80_model1_mmio(address);
+	  }
 	}
 	return memory[address];
 
@@ -1149,6 +1182,30 @@ void mem_write(int address, int value)
 	  if (address >= 0x3400 && address <= 0x3FFF) {
 	    trs80_model1_write_mmio(address, value);
 	    return;
+	  }
+	}
+	memory[address] = value;
+	break;
+      case 0x27: /* Aster CT-80 */
+	if ((system_byte & (1 << 5)) == 0) {
+	  /* CP/M mode */
+	  if ((system_byte & (1 << 3))) {
+	    /* 2K Video RAM */
+	    if (address >= 0xF800) {
+	      trs80_screen_write_char(address - 0xF800, value);
+	      return;
+	    }
+	    /* Disk MMIO */
+	    if (address >= 0xEFE0 && address <= 0xEFEF) {
+	      trs80_model1_write_mmio(address - 0xB800, value);
+	      return;
+	    }
+	  } else {
+	    /* TRS-80 mode */
+	    if (address >= 0x37E0 && address <= 0x3FFF) {
+	      trs80_model1_write_mmio(address, value);
+	      return;
+	    }
 	  }
 	}
 	memory[address] = value;

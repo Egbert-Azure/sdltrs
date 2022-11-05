@@ -1767,7 +1767,8 @@ void trs_gui_emulator_settings(void)
                          "     Seatronics",
                          "        Banking",
                          "          LNW80",
-                         "TCS SpeedMaster"};
+                         "TCS SpeedMaster",
+                         "    CT-80 Aster"};
   float clock_mhz[4];
   char input[8];
   int selection = 0;
@@ -1825,7 +1826,7 @@ void trs_gui_emulator_settings(void)
         }
         break;
       case 2:
-        speedup = trs_gui_display_popup("Speedup", speed, 7, speedup);
+        speedup = trs_gui_display_popup("Speedup", speed, 8, speedup);
         break;
       case 3:
         stringy = trs_gui_display_popup("Stringy", yes_no, 2, stringy);

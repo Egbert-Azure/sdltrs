@@ -830,6 +830,9 @@ static void trs_opt_speedup(char *arg, int intarg, int *stringarg)
     case 't': /*TCS SpeedMaster*/
       speedup = 6;
       break;
+    case 'c': /*Aster CT-80*/
+      speedup = 7;
+      break;
     default:
       error("unknown speedup kit: '%s'", arg);
   }

@@ -412,9 +412,16 @@ void z80_out(int port, int value)
       if (speedup < 4 && trs_rom_size <= 0x2000)
         eg3200_init_out(value);
       break;
+    case 0xFC:
+      if (speedup == 7) /* 6845 CRTC Aster CT-80 */
+        ctrlimage = value;
+      break;
     case 0xFD:
-      /* Printer port of EACA Genie/System 80 */
-      trs_printer_write(value);
+      if (speedup == 7) /* 6845 CRTC Aster CT-80 */
+        m6845_crt(value);
+      else
+        /* Printer port of EACA Genie/System 80 */
+        trs_printer_write(value);
       break;
     case 0xFE:
       /* Speedup kit or Banking/LNW80/TCS Genie IIs and SpeedMaster */
