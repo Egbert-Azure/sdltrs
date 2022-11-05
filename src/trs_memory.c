@@ -428,6 +428,10 @@ void sys_byte_out(int value)
 			if ((value & (1 << 1)) != (system_byte & (1 << 1)))
 				hrg_onoff((value & (1 << 1)) ? 2 : 0);
 			break;
+		case 7: /* Aster CT-80 */
+			if ((value & (1 << 0)) != (system_byte & (1 << 0)))
+				trs_timer_speed(value & (1 << 0));
+			break;
 	}
 
 	system_byte = value;
