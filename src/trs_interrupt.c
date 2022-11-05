@@ -506,6 +506,7 @@ trs_timer_speed(int fast)
         else
         switch (speedup) {
         case 1: /*Archbold*/
+        case 7: /*CT-80*/
           z80_state.clockMHz = clock_mhz_1 * ((fast & 1) + 1);
           break;
         case 2: /*Holmes Sprinter II*/
