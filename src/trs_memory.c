@@ -114,6 +114,9 @@ static int system_byte;
 Uint8 mem_video_read(int vaddr) {
   vaddr = VADDR_MASK(vaddr);
   if (vaddr < 0) { /* emulator bug, should never happen */
+#ifdef MEMDEBUG
+    error("Reading video address %04X out of range [%04X]", vaddr, MAX_VIDEO_SIZE);
+#endif
     return 0xFF;
   }
   return video[vaddr];
@@ -122,6 +125,9 @@ Uint8 mem_video_read(int vaddr) {
 int mem_video_write(int vaddr, Uint8 value) {
   vaddr = VADDR_MASK(vaddr);
   if (vaddr < 0) { /* emulator bug, should never happen */
+#ifdef MEMDEBUG
+    error("Writing video address %04X out of range [%04X]", vaddr, MAX_VIDEO_SIZE);
+#endif
     return 0;
   }
   if (video[vaddr] != value) {
