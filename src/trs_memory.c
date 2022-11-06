@@ -812,13 +812,19 @@ int mem_read(int address)
 	    return trs80_model1_mmio(address);
 	}
 	return memory[address];
-       case 0x27: /* Aster CT-80 */
-	if ((system_byte & (1 << 5)) == 0) {
-	  /* Boot-ROM */
-	  if ((system_byte & (1 << 1)) && address <= 0x7FF)
-	    return rom[address | 0x3000];
+      case 0x27: /* Aster CT-80 */
+	/* Boot-ROM */
+	if ((system_byte & (1 << 1)) && address <= 0x7FF)
+	  return rom[address | 0x3000];
+	if ((system_byte & (1 << 3)) == 0) {
+	  /* TRS-80 mode */
+	  if ((system_byte & (1 << 2)) == 0 && address <= 0x2FFF)
+	    return rom[address];
+	  if (address >= 0x3000 && address <= 0x3FFF)
+	    return trs80_model1_mmio(address);
+	} else {
 	  /* CP/M mode */
-	  if ((system_byte & (1 << 3))) {
+	  if ((system_byte & (1 << 5)) == 0) { /* CP/M device bank */
 	    /* 2K Video RAM */
 	    if (address >= 0xF800)
 	      return video[address - 0xF800];
@@ -830,13 +836,7 @@ int mem_read(int address)
 	      return trs80_model1_mmio(address - 0xB800);
 	    /* Boot-ROM copy (needed?) */
 	    if (address >= 0xEC00 && address <= 0xF3FF)
-	      return rom[(address - 0xEC00) | 0x3000];
-	  } else {
-	    /* TRS-80 mode */
-	    if ((system_byte & (1 << 2)) == 0 && address <= 0x2FFF)
-	      return rom[address];
-	    if (address >= 0x3000 && address <= 0x3FFF)
-	      return trs80_model1_mmio(address);
+	      return rom[address - 0xBC00];
 	  }
 	}
 	return memory[address];
@@ -1191,9 +1191,15 @@ void mem_write(int address, int value)
 	memory[address] = value;
 	break;
       case 0x27: /* Aster CT-80 */
-	if ((system_byte & (1 << 5)) == 0) {
+	if ((system_byte & (1 << 3)) == 0) {
+	  /* TRS-80 mode */
+	  if (address >= 0x37E0 && address <= 0x3FFF) {
+	    trs80_model1_write_mmio(address, value);
+	    return;
+	  }
+	} else {
 	  /* CP/M mode */
-	  if ((system_byte & (1 << 3))) {
+	  if ((system_byte & (1 << 5)) == 0) { /* CP/M device bank */
 	    /* 2K Video RAM */
 	    if (address >= 0xF800) {
 	      trs80_screen_write_char(address - 0xF800, value);
@@ -1202,12 +1208,6 @@ void mem_write(int address, int value)
 	    /* Disk MMIO */
 	    if (address >= 0xEFE0 && address <= 0xEFEF) {
 	      trs80_model1_write_mmio(address - 0xB800, value);
-	      return;
-	    }
-	  } else {
-	    /* TRS-80 mode */
-	    if (address >= 0x37E0 && address <= 0x3FFF) {
-	      trs80_model1_write_mmio(address, value);
 	      return;
 	    }
 	  }
