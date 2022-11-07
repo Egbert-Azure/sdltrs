@@ -1180,7 +1180,9 @@ int trs_write_config_file(const char *filename)
       speedup == 3 ? "seatronics"      :
       speedup == 4 ? "banking"         :
       speedup == 5 ? "lnw80"           :
-      speedup == 6 ? "tcs speedmaster" : "none");
+      speedup == 6 ? "tcs speedmaster" :
+      speedup == 7 ? "ct80"            :
+                     "none");
 
   fprintf(config_file, "statedir=%s\n", trs_state_dir);
 #ifdef __linux
