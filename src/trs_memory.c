@@ -1475,7 +1475,8 @@ Uint8 *mem_pointer(int address, int writing)
 	}
 	if ((system_byte & (1 << 3)) || address >= RAM_START)
 	  return &memory[address];
-	return NULL;
+	else
+	  return trs80_model1_mmio_addr(address, writing);
       case 0x26: /* TCS Genie IIs/SpeedMaster */
       case 0x2E:
 	/* Expansions bit */
