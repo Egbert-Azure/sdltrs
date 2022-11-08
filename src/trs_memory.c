@@ -1490,6 +1490,29 @@ Uint8 *mem_pointer(int address, int writing)
 	    return trs80_model1_mmio_addr(address, writing);
 	}
 	return &memory[address];
+      case 0x27: /* Aster CT-80 */
+      case 0x2F:
+	/* Boot-ROM */
+	if ((system_byte & (1 << 1)) && address <= 0x7FF)
+	  return &rom[address | 0x3000];
+	if ((system_byte & (1 << 3)) == 0) {
+	  /* TRS-80 mode */
+	  if ((system_byte & (1 << 2)) == 0 && address <= 0x2FFF)
+	    return &rom[address];
+	  if (address >= 0x3000 && address <= 0x3FFF)
+	    return trs80_model1_mmio_addr(address, writing);
+	} else {
+	  /* CP/M mode */
+	  if ((system_byte & (1 << 5)) == 0) { /* CP/M device bank */
+	    /* 2K Video RAM */
+	    if (address >= 0xF800)
+	      return &video[address - 0xF800];
+	    /* Boot-ROM */
+	    if (address >= 0xEC00 && address <= 0xF3FF)
+	      return &rom[address - 0xBC00];
+	  }
+	}
+	return &memory[address];
 
       case 0x30: /* Model III reading */
       case 0x38: /* Model III writing */
