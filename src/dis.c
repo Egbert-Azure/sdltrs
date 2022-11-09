@@ -56,7 +56,7 @@
 
 #define arglen(a) ((signed char)((a)&0xff))
 
-static const char undefined[] = "undefined";
+static const char undefined[] = "UNDEFINED";
 
 struct opcode {
 	const char	*name;
