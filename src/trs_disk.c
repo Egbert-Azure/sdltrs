@@ -1379,7 +1379,7 @@ trs_disk_sector_write(Uint8 data)
     debug("sector_write(0x%02x) pc 0x%04x\n", data, Z80_PC);
   }
   if (trs_model == 1 && (trs_disk_doubler & TRSDISK_TANDY)) {
-    switch (data) {
+    switch ((data) & ~0x1F) {
       /* Emulate Radio Shack doubler */
     case TRSDISK_R1791:
       trs_disk_set_controller(TRSDISK_P1791);
