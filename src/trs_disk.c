@@ -2291,23 +2291,19 @@ trs_disk_command_write(Uint8 cmd)
   state.bytecount = 0;
   state.currcommand = cmd;
 
-  /* Select Disk Density for EACA and TCS */
-  switch (trs_clones.model) {
-    case EG3200:
+  /* Select Disk Density for TRS-80 Model I */
+  if (trs_model == 1) {
+    if (trs_disk_doubler) {
       if ((cmd & 0xF8) == 0xF8) {
         state.density = cmd & 1;
         return;
       }
-      break;
-    case GENIE3S:
-    case SPEEDMASTER:
+    } else {
       if (cmd == 0xFE || cmd == 0xFF) {
         state.density = (cmd == 0xFF) ? 1 : 0;
         return;
       }
-      break;
-    default:
-      break;
+    }
   }
 
   switch (cmd & TRSDISK_CMDMASK) {
