@@ -1328,7 +1328,7 @@ void trs_gui_disk_options(void)
    {"Set Drive Steps", MENU_NORMAL},
 #endif
    {"", 0}};
-  const char *doubler[]   = {"     None", "   Percom", "    Tandy", "     Both"};
+  const char *doubler[]   = {"     None", "   Percom", " Tandy/RS", "     Both"};
   const char *disk_size[] = {"5 Inch", "8 Inch"};
   int selection = 0;
   int i;
