@@ -3382,9 +3382,8 @@ int z80_run(int continuous)
 	    break;
 
 	  case 0x76:	/* halt */
-	    if (genie3s) {
-		/* Z80 HALT output is tied to reset button circuit
-		   on the TCS Genie IIIs */
+	    if (trs_model == 1) {
+		/* Z80 HALT output is tied to reset button circuit */
 		trs_reset(0);
 	    } else {
 		/* Really halt (i.e., wait for interrupt) */
