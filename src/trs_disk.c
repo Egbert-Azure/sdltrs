@@ -2292,17 +2292,10 @@ trs_disk_command_write(Uint8 cmd)
   state.currcommand = cmd;
 
   /* Select Disk Density for TRS-80 Model I */
-  if (trs_model == 1) {
-    if (trs_disk_doubler) {
-      if ((cmd & 0xF8) == 0xF8) {
-        state.density = cmd & 1;
-        return;
-      }
-    } else {
-      if (cmd == 0xFE || cmd == 0xFF) {
-        state.density = (cmd == 0xFF) ? 1 : 0;
-        return;
-      }
+  if (trs_model == 1 && trs_disk_doubler) {
+    if ((cmd & 0xF8) == 0xF8) {
+      state.density = cmd & 1;
+      return;
     }
   }
 
