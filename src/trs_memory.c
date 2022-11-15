@@ -349,6 +349,7 @@ void genie3s_init_out(int value)
 	mem_video_page(0);
 	memory_map = 0x24;
 	trs_clones_model(GENIE3S);
+	trs_disk_doubler = TRSDISK_PERCOM;
 	trs_timer_init();
 }
 
