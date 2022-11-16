@@ -2291,8 +2291,8 @@ trs_disk_command_write(Uint8 cmd)
   state.bytecount = 0;
   state.currcommand = cmd;
 
-  /* Select Disk Density for TRS-80 Model I */
-  if (trs_model == 1 && trs_disk_doubler) {
+  /* Select Disk Density for EACA/TCS models */
+  if (trs_clones.model & (EG3200 | GENIE3S | SPEEDMASTER)) {
     if ((cmd & 0xF8) == 0xF8) {
       state.density = cmd & 1;
       return;
