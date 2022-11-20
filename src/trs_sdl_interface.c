@@ -467,6 +467,8 @@ static const char *charset_name(int charset)
     case 12:
       return "meritum";
     case 13:
+      return "ct80";
+    case 14:
       return "videogenie";
   }
 }
@@ -519,8 +521,11 @@ static void trs_opt_charset(char *arg, int intarg, int *stringarg)
           trs_charset1 = 12;
           lowercase = 0;
           break;
-        case 'v': /*video genie*/
+        case 'c': /*ct-80*/
           trs_charset1 = 13;
+          break;
+        case 'v': /*video genie*/
+          trs_charset1 = 14;
           break;
         default:
           error("unknown charset1: '%s'", arg);
@@ -1282,7 +1287,7 @@ void trs_screen_init(int resize)
     case 1:
       if (eg3200) {
         /* Use alternate font for Holte-ROM */
-        trs_charset = trs_rom_size > 2048 ? 15 : 14;
+        trs_charset = trs_rom_size > 2048 ? 16 : 15;
       } else {
         trs_charset = trs_charset1;
         currentmode = NORMAL;
