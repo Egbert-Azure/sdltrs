@@ -135,6 +135,61 @@ static void m6845_crt(int value)
   }
 }
 
+static int rtc_read(int port)
+{
+  /* Support for a special HW real-time clock (TimeDate80?)
+   * I used to have.  It was a small card-edge unit with a
+   * battery that held the time/date with power off.
+   * - Joe Peterson (joe@skyrush.com)
+   *
+   * According to the LDOS Quarterly 1-6, TChron1, TRSWatch, and
+   * TimeDate80 are accessible at high ports 0xB0-0xBC, while
+   * T-Timer is accessible at high ports 0xC0-0xCC.  It does
+   * not say where the low ports were; Joe's code had 0x70-0x7C,
+   * so I presume that's correct at least for the TimeDate80.
+   * Newclock-80 (by Alpha Products) uses 0x70-0x7C or 0xB0-0xBC.
+   * Note: 0xC0-0xCC conflicts with Radio Shack hard disk, so
+   * clock access at these ports is disabled starting in xtrs 4.1.
+   *
+   * These devices were based on the MSM5832 chip, which returns only
+   * a 2-digit year.  It's not clear what software will do with the
+   * date in years beyond 1999.
+   */
+  time_t time_secs = time(NULL);
+  struct tm *time_info = localtime(&time_secs);
+
+  switch (port & 0x0F) {
+    case 0xC: /* year (high) */
+      return (time_info->tm_year / 10) % 10;
+    case 0xB: /* year (low) */
+      return (time_info->tm_year % 10);
+    case 0xA: /* month (high) */
+      return ((time_info->tm_mon + 1) / 10);
+    case 0x9: /* month (low) */
+      return ((time_info->tm_mon + 1) % 10);
+    case 0x8: /* date (high) and leap year (bit 2) */
+      return ((time_info->tm_mday / 10) | ((time_info->tm_year % 4) ? 0 : 4));
+    case 0x7: /* date (low) */
+      return (time_info->tm_mday % 10);
+    case 0x6: /* day-of-week */
+      return time_info->tm_wday;
+    case 0x5: /* hours (high) and PM (bit 2) and 24hr (bit 3) */
+      return ((time_info->tm_hour / 10) | 8);
+    case 0x4: /* hours (low) */
+      return (time_info->tm_hour % 10);
+    case 0x3: /* minutes (high) */
+      return (time_info->tm_min / 10);
+    case 0x2: /* minutes (low) */
+      return (time_info->tm_min % 10);
+    case 0x1: /* seconds (high) */
+      return (time_info->tm_sec / 10);
+    case 0x0: /* seconds (low) */
+      return (time_info->tm_sec % 10);
+    default:
+      return 0xFF;
+  }
+}
+
 void z80_out(int port, int value)
 {
   if (trs_io_debug_flags & IODEBUG_OUT) {
@@ -622,36 +677,17 @@ int z80_in(int port)
 {
   int value = 0xff; /* value returned for nonexistent ports */
 
-  /* Support for a special HW real-time clock (TimeDate80?)
-   * I used to have.  It was a small card-edge unit with a
-   * battery that held the time/date with power off.
-   * - Joe Peterson (joe@skyrush.com)
-   *
-   * According to the LDOS Quarterly 1-6, TChron1, TRSWatch, and
-   * TimeDate80 are accessible at high ports 0xB0-0xBC, while
-   * T-Timer is accessible at high ports 0xC0-0xCC.  It does
-   * not say where the low ports were; Joe's code had 0x70-0x7C,
-   * so I presume that's correct at least for the TimeDate80.
-   * Newclock-80 (by Alpha Products) uses 0x70-0x7C or 0xB0-0xBC.
-   * Note: 0xC0-0xCC conflicts with Radio Shack hard disk, so
-   * clock access at these ports is disabled starting in xtrs 4.1.
-   *
-   * These devices were based on the MSM5832 chip, which returns only
-   * a 2-digit year.  It's not clear what software will do with the
-   * date in years beyond 1999.
-   */
-
   if ((port >= 0x70 && port <= 0x7C)
       || (port >= 0x68 && port <= 0x6D)
-      || (port >= 0xB0 && port <= 0xBC)
-      || (port == 0xE7 && trs_model == 3)
-      || (port == 0xE0 && eg3200)
-      || (port == 0x5A && genie3s)) {
-    time_t time_secs = time(NULL);
-    struct tm *time_info = localtime(&time_secs);
-
+      || (port >= 0xB0 && port <= 0xBC)) {
+    value = rtc_read(port);
+    goto done;
+   } else {
     /* Ports in David Keil's TRS-80 Emulator */
     if (port >= 0x68 && port <= 0x6D) {
+      time_t time_secs = time(NULL);
+      struct tm *time_info = localtime(&time_secs);
+
       switch (port) {
         case 0x68:
           value = time_info->tm_sec;
@@ -674,51 +710,6 @@ int z80_in(int port)
       }
       /* BCD value */
       value = (value / 10 * 16 + value % 10);
-      goto done;
-    }
-
-    if (eg3200 || genie3s || trs_model == 3)
-      port = (rtc_reg >> 4);
-
-    switch (port & 0x0F) {
-    case 0xC: /* year (high) */
-      value = (time_info->tm_year / 10) % 10;
-      goto done;
-    case 0xB: /* year (low) */
-      value = (time_info->tm_year % 10);
-      goto done;
-    case 0xA: /* month (high) */
-      value = ((time_info->tm_mon + 1) / 10);
-      goto done;
-    case 0x9: /* month (low) */
-      value = ((time_info->tm_mon + 1) % 10);
-      goto done;
-    case 0x8: /* date (high) and leap year (bit 2) */
-      value = ((time_info->tm_mday / 10) | ((time_info->tm_year % 4) ? 0 : 4));
-      goto done;
-    case 0x7: /* date (low) */
-      value = (time_info->tm_mday % 10);
-      goto done;
-    case 0x6: /* day-of-week */
-      value = time_info->tm_wday;
-      goto done;
-    case 0x5: /* hours (high) and PM (bit 2) and 24hr (bit 3) */
-      value = ((time_info->tm_hour / 10) | 8);
-      goto done;
-    case 0x4: /* hours (low) */
-      value = (time_info->tm_hour % 10);
-      goto done;
-    case 0x3: /* minutes (high) */
-      value = (time_info->tm_min / 10);
-      goto done;
-    case 0x2: /* minutes (low) */
-      value = (time_info->tm_min % 10);
-      goto done;
-    case 0x1: /* seconds (high) */
-      value = (time_info->tm_sec / 10);
-      goto done;
-    case 0x0: /* seconds (low) */
-      value = (time_info->tm_sec % 10);
       goto done;
     }
   }
@@ -755,6 +746,9 @@ int z80_in(int port)
         break;
       case 0x83: /* Genie III VideoExtension HRG */
         value = grafyx_read_mode();
+        break;
+      case 0xE0:
+        value = rtc_read(rtc_reg >> 4);
         break;
       case 0xF7:
         switch (ctrlimage) {
@@ -801,6 +795,9 @@ int z80_in(int port)
         break;
       case 0x57:
         value = trs_hard_in(TRS_HARD_STATUS);
+        break;
+      case 0x5A:
+        value = rtc_read(rtc_reg >> 4);
         break;
       case 0xE0:
       case 0xE1:
@@ -968,6 +965,10 @@ int z80_in(int port)
     case 0xE2:
     case 0xE3:
       value = trs_interrupt_latch_read();
+      goto done;
+    case 0xE7:
+      if (trs_model == 3)
+        value = rtc_read(rtc_reg >> 4);
       goto done;
     case 0xEC:
     case 0xED:
