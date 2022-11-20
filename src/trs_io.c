@@ -678,11 +678,10 @@ int z80_in(int port)
   int value = 0xff; /* value returned for nonexistent ports */
 
   if ((port >= 0x70 && port <= 0x7C)
-      || (port >= 0x68 && port <= 0x6D)
-      || (port >= 0xB0 && port <= 0xBC)) {
+   || (port >= 0xB0 && port <= 0xBC)) {
     value = rtc_read(port);
     goto done;
-   } else {
+  } else {
     /* Ports in David Keil's TRS-80 Emulator */
     if (port >= 0x68 && port <= 0x6D) {
       time_t time_secs = time(NULL);
