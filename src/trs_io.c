@@ -547,6 +547,12 @@ void z80_out(int port, int value)
     case TRSDISK3_INTERRUPT: /* 0xE4 */
     case 0xE5:
     case 0xE6:
+      /* RTC of Holmes FDC DX-3D board */
+      if (trs_model == 3) {
+        rtc_reg = value;
+        break;
+      }
+     /* Fall through */
     case 0xE7:
       trs_nmi_mask_write(value);
       break;
@@ -638,6 +644,7 @@ int z80_in(int port)
   if ((port >= 0x70 && port <= 0x7C)
       || (port >= 0x68 && port <= 0x6D)
       || (port >= 0xB0 && port <= 0xBC)
+      || (port == 0xE7 && trs_model == 3)
       || (port == 0xE0 && eg3200)
       || (port == 0x5A && genie3s)) {
     time_t time_secs = time(NULL);
@@ -670,7 +677,7 @@ int z80_in(int port)
       goto done;
     }
 
-    if (eg3200 || genie3s)
+    if (eg3200 || genie3s || trs_model == 3)
       port = (rtc_reg >> 4);
 
     switch (port & 0x0F) {
