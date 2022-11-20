@@ -546,15 +546,15 @@ void z80_out(int port, int value)
       break;
     case TRSDISK3_INTERRUPT: /* 0xE4 */
     case 0xE5:
-    case 0xE6:
-      /* RTC of Holmes FDC DX-3D board */
-      if (trs_model == 3) {
-        rtc_reg = value;
-        break;
-      }
-     /* Fall through */
     case 0xE7:
       trs_nmi_mask_write(value);
+      break;
+    case 0xE6:
+      /* RTC of Holmes FDC DX-3D board */
+      if (trs_model == 3)
+        rtc_reg = value;
+      else
+        trs_nmi_mask_write(value);
       break;
     case 0xEC:
     case 0xED:
