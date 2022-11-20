@@ -1901,11 +1901,12 @@ void trs_gui_display_settings(void)
    {"", 0}};
   const char *font1[]  = {"      Early",
                           "      Stock",
-                          "      LCmod",
+                          "      Lcmod",
                           "      Wider",
                           "      Genie",
                           "   HT-1080Z",
                           "  Meritum I",
+                          "CT-80 Aster",
                           "Video Genie"};
   const char *font34[] = {"     Katakana",
                           "International",
@@ -1985,7 +1986,7 @@ void trs_gui_display_settings(void)
         }
         break;
       case 4:
-        value = trs_gui_display_popup("Charset I", font1, 8, gui_charset1);
+        value = trs_gui_display_popup("Charset I", font1, 9, gui_charset1);
         if (value != gui_charset1) {
           gui_charset1 = value;
           trs_charset1 = value >= 4 ? value += 6 : value;
