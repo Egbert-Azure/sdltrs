@@ -659,60 +659,6 @@ int z80_in(int port)
 {
   int value = 0xff; /* value returned for nonexistent ports */
 
-  /* Support for a special HW real-time clock (TimeDate80?)
-   * I used to have.  It was a small card-edge unit with a
-   * battery that held the time/date with power off.
-   * - Joe Peterson (joe@skyrush.com)
-   *
-   * According to the LDOS Quarterly 1-6, TChron1, TRSWatch, and
-   * TimeDate80 are accessible at high ports 0xB0-0xBC, while
-   * T-Timer is accessible at high ports 0xC0-0xCC.  It does
-   * not say where the low ports were; Joe's code had 0x70-0x7C,
-   * so I presume that's correct at least for the TimeDate80.
-   * Newclock-80 (by Alpha Products) uses 0x70-0x7C or 0xB0-0xBC.
-   * Note: 0xC0-0xCC conflicts with Radio Shack hard disk, so
-   * clock access at these ports is disabled starting in xtrs 4.1.
-   *
-   * These devices were based on the MSM5832 chip, which returns only
-   * a 2-digit year.  It's not clear what software will do with the
-   * date in years beyond 1999.
-   */
-  if ((port >= 0x70 && port <= 0x7C)
-   || (port >= 0xB0 && port <= 0xBC)) {
-    value = rtc_read(port);
-    goto done;
-  } else {
-    /* Ports in David Keil's TRS-80 Emulator */
-    if (port >= 0x68 && port <= 0x6D) {
-      time_t time_secs = time(NULL);
-      struct tm *time_info = localtime(&time_secs);
-
-      switch (port) {
-        case 0x68:
-          value = time_info->tm_sec;
-          break;
-        case 0x69:
-          value = time_info->tm_min;
-          break;
-        case 0x6A:
-          value = time_info->tm_hour;
-          break;
-        case 0x6B:
-          value = (time_info->tm_year + 1900) % 100;
-          break;
-        case 0x6C:
-          value = time_info->tm_mday;
-          break;
-        case 0x6D:
-          value = (time_info->tm_mon) + 1;
-          break;
-      }
-      /* BCD value */
-      value = (value / 10 * 16 + value % 10);
-      goto done;
-    }
-  }
-
   /* EG 3200 Genie III */
   if (eg3200) {
     switch (port) {
@@ -887,6 +833,60 @@ int z80_in(int port)
   case 0x43: /* Supermem memory expansion */
     if (trs_model < 4 && supermem) {
       value = mem_read_bank_base(SUPERMEM);
+      goto done;
+    }
+  }
+
+  /* Support for a special HW real-time clock (TimeDate80?)
+   * I used to have.  It was a small card-edge unit with a
+   * battery that held the time/date with power off.
+   * - Joe Peterson (joe@skyrush.com)
+   *
+   * According to the LDOS Quarterly 1-6, TChron1, TRSWatch, and
+   * TimeDate80 are accessible at high ports 0xB0-0xBC, while
+   * T-Timer is accessible at high ports 0xC0-0xCC.  It does
+   * not say where the low ports were; Joe's code had 0x70-0x7C,
+   * so I presume that's correct at least for the TimeDate80.
+   * Newclock-80 (by Alpha Products) uses 0x70-0x7C or 0xB0-0xBC.
+   * Note: 0xC0-0xCC conflicts with Radio Shack hard disk, so
+   * clock access at these ports is disabled starting in xtrs 4.1.
+   *
+   * These devices were based on the MSM5832 chip, which returns only
+   * a 2-digit year.  It's not clear what software will do with the
+   * date in years beyond 1999.
+   */
+  if ((port >= 0x70 && port <= 0x7C)
+   || (port >= 0xB0 && port <= 0xBC)) {
+    value = rtc_read(port);
+    goto done;
+  } else {
+    /* Ports in David Keil's TRS-80 Emulator */
+    if (port >= 0x68 && port <= 0x6D) {
+      time_t time_secs = time(NULL);
+      struct tm *time_info = localtime(&time_secs);
+
+      switch (port) {
+        case 0x68:
+          value = time_info->tm_sec;
+          break;
+        case 0x69:
+          value = time_info->tm_min;
+          break;
+        case 0x6A:
+          value = time_info->tm_hour;
+          break;
+        case 0x6B:
+          value = (time_info->tm_year + 1900) % 100;
+          break;
+        case 0x6C:
+          value = time_info->tm_mday;
+          break;
+        case 0x6D:
+          value = (time_info->tm_mon) + 1;
+          break;
+      }
+      /* BCD value */
+      value = (value / 10 * 16 + value % 10);
       goto done;
     }
   }
