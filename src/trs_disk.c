@@ -2295,6 +2295,7 @@ trs_disk_command_write(Uint8 cmd)
   if (trs_clones.model & (EG3200 | GENIE3S | SPEEDMASTER)) {
     if ((cmd & 0xF8) == 0xF8) {
       state.density = cmd & 1;
+      state.controller = state.density ? TRSDISK_P1791 : TRSDISK_P1771;
       return;
     }
   }
