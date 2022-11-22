@@ -221,7 +221,7 @@ void z80_out(int port, int value)
         grafyx_write_mode(value);
         break;
       case 0xE0:
-        rtc_reg = value;
+        rtc_reg = value >> 4;
         break;
       case 0xF5:
         trs_screen_inverse(value & 1);
@@ -272,7 +272,7 @@ void z80_out(int port, int value)
         trs_hard_out(TRS_HARD_COMMAND, value);
         break;
       case 0x5B:
-        rtc_reg = value;
+        rtc_reg = value >> 4;
         break;
       case 0xE0:
       case 0xE1:
@@ -589,7 +589,7 @@ void z80_out(int port, int value)
     case 0xE6:
       /* RTC of Holmes FDC DX-3D board */
       if (trs_model == 3)
-        rtc_reg = value;
+        rtc_reg = value >> 4;
       else
         trs_nmi_mask_write(value);
       break;
@@ -693,7 +693,7 @@ int z80_in(int port)
         value = grafyx_read_mode();
         break;
       case 0xE0:
-        value = rtc_read(rtc_reg >> 4);
+        value = rtc_read(rtc_reg);
         break;
       case 0xF7:
         switch (ctrlimage) {
@@ -742,7 +742,7 @@ int z80_in(int port)
         value = trs_hard_in(TRS_HARD_STATUS);
         break;
       case 0x5A:
-        value = rtc_read(rtc_reg >> 4);
+        value = rtc_read(rtc_reg);
         break;
       case 0xE0:
       case 0xE1:
@@ -967,7 +967,7 @@ int z80_in(int port)
       goto done;
     case 0xE7:
       if (trs_model == 3)
-        value = rtc_read(rtc_reg >> 4);
+        value = rtc_read(rtc_reg);
       goto done;
     case 0xEC:
     case 0xED:
