@@ -125,11 +125,10 @@ static void m6845_crt(int value)
     case 0x0F: /* Cursor MSB */
       cursor_pos = ((value & 0xFF) << 0) | (cursor_pos & 0xFF00);
       if (cursor_pos != cursor_old) {
-        if (cursor_vis) {
-          m6845_cursor(cursor_old - start_addr, 0, 0, 0);
-          m6845_cursor(cursor_pos - start_addr, cursor_csr, cursor_cer, 1);
-        }
+        m6845_cursor(cursor_old - start_addr, 0, 0, 0);
         cursor_old = cursor_pos;
+        if (cursor_vis)
+          m6845_cursor(cursor_pos - start_addr, cursor_csr, cursor_cer, 1);
       }
       break;
   }
