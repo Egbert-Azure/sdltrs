@@ -3591,16 +3591,13 @@ int trs_diskset_save(const char *filename)
   }
 
   for (i = 0; i < 8; i++) {
-    fputs(trs_disk_getfilename(i), f);
-    fputc('\n', f);
+    fprintf(f, "%s\n", trs_disk_getfilename(i));
   }
   for (i = 0; i < 4; i++) {
-    fputs(trs_hard_getfilename(i), f);
-    fputc('\n', f);
+    fprintf(f, "%s\n", trs_hard_getfilename(i));
   }
   for (i = 0; i < 8; i++) {
-    fputs(stringy_get_name(i), f);
-    fputc('\n', f);
+    fprintf(f, "%s\n", stringy_get_name(i));
   }
   fclose(f);
   return 0;
