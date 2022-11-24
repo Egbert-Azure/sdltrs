@@ -1173,7 +1173,6 @@ static float
 angle(void)
 {
   DiskState *d = &disk[state.curdrive];
-  float a;
   /* Set revus to number of microseconds per revolution */
   int const revus = d->inches == 5 ? 200000 /* 300 RPM */ : 166666 /* 360 RPM */;
 #if TSTATEREV
@@ -1181,16 +1180,15 @@ angle(void)
   /* Minor bug: there will be a glitch when t_count wraps around on
      a 32-bit machine */
   int const revt = (int)(revus * z80_state.clockMHz);
-  a = ((float)(z80_state.t_count % revt)) / ((float)revt);
+  return ((float)(z80_state.t_count % revt)) / ((float)revt);
 #else
   /* Old way: lock revolution rate to real time */
   struct timeval tv;
   gettimeofday(&tv, NULL);
   /* Ignore the seconds field; this is OK if there are a round number
      of revolutions per second */
-  a = ((float)(tv.tv_usec % revus)) / ((float)revus);
+  return ((float)(tv.tv_usec % revus)) / ((float)revus);
 #endif
-  return a;
 }
 
 static void
