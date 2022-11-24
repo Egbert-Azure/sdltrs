@@ -714,8 +714,6 @@ static void
 trs_disk_emutype(DiskState *d)
 {
   int c;
-  char fmt[4];
-  int count;
 
   fseek(d->file, 0, 0);
   c = getc(d->file);
@@ -724,6 +722,9 @@ trs_disk_emutype(DiskState *d)
     return;
   }
   if (c == 0 || c == 0xff) {
+    char fmt[4];
+    int count;
+
     fseek(d->file, DMK_FORMAT, 0);
     count = fread(fmt, 1, DMK_FORMAT_SIZE, d->file);
     if (count != DMK_FORMAT_SIZE) {
