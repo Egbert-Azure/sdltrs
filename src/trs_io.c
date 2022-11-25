@@ -76,6 +76,18 @@ static int interlaced;
 static int max_raster;
 static int start_addr;
 
+void m6845_crtc_reset(void)
+{
+  cursor_csr =
+  cursor_cer =
+  cursor_old =
+  cursor_pos =
+  cursor_vis =
+  interlaced =
+  max_raster =
+  start_addr = 0;
+}
+
 static void m6845_crt(int value)
 {
   switch (ctrlimage) {

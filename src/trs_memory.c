@@ -499,15 +499,11 @@ void trs_reset(int poweron)
     if (poweron || genie3s || trs_model >= 4) {
 	if (poweron || trs_model >= 4)
 		mem_init();
-	if (genie3s) {
-		/* Reset Interlace Mode */
-		z80_out(0xF6, 0x08);
-		z80_out(0xF7, 0x00);
-	}
 	/* No quirks */
 	trs_clones_model(0);
 	/* Blank Video */
 	memset(&video, ' ', MAX_VIDEO_SIZE);
+	m6845_crtc_reset();
 	trs_screen_reset();
 	trs_screen_init(1);
 	if (trs_show_led) {
