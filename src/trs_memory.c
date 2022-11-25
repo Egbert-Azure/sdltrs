@@ -808,18 +808,18 @@ int mem_read(int address)
 	}
 	return memory[address];
       case 0x27: /* Aster CT-80 */
-	/* Boot-ROM */
-	if ((system_byte & (1 << 1)) && address <= 0x7FF)
-	  return rom[address | 0x3000];
-	if ((system_byte & (1 << 3)) == 0) {
-	  /* TRS-80 mode */
+	if ((system_byte & (1 << 5)) == 0) { /* device bank */
+	  /* Boot-ROM */
+	  if ((system_byte & (1 << 1)) && address <= 0x7FF)
+	    return rom[address | 0x3000];
 	  if ((system_byte & (1 << 2)) == 0 && address <= 0x2FFF)
 	    return rom[address];
-	  if (address >= 0x3000 && address <= 0x3FFF)
-	    return trs80_model1_mmio(address);
-	} else {
-	  /* CP/M mode */
-	  if ((system_byte & (1 << 5)) == 0) { /* CP/M device bank */
+	  if ((system_byte & (1 << 3)) == 0) {
+	    /* TRS-80 mode */
+	    if (address >= 0x3000 && address <= 0x3FFF)
+	      return trs80_model1_mmio(address);
+	  } else {
+	    /* CP/M mode */
 	    /* 2K Video RAM */
 	    if (address >= 0xF800)
 	      return video[address - 0xF800];
@@ -1186,15 +1186,15 @@ void mem_write(int address, int value)
 	memory[address] = value;
 	break;
       case 0x27: /* Aster CT-80 */
-	if ((system_byte & (1 << 3)) == 0) {
-	  /* TRS-80 mode */
-	  if (address >= 0x37E0 && address <= 0x3FFF) {
-	    trs80_model1_write_mmio(address, value);
-	    return;
-	  }
-	} else {
-	  /* CP/M mode */
-	  if ((system_byte & (1 << 5)) == 0) { /* CP/M device bank */
+	if ((system_byte & (1 << 5)) == 0) { /* device bank */
+	  if ((system_byte & (1 << 3)) == 0) {
+	    /* TRS-80 mode */
+	    if (address >= 0x37E0 && address <= 0x3FFF) {
+	      trs80_model1_write_mmio(address, value);
+	      return;
+	    }
+	  } else {
+	    /* CP/M mode */
 	    /* 2K Video RAM */
 	    if (address >= 0xF800) {
 	      trs80_screen_write_char(address - 0xF800, value);
@@ -1488,17 +1488,17 @@ Uint8 *mem_pointer(int address, int writing)
       case 0x27: /* Aster CT-80 */
       case 0x2F:
 	/* Boot-ROM */
-	if ((system_byte & (1 << 1)) && address <= 0x7FF)
-	  return &rom[address | 0x3000];
-	if ((system_byte & (1 << 3)) == 0) {
-	  /* TRS-80 mode */
+	if ((system_byte & (1 << 5)) == 0) { /* device bank */
+	  if ((system_byte & (1 << 1)) && address <= 0x7FF)
+	    return &rom[address | 0x3000];
 	  if ((system_byte & (1 << 2)) == 0 && address <= 0x2FFF)
 	    return &rom[address];
-	  if (address >= 0x3000 && address <= 0x3FFF)
-	    return trs80_model1_mmio_addr(address, writing);
-	} else {
-	  /* CP/M mode */
-	  if ((system_byte & (1 << 5)) == 0) { /* CP/M device bank */
+	  if ((system_byte & (1 << 3)) == 0) {
+	    /* TRS-80 mode */
+	    if (address >= 0x3000 && address <= 0x3FFF)
+	      return trs80_model1_mmio_addr(address, writing);
+	  } else {
+	    /* CP/M mode */
 	    /* 2K Video RAM */
 	    if (address >= 0xF800)
 	      return &video[address - 0xF800];
