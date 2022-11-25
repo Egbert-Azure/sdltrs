@@ -299,7 +299,6 @@ void eg3200_init_out(int value)
 	eg3200 = value;
 	memory_map = 0x23;
 	trs_clones_model(EG3200);
-	trs_disk_doubler = TRSDISK_PERCOM;
 	trs_timer_init();
 	trs_screen_inverse(0);
 }
