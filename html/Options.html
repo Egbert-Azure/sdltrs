@@ -62,6 +62,11 @@ will be executed upon startup of the emulator.</p>
         emulated cassette drive.</td>
   </tr>
   <tr>
+    <td><code>-charset <u>name</u></code></td>
+    <td>Use the charset specified by <code>name</code> for the selected
+        TRS-80 Model with the <code>-model</code> option below.</td>
+  </tr>
+  <tr>
     <td><code>-charset1 <u>name</u><br>
               -charset3 <u>name</u><br>
               -charset4 <u>name</u></code></td>
@@ -96,7 +101,8 @@ will be executed upon startup of the emulator.</p>
         the uppercase only charset of this TRS-80 Model I clone from Mera-Elzab
         in Poland. <code>videogenie</code> displays the character set of the
         EACA Video Genie (also labeled as the System 80 in Australia/New Zealand
-        and PMC-80/81 in North America).<br>
+        and PMC-80/81 in North America). <code>ct-80</code> selects the charset
+        of the Aster CT-80, a dutch improved and extended Model I clone.<br>
         In Model III (<code>-charset3</code>), 4 and 4P (<code>-charset4</code>)
         modes, three sets are available: <code>katakana</code> (the default for
         Model III) is the original Model III set with Japanese Katakana
@@ -426,8 +432,7 @@ will be executed upon startup of the emulator.</p>
         TRS-80 Model with the <code>-model</code> option above.</td>
   </tr>
   <tr>
-    <td><code>-romfile <u>filename</u><br>
-              -romfile1 <u>filename</u><br>
+    <td><code>-romfile[1] <u>filename</u><br>
               -romfile3 <u>filename3</u><br>
               -romfile4p <u>filename4p</u></code></td>
     <td>Use the romfile specified by <code>filename</code> in Model I mode,
@@ -439,7 +444,6 @@ will be executed upon startup of the emulator.</p>
         are used to load the ROM: <code>level2.rom</code> for the Model I,
         <code>model3.rom</code> for Model III/4 and <code>model4p.rom</code>
         for the TRS-80 Model 4P.</td>
-    </td>
   </tr>
   <tr>
     <td><code>-samplerate <u>rate</u></code></td>
@@ -522,6 +526,7 @@ will be executed upon startup of the emulator.</p>
         <code>lnw</code> sets the CPU clock to 4 MHz and enables banking for
         the 480*192 HRG in the lower 16 KB. Use <code>tcs</code> to emulate
         the TCS SpeedMaster with 5.35 MHz, memory banking and 480*192 HRG.
+        Select <code>ct-80</code> for emulation of the dutch Aster CT-80.
         The name of speedup or banking may be abbreviated to one character.
         <code>archbold</code> is the default setting.</td>
   </tr>
