@@ -88,7 +88,7 @@ void m6845_crtc_reset(void)
   start_addr = 0;
 }
 
-static void m6845_crt(int value)
+static void m6845_crtc(int value)
 {
   switch (ctrlimage) {
     case 0x01: /* Chars displayed */
@@ -242,7 +242,7 @@ void z80_out(int port, int value)
         ctrlimage = value;
         break;
       case 0xF7:
-        m6845_crt(value);
+        m6845_crtc(value);
         break;
       case 0xFA:
         eg3200 = value;
@@ -317,7 +317,7 @@ void z80_out(int port, int value)
         ctrlimage = value;
         break;
       case 0xF7:
-        m6845_crt(value);
+        m6845_crtc(value);
         break;
       case 0xF9:
         genie3s_bank_out(0x100 | value);
@@ -417,7 +417,7 @@ void z80_out(int port, int value)
     case 0xD1:
     case 0x11: /* Homebrew 80*22 SYS80.SYS */
       if (speedup <= 4)
-        m6845_crt(value);
+        m6845_crtc(value);
       break;
     case 0xD2:
       if (speedup <= 4)
@@ -467,7 +467,7 @@ void z80_out(int port, int value)
       break;
     case 0xFD:
       if (speedup == 7) /* 6845 CRTC Aster CT-80 */
-        m6845_crt(value);
+        m6845_crtc(value);
       else
         /* Printer port of EACA Genie/System 80 */
         trs_printer_write(value);
@@ -867,8 +867,8 @@ int z80_in(int port)
    * a 2-digit year.  It's not clear what software will do with the
    * date in years beyond 1999.
    */
-  if ((port >= 0x70 && port <= 0x7C)
-   || (port >= 0xB0 && port <= 0xBC)) {
+  if ((port >= 0x70 && port <= 0x7C) ||
+      (port >= 0xB0 && port <= 0xBC)) {
     value = rtc_read(port);
     goto done;
   } else {
