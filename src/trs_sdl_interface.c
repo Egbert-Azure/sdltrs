@@ -1886,7 +1886,7 @@ void trs_get_event(int wait)
         switch (keysym.sym) {
           /* Trap some function keys here */
           case SDLK_F7:
-            if (eg3200 == 0 && genie3s == 0) {
+            if ((trs_clones.model & (EG3200 | GENIE3S)) == 0) {
               if (SDL_GetModState() & KMOD_SHIFT)
                 call_function(EMULATOR);
               else
@@ -1895,7 +1895,7 @@ void trs_get_event(int wait)
             }
             break;
           case SDLK_F8:
-            if (eg3200 == 0 && genie3s == 0) {
+            if ((trs_clones.model & (EG3200 | GENIE3S)) == 0) {
               trs_exit(!(SDL_GetModState() & KMOD_SHIFT));
               continue;
             }
@@ -2133,7 +2133,7 @@ void trs_get_event(int wait)
         if (keysym.sym == SDLK_RSHIFT && trs_model == 1)
           keysym.sym = SDLK_LSHIFT;
 
-        if (eg3200 || genie3s) {
+        if (trs_clones.model & (EG3200 | GENIE3S)) {
           /* 1-5 on numeric keypad for P1-P5 / 6 for ESC */
           if (keysym.sym >= SDLK_KP_1 && keysym.sym <= SDLK_KP_6) {
             keysym.sym = (keysym.sym - SDLK_KP_1) + 0x88;
@@ -2711,7 +2711,7 @@ void trs_screen_refresh(void)
     trs_turbo_led();
   }
 
-  if (eg3200 || genie3s) {
+  if (trs_clones.model & (EG3200 | GENIE3S)) {
     z80_out(0xF6, 0x09);
     z80_out(0xF7, 0xFF);
   }
