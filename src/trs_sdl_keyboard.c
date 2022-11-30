@@ -44,6 +44,7 @@
 #include <SDL_joystick.h>
 #include "error.h"
 #include "trs.h"
+#include "trs_clones.h"
 #include "trs_sdl_keyboard.h"
 #include "trs_state_save.h"
 
@@ -771,7 +772,7 @@ static int kb_mem_value(int address)
 {
   int i, bitpos, data = 0;
 
-  if ((eg3200 == 0 && genie3s == 0) || (address & 0x00e0) < 0x00a0) {
+  if ((trs_clones.model & (EG3200 | GENIE3S)) == 0 || (address & 0x00e0) < 0x00a0) {
     for (i = 0, bitpos = 1; i < 7; i++, bitpos <<= 1) {
       if (address & bitpos) {
         data |= keystate[i];
