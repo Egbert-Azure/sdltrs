@@ -3036,16 +3036,20 @@ static void grafyx_write_byte(int x, int y, Uint8 byte)
 static void grafyx_rescale(int y, int x, Uint8 byte)
 {
   if (scale == 1) {
-    int const p = y * y_scale * G_XSIZE + x;
+    if (scale_factor == 2) {
+      int const p = y * 2 * G_XSIZE + x;
 
-    grafyx[p] = byte;
-    if (scale_factor == 2)
+      grafyx[p] = byte;
       grafyx[p + G_XSIZE] = byte;
+    } else {
+      grafyx[y * G_XSIZE + x] = byte;
+    }
   } else {
     Uint8 exp[MAX_SCALE];
+    int const w = G_XSIZE * scale;
+    int const s = w - scale;
+    int p = y * y_scale * w + x * scale;
     int i, j;
-    int p = y * y_scale * (G_XSIZE * scale) + x * scale;
-    int const s = (G_XSIZE * scale) - scale;
 
     switch (scale) {
       case 2:
