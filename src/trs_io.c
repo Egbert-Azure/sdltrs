@@ -462,11 +462,24 @@ void z80_out(int port, int value)
         eg3200_init_out(value);
       break;
     case 0xFC:
-      if (speedup == 7) /* 6845 CRTC Aster CT-80 */
+      if (speedup == 7) {
+        /* 6845 CRTC Aster CT-80 */
+        if (value & (1 << 5)) {
+          value = sys_byte_in();
+          sys_byte_out(value |=  (1 << 3)); /* Enable CP/M mode */
+          break;
+        }
+        if (value & (1 << 4)) {
+          value = sys_byte_in();
+          sys_byte_out(value &= ~(1 << 3)); /* Enable TRS-80 mode */
+          break;
+        }
         ctrlimage = value;
+      }
       break;
     case 0xFD:
-      if (speedup == 7) /* 6845 CRTC Aster CT-80 */
+      if (speedup == 7)
+        /* 6845 CRTC Aster CT-80 */
         m6845_crtc(value);
       else
         /* Printer port of EACA Genie/System 80 */
