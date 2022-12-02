@@ -414,9 +414,7 @@ trs_timer_init(void)
   trs_timer_event();
   trs_timer_mode(timer_overclock);
 
-  if (eg3200 || genie3s)
-    return;
-  else {
+  if ((trs_clones.model & (EG3200 | GENIE3S)) == 0) {
     /* Also initialize the clock in memory - hack */
     time_t tt = time(NULL);
     struct tm *lt = localtime(&tt);
