@@ -3597,13 +3597,13 @@ int trs_diskset_save(const char *filename)
     return -1;
   }
 
-  for (i = 0; i < 8; i++) {
+  for (i = 0; i < NDRIVES; i++) {
     fprintf(f, "%s\n", trs_disk_getfilename(i));
   }
-  for (i = 0; i < 4; i++) {
+  for (i = 0; i < TRS_HARD_MAXDRIVES; i++) {
     fprintf(f, "%s\n", trs_hard_getfilename(i));
   }
-  for (i = 0; i < 8; i++) {
+  for (i = 0; i < NDRIVES; i++) {
     fprintf(f, "%s\n", stringy_get_name(i));
   }
   fclose(f);
@@ -3621,7 +3621,7 @@ int trs_diskset_load(const char *filename)
     return -1;
   }
 
-  for (i = 0; i < 8; i++) {
+  for (i = 0; i < NDRIVES; i++) {
     if (fgets(diskname, FILENAME_MAX, f) == NULL)
       continue;
     if (strlen(diskname) != 0) {
@@ -3630,7 +3630,7 @@ int trs_diskset_load(const char *filename)
         trs_disk_insert(i, diskname);
     }
   }
-  for (i = 0; i < 4; i++) {
+  for (i = 0; i < TRS_HARD_MAXDRIVES; i++) {
     if (fgets(diskname, FILENAME_MAX, f) == NULL)
       continue;
     if (strlen(diskname) != 0) {
@@ -3639,7 +3639,7 @@ int trs_diskset_load(const char *filename)
         trs_hard_attach(i, diskname);
     }
   }
-  for (i = 0; i < 8; i++) {
+  for (i = 0; i < NDRIVES; i++) {
     if (fgets(diskname, FILENAME_MAX, f) == NULL)
       continue;
     if (strlen(diskname) != 0) {
