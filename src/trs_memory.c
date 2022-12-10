@@ -514,7 +514,6 @@ void trs_reset(int poweron)
         /* Reset processor */
 	z80_reset();
     } else {
-	trs_timer_speed(0);
 	/* Signal a nonmaskable interrupt. */
 	trs_reset_button_interrupt(1);
 	trs_schedule_event(trs_reset_button_interrupt, 0, 2000);
