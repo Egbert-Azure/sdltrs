@@ -793,7 +793,7 @@ int mem_read(int address)
 	else
 	  return trs80_model1_mmio(address);
       case 0x26: /* TCS Genie IIs/SpeedMaster */
-	/* Expansions bit */
+	/* Expansions bit (RAM 192 B) */
 	if ((system_byte & (1 << 7)) && address <= 0xBFFF)
 	  return memory[address + bank_base];
 	/* HRG in low 16K */
@@ -828,10 +828,10 @@ int mem_read(int address)
 	    /* Keyboard */
 	    if (address >= 0xF400 && address <= 0xF7FF)
 	      return trs_kb_mem_read(address - 0xBC00);
-	    /* Disk MMIO (needed?) */
+	    /* Disk MMIO */
 	    if (address >= 0xEFE0 && address <= 0xEFEF)
 	      return trs80_model1_mmio(address - 0xB800);
-	    /* Boot-ROM copy (needed?) */
+	    /* Boot-ROM copy */
 	    if (address >= 0xEC00 && address <= 0xF3FF)
 	      return rom[address - 0xBC00];
 	  }
@@ -1164,7 +1164,7 @@ void mem_write(int address, int value)
 	  trs80_model1_write_mmio(address, value);
 	break;
       case 0x26: /* TCS Genie IIs/SpeedMaster */
-	/* Expansions bit */
+	/* Expansions bit (RAM 192 B) */
 	if ((system_byte & (1 << 7)) && address <= 0xBFFF) {
 	  memory[address + bank_base] = value;
 	  return;
@@ -1476,7 +1476,7 @@ Uint8 *mem_pointer(int address, int writing)
 	  return trs80_model1_mmio_addr(address, writing);
       case 0x26: /* TCS Genie IIs/SpeedMaster */
       case 0x2E:
-	/* Expansions bit */
+	/* Expansions bit (RAM 192 B) */
 	if ((system_byte & (1 << 7)) && address <= 0xBFFF)
 	  return &memory[address + bank_base];
 	/* ROM and MMIO */
@@ -1489,8 +1489,8 @@ Uint8 *mem_pointer(int address, int writing)
 	return &memory[address];
       case 0x27: /* Aster CT-80 */
       case 0x2F:
-	/* Boot-ROM */
 	if ((system_byte & (1 << 5)) == 0) { /* device bank */
+	  /* Boot-ROM */
 	  if ((system_byte & (1 << 1)) && address <= 0x2FFF)
 	    return writing ? NULL : &rom[(address & 0x7FF) | 0x3000];
 	  if ((system_byte & (1 << 2)) == 0 && address <= 0x2FFF)

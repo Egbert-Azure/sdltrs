@@ -130,7 +130,7 @@ static int key_queue_entries;
 #define TK_F2           TK(7, 5)  /* M4 only */
 #define TK_F3           TK(7, 6)  /* M4 only */
 #define TK_Unused       TK(7, 7)
-#define TK_EG3200_F1    TK(8, 0)
+#define TK_EG3200_F1    TK(8, 0)  /* F1-F8 keys for EG3200 & TCS Genie IIIs */
 #define TK_EG3200_F2    TK(8, 1)
 #define TK_EG3200_F3    TK(8, 2)
 #define TK_EG3200_F4    TK(8, 3)

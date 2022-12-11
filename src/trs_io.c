@@ -978,6 +978,7 @@ int z80_in(int port)
       value = trs_interrupt_latch_read();
       goto done;
     case 0xE7:
+      /* RTC of Holmes FDC DX-3D board */
       if (trs_model == 3)
         value = rtc_read(rtc_reg);
       goto done;
