@@ -1073,7 +1073,7 @@ void mem_write(int address, int value)
 	  memory[address + 0x8000] = value;
 	else
 	  memory[address] = value;
-	return;
+	break;
       case 0x23: /* EG 3200: bit set to 0 => bank enabled */
 	/* Bit 1 - Bank 2: Video Memory 0 (1k, 64x16, TRS-80 M1 compatible) */
 	if ((eg3200 & (1 << 1)) == 0) {
@@ -1107,7 +1107,7 @@ void mem_write(int address, int value)
 	  memory[address + bank_base] = value;
 	else
 	  memory[address] = value;
-	return;
+	break;
       case 0x24: /* TCS Genie IIIs */
 	if ((system_byte & (1 << 0)) == 0) {
 	  if ((system_byte & (1 << 4)) == 0) {
@@ -1150,7 +1150,7 @@ void mem_write(int address, int value)
 	  memory[address] = value;
 	else
 	  memory[address + bank_base] = value;
-	return;
+	break;
       case 0x25: /* Schmidtke 80-Z Video Card */
 	if (system_byte & (1 << 0)) {
 	  if (address >= video_memory && address <= video_memory + 0xFFF) {
@@ -1162,7 +1162,7 @@ void mem_write(int address, int value)
 	  memory[address] = value;
 	else
 	  trs80_model1_write_mmio(address, value);
-	return;
+	break;
       case 0x26: /* TCS Genie IIs/SpeedMaster */
 	/* Expansions bit */
 	if ((system_byte & (1 << 7)) && address <= 0xBFFF) {
