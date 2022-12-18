@@ -38,6 +38,8 @@ Updated version of Mark Grebe's [SDLTRS]:
   * Emulate 6845 CRTC Interlace Video Mode
   * Support VideoExtension HRG for EACA EG 3200 Genie III
   * Support Genieplus Memory Card for EACA EG 3200 Genie III
+  * Support Prologica CP-500/M80 by Leonardo Brondani Schenkel
+  * Partial emulation of Aster CT-80
 
 SDL(2)TRS is based on Tim Mann's excellent TRS-80 emulator [xtrs] and also
 has very low system requirements: it works on all platforms supported by the
