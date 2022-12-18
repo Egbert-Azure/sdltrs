@@ -936,7 +936,7 @@ void debug_shell(void)
 
 		if(sscanf(input, "save %x, %x %s", &start_address, &end_address, file) == 3)
 		{
-		    save_memory(start_address, end_address - start_address, file);
+		    save_memory(start_address, end_address - start_address + 1, file);
 		}
 		else if(sscanf(input, "save %x / %x %s", &start_address, &num_bytes, file) == 3)
 		{
@@ -949,7 +949,7 @@ void debug_shell(void)
 
 		if(sscanf(input, "%x , %x / ", &start_address, &end_address) == 2)
 		{
-		    print_memory(start_address, end_address - start_address);
+		    print_memory(start_address, end_address - start_address + 1);
 		}
 		else if(sscanf(input, "%x / %x ", &start_address, &num_bytes) == 2)
 		{
