@@ -61,7 +61,7 @@ All contributions are welcome.
   * [sdl2trs.exe]    (32-bit, needs [SDL2.DLL])
   * [sdl2trs64.exe]  (64-bit, needs [SDL2.DLL])
 
-(Release 1.2.24 build with [MinGW] & [MinGW-w64])
+(Release 1.2.25 build with [MinGW] & [MinGW-w64])
 
 ## Packages
 
