@@ -1,3 +1,10 @@
+## Version 1.2.25 Release 12-18-2022:
+
+ * Added Prologica CP-500/M80 support by Leonardo Brondani Schenkel.
+ * Added partial Aster CT-80 emulation.
+ * Fixed Tandy/RS Double-Density Adapter Kit.
+ * Fixed Warm Boot for TRS-80 Model III.
+
 ## Version 1.2.24 Release 07-24-2022:
 
  * Added 6845 CRTC Interlace Mode Emulation.
