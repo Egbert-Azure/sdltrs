@@ -8,13 +8,13 @@
 with lib;
 stdenv.mkDerivation rec {
   pname   = "sdltrs";
-  version = "1.2.24";
+  version = "1.2.25";
 
   src = fetchFromGitLab {
     owner  = "jengun";
     repo   = "sdltrs";
     rev    = version;
-    sha256 = "ZshWG2Qo0gVij9MI4AJ32q36K/W9xyD+lj9Z1UL+V/8=";
+    sha256 = "IS5ikdFBlE4J/Klfn+7cUxpCrPwzLotnP+Kyy5ooUY4=";
 
   };
 
