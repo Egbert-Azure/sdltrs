@@ -422,8 +422,8 @@ static int open_drive(int drive)
       d->file = fopen(d->filename, "rb");
     }
     if (d->file == NULL) {
-      error("trs_hard: could not open hard drive image '%s': %s",
-	    d->filename, strerror(errno));
+      error("trs_hard: could not open hard drive %d image '%s': %s",
+	    drive, d->filename, strerror(errno));
       err = errno;
       goto fail;
     }
