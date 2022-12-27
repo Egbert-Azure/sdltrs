@@ -424,7 +424,7 @@ static Uint8 mirror_bits(Uint8 byte)
   return byte;
 }
 
-static void stripWhitespace(char *inputStr)
+static void strip(char *inputStr)
 {
   char *pos = inputStr;
 
@@ -1026,10 +1026,10 @@ int trs_load_config_file(void)
     arg = strchr(line, '=');
     if (arg != NULL) {
       *arg++ = '\0';
-      stripWhitespace(arg);
+      strip(arg);
     }
 
-    stripWhitespace(line);
+    strip(line);
 
     for (i = 0; i < num_options; i++) {
       if (strcasecmp(line, options[i].name) == 0) {
