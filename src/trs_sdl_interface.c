@@ -54,11 +54,12 @@
 #include "trs_stringy.h"
 #include "trs_uart.h"
 
-#define MAX_RECTS 1
-#define MAX_SCALE 4
-#define WHITE     0xe0e0ff
-#define BLACK     0
-#define GREEN     0x344843
+#define MAX_RECTS   1
+#define MAX_SCALE   4
+#define SCREEN_SIZE 2048
+#define WHITE       0xe0e0ff
+#define BLACK       0
+#define GREEN       0x344843
 
 /* currentmode values */
 #ifdef _WIN32
@@ -113,7 +114,7 @@ char trs_state_file[FILENAME_MAX];
 /* Private data */
 #include "trs_chars.c"
 
-static Uint8 trs_screen[2048];
+static Uint8 trs_screen[SCREEN_SIZE];
 static Uint8 char_ram[MAX_CHARS][MAX_CHAR_HEIGHT];
 static char scale_quality = '1';
 static int cpu_panel;
@@ -1246,7 +1247,7 @@ void trs_screen_reset(void)
   scale_factor = 2;
 
   /* initially, screen is blank (i.e. full of spaces) */
-  memset(trs_screen, ' ', 2048);
+  memset(trs_screen, ' ', SCREEN_SIZE);
   memset(char_ram, 0, 1024);
   memset(grafyx, 0, G_MSIZE);
   memset(grafyx_unscaled, 0, G_YSIZE * G_XSIZE);
@@ -1593,7 +1594,7 @@ static void MarkSelection(void)
 
 static char *GetSelection(void)
 {
-  static char copy_data[2048];
+  static char copy_data[SCREEN_SIZE];
   char *curr_data = copy_data;
   int col, row;
   int start_col, end_col, start_row, end_row;
@@ -3395,12 +3396,12 @@ void m6845_screen(int chars, int lines, int raster, int factor)
     scale_factor = factor;
 
   if (changed) {
-    if (screen_chars < 2048)
-      memset(&trs_screen[screen_chars], ' ', 2048 - screen_chars + 1);
+    if (screen_chars < SCREEN_SIZE)
+      memset(&trs_screen[screen_chars], ' ', SCREEN_SIZE - screen_chars + 1);
 
     screen_chars = row_chars * col_chars;
-    if (screen_chars > 2048)
-      screen_chars = 2048;
+    if (screen_chars > SCREEN_SIZE)
+      screen_chars = SCREEN_SIZE;
 
     trs_screen_init(1);
   }
@@ -3545,7 +3546,7 @@ void trs_main_save(FILE *file)
   int i;
 
   trs_save_int(file, &trs_model, 1);
-  trs_save_uint8(file, trs_screen, 2048);
+  trs_save_uint8(file, trs_screen, SCREEN_SIZE);
   trs_save_int(file, &screen_chars, 1);
   trs_save_int(file, &col_chars, 1);
   trs_save_int(file, &row_chars, 1);
@@ -3583,7 +3584,7 @@ void trs_main_load(FILE *file)
   int i;
 
   trs_load_int(file, &trs_model, 1);
-  trs_load_uint8(file, trs_screen, 2048);
+  trs_load_uint8(file, trs_screen, SCREEN_SIZE);
   trs_load_int(file, &screen_chars, 1);
   trs_load_int(file, &col_chars, 1);
   trs_load_int(file, &row_chars, 1);
