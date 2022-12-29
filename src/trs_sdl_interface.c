@@ -2855,7 +2855,7 @@ void trs_screen_write_char(int position, Uint8 char_index)
   if (genie3s) {
     SDL_BlitSurface(trs_char[expanded][char_index], &srcRect, screen, &dstRect);
   } else {
-    if (trs_model == 1 && eg3200 == 0) {
+    if (trs_model == 1 && (trs_clones.model & (CT80 | EG3200)) == 0) {
       /* On Model I, 0xc0-0xff is another copy of 0x80-0xbf */
       if (char_index >= 0xc0)
         char_index -= 0x40;
