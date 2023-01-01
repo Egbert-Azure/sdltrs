@@ -1075,12 +1075,11 @@ int trs_gui_display_popup(const char *title, const char **entry,
         if (key == 'Y')
           return 1;
       }
-      for (i = 0; i <= num; i++) {
-        if (strchr(entry[i], key)) {
-          selection = i;
-          break;
-        }
-      }
+      i = selection;
+      do {
+        if (selection++ >= num)
+          selection = 0;
+      } while (selection != i && strchr(entry[selection], key) == NULL);
     } else {
       switch (key) {
         case SDLK_DOWN:
