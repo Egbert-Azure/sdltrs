@@ -1138,12 +1138,10 @@ void mem_write(int address, int value)
 	if ((system_byte & (1 << 5)) && address <= 0x2FFF)
 	  return;
 	/* Write to Font-SRAM */
-	if (genie3s & (1 << 1)) {
-	  if (address >= 0x8000) {
-	    genie3s_char(video[(VIDEO_START - video_memory)],
-	        (address - 0x8000) >> 11, value);
-	    return;
-	  }
+	if (genie3s & (1 << 1) && address >= 0x8000) {
+	  genie3s_char(video[(VIDEO_START - video_memory)],
+	      (address - 0x8000) >> 11, value);
+	  return;
 	}
 	/* "Constant bit" points to Bank 0 */
 	if ((address <= 0x3FFF && (genie3s & (1 << 0)) == 0) ||
