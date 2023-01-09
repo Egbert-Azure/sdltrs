@@ -1023,6 +1023,7 @@ void mem_write(int address, int value)
       case 0x13: /* Model 1: selector mode 3 (CP/M mode) */
         if (address >= 0xF7E0)
           trs80_model1_write_mmio(address & 0x3FFF, value);
+	else
 	/* Fall through */
       case 0x14: /* Model 1: All RAM banking high */
       case 0x15: /* Model 1: All RAM banking low */
