@@ -592,27 +592,25 @@ void rom_write(int address, int value)
 
 static int trs80_model1_ram(int address)
 {
-  int bank = 0x8000;
-  int offset = address;
+  if (selector) {
+    int addr = address;
+    int bank = 0x8000;
 
-  /* Selector mode 6 remaps RAM from 0000-3FFF to C000-FFFF while keeping
-     the ROMs visible */
-  /* selector_reg is always 0 if selector disabled so we don't need an
-     extra check */
-  if ((selector_reg & 7) == 6) {
-    if (address >= 0xC000) {
+    /* Selector mode 6 remaps RAM from 0000-3FFF to C000-FFFF while keeping
+       the ROMs visible */
+    if ((selector_reg & 7) == 6 && address >= 0xC000) {
       /* Use the low 16K, and then bank it. I'm not 100% sure how the
          PAL orders the two */
-      offset &= 0x3FFF;
+      address &= 0x3FFF;
     }
+    /* Bank low on odd modes */
+    if ((selector_reg & 1) == 1)
+      bank = 0;
+    /* Deal with 32K banking from selector */
+    if ((addr & 0x8000) == bank)
+      address += bank_base;
   }
-  /* Bank low on odd modes */
-  if ((selector_reg & 1) == 1)
-    bank = 0;
-  /* Deal with 32K banking from selector */
-  if ((address & 0x8000) == bank)
-    offset += bank_base;
-  return memory[offset];
+  return memory[address];
 }
 
 static int trs80_model1_mmio(int address)
@@ -895,30 +893,30 @@ static void trs80_screen_write_char(int vaddr, int value)
 
 static void trs80_model1_write_mem(int address, int value)
 {
-  int bank = 0x8000;
-  int offset = address;
+  if (selector) {
+    int addr = address;
+    int bank = 0x8000;
 
-  /* Selector mode 6 remaps RAM from 0000-3FFF to C000-FFFF while keeping
-     the ROMs visible */
-  /* selector_reg is always 0 if selector disabled so we don't need an
-     extra check */
-  if ((selector_reg & 7) == 6) {
-    if (address >= 0xC000) {
-      /* We have no low 16K of RAM. This is for the LNW80 really */
-      if (!(selector_reg & 8))
-	return;
-      /* Use the low 16K, and then bank it. I'm not 100% sure how the
-         PAL orders the two */
-      offset &= 0x3FFF;
+    /* Selector mode 6 remaps RAM from 0000-3FFF to C000-FFFF while keeping
+       the ROMs visible */
+    if ((selector_reg & 7) == 6) {
+      if (address >= 0xC000) {
+        /* We have no low 16K of RAM. This is for the LNW80 really */
+        if (!(selector_reg & 8))
+	  return;
+        /* Use the low 16K, and then bank it. I'm not 100% sure how the
+           PAL orders the two */
+        address &= 0x3FFF;
+      }
     }
+    /* Bank low on odd modes */
+    if ((selector_reg & 1) == 1)
+      bank = 0;
+    /* Deal with 32K banking from selector */
+    if ((addr & 0x8000) == bank)
+      address += bank_base;
   }
-  /* Bank low on odd modes */
-  if ((selector_reg & 1) == 1)
-    bank = 0;
-  /* Deal with 32K banking from selector or supermem */
-  if ((address & 0x8000) == bank)
-    offset += bank_base;
-  memory[offset] = value;
+  memory[address] = value;
 }
 
 static void trs80_model1_write_mmio(int address, int value)
@@ -1273,27 +1271,25 @@ void mem_write_word(int address, int value)
 
 static Uint8 *trs80_model1_ram_addr(int address)
 {
-  int bank = 0x8000;
-  int offset = address;
+  if (selector) {
+    int addr = address;
+    int bank = 0x8000;
 
-  /* Selector mode 6 remaps RAM from 0000-3FFF to C000-FFFF while keeping
-     the ROMs visible */
-  /* selector_reg is always 0 if selector disabled so we don't need an
-     extra check */
-  if ((selector_reg & 7) == 6) {
-    if (address >= 0xC000) {
+    /* Selector mode 6 remaps RAM from 0000-3FFF to C000-FFFF while keeping
+       the ROMs visible */
+    if ((selector_reg & 7) == 6 && address >= 0xC000) {
       /* Use the low 16K, and then bank it. I'm not 100% sure how the
          PAL orders the two */
-      offset &= 0x3FFF;
+      address &= 0x3FFF;
     }
+    /* Bank low on odd modes */
+    if ((selector_reg & 1) == 1)
+      bank = 0;
+    /* Deal with 32K banking from selector */
+    if ((addr & 0x8000) == bank)
+      address += bank_base;
   }
-  /* Bank low on odd modes */
-  if ((selector_reg & 1) == 1)
-    bank = 0;
-  /* Deal with 32K banking from selector or supermem */
-  if ((address & 0x8000) == bank)
-    offset += bank_base;
-  return memory + offset;
+  return memory + address;
 }
 
 static Uint8 *trs80_model1_mmio_addr(int address, int writing)
