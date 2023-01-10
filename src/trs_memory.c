@@ -390,7 +390,7 @@ void selector_out(Uint8 value)
 	   you can't read back you can't tell */
 	selector_reg = value;
 	/* Always Model 1 */
-	memory_map = (trs_model << 4) + (selector_reg & 7);
+	memory_map = 0x10 + (selector_reg & 7);
 	/* 0x10 is already the default tandy map we add 11-17 in the style
 	   of the model 4 approach */
 	if (selector_reg & 0x8) {
@@ -595,9 +595,6 @@ static int trs80_model1_ram(int address)
   int bank = 0x8000;
   int offset = address;
 
-  /* Model 4 doesn't have banking in Model 1 mode */
-  if (trs_model != 1)
-    return memory[address];
   /* Selector mode 6 remaps RAM from 0000-3FFF to C000-FFFF while keeping
      the ROMs visible */
   /* selector_reg is always 0 if selector disabled so we don't need an
@@ -901,11 +898,6 @@ static void trs80_model1_write_mem(int address, int value)
   int bank = 0x8000;
   int offset = address;
 
-  /* Model 4 doesn't have banking in Model 1 mode */
-  if (trs_model != 1) {
-    memory[address] = value;
-    return;
-  }
   /* Selector mode 6 remaps RAM from 0000-3FFF to C000-FFFF while keeping
      the ROMs visible */
   /* selector_reg is always 0 if selector disabled so we don't need an
@@ -1284,9 +1276,6 @@ static Uint8 *trs80_model1_ram_addr(int address)
   int bank = 0x8000;
   int offset = address;
 
-  /* Model 4 doesn't have banking in Model 1 mode */
-  if (trs_model != 1)
-    return memory + address;
   /* Selector mode 6 remaps RAM from 0000-3FFF to C000-FFFF while keeping
      the ROMs visible */
   /* selector_reg is always 0 if selector disabled so we don't need an
