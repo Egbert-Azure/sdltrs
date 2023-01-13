@@ -411,10 +411,10 @@ static const struct {
 static const int num_options = sizeof(options) / sizeof(options[0]);
 
 /* Private routines */
-static void grafyx_rescale(int y, int x, Uint8 byte);
 static void bitmap_init(int ram);
 static void bitmap_char(int char_index, int ram);
 static void bitmap_free(int char_index, int start, int end);
+static void grafyx_rescale(int y, int x, Uint8 byte);
 
 static Uint8 mirror_bits(Uint8 byte)
 {
