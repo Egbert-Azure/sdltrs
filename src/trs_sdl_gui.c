@@ -495,17 +495,17 @@ void trs_gui_delete_filename_list(void)
 
 int trs_gui_readdirectory(const char *path, const char *mask, int browse_dir)
 {
-  DIR *directory = NULL;
-  char pathname[FILENAME_MAX];
-  char *name;
-  int  dirname_len;
-  struct dirent *dir_entry;
-  struct stat st = { 0 };
+  DIR *directory = opendir(path);
 
-  directory = opendir(path);
   if (directory) {
+    char   pathname[FILENAME_MAX];
+    char  *name;
+    struct dirent *dir_entry;
+    struct stat st = { 0 };
+
     trs_gui_create_filename_list();
     while ((dir_entry = readdir(directory))) {
+      int const len = strlen(dir_entry->d_name);
 
       if (dir_entry->d_name[0] == '.' && dir_entry->d_name[1] != '.')
         continue;
@@ -515,20 +515,19 @@ int trs_gui_readdirectory(const char *path, const char *mask, int browse_dir)
         closedir(directory);
         return -1;
       }
-      dirname_len = strlen(dir_entry->d_name);
 
       stat(pathname, &st);
       if (S_ISDIR(st.st_mode)) {
-        if ( (name = (char *)malloc(dirname_len + 3)) )
-          snprintf(name, dirname_len + 3, "<%s>", dir_entry->d_name);
+        if ( (name = (char *)malloc(len + 3)) )
+          snprintf(name, len + 3, "<%s>", dir_entry->d_name);
       }
       else if (browse_dir) {
         continue;
       } else {
         if (mask != NULL) {
-          if (dirname_len < 4)
+          if (len < 4)
             continue;
-          if (strcasecmp(&dir_entry->d_name[dirname_len - 4], mask) != 0)
+          if (strcasecmp(&dir_entry->d_name[len - 4], mask) != 0)
             continue;
         }
         name = (char *)strdup(dir_entry->d_name);
