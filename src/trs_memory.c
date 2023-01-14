@@ -464,9 +464,17 @@ void s80z_out(int value)
 
 static void mem_init(void)
 {
+    int i;
+
     /* Initialize RAM & ROM */
-    memset(&memory, 0xC9, MAX_MEMORY_SIZE);
-    memset(&supermem_ram, 0xC9, MAX_SUPERMEM_SIZE);
+    for (i = 0; i < MAX_MEMORY_SIZE;) {
+      memory[i++] = 0xFF;
+      memory[i++] = 0x00;
+    }
+    for (i = 0; i < MAX_SUPERMEM_SIZE;) {
+      supermem_ram[i++] = 0xFF;
+      supermem_ram[i++] = 0x00;
+    }
     memset(&rom, 0, MAX_ROM_SIZE);
 
     mem_map(0);
