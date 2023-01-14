@@ -816,7 +816,7 @@ void debug_shell(void)
 		}
 		else if(sscanf(input, "%*s %x = %x", &addr, &value) == 2)
 		{
-		    if (addr < trs_rom_size)
+		    if (addr < (unsigned int)trs_rom_size)
 			rom_write(addr, value);
 		    else
 			mem_write(addr, value);
