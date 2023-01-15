@@ -149,6 +149,8 @@ Miscellaneous:\n\
     set $<reg> = <value>\n\
     set <addr> = <value>\n\
         Change the value of a register, register pair, I/O or memory byte.\n\
+    rom <addr> = <value>\n\
+        Change byte in ROM.\n\
     in <port>\n\
         Input from the given I/O port.\n\
     out <port> = <value>\n\
@@ -747,6 +749,16 @@ void debug_shell(void)
 		puts("Pressing reset button.");
 		trs_reset(0);
 	    }
+	    else if(!strcmp(command, "rom"))
+	    {
+		int addr, value;
+
+		if (sscanf(input, "%*s %x = %x", &addr, &value) == 2)
+		{
+		    if (addr < trs_rom_size)
+			rom_write(addr, value);
+		}
+	    }
 	    else if(!strcmp(command, "run") || !strcmp(command, "r"))
 	    {
 		puts("Performing hard reset and running.");
@@ -816,9 +828,6 @@ void debug_shell(void)
 		}
 		else if(sscanf(input, "%*s %x = %x", &addr, &value) == 2)
 		{
-		    if (addr < (unsigned int)trs_rom_size)
-			rom_write(addr, value);
-		    else
 			mem_write(addr, value);
 		}
 		else
