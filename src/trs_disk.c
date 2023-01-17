@@ -1386,23 +1386,34 @@ trs_disk_sector_write(Uint8 data)
   if (trs_disk_debug_flags & DISKDEBUG_FDCREG) {
     debug("sector_write(0x%02x) pc 0x%04x\n", data, Z80_PC);
   }
-  if (trs_model == 1 && (trs_disk_doubler & TRSDISK_TANDY)) {
-    switch ((data) & ~0x1F) {
-      /* Emulate Radio Shack doubler */
-    case TRSDISK_R1791:
-      trs_disk_set_controller(TRSDISK_P1791);
-      state.density = 1;
-      break;
-    case TRSDISK_R1771:
-      trs_disk_set_controller(TRSDISK_P1771);
-      state.density = 0;
-      break;
-    case TRSDISK_NOPRECMP:
-    case TRSDISK_PRECMP:
-      /* Nothing for emulator to do */
-      break;
-    default:
-      break;
+  if (trs_model == 1) {
+    if (trs_disk_doubler & TRSDISK_TANDY) {
+      switch ((data) & ~0x1F) {
+        /* Emulate Radio Shack doubler */
+      case TRSDISK_R1791:
+        trs_disk_set_controller(TRSDISK_P1791);
+        state.density = 1;
+        break;
+      case TRSDISK_R1771:
+        trs_disk_set_controller(TRSDISK_P1771);
+        state.density = 0;
+        break;
+      case TRSDISK_NOPRECMP:
+      case TRSDISK_PRECMP:
+        /* Nothing for emulator to do */
+        break;
+      default:
+        break;
+      }
+    } else {
+      if (trs_disk_doubler & TRSDISK_PERCOM) {
+        switch (data) {
+          case 0xA0: /* 8" >> 5.25" */
+          case 0xC0: /* 5.25" >> 8" / wait logic "off" */
+          case 0xE0: /* wait logic "on" */
+            return;
+        }
+      }
     }
   }
   state.sector = data;
