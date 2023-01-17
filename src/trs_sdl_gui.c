@@ -1893,7 +1893,6 @@ void trs_gui_display_settings(void)
   int selection = 0;
   int value = 0;
   int gui_charset1 = trs_charset1 >= 10 ? trs_charset1 - 6 : trs_charset1;
-  int rgb_color = 0;
 
   while (1) {
     snprintf(&menu[0].text[52], 9, "0x%06X", background);
@@ -1921,9 +1920,9 @@ void trs_gui_display_settings(void)
         snprintf(input, 7, "%06X", background);
         if (trs_gui_input_string("Enter Background RGB color (Hex, RRGGBB)",
             input, input, 6, 0) == 0) {
-          rgb_color = strtol(input, NULL, 16);
-          if (rgb_color != background) {
-            background = rgb_color;
+          value = strtol(input, NULL, 16);
+          if (value != background) {
+            background = value;
             resize = 0;
           }
         }
@@ -1932,9 +1931,9 @@ void trs_gui_display_settings(void)
         snprintf(input, 7, "%06X", foreground);
         if (trs_gui_input_string("Enter Foreground RGB color (Hex, RRGGBB)",
             input, input, 6, 0) == 0) {
-          rgb_color = strtol(input, NULL, 16);
-          if (rgb_color != foreground) {
-            foreground = rgb_color;
+          value = strtol(input, NULL, 16);
+          if (value != foreground) {
+            foreground = value;
             resize = 0;
           }
         }
@@ -1943,9 +1942,9 @@ void trs_gui_display_settings(void)
         snprintf(input, 7, "%06X", gui_background);
         if (trs_gui_input_string("Enter GUI Background RGB color (Hex, RRGGBB)",
             input, input, 6, 0) == 0) {
-          rgb_color = strtol(input, NULL, 16);
-          if (rgb_color != gui_background) {
-            gui_background = rgb_color;
+          value = strtol(input, NULL, 16);
+          if (value != gui_background) {
+            gui_background = value;
             resize = 0;
           }
         }
@@ -1954,9 +1953,9 @@ void trs_gui_display_settings(void)
         snprintf(input, 7, "%06X", gui_foreground);
         if (trs_gui_input_string("Enter GUI Foreground RGB color (Hex, RRGGBB)",
             input, input, 6, 0) == 0) {
-          rgb_color = strtol(input, NULL, 16);
-          if (rgb_color != gui_foreground) {
-            gui_foreground = rgb_color;
+          value = strtol(input, NULL, 16);
+          if (value != gui_foreground) {
+            gui_foreground = value;
             resize = 0;
           }
         }
