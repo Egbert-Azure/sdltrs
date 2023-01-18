@@ -158,7 +158,7 @@ Uint8 cp500_switch_mode(int mode) {
 Uint8 cp500_mem_read(int address, int mem_map, Uint8 *rom, Uint8 *ram) {
   switch (mem_map) {
     case 0x31: /* 3000-37FF = extra 2K in EPROM 4 */
-      if (address >= 0x3000 && address <= 0x3FFF) {
+      if (address >= 0x3000 && address <= 0x37FF) {
         return rom[address | 0x0800];
       }
       return trs80_model3_mem_read(address);
@@ -225,7 +225,7 @@ Uint8 *cp500_mem_addr(int address, int mem_map, Uint8 *rom, Uint8 *ram, int writ
   switch (mem_map) {
     case 0x31: /* 3000-37FF = extra 2K in EPROM 4 */
     case 0x39:
-      if (address >= 0x3000 && address <= 0x3FFF && writing == 0) {
+      if (address >= 0x3000 && address <= 0x37FF && writing == 0) {
         return &rom[address | 0x0800];
       }
       return trs80_model3_mem_addr(address, writing);
