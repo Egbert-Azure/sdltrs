@@ -166,7 +166,7 @@ Uint8 cp500_mem_read(int address, int mem_map, Uint8 *rom, Uint8 *ram) {
     case 0x32: /* 64K of RAM, nothing else mapped */
       return ram[address];
 
-    case 0x33: /* 80x24, 3800 = keyboard, 3C00-3CFF = VRAM */
+    case 0x33: /* 80x24, 3800 = keyboard, 3C00-3FFF = VRAM */
       if (address >= RAM_START) {
         return ram[address];
       } else if (address >= VIDEO_START) {
@@ -192,7 +192,7 @@ void cp500_mem_write(int address, Uint8 value, int mem_map, Uint8 *ram) {
       ram[address] = value;
       return;
 
-    case 0x33: /* video and keyboard mapped  */
+    case 0x33: /* 80x24, 3C00-3FFF = VRAM */
       if (address >= RAM_START) {
         ram[address] = value;
         return;
@@ -234,7 +234,7 @@ Uint8 *cp500_mem_addr(int address, int mem_map, Uint8 *rom, Uint8 *ram, int writ
     case 0x3A:
       return &ram[address];
 
-    case 0x33: /* 80x24, 3800 = keyboard, 3C00-3CFF = VRAM */
+    case 0x33: /* 80x24, 3C00-3FFF = VRAM */
     case 0x3B:
       if (address >= RAM_START) {
         return &ram[address];
