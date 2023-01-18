@@ -623,7 +623,7 @@ static int trs80_model1_ram(int address)
 
 static int trs80_model1_mmio(int address)
 {
-  if (address >= VIDEO_START) return video[address - video_memory];
+  if (address >= VIDEO_START) return video[address - VIDEO_START];
   if (address < trs_rom_size) return rom[address];
   if (address == TRSDISK_DATA) return trs_disk_data_read();
   if (TRS_INTLATCH(address)) return trs_interrupt_latch_read();
@@ -942,7 +942,7 @@ static void trs80_model1_write_mmio(int address, int value)
           value |= 0x40;
       }
     }
-    trs80_screen_write_char(address - video_memory, value);
+    trs80_screen_write_char(address - VIDEO_START, value);
   } else if (address == TRSDISK_DATA) {
     trs_disk_data_write(value);
   } else if (address == TRSDISK_COMMAND) {
@@ -963,10 +963,10 @@ void trs80_model3_mem_write(int address, int value) {
   if (address >= RAM_START) {
     memory[address] = value;
   } else if (address >= VIDEO_START) {
-    if (grafyx_m3_write_byte(address - video_memory, value)) {
+    if (grafyx_m3_write_byte(address - VIDEO_START, value))
       return;
-    }
-    trs80_screen_write_char(address - video_memory, value);
+    else
+      trs80_screen_write_char(address - VIDEO_START, value);
   } else if (address == PRINTER_ADDRESS) {
     trs_printer_write(value);
 #if MEMDEBUG
@@ -1314,7 +1314,7 @@ Uint8 *trs80_model3_mem_addr(int address, int writing)
 {
   if (writing) {
     if (address >= RAM_START) return &memory[address];
-    if (address >= VIDEO_START) return &video[address - video_memory];
+    if (address >= VIDEO_START) return &video[address - VIDEO_START];
   } else {
     if (trs_model < 4 && address >= 32768)
       return &memory[address + bank_base];
