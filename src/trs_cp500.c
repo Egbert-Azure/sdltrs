@@ -29,9 +29,7 @@
 #include "trs_memory.h"
 #include "trs_state_save.h"
 
-static struct {
-  int video_first_row;
-} cp500_m80;
+static int cp500_m80_video_first_row;
 
 void cp500_reset_mode() {
   mem_map(0);
@@ -137,7 +135,7 @@ Uint8 cp500_switch_mode(int mode) {
     case 0x85: /* 64K RAM, 80x24, video lines 15-24 mapped to RAM */
       mem_map(3);
       /* Precalculate now to avoid doing on every memory access: */
-      cp500_m80.video_first_row = mode >> 3;
+      cp500_m80_video_first_row = mode >> 3;
       mem_video_page((mode >> 6) * 1024);
       trs_clones_model(CP500_M80);
       trs_screen_80x24(1);
@@ -210,7 +208,7 @@ void cp500_mem_write(int address, Uint8 value, int mem_map, Uint8 *ram) {
            * rules, and convert that into the right offset for 80x24:
            */
           trs_screen_write_char((address % 128) + (((address / 128) +
-              cp500_m80.video_first_row) * 80), value);
+              cp500_m80_video_first_row) * 80), value);
         }
       }
       return;
@@ -247,10 +245,10 @@ Uint8 *cp500_mem_addr(int address, int mem_map, Uint8 *rom, Uint8 *ram, int writ
 
 void trs_cp500_save(FILE *file)
 {
-  trs_save_int(file, &cp500_m80.video_first_row, 1);
+  trs_save_int(file, &cp500_m80_video_first_row, 1);
 }
 
 void trs_cp500_load(FILE *file)
 {
-  trs_load_int(file, &cp500_m80.video_first_row, 1);
+  trs_load_int(file, &cp500_m80_video_first_row, 1);
 }
