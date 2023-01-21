@@ -1312,15 +1312,9 @@ static Uint8 *trs80_model1_mmio_addr(int address, int writing)
 
 Uint8 *trs80_model3_mem_addr(int address, int writing)
 {
-  if (writing) {
-    if (address >= RAM_START) return &memory[address];
-    if (address >= VIDEO_START) return &video[address - VIDEO_START];
-  } else {
-    if (trs_model < 4 && address >= 32768)
-      return &memory[address + bank_base];
-    if (address >= VIDEO_START) return &memory[address];
-    if (address < trs_rom_size) return &rom[address];
-  }
+  if (address >= RAM_START) return &memory[address];
+  if (address >= VIDEO_START) return &video[address - VIDEO_START];
+  if (address < trs_rom_size && !writing) return &rom[address];
   return NULL;
 }
 
