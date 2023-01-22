@@ -674,7 +674,7 @@ int mem_read(int address)
     switch (memory_map) {
       case 0x10: /* Model I */
         if (address < RAM_START)
-	  return trs80_model1_mmio(address & 0x3FFF);
+	  return trs80_model1_mmio(address);
 	else
 	  return trs80_model1_ram(address);
       case 0x11: /* Model 1: selector mode 1 (all RAM except I/O high */
@@ -1346,7 +1346,7 @@ Uint8 *mem_pointer(int address, int writing)
       case 0x10: /* Model I */
       case 0x18:
         if (address < RAM_START)
-	  return trs80_model1_mmio_addr(address & 0x3FFF, writing);
+	  return trs80_model1_mmio_addr(address, writing);
 	else
 	  return trs80_model1_ram_addr(address);
       case 0x11: /* Model 1: selector mode 1 (all RAM except I/O high */
