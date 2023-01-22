@@ -1303,7 +1303,7 @@ static Uint8 *trs80_model1_ram_addr(int address)
 static Uint8 *trs80_model1_mmio_addr(int address, int writing)
 {
   if (address >= VIDEO_START) return &video[address - VIDEO_START];
-  if (address < trs_rom_size && !writing) return memory + address;
+  if (address < trs_rom_size && !writing) return &rom[address];
   /* With a selector 768 bytes poke through the hole */
   if (address >= 0x3900 && selector)
     return trs80_model1_ram_addr(address);
