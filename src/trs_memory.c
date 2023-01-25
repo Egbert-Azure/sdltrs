@@ -707,7 +707,7 @@ int mem_read(int address)
 	else
 	  return trs80_model1_ram(address);
       case 0x17: /* Model 1: Described in the selector doc as 'not useful' */
-        return 0xFF;	/* Not clear what really happens */
+        break;	/* Not clear what really happens */
       case 0x20: /* LNW80: HRG in low 16K */
 	if (address < RAM_START) {
 	  hrg_write_addr(address, 0x3FFF);
@@ -862,7 +862,7 @@ int mem_read(int address)
 	if (address < trs_rom_size) return rom[address];
 	if (address == PRINTER_ADDRESS) return trs_printer_read();
 	if (address >= KEYBOARD_START) return trs_kb_mem_read(address);
-	return 0xff;
+	break;
 
       case 0x54: /* Model 4P map 0, boot ROM in */
       case 0x55: /* Model 4P map 1, boot ROM in */
@@ -876,7 +876,7 @@ int mem_read(int address)
 	}
 	if (address >= VIDEO_START) return video[address - video_memory];
 	if (address >= KEYBOARD_START) return trs_kb_mem_read(address);
-	return 0xff;
+	break;
 
       case 0x42: /* Model 4 map 2 */
       case 0x52: /* Model 4P map 2, boot ROM out */
@@ -893,7 +893,7 @@ int mem_read(int address)
 	return memory[address + bank_offset[address >> 15]];
 
     }
-    /* not reached */
+
     return 0xff;
 }
 
@@ -1383,7 +1383,7 @@ Uint8 *mem_pointer(int address, int writing)
 	else
 	  return trs80_model1_ram_addr(address);
       case 0x17: /* Model 1: Described in the selector doc as 'not useful' */
-	return NULL;	/* Not clear what really happens */
+	break;	/* Not clear what really happens */
       case 0x20: /* LNW80: HRG in low 16K */
       case 0x28:
 	if (address < RAM_START)
@@ -1521,7 +1521,7 @@ Uint8 *mem_pointer(int address, int writing)
 	}
 	if (address >= VIDEO_START) return &video[address - video_memory];
 	if (address < trs_rom_size) return &rom[address];
-	return NULL;
+	break;
 
       case 0x48: /* Model 4 map 0 writing */
       case 0x58: /* Model 4P map 0, boot ROM out, writing */
@@ -1530,7 +1530,7 @@ Uint8 *mem_pointer(int address, int writing)
 	    return &memory[address + bank_offset[address >> 15]];
 	}
 	if (address >= VIDEO_START) return &video[address - video_memory];
-	return NULL;
+	break;
 
       case 0x54: /* Model 4P map 0, boot ROM in, reading */
       case 0x55: /* Model 4P map 1, boot ROM in, reading */
@@ -1546,7 +1546,7 @@ Uint8 *mem_pointer(int address, int writing)
 	    return &memory[address + bank_offset[address >> 15]];
 	}
 	if (address >= VIDEO_START) return &video[address - video_memory];
-	return NULL;
+	break;
 
       case 0x42: /* Model 4 map 1, reading */
       case 0x4a: /* Model 4 map 1, writing */
@@ -1558,7 +1558,7 @@ Uint8 *mem_pointer(int address, int writing)
 	    return &memory[address + bank_offset[address >> 15]];
 	}
 	if (address >= 0xf800) return &video[address-0xf800];
-	return NULL;
+	break;
 
       case 0x43: /* Model 4 map 3, reading */
       case 0x4b: /* Model 4 map 3, writing */
@@ -1568,7 +1568,7 @@ Uint8 *mem_pointer(int address, int writing)
       case 0x5f: /* Model 4P map 3, boot ROM in, writing */
 	return &memory[address + bank_offset[address >> 15]];
     }
-    /* not reached */
+
     return NULL;
 }
 
