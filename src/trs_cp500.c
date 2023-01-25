@@ -31,7 +31,8 @@
 
 static int cp500_m80_video_first_row;
 
-void cp500_reset_mode() {
+void cp500_reset_mode()
+{
   mem_map(0);
   trs_clones_model(0);
 }
@@ -40,7 +41,8 @@ void cp500_reset_mode() {
  * Switches CP-500 to a new mode. Mode switching in CP-500 is done by
  * reading (!) port F4, which is unused (when reading) in Model III.
  */
-Uint8 cp500_switch_mode(int mode) {
+Uint8 cp500_switch_mode(int mode)
+{
 
   /*
    * In the original CP-500, mode switching is documented in the
@@ -153,7 +155,8 @@ Uint8 cp500_switch_mode(int mode) {
   return 0; /* TODO: unknown what the hardware actually returns */
 }
 
-Uint8 cp500_mem_read(int address, int mem_map, Uint8 *rom, Uint8 *ram) {
+Uint8 cp500_mem_read(int address, int mem_map, Uint8 *rom, Uint8 *ram)
+{
   switch (mem_map) {
     case 0x31: /* 3000-37FF = extra 2K in EPROM 4 */
       if (address >= 0x3000 && address <= 0x37FF) {
@@ -180,7 +183,8 @@ Uint8 cp500_mem_read(int address, int mem_map, Uint8 *rom, Uint8 *ram) {
   return 0xFF;
 }
 
-void cp500_mem_write(int address, Uint8 value, int mem_map, Uint8 *ram) {
+void cp500_mem_write(int address, Uint8 value, int mem_map, Uint8 *ram)
+{
   switch (mem_map) {
     case 0x31: /* 3000-37FF = extra 2K in EPROM 4 */
       trs80_model3_mem_write(address, value);
@@ -219,7 +223,8 @@ void cp500_mem_write(int address, Uint8 value, int mem_map, Uint8 *ram) {
 #endif
 }
 
-Uint8 *cp500_mem_addr(int address, int mem_map, Uint8 *rom, Uint8 *ram, int writing) {
+Uint8 *cp500_mem_addr(int address, int mem_map, Uint8 *rom, Uint8 *ram, int writing)
+{
   switch (mem_map) {
     case 0x31: /* 3000-37FF = extra 2K in EPROM 4 */
     case 0x39:
