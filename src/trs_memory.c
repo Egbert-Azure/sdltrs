@@ -111,7 +111,8 @@ static unsigned int supermem_hi;
 static int selector_reg;
 static int system_byte;
 
-Uint8 mem_video_read(int vaddr) {
+Uint8 mem_video_read(int vaddr)
+{
   vaddr = VADDR_MASK(vaddr);
   if (vaddr < 0) { /* emulator bug, should never happen */
 #if MEMDEBUG
@@ -122,7 +123,8 @@ Uint8 mem_video_read(int vaddr) {
   return video[vaddr];
 }
 
-int mem_video_write(int vaddr, Uint8 value) {
+int mem_video_write(int vaddr, Uint8 value)
+{
   vaddr = VADDR_MASK(vaddr);
   if (vaddr < 0) { /* emulator bug, should never happen */
 #if MEMDEBUG
@@ -144,15 +146,18 @@ void mem_video_page(int offset)
   video_offset = offset;
 }
 
-Uint8 mem_video_page_read(int vaddr) {
+Uint8 mem_video_page_read(int vaddr)
+{
   return mem_video_read(vaddr + video_offset);
 }
 
-int mem_video_page_write(int vaddr, Uint8 value) {
+int mem_video_page_write(int vaddr, Uint8 value)
+{
   return mem_video_write(vaddr + video_offset, value);
 }
 
-Uint8 *mem_video_page_addr(int vaddr) {
+Uint8 *mem_video_page_addr(int vaddr)
+{
   vaddr = VADDR_MASK(vaddr + video_offset);
   if (vaddr < 0) {
 #if MEMDEBUG
@@ -959,7 +964,8 @@ static void trs80_model1_write_mmio(int address, int value)
     trs80_model1_write_mem(address, value);
 }
 
-void trs80_model3_mem_write(int address, int value) {
+void trs80_model3_mem_write(int address, int value)
+{
   if (address >= RAM_START) {
     memory[address] = value;
   } else if (address >= VIDEO_START) {
