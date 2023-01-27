@@ -940,12 +940,10 @@ static void trs80_model1_write_mmio(int address, int value)
        * Video write.  Hack here to make up for the missing bit 6
        * video ram, emulating the gate in Z30.
        */
-      if (trs_model == 1) {
-        if (value & 0xa0)
-          value &= 0xbf;
-        else
-          value |= 0x40;
-      }
+      if (value & 0xa0)
+        value &= 0xbf;
+      else
+        value |= 0x40;
     }
     trs80_screen_write_char(address - VIDEO_START, value);
   } else if (address == TRSDISK_DATA) {
