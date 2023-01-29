@@ -373,7 +373,7 @@ static const struct {
   { "resize3",         trs_opt_value,         0, 1, &resize3             },
   { "resize4",         trs_opt_value,         0, 1, &resize4             },
   { "rom",             trs_opt_rom,           1, 0, NULL                 },
-  { "romfile",         trs_opt_rom,           1, 1, NULL                 },
+  { "romfile",         trs_opt_rom,           1, 0, NULL                 },
   { "romfile1",        trs_opt_rom,           1, 1, NULL                 },
   { "romfile3",        trs_opt_rom,           1, 3, NULL                 },
   { "romfile4p",       trs_opt_rom,           1, 5, NULL                 },
