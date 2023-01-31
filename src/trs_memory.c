@@ -858,7 +858,9 @@ int mem_read(int address)
 	if (address >= RAM_START) {
 	    return memory[address + bank_offset[address >> 15]];
 	}
-	if (address >= VIDEO_START) return video[address - video_memory];
+	if (address >= VIDEO_START) {
+	    return mem_video_page_read(address - VIDEO_START);
+	}
 	if (address < trs_rom_size) return rom[address];
 	if (address == PRINTER_ADDRESS) return trs_printer_read();
 	if (address >= KEYBOARD_START) return trs_kb_mem_read(address);
@@ -874,7 +876,9 @@ int mem_read(int address)
 	if (address >= RAM_START || address < KEYBOARD_START) {
 	    return memory[address + bank_offset[address >> 15]];
 	}
-	if (address >= VIDEO_START) return video[address - video_memory];
+	if (address >= VIDEO_START) {
+	    return mem_video_page_read(address - VIDEO_START);
+	}
 	if (address >= KEYBOARD_START) return trs_kb_mem_read(address);
 	break;
 
@@ -1227,7 +1231,9 @@ void mem_write(int address, int value)
 	if (address >= RAM_START) {
 	    memory[address + bank_offset[address >> 15]] = value;
 	} else if (address >= VIDEO_START) {
-	    trs80_screen_write_char(address - video_memory, value);
+	    address = address - VIDEO_START;
+	    if (mem_video_page_write(address, value))
+	      trs_screen_write_char(address, value);
 	} else if (address == PRINTER_ADDRESS) {
 	    trs_printer_write(value);
 	}
@@ -1239,7 +1245,9 @@ void mem_write(int address, int value)
 	if (address >= RAM_START || address < KEYBOARD_START) {
 	    memory[address + bank_offset[address >> 15]] = value;
 	} else if (address >= VIDEO_START) {
-	    trs80_screen_write_char(address - video_memory, value);
+	    address = address - VIDEO_START;
+	    if (mem_video_page_write(address, value))
+	      trs_screen_write_char(address, value);
 	}
 	break;
 
@@ -1515,7 +1523,9 @@ Uint8 *mem_pointer(int address, int writing)
 	if (address >= RAM_START) {
 	    return &memory[address + bank_offset[address >> 15]];
 	}
-	if (address >= VIDEO_START) return &video[address - video_memory];
+	if (address >= VIDEO_START) {
+	   return mem_video_page_addr(address - VIDEO_START);
+	}
 	if (address < trs_rom_size) return &rom[address];
 	break;
 
@@ -1525,7 +1535,9 @@ Uint8 *mem_pointer(int address, int writing)
 	if (address >= RAM_START) {
 	    return &memory[address + bank_offset[address >> 15]];
 	}
-	if (address >= VIDEO_START) return &video[address - video_memory];
+	if (address >= VIDEO_START) {
+	   return mem_video_page_addr(address - VIDEO_START);
+	}
 	break;
 
       case 0x54: /* Model 4P map 0, boot ROM in, reading */
@@ -1541,7 +1553,9 @@ Uint8 *mem_pointer(int address, int writing)
 	if (address >= RAM_START || address < KEYBOARD_START) {
 	    return &memory[address + bank_offset[address >> 15]];
 	}
-	if (address >= VIDEO_START) return &video[address - video_memory];
+	if (address >= VIDEO_START) {
+	    return mem_video_page_addr(address - VIDEO_START);
+	}
 	break;
 
       case 0x42: /* Model 4 map 1, reading */
