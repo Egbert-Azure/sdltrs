@@ -912,15 +912,13 @@ static void trs80_model1_write_mem(int address, int value)
 
     /* Selector mode 6 remaps RAM from 0000-3FFF to C000-FFFF while keeping
        the ROMs visible */
-    if ((selector_reg & 7) == 6) {
-      if (address >= 0xC000) {
-        /* We have no low 16K of RAM. This is for the LNW80 really */
-        if (!(selector_reg & 8))
-	  return;
-        /* Use the low 16K, and then bank it. I'm not 100% sure how the
-           PAL orders the two */
-        address &= 0x3FFF;
-      }
+    if ((selector_reg & 7) == 6 && address >= 0xC000) {
+      /* We have no low 16K of RAM. This is for the LNW80 really */
+      if (!(selector_reg & 8))
+	return;
+      /* Use the low 16K, and then bank it. I'm not 100% sure how the
+         PAL orders the two */
+      address &= 0x3FFF;
     }
     /* Bank low on odd modes */
     if ((selector_reg & 1) == 1)
