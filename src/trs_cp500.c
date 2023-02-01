@@ -171,7 +171,7 @@ Uint8 cp500_mem_read(int address, int mem_map, Uint8 *rom, Uint8 *ram)
       if (address >= RAM_START) {
         return ram[address];
       } else if (address >= VIDEO_START) {
-        return mem_video_page_read(address - VIDEO_START);
+        return mem_video_page_read(address);
       } else if (address >= KEYBOARD_START) {
         return trs_kb_mem_read(address);
       }
@@ -199,7 +199,6 @@ void cp500_mem_write(int address, Uint8 value, int mem_map, Uint8 *ram)
         ram[address] = value;
         return;
       } else if (address >= VIDEO_START) {
-        address = address - VIDEO_START;
         if (mem_video_page_write(address, value)) {
           /*
            * In M80, the 80x24 modes use 3 banks of 128x8 characters.
@@ -211,6 +210,7 @@ void cp500_mem_write(int address, Uint8 value, int mem_map, Uint8 *ram)
            * So we figure out the row/col of the byte in M80 addressing
            * rules, and convert that into the right offset for 80x24:
            */
+          address = address - VIDEO_START;
           trs_screen_write_char((address % 128) + (((address / 128) +
               cp500_m80_video_first_row) * 80), value);
         }
@@ -242,7 +242,7 @@ Uint8 *cp500_mem_addr(int address, int mem_map, Uint8 *rom, Uint8 *ram, int writ
       if (address >= RAM_START) {
         return &ram[address];
       } else if (address >= VIDEO_START) {
-        return mem_video_page_addr(address - VIDEO_START);
+        return mem_video_page_addr(address);
       }
   }
   return NULL;
