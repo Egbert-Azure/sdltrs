@@ -1228,7 +1228,7 @@ void mem_write(int address, int value)
 	    memory[address + bank_offset[address >> 15]] = value;
 	} else if (address >= VIDEO_START) {
 	    if (mem_video_page_write(address, value))
-	      trs_screen_write_char(address - VIDEO_START, value);
+	      trs_screen_write_char(address + video_offset, value);
 	} else if (address == PRINTER_ADDRESS) {
 	    trs_printer_write(value);
 	}
@@ -1241,7 +1241,7 @@ void mem_write(int address, int value)
 	    memory[address + bank_offset[address >> 15]] = value;
 	} else if (address >= VIDEO_START) {
 	    if (mem_video_page_write(address, value))
-	      trs_screen_write_char(address - VIDEO_START, value);
+	      trs_screen_write_char(address + video_offset, value);
 	}
 	break;
 
