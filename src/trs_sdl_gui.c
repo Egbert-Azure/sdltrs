@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006-2011, Mark Grebe
- * Copyright (C) 2018-2022, Jens Guenther
+ * Copyright (C) 2018-2023, Jens Guenther
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -2590,7 +2590,7 @@ void trs_gui_about_sdltrs(void)
   trs_gui_center_text("SDLTRS", 3, 0);
   trs_gui_center_text("Version 1.2.25", 4, 0);
   trs_gui_center_text("BSD 2-Clause License", 5, 0);
-  trs_gui_center_text("Copyright (C) 2006-2011 Mark Grebe, 2018-2022", 6, 0);
+  trs_gui_center_text("Copyright (C) 2006-2011 Mark Grebe, 2018-2023", 6, 0);
   trs_gui_center_text("Alan Cox, Jens Guenther, Leonardo Brondani Schenkel", 7, 0);
   trs_gui_center_text("<https://gitlab.com/jengun/sdltrs>", 8, 0);
   trs_gui_center_text("Based on xtrs 4.9d by Tim Mann", 10, 0);
