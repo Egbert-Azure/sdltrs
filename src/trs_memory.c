@@ -156,6 +156,7 @@ int mem_video_page_write(int vaddr, Uint8 value)
 
 Uint8 *mem_video_page_addr(int vaddr)
 {
+  vaddr = vaddr + video_offset;
   if (VADDR_MASK(vaddr) < 0) {
 #if MEMDEBUG
     error("Video page address %04X out of range [%04X]", vaddr, MAX_VIDEO_SIZE);
