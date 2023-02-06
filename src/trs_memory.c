@@ -75,7 +75,7 @@
 #define TRS_INTLATCH(addr) (((addr)&~3) == 0x37e0)
 
 /* Check address in video memory */
-#define VADDR_MASK(vaddr)  ((Uint16)vaddr < MAX_VIDEO_SIZE ? vaddr : -1)
+#define VIDEO_ADDR(vaddr)  (Uint16)vaddr < MAX_VIDEO_SIZE
 
 /* We allow for 2MB of banked memory via port 0x94. That is the extreme limit
    of the port mods rather than anything normal (512K might be more 'normal' */
@@ -113,27 +113,29 @@ static int system_byte;
 
 Uint8 mem_video_read(int vaddr)
 {
-  if (VADDR_MASK(vaddr) < 0) { /* emulator bug, should never happen */
+  if (VIDEO_ADDR(vaddr)) {
+    return video[vaddr];
+  } else { /* emulator bug, should never happen */
 #if MEMDEBUG
     error("Reading video address %04X out of range [%04X]", vaddr, MAX_VIDEO_SIZE);
 #endif
     return 0xFF;
   }
-  return video[vaddr];
 }
 
 int mem_video_write(int vaddr, Uint8 value)
 {
-  if (VADDR_MASK(vaddr) < 0) { /* emulator bug, should never happen */
+  if (VIDEO_ADDR(vaddr)) {
+    if (video[vaddr] != value) {
+      video[vaddr] = value;
+      return 1;
+    } else {
+      return 0;
+    }
+  } else { /* emulator bug, should never happen */
 #if MEMDEBUG
     error("Writing video address %04X out of range [%04X]", vaddr, MAX_VIDEO_SIZE);
 #endif
-    return 0;
-  }
-  if (video[vaddr] != value) {
-    video[vaddr] = value;
-    return 1;
-  } else {
     return 0;
   }
 }
@@ -157,13 +159,14 @@ int mem_video_page_write(int vaddr, Uint8 value)
 Uint8 *mem_video_page_addr(int vaddr)
 {
   vaddr = vaddr + video_offset;
-  if (VADDR_MASK(vaddr) < 0) {
+  if (VIDEO_ADDR(vaddr)) {
+    return video + vaddr;
+  } else { /* emulator bug, should never happen */
 #if MEMDEBUG
     error("Video page address %04X out of range [%04X]", vaddr, MAX_VIDEO_SIZE);
 #endif
     return NULL;
   }
-  return video + vaddr;
 }
 
 void mem_bank(int command)
