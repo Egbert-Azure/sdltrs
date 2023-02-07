@@ -84,6 +84,7 @@ Running:\n\
     r(un)\n\
         Hard reset the Z80 and devices and commence execution.\n\
     c(ont)\n\
+    g(o)\n\
         Continue execution.\n\
     s(tep)\n\
     s(tep)i(nt)\n\
@@ -581,7 +582,8 @@ void debug_shell(void)
 	    {
 		clear_trap_address(Z80_PC, 0);
 	    }
-	    else if(!strcmp(command, "cont") || !strcmp(command, "c"))
+	    else if(!strcmp(command, "cont") || !strcmp(command, "c") ||
+	            !strcmp(command, "go")   || !strcmp(command, "g"))
 	    {
 		debug_run();
 	    }
