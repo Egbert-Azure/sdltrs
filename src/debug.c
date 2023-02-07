@@ -83,9 +83,9 @@ static void help_message(void)
 Running:\n\
     r(un)\n\
         Hard reset the Z80 and devices and commence execution.\n\
-    c(ont)\n\
-    g(o)\n\
-        Continue execution.\n\
+    c(ont) <addr>\n\
+    g(o)   <addr>\n\
+        Continue execution at current pc or specified hex address for pc.\n\
     s(tep)\n\
     s(tep)i(nt)\n\
         Execute one instruction, or if the instruction is repeating (such as\n\
@@ -585,6 +585,11 @@ void debug_shell(void)
 	    else if(!strcmp(command, "cont") || !strcmp(command, "c") ||
 	            !strcmp(command, "go")   || !strcmp(command, "g"))
 	    {
+		unsigned int address;
+
+		if(sscanf(input, "%*s %x", &address) == 1) {
+			Z80_PC = address & 0xFFFF;
+		}
 		debug_run();
 	    }
 	    else if(!strcmp(command, "dump") || !strcmp(command, "p"))
