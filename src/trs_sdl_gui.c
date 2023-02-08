@@ -1341,10 +1341,10 @@ void trs_gui_disk_options(void)
    {"", MENU_NORMAL},
    {"", MENU_NORMAL},
    {"", MENU_TITLE},
+   {"Floppy Disk Controller                             ", MENU_NORMAL},
    {"Doubler Type                                       ", MENU_NORMAL},
    {"True DAM Emulation                                 ", MENU_NORMAL},
 #ifdef __linux
-   {"", MENU_TITLE},
    {"Set Drive Steps", MENU_NORMAL},
 #endif
    {"", 0}};
@@ -1359,8 +1359,9 @@ void trs_gui_disk_options(void)
           " %d: Drive Size                                        %s",
           i, disk_size[trs_disk_getsize(i) == 5 ? 0 : 1]);
     }
-    snprintf(&menu[9].text[51], 10, "%s", doubler[trs_disk_doubler]);
-    snprintf(&menu[10].text[50], 11, "%s", yes_no[trs_disk_truedam]);
+    snprintf(&menu[9].text[50], 11, "%s", yes_no[trs_disk_controller]);
+    snprintf(&menu[10].text[51], 10, "%s", doubler[trs_disk_doubler]);
+    snprintf(&menu[11].text[50], 11, "%s", yes_no[trs_disk_truedam]);
     trs_gui_clear_screen();
 
     selection = trs_gui_display_menu("Floppy Disk Options", menu, selection);
@@ -1370,9 +1371,12 @@ void trs_gui_disk_options(void)
     }
     else switch (selection) {
       case 9:
-        trs_disk_doubler = trs_gui_display_popup("Doubler", doubler, 4, trs_disk_doubler);
+        trs_disk_controller = trs_gui_display_popup("FDC", yes_no, 2, trs_disk_controller);
         break;
       case 10:
+        trs_disk_doubler = trs_gui_display_popup("Doubler", doubler, 4, trs_disk_doubler);
+        break;
+      case 11:
         trs_disk_truedam = trs_gui_display_popup("True DAM", yes_no, 2, trs_disk_truedam);
         break;
 #ifdef __linux
