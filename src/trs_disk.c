@@ -68,10 +68,10 @@
 #include "trs_stringy.h"
 #include "trs_state_save.h"
 
+int trs_disk_controller = TRUE;
 int trs_disk_doubler = TRSDISK_BOTH;
 int trs_disk_truedam;
 int trs_disk_debug_flags;
-int trs_disk_nocontroller;
 
 static const float trs_disk_holewidth = 0.01;
 
@@ -464,12 +464,6 @@ trs_disk_init(int poweron)
   trs_hard_init(poweron);
   stringy_init();
   trs_cancel_event();
-
-/*
- * Emulate no controller if there is no disk in drive 0 at reset time,
- * except for model 4.
- */
-  trs_disk_nocontroller = (trs_model < 5 && disk[0].file == NULL);
 }
 
 /* trs_event_func used for delayed command completion.  Clears BUSY,
@@ -2184,7 +2178,8 @@ trs_disk_status_read(void)
 {
   static int last_status = -1;
 
-  if (trs_disk_nocontroller) return 0xff;
+  if (trs_disk_controller == FALSE) return 0xff;
+
   type1_status();
   if (!(state.status & TRSDISK_NOTRDY)) {
     if (state.motor_timeout - z80_state.t_count > TSTATE_T_MID) {
@@ -3850,7 +3845,7 @@ void trs_disk_save(FILE *file)
 {
   int i;
 
-  trs_save_int(file, &trs_disk_nocontroller, 1);
+  trs_save_int(file, &trs_disk_controller, 1);
   trs_save_int(file, &trs_disk_doubler, 1);
   trs_save_int(file, &trs_disk_truedam, 1);
   trs_save_int(file, &trs_disk_debug_flags, 1);
@@ -3870,7 +3865,7 @@ void trs_disk_load(FILE *file)
     if (disk[i].file != NULL)
       fclose(disk[i].file);
   }
-  trs_load_int(file, &trs_disk_nocontroller, 1);
+  trs_load_int(file, &trs_disk_controller, 1);
   trs_load_int(file, &trs_disk_doubler, 1);
   trs_load_int(file, &trs_disk_truedam, 1);
   trs_load_int(file, &trs_disk_debug_flags, 1);

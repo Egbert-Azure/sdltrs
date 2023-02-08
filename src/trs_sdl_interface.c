@@ -308,6 +308,7 @@ static const struct {
   { "stepmap",         trs_opt_stepmap,       1, 0, NULL                 },
 #endif
   { "emtsafe",         trs_opt_value,         0, 1, &trs_emtsafe         },
+  { "fdc",             trs_opt_value,         0, 1, &trs_disk_controller },
   { "fg",              trs_opt_color,         1, 0, &foreground          },
   { "foreground",      trs_opt_color,         1, 0, &foreground          },
   { "fullscreen",      trs_opt_value,         0, 1, &fullscreen          },
@@ -343,6 +344,7 @@ static const struct {
   { "model",           trs_opt_model,         1, 0, NULL                 },
   { "mousepointer",    trs_opt_value,         0, 1, &mousepointer        },
   { "noemtsafe",       trs_opt_value,         0, 0, &trs_emtsafe         },
+  { "nofdc",           trs_opt_value,         0, 0, &trs_disk_controller },
   { "nofullscreen",    trs_opt_value,         0, 0, &fullscreen          },
   { "nofs",            trs_opt_value,         0, 0, &fullscreen          },
   { "nohdboot",        trs_opt_value,         0, 0, &trs_hd_boot         },
@@ -1122,6 +1124,7 @@ int trs_write_config_file(const char *filename)
       trs_disk_doubler == TRSDISK_BOTH   ? "both"   : "none");
 
   fprintf(config_file, "%semtsafe\n", trs_emtsafe ? "" : "no");
+  fprintf(config_file, "%sfdc\n", trs_disk_controller ? "" : "no");
   fprintf(config_file, "%sfullscreen\n", fullscreen ? "" : "no");
   fprintf(config_file, "foreground=0x%x\n", foreground);
   fprintf(config_file, "guibackground=0x%x\n", gui_background);
