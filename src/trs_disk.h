@@ -55,6 +55,7 @@ extern void trs_disk_remove(int drive);
 extern int trs_diskset_save(const char *filename);
 extern int trs_diskset_load(const char *filename);
 
+extern int trs_disk_controller;
 extern int trs_disk_doubler;
 extern int trs_disk_truedam;
 

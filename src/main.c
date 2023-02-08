@@ -45,6 +45,7 @@
 #include "error.h"
 #include "load_cmd.h"
 #include "trs.h"
+#include "trs_disk.h"
 #include "trs_sdl_keyboard.h"
 #include "trs_state_save.h"
 
@@ -219,8 +220,6 @@ int trs_load_cmd(const char *filename)
 
 void trs_rom_init(void)
 {
-  extern int trs_disk_nocontroller;
-
   switch (trs_model) {
     case 1:
       if (trs_load_rom(romfile) != 0)
@@ -228,7 +227,7 @@ void trs_rom_init(void)
       if (stringy)
         trs_load_compiled_rom(0x3000, sizeof(trs_romesf), trs_romesf);
       /* Do not overwrite memory mapped disk I/O */
-      if (trs_rom_size > 0x37E0 && trs_disk_nocontroller == 0)
+      if (trs_rom_size > 0x37E0 && trs_disk_controller)
           trs_rom_size = 0x37E0;
       if (trs_hd_boot)
         trs_boot_hd();
