@@ -25,7 +25,7 @@ Add the path to your Mingw-w64 bin folder to the Windows PATH environment variab
 select new to `C:\msys64\mingw64\bin`
 - Add SDL2 package for 64 bit system with `pacman -S mingw-w64-x86_64-SDL2`
 
-Visual Studio Creator can be used for coding if you add the extensions.
+Visual Studio Creator can be used for coding. Add the extensions by searching for `c++` in the Extensions view (`Ctrl+Shift+X`).
 
 ---
 
