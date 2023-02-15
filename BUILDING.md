@@ -17,7 +17,7 @@ For *Win32/64* please install [MinGW] or [MinGW-w64] and the [SDL]
 development library with the `mingw.tar.gz` file extension.
 It is recommended to use [MSYS2] to make things easier:
 
-- Get the latest version of Mingw-w64 via MSYS2, which provides up-to-date native builds of GCC, Mingw-w64, and other helpful C++ tools and libraries. You can download the latest installer from the MSYS2 page or use this link to the installer.
+- Get the latest version of Mingw-w64 via MSYS2, which provides up-to-date native builds of GCC, Mingw-w64, and other helpful C++ tools and libraries. You can use this [link](https://github.com/msys2/msys2-installer/releases/download/2022-06-03/msys2-x86_64-20220603.exe) to the installer.
 
 - Follow the Installation instructions on the MSYS2 website to install Mingw-w64. Take care to run each required Start menu and pacman command.
 - Install the Mingw-w64 toolchain (`pacman -S --needed base-devel mingw-w64-x86_64-toolchain`). Run the pacman command in a MSYS2 terminal. Accept the default to install all the members in the `toolchain` group
