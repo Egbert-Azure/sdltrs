@@ -11,9 +11,20 @@ sudo apt install libsdl1.2-dev libreadline-dev
 ```
 for the SDL 1.2 version.
 
+## Windows prerequesits
+
 For *Win32/64* please install [MinGW] or [MinGW-w64] and the [SDL]
 development library with the `mingw.tar.gz` file extension.
-It is recommended to use [MSYS2] to make things easier.
+It is recommended to use [MSYS2] to make things easier:
+
+- Get the latest version of Mingw-w64 via MSYS2, which provides up-to-date native builds of GCC, Mingw-w64, and other helpful C++ tools and libraries. You can download the latest installer from the MSYS2 page or use this link to the installer.
+
+- Follow the Installation instructions on the MSYS2 website to install Mingw-w64. Take care to run each required Start menu and pacman command.
+- Install the Mingw-w64 toolchain (`pacman -S --needed base-devel mingw-w64-x86_64-toolchain`). Run the pacman command in a MSYS2 terminal. Accept the default to install all the members in the `toolchain` group
+Add the path to your Mingw-w64 bin folder to the Windows PATH environment variable by using the following steps: type `settings` to open your Windows Settings. Edit environment variables and
+select new to `C:\msys64\mingw64\bin`
+
+Visual Studio Creator can be used for coding if you add the extensions.
 
 ---
 
