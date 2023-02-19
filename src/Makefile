@@ -72,4 +72,5 @@ CFLAGS		?= -g -O2 -Wall
 CFLAGS		+= ${SDL_INC} ${ENDIAN} ${MACROS} ${READLINE} ${ZBX}
 
 ${PROG}: ${OBJS}
-	${CC} -o ${PROG} ${OBJS} ${SDL_LIB} ${LDFLAGS} ${READLINELIBS}
+	    ${CC} -o ${PROG} ${OBJS} ${SDL_LIB} ${LDFLAGS} ${READLINELIBS} -lssp
+
